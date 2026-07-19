@@ -879,10 +879,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     #filterWrap{max-width:680px;}
   }
   @media (max-width:600px){
-    #filterWrap{left:92px; top:8px; gap:4px;}
-    #filterWrap .chiprow{justify-content:flex-start;}
+    /* Top toggles: full-width, centered, wrap into even rows clear of the species column */
+    #filterWrap{left:8px; right:8px; top:8px; gap:4px; max-width:none;}
+    #filterWrap .chiprow{justify-content:center; flex-wrap:wrap;}
+    #metaRow{row-gap:5px;}
     .chip{padding:4px 8px; font-size:13px;}
-    #speciesCol{top:8px;}
+    /* Species column starts below the two-row toggle block so the top-left button isn't hidden */
+    #speciesCol{top:78px;}
   }
 
   /* ---------- Tabs ---------- */
@@ -1165,6 +1168,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <span class="logo-wtf">WTF</span>
     </div>
     <div style="display:flex; gap:6px;">
+      <button class="help-btn" id="addSpotBtn" title="Add a spot" style="font-size:17px;">➕</button>
       <button class="help-btn" id="themeBtn" title="Theme" style="font-size:15px;">🎨</button>
       <button class="help-btn" id="bubbleBtn" title="Bubbles" style="font-size:15px;">🫧</button>
       <button class="help-btn" id="searchBtn" title="Search" style="font-size:13px;">🔍</button>
@@ -1381,6 +1385,36 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
 </div>
 
+<div class="scrim" id="addSpotScrim"></div>
+<div class="sheet" id="addSpotSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2>Add a spot</h2>
+    <button class="close" id="addSpotClose">CLOSE ✕</button>
+  </div>
+  <div class="sheet-body">
+    <p class="sheet-note">Save your own fishing spot to the map. It's stored on this device and shows up like the built-in spots, including in the Log Catch location list. Drop a pin or use your current location, name it, and choose inshore or offshore.</p>
+    <label class="field-label">Name</label>
+    <input type="text" id="addSpotName" placeholder="e.g. My honey hole" style="width:100%; box-sizing:border-box;">
+    <label class="field-label">Type</label>
+    <div class="chiprow wrap" id="addSpotZoneRow">
+      <div class="chip util active" data-zone="inshore">Inshore</div>
+      <div class="chip util" data-zone="offshore">Offshore</div>
+    </div>
+    <label class="field-label">Location</label>
+    <div class="loc-btns">
+      <button class="mini-btn" id="addSpotPin">📍 Drop pin</button>
+      <button class="mini-btn" id="addSpotGPS">🎯 My location</button>
+    </div>
+    <div class="loc-preview" id="addSpotPreview">No location set yet.</div>
+    <div class="loc-btns" style="margin-top:12px;">
+      <button class="mini-btn" id="addSpotSave" style="font-weight:700;">Save spot</button>
+    </div>
+    <p class="sheet-note" style="margin-top:14px;">Your saved spots: <span id="customSpotCount">0</span>.</p>
+    <div id="customSpotList"></div>
+  </div>
+</div>
+
 <div id="cropModal">
   <div id="cropStage">
     <img id="cropImg" alt="">
@@ -1406,7 +1440,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* ===================== DATA ===================== */
 
 const SPECIES = {
-  blackdrum: { label:"Black Drum", short:"BD", color:"var(--blackdrum)", months:[1,2,2,2,1,0,0,0,0,1,1,1] },
+  blackdrum: { label:"Drum", short:"BD", color:"var(--blackdrum)", months:[1,2,2,2,1,0,0,0,0,1,1,1] },
   bonito:    { label:"Bonito",     short:"BN", color:"var(--bonito)",    months:[0,0,1,2,2,2,1,1,1,1,0,0] },
   flounder:  { label:"Flounder",   short:"FL", color:"var(--flounder)",  months:[0,0,1,1,0,0,0,0,2,2,2,1] },
   grouper:   { label:"Grouper",    short:"GR", color:"var(--grouper)",   months:[2,2,2,1,0,0,0,0,1,2,2,2] },
@@ -1976,6 +2010,7 @@ async function loadAll(){
   try{ const raw = await storeGet(STORAGE_KEY); catches = raw ? JSON.parse(raw) : []; }catch(e){ catches = []; }
   try{ const nraw = await storeGet(NOTES_KEY); userNotes = nraw ? JSON.parse(nraw) : {}; }catch(e){ userNotes = {}; }
   try{ const th = await storeGet(THEME_KEY); if(th) applyTheme(th); }catch(e){}
+  await loadCustomSpots();
   renderCatchMarkers();
   renderCatchList();
   updateCatchCount();
@@ -2464,10 +2499,138 @@ function setTideUI(key){
 spotSelect.addEventListener('change', ()=>{
   const id = spotSelect.value;
   if(!id) return;
-  const spot = SPOTS.find(s=>s.id===id);
+  const spot = SPOTS.find(s=>s.id===id) || customSpots.find(s=>s.id===id);
+  if(!spot) return;
   pendingLoc = {lat:spot.lat, lng:spot.lng, label:spot.name};
   clearPreviewMarker();
   updateLocPreview();
+});
+
+/* ===================== CUSTOM (USER-ADDED) SPOTS ===================== */
+let customSpots = [];
+const customSpotMarkers = {};
+const CUSTOM_SPOTS_KEY = 'custom-spots';
+
+async function loadCustomSpots(){
+  try{ const raw = await storeGet(CUSTOM_SPOTS_KEY); customSpots = raw ? JSON.parse(raw) : []; }
+  catch(e){ customSpots = []; }
+  customSpots.forEach(s=> addCustomSpotMarker(s));
+  refreshCustomSpotSelect();
+  updateCustomSpotList();
+}
+async function saveCustomSpots(){
+  try{ await storeSet(CUSTOM_SPOTS_KEY, JSON.stringify(customSpots)); }catch(e){}
+}
+function addCustomSpotMarker(s){
+  const sz = 18;
+  const fill = resolvedZoneColor[s.zone] || (s.zone==='offshore' ? resolveVar('var(--offshore)') : resolveVar('var(--inshore)'));
+  const icon = L.divIcon({ className:'', html:`<div class="spot-marker" style="background:${fill}; width:${sz}px; height:${sz}px; box-shadow:0 0 0 2px rgba(255,255,255,.5);"></div>`, iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], popupAnchor:[0,-Math.round(sz/2)-1] });
+  const m = L.marker([s.lat,s.lng], {icon}).addTo(map);
+  m.bindPopup(()=>customSpotPopup(s), {maxWidth:300});
+  m.spotRef = s;
+  markers.push(m);            // so labels + zoom logic include it
+  customSpotMarkers[s.id] = m;
+  if(typeof applyFilter === 'function') applyFilter();
+}
+function customSpotPopup(s){
+  const note = userNotes[s.id] ? `<div class="pop-note">${userNotes[s.id]}</div>` : '';
+  return `<div class="pop">
+    <div class="pop-top"><div class="pop-name">${s.name}</div></div>
+    <div class="pop-meta"><span>${s.zone==='offshore'?'Offshore':'Inshore'} · My spot</span><span>${toDMS(s.lat, s.lng)}</span></div>
+    ${note}
+    <button class="mini-btn" style="width:100%; margin-top:9px;" onclick="removeCustomSpot('${s.id}')">Delete this spot</button>
+  </div>`;
+}
+window.removeCustomSpot = function(id){
+  customSpots = customSpots.filter(s=>s.id!==id);
+  const m = customSpotMarkers[id];
+  if(m){ map.removeLayer(m); const idx = markers.indexOf(m); if(idx>=0) markers.splice(idx,1); delete customSpotMarkers[id]; }
+  saveCustomSpots();
+  refreshCustomSpotSelect();
+  updateCustomSpotList();
+  map.closePopup();
+};
+function refreshCustomSpotSelect(){
+  // remove any prior custom optgroup, then rebuild from customSpots
+  Array.from(spotSelect.querySelectorAll('optgroup[data-custom="1"]')).forEach(g=>g.remove());
+  if(!customSpots.length) return;
+  const group = document.createElement('optgroup');
+  group.label = 'My spots';
+  group.dataset.custom = '1';
+  customSpots.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(s=>{
+    const opt = document.createElement('option');
+    opt.value = s.id; opt.textContent = s.name;
+    group.appendChild(opt);
+  });
+  spotSelect.appendChild(group);
+}
+function updateCustomSpotList(){
+  const cnt = document.getElementById('customSpotCount');
+  if(cnt) cnt.textContent = customSpots.length;
+  const list = document.getElementById('customSpotList');
+  if(!list) return;
+  list.innerHTML = customSpots.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(s=>
+    `<div class="loc-preview set" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:6px;">
+      <span>${s.name} · ${s.zone==='offshore'?'Offshore':'Inshore'}</span>
+      <button class="mini-btn" style="padding:2px 8px;" onclick="removeCustomSpot('${s.id}')">✕</button>
+    </div>`).join('');
+}
+
+/* ---- Add-spot modal flow ---- */
+let addSpotLoc = null;
+let addSpotZone = 'inshore';
+let placingSpotPin = false;
+const addSpotSheet = document.getElementById('addSpotSheet');
+const addSpotScrim = document.getElementById('addSpotScrim');
+function openAddSpot(){ addSpotSheet.classList.add('open'); addSpotScrim.classList.add('open'); }
+function closeAddSpot(){ addSpotSheet.classList.remove('open'); addSpotScrim.classList.remove('open'); }
+function updateAddSpotPreview(){
+  const el = document.getElementById('addSpotPreview');
+  if(!addSpotLoc){ el.textContent = 'No location set yet.'; el.classList.remove('set'); return; }
+  el.textContent = toDMS(addSpotLoc.lat, addSpotLoc.lng);
+  el.classList.add('set');
+}
+document.getElementById('addSpotBtn').addEventListener('click', ()=>{ addSpotLoc=null; updateAddSpotPreview(); openAddSpot(); });
+document.getElementById('addSpotClose').addEventListener('click', closeAddSpot);
+addSpotScrim.addEventListener('click', closeAddSpot);
+document.getElementById('addSpotZoneRow').addEventListener('click', (e)=>{
+  const chip = e.target.closest('.chip'); if(!chip) return;
+  addSpotZone = chip.dataset.zone;
+  document.querySelectorAll('#addSpotZoneRow .chip').forEach(c=>c.classList.toggle('active', c===chip));
+});
+document.getElementById('addSpotPin').addEventListener('click', ()=>{
+  placingSpotPin = true;
+  closeAddSpot();
+  showToast('Tap the map to place your spot.');
+});
+document.getElementById('addSpotGPS').addEventListener('click', ()=>{
+  if(!navigator.geolocation){ showToast("Location isn't available on this device/browser."); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    addSpotLoc = {lat:pos.coords.latitude, lng:pos.coords.longitude};
+    updateAddSpotPreview();
+  }, ()=>{ showToast('Could not get your location.'); }, {enableHighAccuracy:true, timeout:8000});
+});
+map.on('click', (e)=>{
+  if(!placingSpotPin) return;
+  placingSpotPin = false;
+  addSpotLoc = {lat:e.latlng.lat, lng:e.latlng.lng};
+  updateAddSpotPreview();
+  openAddSpot();
+});
+document.getElementById('addSpotSave').addEventListener('click', ()=>{
+  const name = (document.getElementById('addSpotName').value || '').trim();
+  if(!name){ showToast('Give your spot a name first.'); return; }
+  if(!addSpotLoc){ showToast('Set a location — drop a pin or use My location.'); return; }
+  const s = { id:'custom-'+Date.now(), name, zone:addSpotZone, lat:addSpotLoc.lat, lng:addSpotLoc.lng, meta:(addSpotZone==='offshore'?'Offshore':'Inshore')+' · My spot', custom:true, species:[] };
+  customSpots.push(s);
+  addCustomSpotMarker(s);
+  saveCustomSpots();
+  refreshCustomSpotSelect();
+  updateCustomSpotList();
+  document.getElementById('addSpotName').value = '';
+  addSpotLoc = null; updateAddSpotPreview();
+  showToast('Spot saved: '+name);
+  map.flyTo([s.lat, s.lng], Math.max(map.getZoom(), 13));
 });
 
 function clearPreviewMarker(){ if(previewMarker){ map.removeLayer(previewMarker); previewMarker = null; } }
@@ -2956,14 +3119,14 @@ searchInput.addEventListener('input', ()=>{
   let html = '';
 
   // Locations by name
-  const locHits = SPOTS.filter(s=> s.name.toLowerCase().includes(q)).slice(0, 20);
+  const locHits = SPOTS.concat(customSpots).filter(s=> s.name.toLowerCase().includes(q)).slice(0, 20);
   if(locHits.length){
     html += '<div class="subhead" style="margin-top:4px;">Locations</div>';
     html += locHits.map(s=>{
       const fill = s.ramp ? 'var(--launch)' : ZONES[s.zone].color;
       return `<div class="search-row" data-go="spot" data-id="${s.id}">
         <div style="display:flex; align-items:center; gap:8px; min-width:0;"><span class="sw" style="background:${fill}"></span><span class="nm">${s.name}</span></div>
-        <div class="mt">${s.meta.split(' \u00b7 ')[0]}</div>
+        <div class="mt">${(s.meta||'').split(' \u00b7 ')[0]}</div>
       </div>`;
     }).join('');
   }
@@ -3034,13 +3197,47 @@ const TIDE_LAG_STATIONS = [
   { name:"Halifax N (Ormond)",     lat:29.287489, lng:-81.050940, h:140, l:165 }
 ];
 function nearestTideLag(lat, lng){
-  let best = TIDE_LAG_STATIONS[0], bestD = Infinity;
-  for(const s of TIDE_LAG_STATIONS){
-    const dLat = s.lat - lat, dLng = (s.lng - lng)*Math.cos(lat*Math.PI/180);
+  // Assign a dropped pin to its GOVERNING tide station along the waterway —
+  // the closest station downstream toward Ponce Inlet — not the closest as-the-crow-flies.
+  // We approximate the channels with labeled sample points; a pin uses the station
+  // of the nearest sample. Seeded with known spots (Strickland Bay -> Three Bridges,
+  // Trout Flats -> Turnbull Bay Trestle). Add/move samples here to correct assignments.
+  const S = {};
+  for(const st of TIDE_LAG_STATIONS) S[st.name] = st;
+  const CHANNEL_SAMPLES = [
+    // near-inlet Halifax
+    ["Ponce Inlet", 29.078252, -80.910331], ["Ponce Inlet", 29.072, -80.922],
+    // Rockhouse Creek reach
+    ["Rockhouse Creek", 29.0639, -80.930], ["Rockhouse Creek", 29.066, -80.938], ["Rockhouse Creek", 29.070, -80.925],
+    // Three Bridges reach — Halifax around the bridges + Strickland Bay / Spruce Creek mouth (per user)
+    ["Three Bridges", 29.060, -80.945], ["Three Bridges", 29.065, -80.950], ["Three Bridges", 29.070, -80.958],
+    ["Three Bridges", 29.0815, -80.977], ["Three Bridges", 29.0799, -80.9794], ["Three Bridges", 29.085, -80.972],
+    ["Three Bridges", 29.075, -80.968], ["Three Bridges", 29.078, -80.982],
+    // Rose Bay
+    ["Rose Bay", 29.0997, -80.9657], ["Rose Bay", 29.095, -80.968], ["Rose Bay", 29.110, -80.972],
+    // Dunlawton Bridge (north Halifax)
+    ["Dunlawton Bridge", 29.185, -80.980], ["Dunlawton Bridge", 29.162, -80.978], ["Dunlawton Bridge", 29.175, -80.982],
+    // Turnbull Bay Trestle arm (west) — includes Trout Flats (per user)
+    ["Turnbull Bay Trestle", 29.140, -81.010], ["Turnbull Bay Trestle", 29.1497, -80.9803],
+    ["Turnbull Bay Trestle", 29.145, -80.995], ["Turnbull Bay Trestle", 29.135, -81.000], ["Turnbull Bay Trestle", 29.155, -80.988],
+    // Crooks Corner (south of inlet)
+    ["Crooks Corner", 29.030, -80.910], ["Crooks Corner", 29.045, -80.912], ["Crooks Corner", 29.020, -80.905],
+    // DJM / upper
+    ["DJM", 29.220, -81.010], ["DJM", 29.205, -81.000],
+    // Halifax N (Ormond)
+    ["Halifax N (Ormond)", 29.287, -81.051], ["Halifax N (Ormond)", 29.250, -81.030],
+    // Tomoka River (far north)
+    ["Tomoka River", 29.338, -81.088], ["Tomoka River", 29.300, -81.060],
+    // Mosquito Lagoon (far south)
+    ["Mosquito Lagoon", 28.798, -80.845], ["Mosquito Lagoon", 28.900, -80.870], ["Mosquito Lagoon", 28.980, -80.900]
+  ];
+  let bestName = "Ponce Inlet", bestD = Infinity;
+  for(const [name, slat, slng] of CHANNEL_SAMPLES){
+    const dLat = slat - lat, dLng = (slng - lng)*Math.cos(lat*Math.PI/180);
     const d = dLat*dLat + dLng*dLng;
-    if(d < bestD){ bestD = d; best = s; }
+    if(d < bestD){ bestD = d; bestName = name; }
   }
-  return best;
+  return S[bestName] || TIDE_LAG_STATIONS[0];
 }
 
 function tideHeight(dateObj){
