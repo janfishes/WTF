@@ -880,7 +880,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     header{padding:7px 8px; gap:6px;}
     .hdr-left h1{font-size:22px; line-height:24px;}
     .hdr-left .kicker{font-size:11.5px; letter-spacing:.06em; line-height:28px; margin-top:4px;}
-    .credit{font-size:10.5px; letter-spacing:.02em; flex:0 1 auto; overflow:hidden; text-overflow:ellipsis;}
+    /* Move the name out of the button row: bottom-center of the header, same line as the tagline */
+    header{position:relative;}
+    .credit{position:absolute; left:50%; transform:translateX(-50%); bottom:10px;
+            font-size:10.5px; letter-spacing:.02em; white-space:nowrap;}
     .logo-mini{width:92px;}
     .logo-wtf{font-size:12px; letter-spacing:1.5px;}
     .help-btn{width:28px; height:28px; font-size:14px;}
