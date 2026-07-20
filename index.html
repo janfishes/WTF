@@ -2004,10 +2004,10 @@ function buildClusters(){
     if(showCatches && (!speciesActive || activeSpecies.has(c.species))) groups.catch.pts.push([c.lat,c.lng]);
   });
   // Offset each cluster pill slightly around the shared centroid so they don't stack
-  const active = Object.entries(groups).filter(([,g])=>g.show && g.pts.length);
+  const active = Object.entries(groups).filter(([key,g])=> g.show && (g.pts.length || key==='catch'));
   const all = active.flatMap(([,g])=>g.pts);
-  if(!all.length) return;
-  const base = centroid(all);
+  // Center the fan on the spots if there are any, else on the map center
+  const base = all.length ? centroid(all) : [map.getCenter().lat, map.getCenter().lng];
   // Fan the pills out by an exact PIXEL radius (via project/unproject) so they never
   // overlap, at any zoom or latitude. Each pill is ~72px from the shared center.
   const z = map.getZoom();
