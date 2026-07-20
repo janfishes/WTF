@@ -827,7 +827,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:#c09aff !important; border-color:#9a6ae0 !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
-  #labelsToggle.active{background:#fff !important; color:#000 !important; border-color:#000 !important;}
+  #labelsToggle.active{background:var(--teal) !important; color:#04141e !important; border-color:var(--teal) !important;}
   .chip.util.active{border-color:var(--fog); box-shadow:0 0 0 1px var(--fog) inset;}
   #catchToggle.active{background:#000 !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
   #launchToggle{background:#000 !important; color:#e02020 !important; font-weight:700; border:1px solid #e02020 !important; box-shadow:none !important;}
@@ -871,7 +871,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .sheet-note{font-size:11.5px; color:var(--muted); line-height:1.5; margin:0 0 14px;}
   .sheet-note b{color:var(--brass); font-weight:600;}
   @media (min-width:720px){
-    .sheet{max-width:480px; left:auto; right:14px; bottom:14px; border-radius:16px; max-height:92vh;}
+    .sheet{max-width:480px; left:auto; right:14px; bottom:40px; border-radius:16px; max-height:88vh;}
     #filterWrap{max-width:680px;}
   }
   .chip-break{display:none;}
@@ -3211,7 +3211,7 @@ const buoyMarker = L.marker([BUOY_41070.lat, BUOY_41070.lng], {
 buoyMarker.bindPopup(`<div class="pop">
   <div class="pop-top"><div class="pop-name">${BUOY_41070.name}</div></div>
   <div class="pop-meta"><span>NDBC live conditions</span><span>${toDMS(BUOY_41070.lat, BUOY_41070.lng)}</span></div>
-  <div id="buoyData" style="margin-top:8px; font-size:12.5px; line-height:1.7;">Loading latest buoy data… <span style="color:var(--muted); font-size:9.5px;">(build 0720a)</span></div>
+  <div id="buoyData" style="margin-top:8px; font-size:12.5px; line-height:1.7;">Loading latest buoy data… <span style="color:var(--muted); font-size:9.5px;">(build 0720b)</span></div>
 </div>`, {maxWidth:300});
 function degToCompass(d){
   const dirs=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
@@ -3247,6 +3247,11 @@ async function buoyViaNdbc(){
   if(!r.ok) throw new Error('ndbc '+r.status);
   return parseNdbcText(await r.text());
 }
+async function buoyViaProxy(){
+  const r = await fetchT('https://api.allorigins.win/raw?url='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'), 9000);
+  if(!r.ok) throw new Error('allorigins '+r.status);
+  return parseNdbcText(await r.text());
+}
 async function buoyViaProxy2(){
   const r = await fetchT('https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'), 9000);
   if(!r.ok) throw new Error('codetabs '+r.status);
@@ -3261,11 +3266,11 @@ async function loadBuoyData(){
   const el = document.getElementById('buoyData');
   if(!el) return;
   if(buoyCache && Date.now()-buoyCacheTime < 5*60000){ el.innerHTML = buoyCache; return; }
-  el.textContent = 'Loading latest buoy data\u2026 (build 0720a)';
+  el.textContent = 'Loading latest buoy data\u2026 (build 0720b)';
   const watchdog = setTimeout(()=>{
     const t = el.textContent || '';
     if(t.indexOf('Loading') === 0 || t.indexOf('Trying') === 0){
-      el.innerHTML = 'Buoy fetch stalled unexpectedly (build 0720a). See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC 41070</a>.';
+      el.innerHTML = 'Buoy fetch stalled unexpectedly (build 0720b). See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC 41070</a>.';
     }
   }, 45000);
   try{
@@ -3281,9 +3286,9 @@ async function loadBuoyData(){
     }catch(err){ fails.push(src.name+': '+(err && err.message ? err.message : 'failed')); }
   }
   el.innerHTML = 'Couldn\u2019t reach the buoy feed right now. See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC station 41070</a>.'
-    + '<div style="color:var(--muted); font-size:9.5px; margin-top:6px;">build 0720a \u00b7 ' + fails.join(' \u00b7 ') + '</div>';
+    + '<div style="color:var(--muted); font-size:9.5px; margin-top:6px;">build 0720b \u00b7 ' + fails.join(' \u00b7 ') + '</div>';
   }catch(outer){
-    el.innerHTML = 'Buoy fetch error: ' + (outer && outer.message ? outer.message : 'unknown') + ' (build 0720a)';
+    el.innerHTML = 'Buoy fetch error: ' + (outer && outer.message ? outer.message : 'unknown') + ' (build 0720b)';
   }finally{
     clearTimeout(watchdog);
   }
