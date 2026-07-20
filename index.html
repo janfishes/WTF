@@ -3218,34 +3218,60 @@ function degToCompass(d){
   return dirs[Math.round(d/22.5)%16];
 }
 let buoyCache = null, buoyCacheTime = 0;
+function buoyRowsHTML(f, obsTime){
+  const rows = [];
+  if(f.wvht!=null) rows.push(['Wave Height (WVHT)', (f.wvht*3.281).toFixed(1)+' ft']);
+  if(f.dpd!=null)  rows.push(['Dominant Wave Period (DPD)', Math.round(f.dpd)+' sec']);
+  if(f.apd!=null)  rows.push(['Average Period (APD)', (+f.apd).toFixed(1)+' sec']);
+  if(f.mwd!=null)  rows.push(['Mean Wave Direction (MWD)', degToCompass(f.mwd)+' ( '+Math.round(f.mwd)+' deg true )']);
+  if(f.wtmp!=null) rows.push(['Water Temperature (WTMP)', (f.wtmp*9/5+32).toFixed(1)+' \u00b0F']);
+  if(!rows.length) return null;
+  return rows.map(r=>`<div style="display:flex; justify-content:space-between; gap:10px;"><span>${r[0]}:</span><b style="white-space:nowrap;">${r[1]}</b></div>`).join('')
+    + `<div style="color:var(--muted); font-size:10.5px; margin-top:6px;">Observed ${obsTime.toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})} \u00b7 NDBC 41070</div>`;
+}
+function parseNdbcText(text){
+  const lines = text.split('\n');
+  const head = lines[0].replace(/^#/,'').trim().split(/\s+/);
+  const row = lines[2].trim().split(/\s+/);
+  const g = k => { const i = head.indexOf(k); return (i<0 || row[i]==='MM') ? null : parseFloat(row[i]); };
+  const obsTime = new Date(Date.UTC(+row[0], +row[1]-1, +row[2], +row[3], +row[4]));
+  return buoyRowsHTML({wvht:g('WVHT'), dpd:g('DPD'), apd:g('APD'), mwd:g('MWD'), wtmp:g('WTMP')}, obsTime);
+}
+async function buoyViaNdbc(){
+  const r = await fetch('https://www.ndbc.noaa.gov/data/realtime2/41070.txt');
+  if(!r.ok) throw new Error('ndbc '+r.status);
+  return parseNdbcText(await r.text());
+}
+async function buoyViaErddap(){
+  const url = 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.json?time%2Cwvht%2Cdpd%2Capd%2Cmwd%2Cwtmp&station=%2241070%22&time%3E=now-3hours';
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('erddap '+r.status);
+  const j = await r.json();
+  const cols = j.table.columnNames, rows = j.table.rows;
+  if(!rows.length) throw new Error('erddap empty');
+  const gi = n => cols.indexOf(n);
+  // last row with a wave height, else last row
+  let row = rows[rows.length-1];
+  for(let i=rows.length-1;i>=0;i--){ if(rows[i][gi('wvht')]!=null){ row = rows[i]; break; } }
+  return buoyRowsHTML({wvht:row[gi('wvht')], dpd:row[gi('dpd')], apd:row[gi('apd')], mwd:row[gi('mwd')], wtmp:row[gi('wtmp')]}, new Date(row[gi('time')]));
+}
+async function buoyViaProxy(){
+  const r = await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'));
+  if(!r.ok) throw new Error('proxy '+r.status);
+  return parseNdbcText(await r.text());
+}
 async function loadBuoyData(){
   const el = document.getElementById('buoyData');
   if(!el) return;
   if(buoyCache && Date.now()-buoyCacheTime < 5*60000){ el.innerHTML = buoyCache; return; }
-  el.textContent = 'Loading latest buoy data…';
-  try{
-    const resp = await fetch('https://www.ndbc.noaa.gov/data/realtime2/41070.txt');
-    if(!resp.ok) throw new Error('HTTP '+resp.status);
-    const lines = (await resp.text()).split('\n');
-    const head = lines[0].replace(/^#/,'').trim().split(/\s+/);
-    const row = lines[2].trim().split(/\s+/);   // line 0: names, 1: units, 2: latest obs
-    const g = k => { const i = head.indexOf(k); return (i<0 || row[i]==='MM') ? null : parseFloat(row[i]); };
-    const wvht = g('WVHT'), dpd = g('DPD'), apd = g('APD'), mwd = g('MWD'), wtmp = g('WTMP');
-    const obsTime = new Date(Date.UTC(2000+ +row[0].slice(-2) || +row[0], +row[1]-1, +row[2], +row[3], +row[4]));
-    const rows = [];
-    if(wvht!=null) rows.push(['Wave Height (WVHT)', (wvht*3.281).toFixed(1)+' ft']);
-    if(dpd!=null)  rows.push(['Dominant Wave Period (DPD)', dpd+' sec']);
-    if(apd!=null)  rows.push(['Average Period (APD)', apd.toFixed(1)+' sec']);
-    if(mwd!=null)  rows.push(['Mean Wave Direction (MWD)', degToCompass(mwd)+' ( '+Math.round(mwd)+' deg true )']);
-    if(wtmp!=null) rows.push(['Water Temperature (WTMP)', (wtmp*9/5+32).toFixed(1)+' \u00b0F']);
-    if(!rows.length) throw new Error('no data fields');
-    const html = rows.map(r=>`<div style="display:flex; justify-content:space-between; gap:10px;"><span>${r[0]}:</span><b style="white-space:nowrap;">${r[1]}</b></div>`).join('')
-      + `<div style="color:var(--muted); font-size:10.5px; margin-top:6px;">Observed ${obsTime.toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})} · NDBC 41070</div>`;
-    buoyCache = html; buoyCacheTime = Date.now();
-    el.innerHTML = html;
-  }catch(err){
-    el.innerHTML = 'Couldn\u2019t reach the buoy feed (needs internet). See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC station 41070</a>.';
+  el.textContent = 'Loading latest buoy data\u2026';
+  for(const src of [buoyViaNdbc, buoyViaErddap, buoyViaProxy]){
+    try{
+      const html = await src();
+      if(html){ buoyCache = html; buoyCacheTime = Date.now(); el.innerHTML = html; return; }
+    }catch(err){ /* try next source */ }
   }
+  el.innerHTML = 'Couldn\u2019t reach the buoy feed right now. See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC station 41070</a>.';
 }
 buoyMarker.on('popupopen', loadBuoyData);
 document.getElementById('waveBtn').addEventListener('click', ()=>{
