@@ -876,6 +876,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .chip-break{display:none;}
   @media (max-width:600px){
+    /* Tide panel: full-height sheet on phones, always within the screen, clear of the FAB stack */
+    #tidePanel{ top:auto; bottom:12px; right:8px; left:8px; width:auto;
+                max-height:70dvh; height:auto; border-radius:16px; }
     /* Header: shrink so title, tagline, name, logo, and all three buttons fit on-screen */
     header{padding:7px 8px; gap:6px;}
     .hdr-left h1{font-size:22px; line-height:24px;}
@@ -1135,8 +1138,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .td-type.td-low{background:var(--brass);}
   .td-row .td-ht{margin-left:auto; color:var(--muted);}
   #tidePanel{
-    position:absolute; top:54px; right:10px; width:min(270px, 78vw);
-    max-height:min(calc(100% - 68px), calc(100dvh - 120px));
+    position:fixed; top:56px; right:10px; bottom:16px; width:min(270px, 78vw);
     z-index:1170; background:var(--navy-900); border:1px solid var(--line); border-radius:14px;
     box-shadow:0 8px 30px rgba(0,0,0,.5); display:none; flex-direction:column; overflow:hidden;
   }
