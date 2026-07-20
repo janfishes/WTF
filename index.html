@@ -2198,7 +2198,9 @@ function wirePopup(popup){
         clearDropDots();
         popup.setLatLng([s.lat, s.lng]);
       } else {
-        popup.setLatLng([s.lat, s.lng + 0.012]);
+        // Park the popup east of the easternmost drop so no dots hide behind it
+        const maxLng = Math.max(...drops.map(d=>d.lng));
+        popup.setLatLng([s.lat, Math.max(s.lng, maxLng) + 0.028]);
         list.innerHTML = drops.map((d,i)=>
           `<div class="drop-row">${String(i+1).padStart(2,' ')}. ${d.dms}<span class="dd">${d.depth? ' \u00b7 '+d.depth+'ft':''} \u00b7 ${d.nm}nm</span>${d.label? ` <span class="wn">${escapeHTML(d.label)}</span>`:''}</div>`
         ).join('');
