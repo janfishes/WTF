@@ -1122,7 +1122,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .td-type.td-low{background:var(--brass);}
   .td-row .td-ht{margin-left:auto; color:var(--muted);}
   #tidePanel{
-    position:absolute; top:54px; right:10px; bottom:14px; width:min(270px, 78vw);
+    position:absolute; top:54px; right:10px; width:min(270px, 78vw);
+    max-height:min(calc(100% - 68px), calc(100dvh - 120px));
     z-index:1170; background:var(--navy-900); border:1px solid var(--line); border-radius:14px;
     box-shadow:0 8px 30px rgba(0,0,0,.5); display:none; flex-direction:column; overflow:hidden;
   }
@@ -1137,7 +1138,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background:none; border:1px solid var(--line); color:var(--muted); border-radius:8px;
     width:26px; height:26px; cursor:pointer; font-size:12px; flex:0 0 auto;
   }
-  #tidePanelBody{overflow-y:auto; flex:1 1 auto; min-height:0; padding:12px 14px 28px;}
+  #tidePanelBody{overflow-y:auto; flex:1 1 auto; min-height:0; padding:12px 14px 36px;}
   #tidePanelBody .pop-meta{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--brass); margin-bottom:8px;}
   #toast{
     position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px);
