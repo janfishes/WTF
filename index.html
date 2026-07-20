@@ -876,6 +876,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .chip-break{display:none;}
   @media (max-width:600px){
+    /* Header: shrink so title, tagline, name, logo, and all three buttons fit on-screen */
+    header{padding:7px 8px; gap:6px;}
+    .hdr-left h1{font-size:22px; line-height:24px;}
+    .hdr-left .kicker{font-size:11.5px; letter-spacing:.06em; line-height:28px; margin-top:4px;}
+    .credit{font-size:10.5px; letter-spacing:.02em; flex:0 1 auto; overflow:hidden; text-overflow:ellipsis;}
+    .logo-mini{width:92px;}
+    .logo-wtf{font-size:12px; letter-spacing:1.5px;}
+    .help-btn{width:28px; height:28px; font-size:14px;}
+    .hdr-right{min-width:0;}
     /* Top toggles: 3 on top (Inshore, Offshore, My Catches), 2 underneath (Launches, Labels),
        centered between the species column (left) and the zoom buttons (right) */
     #filterWrap{left:96px; right:56px; top:8px; gap:4px; max-width:none;}
