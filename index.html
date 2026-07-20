@@ -1210,6 +1210,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
       Tides
     </button>
+    <button class="fab" id="waveBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 14c2.5-4 5-4 7.5 0s5 4 7.5 0 3.5-3 5-1M2 19c2.5-4 5-4 7.5 0s5 4 7.5 0 3.5-3 5-1"></path><circle cx="17" cy="6" r="2.2"></circle></svg>
+      Waves
+    </button>
     <button class="fab primary" id="logCatchFab">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
       Log Catch
@@ -3197,6 +3201,56 @@ photoInput.addEventListener('change', async ()=>{
   }
   photoStatus.textContent = statusBits.join(' \u00b7 ');
   if(gotLoc && gotTime) autoTide(true);
+});
+
+/* ===================== WAVES — NDBC Buoy 41070 (Ponce de Leon Inlet) ===================== */
+const BUOY_41070 = { lat:29.289, lng:-80.803, id:"41070", name:"Ponce Inlet Buoy 41070" };
+const buoyMarker = L.marker([BUOY_41070.lat, BUOY_41070.lng], {
+  icon: L.divIcon({ className:'', html:'<div style="width:16px;height:16px;border-radius:50%;background:#ffb703;border:2.5px solid #7a4a00;box-shadow:0 0 0 2px rgba(255,255,255,.65);"></div>', iconSize:[16,16], iconAnchor:[8,8], popupAnchor:[0,-9] })
+}).addTo(map);
+buoyMarker.bindPopup(`<div class="pop">
+  <div class="pop-top"><div class="pop-name">${BUOY_41070.name}</div></div>
+  <div class="pop-meta"><span>NDBC live conditions</span><span>${toDMS(BUOY_41070.lat, BUOY_41070.lng)}</span></div>
+  <div id="buoyData" style="margin-top:8px; font-size:12.5px; line-height:1.7;">Loading latest buoy data…</div>
+</div>`, {maxWidth:300});
+function degToCompass(d){
+  const dirs=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  return dirs[Math.round(d/22.5)%16];
+}
+let buoyCache = null, buoyCacheTime = 0;
+async function loadBuoyData(){
+  const el = document.getElementById('buoyData');
+  if(!el) return;
+  if(buoyCache && Date.now()-buoyCacheTime < 5*60000){ el.innerHTML = buoyCache; return; }
+  el.textContent = 'Loading latest buoy data…';
+  try{
+    const resp = await fetch('https://www.ndbc.noaa.gov/data/realtime2/41070.txt');
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    const lines = (await resp.text()).split('\n');
+    const head = lines[0].replace(/^#/,'').trim().split(/\s+/);
+    const row = lines[2].trim().split(/\s+/);   // line 0: names, 1: units, 2: latest obs
+    const g = k => { const i = head.indexOf(k); return (i<0 || row[i]==='MM') ? null : parseFloat(row[i]); };
+    const wvht = g('WVHT'), dpd = g('DPD'), apd = g('APD'), mwd = g('MWD'), wtmp = g('WTMP');
+    const obsTime = new Date(Date.UTC(2000+ +row[0].slice(-2) || +row[0], +row[1]-1, +row[2], +row[3], +row[4]));
+    const rows = [];
+    if(wvht!=null) rows.push(['Wave Height (WVHT)', (wvht*3.281).toFixed(1)+' ft']);
+    if(dpd!=null)  rows.push(['Dominant Wave Period (DPD)', dpd+' sec']);
+    if(apd!=null)  rows.push(['Average Period (APD)', apd.toFixed(1)+' sec']);
+    if(mwd!=null)  rows.push(['Mean Wave Direction (MWD)', degToCompass(mwd)+' ( '+Math.round(mwd)+' deg true )']);
+    if(wtmp!=null) rows.push(['Water Temperature (WTMP)', (wtmp*9/5+32).toFixed(1)+' \u00b0F']);
+    if(!rows.length) throw new Error('no data fields');
+    const html = rows.map(r=>`<div style="display:flex; justify-content:space-between; gap:10px;"><span>${r[0]}:</span><b style="white-space:nowrap;">${r[1]}</b></div>`).join('')
+      + `<div style="color:var(--muted); font-size:10.5px; margin-top:6px;">Observed ${obsTime.toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})} · NDBC 41070</div>`;
+    buoyCache = html; buoyCacheTime = Date.now();
+    el.innerHTML = html;
+  }catch(err){
+    el.innerHTML = 'Couldn\u2019t reach the buoy feed (needs internet). See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC station 41070</a>.';
+  }
+}
+buoyMarker.on('popupopen', loadBuoyData);
+document.getElementById('waveBtn').addEventListener('click', ()=>{
+  map.flyTo([BUOY_41070.lat, BUOY_41070.lng], Math.max(map.getZoom(), 10));
+  setTimeout(()=> buoyMarker.openPopup(), 650);
 });
 
 /* ===================== LOCATE ===================== */
