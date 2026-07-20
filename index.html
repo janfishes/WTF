@@ -1981,11 +1981,13 @@ let clusterMarkers = [];
 function clearClusters(){ clusterMarkers.forEach(m=>map.removeLayer(m)); clusterMarkers = []; }
 
 function makeClusterIcon(count, colorVar, label){
-  const wide = (label && label.length >= 7);   // launches / catches
-  const D = wide ? 74 : 62;
+  const longLabel = (label && label.length >= 7);          // launches / catches
+  const bigNum = String(count).length >= 3;                // 100+ needs more room
+  let D = longLabel ? 74 : 62;
+  if(bigNum) D += 12;                                        // grow the pill for 3-digit totals
   return L.divIcon({
     className:'',
-    html:`<div class="cluster-pill${wide?' wide':''}" style="background:${resolveVar(colorVar)}; width:${D}px; height:${D}px;"><span class="cn">${count}</span><span class="cl">${label}</span></div>`,
+    html:`<div class="cluster-pill${longLabel?' wide':''}" style="background:${resolveVar(colorVar)}; width:${D}px; height:${D}px;"><span class="cn">${count}</span><span class="cl">${label}</span></div>`,
     iconSize:[D,D], iconAnchor:[D/2,D/2]
   });
 }
