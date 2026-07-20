@@ -2785,11 +2785,13 @@ document.getElementById('addSpotPin').addEventListener('click', ()=>{
 });
 document.getElementById('addSpotGPS').addEventListener('click', ()=>{
   if(!navigator.geolocation){ showToast("Location isn't available on this device/browser."); return; }
-  navigator.geolocation.getCurrentPosition(pos=>{
+  showToast('Finding your location\u2026', 8000);
+  getFixOnce(pos=>{
     addSpotLoc = {lat:pos.coords.latitude, lng:pos.coords.longitude};
     showAddSpotPreview(addSpotLoc.lat, addSpotLoc.lng);
     updateAddSpotPreview();
-  }, ()=>{ showToast('Could not get your location.'); }, {enableHighAccuracy:true, timeout:8000});
+    showToast('Location set.');
+  }, ()=>{ showToast('Could not get your location.'); }, 20000);
 });
 map.on('click', (e)=>{
   if(!placingSpotPin) return;
@@ -2904,12 +2906,14 @@ map.on('click', (e)=>{
 
 document.getElementById('useMyLoc').addEventListener('click', ()=>{
   if(!navigator.geolocation){ showToast("Location isn't available on this device/browser."); return; }
-  navigator.geolocation.getCurrentPosition(pos=>{
+  showToast('Finding your location\u2026', 8000);
+  getFixOnce(pos=>{
     pendingLoc = {lat:pos.coords.latitude, lng:pos.coords.longitude, label:'My location'};
     spotSelect.value = '';
     setPreviewMarker(pendingLoc.lat, pendingLoc.lng);
     updateLocPreview();
-  }, ()=>{ showToast('Could not get your location.'); }, {enableHighAccuracy:true, timeout:8000});
+    showToast('Location set.');
+  }, ()=>{ showToast('Could not get your location.'); }, 20000);
 });
 
 function resetLogForm(){
@@ -3354,6 +3358,26 @@ document.getElementById('waveBtn').addEventListener('click', ()=>{
 /* ===================== LOCATE ===================== */
 
 let locMarker = null;
+/* Robust one-shot GPS fix: watchPosition works where getCurrentPosition can hang
+   on iOS home-screen web apps. Takes the first fix, then stops. */
+function getFixOnce(onOk, onErr, overallMs){
+  if(!navigator.geolocation){ onErr({code:2, message:'unsupported'}); return; }
+  let done = false, watchId = null;
+  const finish = (fn, arg)=>{
+    if(done) return; done = true;
+    if(watchId != null){ try{ navigator.geolocation.clearWatch(watchId); }catch(e){} }
+    clearTimeout(killer);
+    fn(arg);
+  };
+  const killer = setTimeout(()=> finish(onErr, {code:3, message:'timeout'}), overallMs || 20000);
+  try{
+    watchId = navigator.geolocation.watchPosition(
+      pos=> finish(onOk, pos),
+      err=>{ if(err && err.code === 1) finish(onErr, err); /* other errors: keep watching until timeout */ },
+      {enableHighAccuracy:true, maximumAge:15000}
+    );
+  }catch(e){ finish(onErr, {code:2, message:'exception'}); }
+}
 document.getElementById('locateBtn').addEventListener('click', function(){
   // Toggle off if a location pin is already shown
   if(locMarker){
@@ -3370,19 +3394,14 @@ document.getElementById('locateBtn').addEventListener('click', function(){
     map.setView(ll, 13);
     btn.classList.add('active-locate');
   };
-  showToast('Finding your location\u2026');
-  navigator.geolocation.getCurrentPosition(place, err=>{
+  showToast('Finding your location\u2026', 8000);
+  getFixOnce(place, err=>{
     if(err && err.code === 1){
-      showToast('Location was denied for this site. In Safari: tap aA in the address bar \u2192 Website Settings \u2192 Location \u2192 Allow.', 5200);
-      return;
+      showToast('Location was denied for this site. Allow it in Safari\u2019s website settings for janfishes.github.io.', 5200);
+    } else {
+      showToast('GPS timed out \u2014 try again outdoors or with a clear sky view.', 4200);
     }
-    // Unavailable or timed out on high accuracy — retry with relaxed settings
-    navigator.geolocation.getCurrentPosition(place, err2=>{
-      showToast(err2 && err2.code === 3
-        ? 'GPS timed out \u2014 try again outdoors or near a window.'
-        : 'Could not get a location fix right now.', 4200);
-    }, {enableHighAccuracy:false, timeout:15000, maximumAge:120000});
-  }, {enableHighAccuracy:true, timeout:9000});
+  }, 20000);
 });
 
 /* ===================== BACKUP EXPORT / IMPORT ===================== */
