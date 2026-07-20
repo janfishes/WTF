@@ -3237,18 +3237,23 @@ function parseNdbcText(text){
   const obsTime = new Date(Date.UTC(+row[0], +row[1]-1, +row[2], +row[3], +row[4]));
   return buoyRowsHTML({wvht:g('WVHT'), dpd:g('DPD'), apd:g('APD'), mwd:g('MWD'), wtmp:g('WTMP')}, obsTime);
 }
+function fetchT(url, ms){
+  const ctl = new AbortController();
+  const t = setTimeout(()=> ctl.abort(), ms);
+  return fetch(url, {signal: ctl.signal}).finally(()=> clearTimeout(t));
+}
 async function buoyViaNdbc(){
-  const r = await fetch('https://www.ndbc.noaa.gov/data/realtime2/41070.txt');
+  const r = await fetchT('https://www.ndbc.noaa.gov/data/realtime2/41070.txt', 6000);
   if(!r.ok) throw new Error('ndbc '+r.status);
   return parseNdbcText(await r.text());
 }
 async function buoyViaProxy2(){
-  const r = await fetch('https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'));
+  const r = await fetchT('https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'), 9000);
   if(!r.ok) throw new Error('codetabs '+r.status);
   return parseNdbcText(await r.text());
 }
 async function buoyViaProxy3(){
-  const r = await fetch('https://corsproxy.io/?url='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'));
+  const r = await fetchT('https://corsproxy.io/?url='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'), 9000);
   if(!r.ok) throw new Error('corsproxy '+r.status);
   return parseNdbcText(await r.text());
 }
@@ -3258,7 +3263,10 @@ async function loadBuoyData(){
   if(buoyCache && Date.now()-buoyCacheTime < 5*60000){ el.innerHTML = buoyCache; return; }
   el.textContent = 'Loading latest buoy data\u2026';
   const fails = [];
-  for(const src of [buoyViaNdbc, buoyViaProxy2, buoyViaProxy, buoyViaProxy3]){
+  const srcs = [buoyViaNdbc, buoyViaProxy2, buoyViaProxy, buoyViaProxy3];
+  for(let si=0; si<srcs.length; si++){
+    const src = srcs[si];
+    if(si>0) el.textContent = 'Trying another source ('+(si+1)+' of '+srcs.length+')\u2026';
     try{
       const html = await src();
       if(html){ buoyCache = html; buoyCacheTime = Date.now(); el.innerHTML = html; return; }
