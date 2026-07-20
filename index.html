@@ -3368,7 +3368,7 @@ const TIDE_LAG_STATIONS = [
   { name:"Turnbull Bay Trestle",   lat:29.140000, lng:-81.010000, h:105, l:120 },
   { name:"Three Bridges",          lat:29.060000, lng:-80.945000, h:75,  l:90  },
   { name:"Dunlawton Bridge",       lat:29.185000, lng:-80.980000, h:125, l:150 },
-  { name:"DJM",                    lat:29.220000, lng:-81.010000, h:135, l:160 },
+  { name:"DJM",                    lat:29.032674, lng:-80.947043, h:135, l:160 },
   /* extrapolated from the anchors above, by position in the estuary */
   { name:"Rockhouse Creek",        lat:29.063900, lng:-80.930000, h:55,  l:65  },
   { name:"Spruce Creek Mouth",     lat:29.081500, lng:-80.977000, h:95,  l:110 },
@@ -3402,8 +3402,8 @@ function nearestTideLag(lat, lng){
     ["Dunlawton Bridge", 29.185, -80.980], ["Dunlawton Bridge", 29.162, -80.978], ["Dunlawton Bridge", 29.175, -80.982],
     ["Dunlawton Bridge", 29.210, -80.995], ["Dunlawton Bridge", 29.250, -81.030],
     ["Dunlawton Bridge", 29.287, -81.051], ["Dunlawton Bridge", 29.320, -81.070],
-    // DJM — its own dataset, only right at DJM
-    ["DJM", 29.220, -81.010],
+    // DJM (810 Fairway Dr, New Smyrna canal) — verified on the water within 5 min
+    ["DJM", 29.032674, -80.947043],
     // Turnbull Bay Trestle arm (west) — includes Trout Flats (per user)
     ["Turnbull Bay Trestle", 29.140, -81.010], ["Turnbull Bay Trestle", 29.1497, -80.9803],
     ["Turnbull Bay Trestle", 29.145, -80.995], ["Turnbull Bay Trestle", 29.135, -81.000], ["Turnbull Bay Trestle", 29.155, -80.988],
@@ -3418,7 +3418,118 @@ function nearestTideLag(lat, lng){
     const d = dLat*dLat + dLng*dLng;
     if(d < bestD){ bestD = d; bestName = name; }
   }
+  // North of Dunlawton: extrapolate using the tide-wave travel rate derived from
+  // the measured Ponce -> Dunlawton lag (+125 high / +150 low over the water route).
+  if(bestName === "Dunlawton Bridge"){
+    const ext = extrapolateBeyondDunlawton(lat, lng);
+    if(ext) return ext;
+  }
+  // Main channel SOUTH of the inlet: smooth interpolation along the water route
+  // between anchors (Ponce 0/0 -> Three Bridges +75/+90 -> Crooks Corner +120/+140),
+  // extrapolating beyond Crooks Corner into Mosquito Lagoon at the observed rate.
+  // Branch areas (Strickland/Spruce, Turnbull arm, Rose Bay) keep their pinned stations.
+  if(bestName === "Ponce Inlet" || bestName === "Three Bridges" || bestName === "Crooks Corner" || bestName === "Mosquito Lagoon"){
+    const si = southMainInterp(lat, lng, bestName);
+    if(si) return si;
+  }
   return S[bestName] || TIDE_LAG_STATIONS[0];
+}
+
+/* ---- South main channel: along-route interpolation between measured anchors ---- */
+const SOUTH_ROUTE = [
+  [29.0783,-80.9103],[29.070,-80.925],[29.065,-80.935],[29.060,-80.945],  // inlet -> Three Bridges
+  [29.048,-80.932],[29.038,-80.920],[29.030,-80.910],                      // -> Crooks Corner
+  [28.980,-80.900],[28.900,-80.870],[28.798,-80.845]                       // -> Mosquito Lagoon
+];
+let _southAnchors = null;
+function southAnchors(){
+  if(!_southAnchors){
+    const tb = alongPathKm(SOUTH_ROUTE, 29.060, -80.945).s;   // Three Bridges anchor
+    const cc = alongPathKm(SOUTH_ROUTE, 29.030, -80.910).s;   // Crooks Corner anchor
+    _southAnchors = [
+      {s:0,  h:0,   l:0,   name:"Ponce Inlet"},
+      {s:tb, h:75,  l:90,  name:"Three Bridges"},
+      {s:cc, h:120, l:140, name:"Crooks Corner"}
+    ];
+  }
+  return _southAnchors;
+}
+function southMainInterp(lat, lng, bestName){
+  const proj = alongPathKm(SOUTH_ROUTE, lat, lng);
+  // Only apply on/near the main channel; branch samples sit well off this line.
+  // (Mosquito Lagoon is wide, so allow a broader corridor down there.)
+  const corridor = (bestName === "Mosquito Lagoon") ? 6.0 : 2.2;
+  if(proj.d > corridor) return null;
+  const A = southAnchors();
+  const s = proj.s;
+  const mi = (s*0.621371).toFixed(1);
+  if(s <= A[0].s) return { name:"Ponce Inlet", lat, lng, h:0, l:0 };
+  for(let i=1;i<A.length;i++){
+    if(s <= A[i].s){
+      const a=A[i-1], b=A[i], f=(s-a.s)/(b.s-a.s);
+      const h=Math.round((a.h+f*(b.h-a.h))/5)*5, l=Math.round((a.l+f*(b.l-a.l))/5)*5;
+      if(f>0.93) return { name:b.name, lat, lng, h:b.h, l:b.l };
+      if(f<0.07) return { name:a.name, lat, lng, h:a.h, l:a.l };
+      return { name:`${mi} mi from Ponce Inlet (interpolated)`, lat, lng, h, l };
+    }
+  }
+  // beyond Crooks Corner: extrapolate at the Three Bridges -> Crooks rate
+  const a=A[1], b=A[2];
+  const rateH=(b.h-a.h)/(b.s-a.s), rateL=(b.l-a.l)/(b.s-a.s);
+  const h=Math.round((b.h+rateH*(s-b.s))/5)*5, l=Math.round((b.l+rateL*(s-b.s))/5)*5;
+  const miPast=((s-b.s)*0.621371).toFixed(1);
+  return { name:`Crooks Corner +${miPast} mi south (extrapolated)`, lat, lng, h, l };
+}
+
+/* ---- Tide-wave extrapolation up the Halifax past Dunlawton Bridge ----
+   Rate (min per km) = Dunlawton lag / water distance Ponce->Dunlawton.
+   A pin farther upriver gets Dunlawton's lag + rate x extra distance. ---- */
+function segKm(aLat,aLng,bLat,bLng){
+  const dLat=(bLat-aLat)*111.32;
+  const dLng=(bLng-aLng)*111.32*Math.cos(((aLat+bLat)/2)*Math.PI/180);
+  return Math.hypot(dLat,dLng);
+}
+// Approximate channel centerline of the Halifax, inlet -> Dunlawton -> Ormond/Tomoka
+const HALIFAX_SOUTH_PATH = [
+  [29.0783,-80.9103],[29.085,-80.925],[29.093,-80.941],[29.103,-80.952],
+  [29.118,-80.962],[29.135,-80.970],[29.155,-80.975],[29.170,-80.978],[29.185,-80.980]
+];
+const HALIFAX_NORTH_PATH = [
+  [29.185,-80.980],[29.205,-80.992],[29.225,-81.008],[29.245,-81.022],
+  [29.270,-81.040],[29.300,-81.058],[29.330,-81.075],[29.360,-81.090]
+];
+function pathLengthKm(path){
+  let d=0; for(let i=1;i<path.length;i++) d+=segKm(path[i-1][0],path[i-1][1],path[i][0],path[i][1]);
+  return d;
+}
+function alongPathKm(path, lat, lng){
+  // distance along the path of the closest projection of (lat,lng)
+  let best={d:Infinity, s:0}, acc=0;
+  for(let i=1;i<path.length;i++){
+    const [aLat,aLng]=path[i-1],[bLat,bLng]=path[i];
+    const L=segKm(aLat,aLng,bLat,bLng);
+    // project in local planar coords
+    const cos=Math.cos(((aLat+bLat)/2)*Math.PI/180);
+    const ax=aLng*111.32*cos, ay=aLat*111.32, bx=bLng*111.32*cos, by=bLat*111.32;
+    const px=lng*111.32*cos, py=lat*111.32;
+    const vx=bx-ax, vy=by-ay, wx=px-ax, wy=py-ay;
+    let t=(vx*wx+vy*wy)/(vx*vx+vy*vy); t=Math.max(0,Math.min(1,t));
+    const cx=ax+t*vx, cy=ay+t*vy;
+    const d=Math.hypot(px-cx,py-cy);
+    if(d<best.d) best={d, s:acc+t*L};
+    acc+=L;
+  }
+  return best;
+}
+function extrapolateBeyondDunlawton(lat, lng){
+  const proj = alongPathKm(HALIFAX_NORTH_PATH, lat, lng);
+  if(proj.s < 0.4) return null;                     // effectively at the bridge: use base values
+  const D0 = pathLengthKm(HALIFAX_SOUTH_PATH);      // Ponce -> Dunlawton water distance
+  const rateH = 125/D0, rateL = 150/D0;             // min per km of tide-wave travel
+  const h = Math.round((125 + rateH*proj.s)/5)*5;
+  const l = Math.round((150 + rateL*proj.s)/5)*5;
+  const mi = (proj.s*0.621371).toFixed(1);
+  return { name:`Dunlawton +${mi} mi upriver (extrapolated)`, lat, lng, h, l };
 }
 
 function tideHeight(dateObj){
