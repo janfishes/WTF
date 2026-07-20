@@ -1088,13 +1088,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .th-card ol{margin:8px 0 12px; padding-left:20px;}
   .th-card li{margin-bottom:6px;}
   .cluster-pill{
-    width:54px; height:54px; border-radius:50%; border:2.5px solid #fff;
+    width:62px; height:62px; border-radius:50%; border:2.5px solid #fff;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1;
+    color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1; padding:6px; box-sizing:border-box;
   }
-  .cluster-pill{color:#fff;}
   .cluster-pill .cn{font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:800;}
-  .cluster-pill .cl{font-family:'JetBrains Mono',monospace; font-size:8px; text-transform:uppercase; letter-spacing:.04em; margin-top:1px;}
+  .cluster-pill .cl{font-family:'JetBrains Mono',monospace; font-size:8px; text-transform:uppercase; letter-spacing:.04em; margin-top:3px;}
   #themeGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
   .theme-opt{
     display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:11px;
@@ -1977,7 +1976,7 @@ function makeClusterIcon(count, colorVar, label){
   return L.divIcon({
     className:'',
     html:`<div class="cluster-pill" style="background:${resolveVar(colorVar)}"><span class="cn">${count}</span><span class="cl">${label}</span></div>`,
-    iconSize:[54,54], iconAnchor:[27,27]
+    iconSize:[62,62], iconAnchor:[31,31]
   });
 }
 function centroid(pts){
@@ -2007,11 +2006,17 @@ function buildClusters(){
   const all = active.flatMap(([,g])=>g.pts);
   if(!all.length) return;
   const base = centroid(all);
-  const spread = 0.045;
+  // Fan the pills out by an exact PIXEL radius (via project/unproject) so they never
+  // overlap, at any zoom or latitude. Each pill is ~72px from the shared center.
+  const z = map.getZoom();
+  const centerPt = map.project(base, z);
+  const radiusPx = 72;
   const angles = { inshore:225, offshore:315, launch:135, catch:45 };
   active.forEach(([key,g])=>{
     const a = (angles[key]||0) * Math.PI/180;
-    const pos = [base[0] + Math.sin(a)*spread*0.6, base[1] + Math.cos(a)*spread];
+    const pos = (active.length === 1)
+      ? base
+      : map.unproject([centerPt.x + Math.cos(a)*radiusPx, centerPt.y - Math.sin(a)*radiusPx], z);
     const m = L.marker(pos, {icon: makeClusterIcon(g.pts.length, g.color, g.label)})
       .addTo(map)
       .on('click', ()=> map.flyTo(base, CLUSTER_ZOOM + 2));
@@ -2034,6 +2039,7 @@ function updateClustering(){
   }
 }
 map.on('zoomend', updateClustering);
+map.on('moveend', ()=>{ if(clustered) buildClusters(); });
 
 applySpotLabels();
 
