@@ -3242,22 +3242,14 @@ async function buoyViaNdbc(){
   if(!r.ok) throw new Error('ndbc '+r.status);
   return parseNdbcText(await r.text());
 }
-async function buoyViaErddap(){
-  const url = 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.json?time%2Cwvht%2Cdpd%2Capd%2Cmwd%2Cwtmp&station=%2241070%22&time%3E=now-3hours';
-  const r = await fetch(url);
-  if(!r.ok) throw new Error('erddap '+r.status);
-  const j = await r.json();
-  const cols = j.table.columnNames, rows = j.table.rows;
-  if(!rows.length) throw new Error('erddap empty');
-  const gi = n => cols.indexOf(n);
-  // last row with a wave height, else last row
-  let row = rows[rows.length-1];
-  for(let i=rows.length-1;i>=0;i--){ if(rows[i][gi('wvht')]!=null){ row = rows[i]; break; } }
-  return buoyRowsHTML({wvht:row[gi('wvht')], dpd:row[gi('dpd')], apd:row[gi('apd')], mwd:row[gi('mwd')], wtmp:row[gi('wtmp')]}, new Date(row[gi('time')]));
+async function buoyViaProxy2(){
+  const r = await fetch('https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'));
+  if(!r.ok) throw new Error('codetabs '+r.status);
+  return parseNdbcText(await r.text());
 }
-async function buoyViaProxy(){
-  const r = await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'));
-  if(!r.ok) throw new Error('proxy '+r.status);
+async function buoyViaProxy3(){
+  const r = await fetch('https://corsproxy.io/?url='+encodeURIComponent('https://www.ndbc.noaa.gov/data/realtime2/41070.txt'));
+  if(!r.ok) throw new Error('corsproxy '+r.status);
   return parseNdbcText(await r.text());
 }
 async function loadBuoyData(){
@@ -3265,13 +3257,16 @@ async function loadBuoyData(){
   if(!el) return;
   if(buoyCache && Date.now()-buoyCacheTime < 5*60000){ el.innerHTML = buoyCache; return; }
   el.textContent = 'Loading latest buoy data\u2026';
-  for(const src of [buoyViaNdbc, buoyViaErddap, buoyViaProxy]){
+  const fails = [];
+  for(const src of [buoyViaNdbc, buoyViaProxy2, buoyViaProxy, buoyViaProxy3]){
     try{
       const html = await src();
       if(html){ buoyCache = html; buoyCacheTime = Date.now(); el.innerHTML = html; return; }
-    }catch(err){ /* try next source */ }
+      fails.push(src.name+': empty');
+    }catch(err){ fails.push(src.name+': '+(err && err.message ? err.message : 'failed')); }
   }
-  el.innerHTML = 'Couldn\u2019t reach the buoy feed right now. See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC station 41070</a>.';
+  el.innerHTML = 'Couldn\u2019t reach the buoy feed right now. See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC station 41070</a>.'
+    + '<div style="color:var(--muted); font-size:9.5px; margin-top:6px;">' + fails.join(' \u00b7 ') + '</div>';
 }
 buoyMarker.on('popupopen', loadBuoyData);
 document.getElementById('waveBtn').addEventListener('click', ()=>{
