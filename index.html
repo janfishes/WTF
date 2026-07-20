@@ -3211,7 +3211,7 @@ const buoyMarker = L.marker([BUOY_41070.lat, BUOY_41070.lng], {
 buoyMarker.bindPopup(`<div class="pop">
   <div class="pop-top"><div class="pop-name">${BUOY_41070.name}</div></div>
   <div class="pop-meta"><span>NDBC live conditions</span><span>${toDMS(BUOY_41070.lat, BUOY_41070.lng)}</span></div>
-  <div id="buoyData" style="margin-top:8px; font-size:12.5px; line-height:1.7;">Loading latest buoy data…</div>
+  <div id="buoyData" style="margin-top:8px; font-size:12.5px; line-height:1.7;">Loading latest buoy data… <span style="color:var(--muted); font-size:9.5px;">(build 0720a)</span></div>
 </div>`, {maxWidth:300});
 function degToCompass(d){
   const dirs=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
@@ -3261,7 +3261,14 @@ async function loadBuoyData(){
   const el = document.getElementById('buoyData');
   if(!el) return;
   if(buoyCache && Date.now()-buoyCacheTime < 5*60000){ el.innerHTML = buoyCache; return; }
-  el.textContent = 'Loading latest buoy data\u2026';
+  el.textContent = 'Loading latest buoy data\u2026 (build 0720a)';
+  const watchdog = setTimeout(()=>{
+    const t = el.textContent || '';
+    if(t.indexOf('Loading') === 0 || t.indexOf('Trying') === 0){
+      el.innerHTML = 'Buoy fetch stalled unexpectedly (build 0720a). See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC 41070</a>.';
+    }
+  }, 45000);
+  try{
   const fails = [];
   const srcs = [buoyViaNdbc, buoyViaProxy2, buoyViaProxy, buoyViaProxy3];
   for(let si=0; si<srcs.length; si++){
@@ -3274,7 +3281,12 @@ async function loadBuoyData(){
     }catch(err){ fails.push(src.name+': '+(err && err.message ? err.message : 'failed')); }
   }
   el.innerHTML = 'Couldn\u2019t reach the buoy feed right now. See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC station 41070</a>.'
-    + '<div style="color:var(--muted); font-size:9.5px; margin-top:6px;">' + fails.join(' \u00b7 ') + '</div>';
+    + '<div style="color:var(--muted); font-size:9.5px; margin-top:6px;">build 0720a \u00b7 ' + fails.join(' \u00b7 ') + '</div>';
+  }catch(outer){
+    el.innerHTML = 'Buoy fetch error: ' + (outer && outer.message ? outer.message : 'unknown') + ' (build 0720a)';
+  }finally{
+    clearTimeout(watchdog);
+  }
 }
 buoyMarker.on('popupopen', loadBuoyData);
 document.getElementById('waveBtn').addEventListener('click', ()=>{
