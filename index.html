@@ -1285,7 +1285,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap <b>🎨</b> to pick a color theme (dark options, light, and beige) — saved on your device. As you zoom out, pins collapse into count pills showing how many spots, reefs, launches, and catches are in view — tap a pill or zoom back in to expand them.</p>
 
       <div class="subhead">Tides (works offline)</div>
-      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b> for the Ponce Inlet area, computed on your device from NOAA harmonic constituents. No internet needed. Timing is a close approximation; for exact published tides use a NOAA station chart.</p>
+      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b> for the Ponce Inlet area, using <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027), shifted by each spot's local lag. No internet needed.</p>
 
       <div class="subhead">Using it offline</div>
       <p class="sheet-note">The app itself — all your spots, launches, reefs, catch log, notes, tide forecasts, search, and themes — works with <b>no internet</b>. The one thing that needs a connection is the <b>satellite map imagery</b>, which streams from map servers and can't be stored in the app. Areas you've already viewed while online stay cached by your browser for a while. So: pins, coordinates, and tides always work offline; the background photo fills in when you have signal. Add the app to your home screen for the most reliable offline launch.</p>
@@ -1747,13 +1747,15 @@ function mountBaseLayer(i){
     if(tileErrors >= 3 && tileLoads === 0 && i < TILE_PROVIDERS.length-1){
       providerIdx = i+1;
       mountBaseLayer(providerIdx);
-    } else if(tileErrors >= 4 && tileLoads === 0 && i === TILE_PROVIDERS.length-1 && !everLoadedATile){
+    } else if(tileErrors === 4 && tileLoads === 0 && i === TILE_PROVIDERS.length-1 && !everLoadedATile){
       // Wait a moment in case tiles are just slow; only show if still nothing loaded anywhere
       setTimeout(()=>{ if(!everLoadedATile && tileLoads === 0) showTileHelp(); }, 3500);
     }
   });
 }
+let tileHelpMuted = false;
 function showTileHelp(){
+  if(tileHelpMuted) return;
   if(document.getElementById('tileHelp')) return;
   const d = document.createElement('div');
   d.id = 'tileHelp';
@@ -1776,13 +1778,14 @@ function showTileHelp(){
   </div>`;
   document.body.appendChild(d);
   const kill = ()=>{ if(d && d.parentNode) d.parentNode.removeChild(d); };
-  const retry = ()=>{ kill(); everLoadedATile = false; providerIdx = 0; mountBaseLayer(0); };
-  const street = ()=>{ kill(); everLoadedATile = false; providerIdx = TILE_PROVIDERS.length-1; mountBaseLayer(TILE_PROVIDERS.length-1); };
+  const mute = ()=>{ tileHelpMuted = true; kill(); };
+  const retry = ()=>{ kill(); tileHelpMuted = false; everLoadedATile = false; providerIdx = 0; mountBaseLayer(0); };
+  const street = ()=>{ mute(); everLoadedATile = false; providerIdx = TILE_PROVIDERS.length-1; mountBaseLayer(TILE_PROVIDERS.length-1); };
   ['click','touchend'].forEach(ev=>{
     d.querySelector('#tileStreet').addEventListener(ev, (e)=>{ e.preventDefault(); street(); }, {passive:false});
     d.querySelector('#tileRetry').addEventListener(ev, (e)=>{ e.preventDefault(); retry(); }, {passive:false});
-    d.querySelector('#tileDismiss').addEventListener(ev, (e)=>{ e.preventDefault(); kill(); }, {passive:false});
-    d.querySelector('#tileClose').addEventListener(ev, (e)=>{ e.preventDefault(); kill(); }, {passive:false});
+    d.querySelector('#tileDismiss').addEventListener(ev, (e)=>{ e.preventDefault(); mute(); }, {passive:false});
+    d.querySelector('#tileClose').addEventListener(ev, (e)=>{ e.preventDefault(); mute(); }, {passive:false});
   });
   // tap outside the card also dismisses
   d.addEventListener('click', (e)=>{ if(e.target === d) kill(); });
@@ -3537,9 +3540,14 @@ function tideForecastHTML(latlng){
   const lagNote = station.h || station.l
     ? `Timing adjusted for <b>${station.name}</b> (High +${station.h} min, Low +${station.l} min after Ponce Inlet).`
     : `Timing at <b>Ponce Inlet</b> (reference station).`;
+  const winEnd = start.getTime() + 3*24*60*60000;
+  const usedNoaa = start.getTime() >= NOAA_BASE.getTime() && winEnd <= NOAA_END.getTime();
+  const srcNote = usedNoaa
+    ? `Times are <b>official NOAA predictions</b> for Ponce Inlet (station 8721138), stored on your device — no internet needed. Heights relative to mean lower low water.`
+    : `Computed offline from NOAA harmonic constituents for the Ponce Inlet area; heights are relative to mean lower low water and timing is a close approximation. Works with no internet.`;
   return `<div class="pop-meta"><span>${toDMS(latlng.lat, latlng.lng)}</span></div>
     <div class="td-wrap">${rows}</div>
-    <p style="font-size:10px; color:var(--muted); line-height:1.5; margin:10px 0 0;">${lagNote} Computed offline from NOAA harmonic constituents for the Ponce Inlet area; heights are relative to mean lower low water and timing is a close approximation. Works with no internet.</p>`;
+    <p style="font-size:10px; color:var(--muted); line-height:1.5; margin:10px 0 0;">${lagNote} ${srcNote}</p>`;
 }
 
 /* ===================== THEME PICKER ===================== */
