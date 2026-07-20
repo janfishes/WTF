@@ -3307,7 +3307,7 @@ async function loadBuoyData(){
   }, 45000);
   try{
   const fails = [];
-  const srcs = [buoyViaNdbc, buoyViaProxy2, buoyViaProxy, buoyViaProxy3];
+  const srcs = [buoyViaProxy3, buoyViaNdbc, buoyViaProxy2, buoyViaProxy];  // corsproxy first — it's the one that reliably works
   for(let si=0; si<srcs.length; si++){
     const src = srcs[si];
     if(si>0) el.textContent = 'Trying another source ('+(si+1)+' of '+srcs.length+')\u2026';
