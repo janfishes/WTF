@@ -834,6 +834,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:#c09aff !important; border-color:#9a6ae0 !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
+  /* Log-sheet species picker: make the chosen species unmistakable */
+  #logSpeciesRow .chip.sp{border-width:1.5px; transition:transform .1s ease;}
+  #logSpeciesRow .chip.sp.active{
+    background:currentColor; border-color:#fff;
+    box-shadow:0 0 0 2px var(--fog), 0 2px 8px rgba(0,0,0,.4);
+    transform:scale(1.05); font-weight:800;
+  }
+  #logSpeciesRow .chip.sp.active .lbl{color:#fff;}
+  #logSpeciesRow .chip.sp.active .dot{background:#fff !important; box-shadow:0 0 0 2px currentColor;}
+  #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#fff; font-weight:800;}
   #labelsToggle.active{background:var(--teal) !important; color:#fff !important; border-color:var(--teal) !important;}
   body[data-theme="beige"] #labelsToggle.active{background:#8a5620 !important; color:#fff !important; border-color:#6e4416 !important;}
   .chip.util.active{border-color:var(--fog); box-shadow:0 0 0 1px var(--fog) inset;}
@@ -1327,7 +1337,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap the 🔍 button next to Help (top right) and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched back on automatically.</p>
 
       <div class="subhead">Map controls</div>
-      <p class="sheet-note"><b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins (red boat markers), independently of everything else. <b>My Catches</b> shows/hides your catch diamonds. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one to show only where you've caught that species, and hide the rest. They don't change the fishing-spot pins. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
+      <p class="sheet-note"><b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>My Catches</b> shows/hides your catch diamonds. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one to show only where you've caught that species, and hide the rest. They don't change the fishing-spot pins. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
 
       <div class="subhead">Themes &amp; zoom</div>
       <p class="sheet-note">Tap <b>🎨</b> to pick a color theme (dark options, light, and beige) — saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
@@ -2101,9 +2111,25 @@ function buildClusters(){
     el.style.cssText = `background:${resolveVar(p.g.color)}; width:${p.D}px; height:${p.D}px; position:absolute; left:${Math.round(p.cx - p.D/2)}px; top:${Math.round(rowTop)}px;`;
     el.innerHTML = `<span class="cn">${p.count}</span><span class="cl">${p.g.label}</span>`;
     const target = p.g.pts.length ? centroid(p.g.pts) : base;
-    el.addEventListener('click', ()=> map.flyTo(target, CLUSTER_ZOOM + 2));
+    el.addEventListener('click', ()=>{ soloCategory(p.key); map.flyTo(target, CLUSTER_ZOOM + 2); });
     pillLayer.appendChild(el);
   });
+}
+
+// Tapping a count pill expands ONLY that category: switch the top buttons so
+// just the tapped one is on. The user can tap the other top buttons to bring
+// their pins back.
+function soloCategory(key){
+  activeZones.clear();
+  if(key === 'inshore' || key === 'offshore') activeZones.add(key);
+  showLaunches = (key === 'launch');
+  showCatches  = (key === 'catch');
+  document.querySelectorAll('#metaRow .chip[data-zone]').forEach(ch=>
+    ch.classList.toggle('active', activeZones.has(ch.dataset.zone)));
+  const lt = document.getElementById('launchToggle');
+  if(lt) lt.classList.toggle('active', showLaunches);
+  const ct = document.getElementById('catchToggle');
+  if(ct) ct.classList.toggle('active', showCatches);
 }
 function centroid(pts){
   const la = pts.reduce((s,p)=>s+p[0],0)/pts.length;
@@ -2780,7 +2806,7 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   const chip = document.createElement('div');
   chip.className = 'chip sp';
   chip.dataset.species = key;
-  chip.innerHTML = `<span class="dot" style="background:${sp.color}"></span>${sp.label}`;
+  chip.innerHTML = `<span class="dot" style="background:${sp.color}"></span><span class="lbl">${sp.label}</span>`;
   chip.style.color = sp.color;
   chip.addEventListener('click', ()=>{
     activeLogSpecies = key;
