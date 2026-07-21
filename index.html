@@ -754,14 +754,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #speciesCol{
     position:absolute; left:10px; top:10px; bottom:14px; z-index:1100;
-    display:flex; flex-direction:column; gap:4px; overflow-y:auto;
-    scrollbar-width:none; pointer-events:auto; padding-right:2px; padding-bottom:8px; align-items:flex-start;
-    /* Fade the bottom edge while there's more to scroll, hinting the list continues (e.g. Whiting) */
-    -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 22px), transparent 100%);
-            mask-image:linear-gradient(to bottom, #000 calc(100% - 22px), transparent 100%);
+    display:flex; flex-direction:column; gap:4px; overflow-y:scroll;
+    pointer-events:auto; padding-right:4px; padding-bottom:8px; align-items:flex-start;
+    scrollbar-width:thin; scrollbar-color:var(--teal) rgba(0,0,0,.6);
+    scroll-behavior:smooth; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   }
-  #speciesCol.scroll-end{ -webkit-mask-image:none; mask-image:none; }
-  #speciesCol::-webkit-scrollbar{display:none;}
+  #speciesCol::-webkit-scrollbar{ width:10px; }
+  #speciesCol::-webkit-scrollbar-track{ background:rgba(0,0,0,.6); border-radius:6px; }
+  #speciesCol::-webkit-scrollbar-thumb{
+    background:var(--teal); border-radius:6px; border:1px solid rgba(255,255,255,.75);
+    min-height:40px;
+  }
+  #speciesCol::-webkit-scrollbar-thumb:hover{ filter:brightness(1.15); }
   #speciesCol .chip{padding:5px 10px; font-size:14px; font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
   #speciesCol .chip .dot{width:7px; height:7px;}
 
@@ -2637,17 +2641,18 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   speciesCol.appendChild(chip);
 });
 
-// Bottom-edge fade only when the species list overflows and isn't scrolled to the end,
-// so it's obvious the list continues below (e.g. Whiting at the bottom).
-function updateSpeciesFade(){
-  const el = speciesCol;
-  const overflowing = el.scrollHeight > el.clientHeight + 2;
-  const atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
-  el.classList.toggle('scroll-end', !overflowing || atEnd);
+// Make sure wheel/trackpad scrolling over the species column scrolls the list
+// itself instead of falling through to the map's zoom, and stop map drag-capture.
+if(window.L && L.DomEvent){
+  L.DomEvent.disableScrollPropagation(speciesCol);
+  L.DomEvent.disableClickPropagation(speciesCol);
 }
-speciesCol.addEventListener('scroll', updateSpeciesFade, {passive:true});
-window.addEventListener('resize', updateSpeciesFade);
-requestAnimationFrame(updateSpeciesFade);
+speciesCol.addEventListener('wheel', (e)=>{
+  const before = speciesCol.scrollTop;
+  speciesCol.scrollTop += e.deltaY;
+  if(speciesCol.scrollTop !== before) e.preventDefault();
+  e.stopPropagation();
+}, {passive:false});
 
 function applyFilter(){
   if(clustered){ updateClustering(); return; }
