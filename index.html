@@ -1986,7 +1986,6 @@ function popupHTML(s){
   }).join("");
   const monthHeader = `<div class="ps-row"><div class="ps-tag" style="background:none;"></div><div class="ps-bar">${MONTH_LBL.map(m=>`<div class="mo">${m}</div>`).join("")}</div></div>`;
   const speciesBlock = rows ? `<div class="pop-species"><div class="ps-cap">Best months (Jan–Dec) — brighter = better</div>${monthHeader}${rows}</div>` : '';
-  const targetsLine = s.zone==='offshore' ? `<div class="pop-targets"><b>Bottom:</b> flounder, grouper, snapper, snook &nbsp;·&nbsp; <b>Troll/topwater:</b> kingfish, mackerel, jack, tarpon, mahi</div>` : '';
   const drops = REEF_DROPS[s.id];
   const dropsBlock = drops ? `<button class="mini-btn drops-btn" style="width:100%; margin-top:9px;">Show ${drops.length} drop${drops.length===1?"":"s"} (closest → farthest)</button><div class="drops-list"></div>` : '';
   const note = userNotes[s.id];
@@ -1994,7 +1993,6 @@ function popupHTML(s){
     <div class="pop-top"><div class="pop-name">${s.name}</div></div>
     <div class="pop-meta"><span>${s.meta}</span><span>${toDMS(s.lat, s.lng)}</span></div>
     ${s.desc? `<div class="pop-desc">${s.desc}</div>`:''}
-    ${targetsLine}
     ${s.tip? `<div class="pop-tip">${s.tip}</div>`:''}
     ${speciesBlock}
     ${dropsBlock}
