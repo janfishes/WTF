@@ -1106,9 +1106,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #pillLayer{position:absolute; inset:0; z-index:1090; pointer-events:none;}
   #pillLayer .cluster-pill{pointer-events:auto; cursor:pointer;}
   .cluster-pill{
-    width:62px; height:62px; border-radius:50%; border:2.5px solid #fff;
+    width:70px; height:70px; border-radius:50%; border:2.5px solid #fff;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1; padding:8px; box-sizing:border-box;
+    color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1; padding:12px; box-sizing:border-box;
   }
   .cluster-pill .cn{font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:800;}
   .cluster-pill .cl{font-family:'JetBrains Mono',monospace; font-size:8px; text-transform:uppercase; letter-spacing:.02em; margin-top:3px; text-align:center; line-height:1; white-space:nowrap;}
@@ -2074,10 +2074,7 @@ function buildClusters(){
     const anchor = pillAnchorEl(key);
     if(!anchor) return;
     const count = g.pts.length;
-    const longLabel = (g.label.length >= 7);
-    const bigNum = String(count).length >= 3;
-    let D = longLabel ? 66 : 56;
-    if(bigNum) D += 12;
+    const D = 70; // all pills the same size, with room for the longest label + padding
     const a = anchor.getBoundingClientRect();
     specs.push({ key, g, count, D,
       cx: a.left + a.width/2 - mapRect.left });
@@ -2100,7 +2097,7 @@ function buildClusters(){
 
   specs.forEach(p=>{
     const el = document.createElement('div');
-    el.className = 'cluster-pill' + (p.g.label.length >= 7 ? ' wide' : '');
+    el.className = 'cluster-pill';
     el.style.cssText = `background:${resolveVar(p.g.color)}; width:${p.D}px; height:${p.D}px; position:absolute; left:${Math.round(p.cx - p.D/2)}px; top:${Math.round(rowTop)}px;`;
     el.innerHTML = `<span class="cn">${p.count}</span><span class="cl">${p.g.label}</span>`;
     const target = p.g.pts.length ? centroid(p.g.pts) : base;
