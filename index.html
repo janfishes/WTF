@@ -1085,11 +1085,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* All bottom buttons: white bg + black text when off; colored fill + black text when active (like Tides) */
   .fab{background:#fff !important; border-color:#fff !important; color:#000 !important;}
   .fab svg{stroke:#000 !important;}
-  #tidePinBtn.tide-active{background:#f2c200 !important; border-color:#f2c200 !important; color:#000 !important;}
-  #tidePinBtn.tide-active svg{stroke:#000 !important;}
-  .fab.primary.pressed{background:var(--catch) !important; border-color:var(--catch) !important; color:#fff !important;}
+  /* Selected white buttons all adopt the current theme's accent color (--teal),
+     so they follow whatever theme the user picks. */
+  #tidePinBtn.tide-active{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
+  #tidePinBtn.tide-active svg{stroke:#fff !important;}
+  .fab.primary.pressed{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
   .fab.primary.pressed svg{stroke:#fff !important;}
-  #locateBtn.active-locate{background:var(--rust) !important; border-color:var(--rust) !important; color:#fff !important;}
+  #locateBtn.active-locate{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
   #locateBtn.active-locate svg{stroke:#fff !important;}
   #mapModeBtn.street-on{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
   #mapModeBtn.street-on svg{stroke:#fff !important;}
@@ -3246,6 +3248,9 @@ function openLogSheet(editCatch){
   logSheet.classList.add('open');
   logScrim.classList.add('open');
   document.getElementById('logCatchFab').classList.add('pressed');
+  // Always start at the top (Photo field) rather than wherever it was last scrolled
+  const body = logSheet.querySelector('.sheet-body');
+  if(body){ body.scrollTop = 0; requestAnimationFrame(()=>{ body.scrollTop = 0; }); }
 }
 function closeLogSheetFn(){ logSheet.classList.remove('open'); logScrim.classList.remove('open'); placingPin = false; clearPreviewMarker(); document.getElementById('logCatchFab').classList.remove('pressed'); }
 
