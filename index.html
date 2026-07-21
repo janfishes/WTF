@@ -717,16 +717,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* ---------- Header ---------- */
   header{
     flex:0 0 auto; display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
-    padding:9px 14px; background:linear-gradient(180deg,var(--navy-900),var(--navy-950));
+    padding:6px 14px; background:linear-gradient(180deg,var(--navy-900),var(--navy-950));
     border-bottom:1px solid var(--line); z-index:1050;
   }
   .hdr-left{display:inline-flex; flex-direction:column; align-items:stretch; justify-content:flex-start;}
   .hdr-left .kicker{
-    font-family:'JetBrains Mono',monospace; font-size:17px; font-weight:700; font-style:italic;
-    color:var(--teal); text-transform:none; margin-top:6px; letter-spacing:.12em; line-height:32px;
+    font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; font-style:italic;
+    color:var(--teal); text-transform:none; margin-top:3px; letter-spacing:.12em; line-height:24px;
     width:100%; display:block; white-space:nowrap;
   }
-  .hdr-left h1{font-family:'Space Grotesk',sans-serif; font-size:30px; line-height:32px; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap;}
+  .hdr-left h1{font-family:'Space Grotesk',sans-serif; font-size:26px; line-height:28px; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap;}
   .hdr-right{display:flex; align-items:center; gap:12px;}
   .help-btn{
     flex:0 0 auto; width:32px; height:32px; border-radius:50%;
@@ -754,7 +754,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #speciesCol{
     position:absolute; left:10px; top:10px; bottom:14px; z-index:1100;
-    display:flex; flex-direction:column; gap:4px; overflow-y:scroll;
+    display:flex; flex-direction:column; gap:3px; overflow-y:scroll;
     pointer-events:auto; padding-right:4px; padding-bottom:8px; align-items:flex-start;
     scrollbar-width:thin; scrollbar-color:var(--teal) rgba(0,0,0,.6);
     scroll-behavior:smooth; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
@@ -766,8 +766,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     min-height:40px;
   }
   #speciesCol::-webkit-scrollbar-thumb:hover{ filter:brightness(1.15); }
-  #speciesCol .chip{padding:5px 10px; font-size:14px; font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
-  #speciesCol .chip .dot{width:7px; height:7px;}
+  #speciesCol .chip{padding:4px 8px; font-size:12px; font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
+  #speciesCol .chip .dot{width:6px; height:6px;}
 
   /* ---------- Map ---------- */
   #map{flex:1 1 auto; position:relative; background:var(--map-bg); min-height:200px;}
@@ -915,16 +915,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     #tidePanel{ top:auto; bottom:12px; right:8px; left:8px; width:auto;
                 max-height:70dvh; height:auto; border-radius:16px; }
     /* Header: shrink so title, tagline, name, logo, and all three buttons fit on-screen */
-    header{padding:7px 8px; gap:6px;}
-    .hdr-left h1{font-size:22px; line-height:24px;}
-    .hdr-left .kicker{font-size:11.5px; letter-spacing:.06em; line-height:28px; margin-top:4px;}
+    header{padding:5px 8px; gap:5px;}
+    .hdr-left h1{font-size:19px; line-height:21px;}
+    .hdr-left .kicker{font-size:10px; letter-spacing:.05em; line-height:19px; margin-top:2px;}
     /* Move the name out of the button row: bottom-center of the header, same line as the tagline */
     header{position:relative;}
-    .credit{position:absolute; left:50%; transform:translateX(-50%); bottom:10px;
-            font-size:10.5px; letter-spacing:.02em; white-space:nowrap;}
-    .logo-mini{width:92px;}
-    .logo-wtf{font-size:12px; letter-spacing:1.5px;}
-    .help-btn{width:28px; height:28px; font-size:14px;}
+    .credit{position:absolute; left:50%; transform:translateX(-50%); bottom:6px;
+            font-size:10px; letter-spacing:.02em; white-space:nowrap;}
+    .logo-mini{width:78px;}
+    .logo-wtf{font-size:11px; letter-spacing:1.3px;}
+    .help-btn{width:25px; height:25px; font-size:13px;}
     .hdr-right{min-width:0;}
     /* Top toggles: 3 on top (Inshore, Offshore, My Catches), 2 underneath (Launches, Labels),
        centered between the species column (left) and the zoom buttons (right) */
@@ -1859,6 +1859,7 @@ function showToast(msg, duration=2400){
 
 const map = L.map('map', { zoomControl:false, attributionControl:true }).setView([29.06,-80.87],11);
 L.control.zoom({position:'topright'}).addTo(map);
+const CLUSTER_ZOOM = 9; // at/below this zoom, spots collapse into category count ("totals") pills
 L.control.scale({position:'bottomright', imperial:true, metric:false}).addTo(map);
 
 const TILE_PROVIDERS = [
@@ -1978,7 +1979,10 @@ map.getPane('tooltipPane').style.zIndex = 650;
 map.getPane('popupPane').style.zIndex = 900;
 
 const bounds = L.latLngBounds(SPOTS.filter(s=>!s.farOut).map(s=>[s.lat,s.lng]));
-map.fitBounds(bounds, {padding:[40,40]});
+// Launch zoomed out into the "totals" (cluster pill) view instead of zooming in to fit
+// every individual pin. Zooming in, or tapping a top filter button, reveals them — see
+// the CLUSTERING section below.
+map.setView(bounds.getCenter(), CLUSTER_ZOOM);
 
 // Our own inlet label, placed between the outside and inside north jetty pins
 L.marker([29.078252, -80.910331], {
@@ -2056,8 +2060,6 @@ function applySpotLabels(){
    My Catches, Launches) instead of floating over the map, so they never cover the
    PONCE DELEON INLET label or any other map content. Tapping a pill flies to that
    group's centroid. */
-
-const CLUSTER_ZOOM = 9; // at/below this zoom, collapse into category count pills
 
 const pillLayer = document.createElement('div');
 pillLayer.id = 'pillLayer';
@@ -2158,6 +2160,10 @@ function centroid(pts){
 }
 
 let clustered = false;
+// Set to true right before a "white button" (FAB) programmatically moves/zooms the map
+// (e.g. Waves, Locate Me) so that zoom doesn't silently break out of the totals view.
+// Genuine user zooming (scroll/pinch/+-) and top-button taps are unaffected.
+let suppressClusterZoom = false;
 function updateClustering(){
   const shouldCluster = map.getZoom() <= CLUSTER_ZOOM;
   if(shouldCluster){
@@ -2171,7 +2177,10 @@ function updateClustering(){
     applyFilter();
   }
 }
-map.on('zoomend', updateClustering);
+map.on('zoomend', ()=>{
+  if(suppressClusterZoom){ suppressClusterZoom = false; return; }
+  updateClustering();
+});
 window.addEventListener('resize', ()=>{ if(clustered) buildClusters(); });
 
 applySpotLabels();
@@ -2599,6 +2608,7 @@ Object.entries(ZONES).forEach(([key,z])=>{
   chip.addEventListener('click', ()=>{
     if(activeZones.has(key)){ activeZones.delete(key); chip.classList.remove('active'); }
     else { activeZones.add(key); chip.classList.add('active'); }
+    if(clustered){ clearClusters(); clustered = false; }
     applyFilter();
   });
   metaRow.appendChild(chip);
@@ -2678,11 +2688,13 @@ function applyFilter(){
 document.getElementById('launchToggle').addEventListener('click', function(){
   showLaunches = !showLaunches;
   this.classList.toggle('active', showLaunches);
+  if(clustered){ clearClusters(); clustered = false; }
   applyFilter();
 });
 document.getElementById('catchToggle').addEventListener('click', function(){
   showCatches = !showCatches;
   this.classList.toggle('active', showCatches);
+  if(clustered){ clearClusters(); clustered = false; }
   applyFilter();
 });
 document.getElementById('labelsToggle').addEventListener('click', function(){
@@ -2690,6 +2702,10 @@ document.getElementById('labelsToggle').addEventListener('click', function(){
   this.classList.toggle('active', labelsOn);
   applySpotLabels();
 });
+
+// Now that the top filter buttons exist (pills anchor under them), render the initial
+// totals view for the launch zoom level set earlier in MAP INIT.
+updateClustering();
 
 /* ===================== SEASON CHART ===================== */
 
@@ -3666,6 +3682,8 @@ async function loadBuoyData(){
 }
 buoyMarker.on('popupopen', loadBuoyData);
 document.getElementById('waveBtn').addEventListener('click', ()=>{
+  suppressClusterZoom = true;
+  setTimeout(()=>{ suppressClusterZoom = false; }, 1200); // safety reset if zoomend doesn't fire
   map.flyTo([BUOY_41070.lat, BUOY_41070.lng], Math.max(map.getZoom(), 10));
   setTimeout(()=> buoyMarker.openPopup(), 650);
 });
@@ -3706,6 +3724,8 @@ document.getElementById('locateBtn').addEventListener('click', function(){
     const ll = [pos.coords.latitude, pos.coords.longitude];
     if(locMarker) map.removeLayer(locMarker);
     locMarker = L.marker(ll, {icon:L.divIcon({className:'', html:'<div class="loc-dot"></div>', iconSize:[14,14], iconAnchor:[7,7]})}).addTo(map);
+    suppressClusterZoom = true;
+    setTimeout(()=>{ suppressClusterZoom = false; }, 1200); // safety reset if zoomend doesn't fire
     map.setView(ll, 13);
     btn.classList.add('active-locate');
   };
