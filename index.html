@@ -834,15 +834,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:#c09aff !important; border-color:#9a6ae0 !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
-  /* Log-sheet species picker: make the chosen species unmistakable */
-  #logSpeciesRow .chip.sp{border-width:1.5px; transition:transform .1s ease;}
-  #logSpeciesRow .chip.sp.active{
-    background:currentColor; border-color:#fff;
-    box-shadow:0 0 0 2px var(--fog), 0 2px 8px rgba(0,0,0,.4);
-    transform:scale(1.05); font-weight:800;
+  /* Log-sheet species picker: match the bright left-column buttons (black bg,
+     vivid brightened/saturated species color) and keep a clear selected state. */
+  #logSpeciesRow .chip.sp{
+    font-size:14px; font-weight:800; background:#000 !important;
+    border:1px solid rgba(255,255,255,.25); opacity:1 !important;
+    filter:brightness(1.6) saturate(1.2); transition:transform .1s ease, filter .1s ease;
   }
-  #logSpeciesRow .chip.sp.active .lbl{color:#fff;}
-  #logSpeciesRow .chip.sp.active .dot{background:#fff !important; box-shadow:0 0 0 2px currentColor;}
+  #logSpeciesRow .chip.sp .dot{width:7px; height:7px;}
+  #logSpeciesRow .chip.sp.active{
+    filter:brightness(1.7) saturate(1.4); border-color:#fff;
+    box-shadow:0 0 8px rgba(255,255,255,.35); transform:scale(1.05);
+  }
   #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#fff; font-weight:800;}
   #labelsToggle.active{background:var(--teal) !important; color:#fff !important; border-color:var(--teal) !important;}
   body[data-theme="beige"] #labelsToggle.active{background:#8a5620 !important; color:#fff !important; border-color:#6e4416 !important;}
