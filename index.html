@@ -1253,7 +1253,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <div id="speciesCol"></div>
   <div id="tideBanner" style="display:none;">
-    <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tap a spot for its 3-day tide forecast</span>
+    <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tap a spot for its current tide & next high/low</span>
     <button id="tideBannerCancel">Cancel</button>
   </div>
   <div id="tidePanel">
@@ -1368,7 +1368,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap <b>🎨</b> to pick a color theme (dark options, light, and beige) — saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
 
       <div class="subhead">Tides (works offline)</div>
-      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b> built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). The app picks the reference station nearest your pin <b>along the waterway</b> — on a <b>rising (flood)</b> tide the nearest station <b>upstream</b>, on a <b>falling (ebb)</b> tide the nearest station toward the <b>inlet</b> — and shows which one it used. No internet needed. Note: a per-station timing offset is only set for Ponce Inlet so far, so other stations currently show Ponce Inlet times as an approximation.</p>
+      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get the <b>current tide state and the next high and low</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). The app uses the <b>closest tide station</b> to your pin and shows which one it used. No internet needed. Note: a verified timing offset is only set for the near-inlet Halifax stations so far (Spruce Creek, Rose Bay, Dunlawton are estimates); farther stations show Ponce Inlet times as an approximation until real lags are measured.</p>
 
       <div class="subhead">Using it offline</div>
       <p class="sheet-note">Tap the <b>WTF Log fish</b> in the top corner to see the app credits.</p>
@@ -3910,16 +3910,21 @@ const TIDE_MODEL = {"speeds":{"M2":28.9841042,"S2":30.0,"N2":28.4397295,"K1":15.
    Inlet) below to make each station's timing correct. The Stevens-Connect entries are
    live sensors (need internet); their station_id is kept for reference only. */
 const TIDE_LAG_STATIONS = [
-  { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0, l:0, lagKnown:true,  src:'noaa' },
-  { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0, l:0, lagKnown:false, src:'noaa' },
-  { id:'4774',    name:'Ponce DeLeon Inlet USCG Station',lat:29.0633, lng:-80.9155, h:0, l:0, lagKnown:false, src:'stevens' },
-  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:0, l:0, lagKnown:false, src:'stevens' },
-  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:0, l:0, lagKnown:false, src:'stevens' },
-  { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:0, l:0, lagKnown:false, src:'stevens' },
-  { id:'4472',    name:'Bulow Plantation',               lat:29.4350, lng:-81.1366, h:0, l:0, lagKnown:false, src:'stevens' },
-  { id:'5286',    name:'Scottsmoor Turnbull Creek Ramp', lat:28.8985, lng:-80.8516, h:0, l:0, lagKnown:false, src:'stevens' },
-  { id:'5287',    name:'Mosquito Lagoon Biolab',         lat:28.7059, lng:-80.7203, h:0, l:0, lagKnown:false, src:'stevens' },
-  { id:'5068',    name:'Williams Point',                 lat:28.4555, lng:-80.7605, h:0, l:0, lagKnown:false, src:'stevens' }
+  // lagKind: 'reference' = the NOAA source (exact); 'estimated' = carried over from the
+  // app's prior anchors for the same near-inlet locations + propagation distance, NOT
+  // measured — verify against a live chart; 'unset' = no reliable value (shows Ponce Inlet
+  // times). Extrapolation is only trustworthy in the near-inlet Halifax corridor; the far
+  // lagoon/creek stations are left 'unset' rather than given fabricated multi-hour lags.
+  { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0,   l:0,   lagKind:'reference', src:'noaa' },
+  { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0,   l:0,   lagKind:'reference', src:'noaa' },
+  { id:'4774',    name:'Ponce DeLeon Inlet USCG Station',lat:29.0633, lng:-80.9155, h:0,   l:0,   lagKind:'reference', src:'stevens' },
+  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:95,  l:110, lagKind:'estimated', src:'stevens' },
+  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:110, l:130, lagKind:'estimated', src:'stevens' },
+  { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:125, l:150, lagKind:'estimated', src:'stevens' },
+  { id:'4472',    name:'Bulow Plantation',               lat:29.4350, lng:-81.1366, h:0,   l:0,   lagKind:'unset',     src:'stevens' },
+  { id:'5286',    name:'Scottsmoor Turnbull Creek Ramp', lat:28.8985, lng:-80.8516, h:0,   l:0,   lagKind:'unset',     src:'stevens' },
+  { id:'5287',    name:'Mosquito Lagoon Biolab',         lat:28.7059, lng:-80.7203, h:0,   l:0,   lagKind:'unset',     src:'stevens' },
+  { id:'5068',    name:'Williams Point',                 lat:28.4555, lng:-80.7605, h:0,   l:0,   lagKind:'unset',     src:'stevens' }
 ];
 
 /* ---- Waterway model. Ponce Inlet is the mouth (s = 0 km). Two arms run inland:
@@ -3986,27 +3991,17 @@ function tideRisingAt(date){
   return tideHeight(new Date(date.getTime()+6*60000)) > tideHeight(date);
 }
 function nearestTideLag(lat, lng){
-  // Choose the governing station ALONG THE WATERWAY, by tide direction right now:
-  //   flooding -> nearest station UPSTREAM of the pin (water arriving from inland)
-  //   ebbing   -> nearest station toward the INLET (water heading to the ocean)
+  // Pick the CLOSEST tide station to the pin. Distance is measured along the waterway
+  // when the pin and station are on the same arm (so a station across a barrier island
+  // isn't treated as "close"); otherwise straight-line.
   const pin = waterwayPos(lat, lng);
-  const rising = tideRisingAt(new Date());
-  const armPool = stationPositions().filter(st=> st.arm===pin.arm);
-  const pool = armPool.length ? armPool : stationPositions();
-  const EPS = 0.05; // km tolerance: a station essentially at the pin still qualifies
+  const sp = stationPositions();
   let pick=null, bestD=Infinity;
-  for(const st of pool){
-    const isUpstream = st.s >= pin.s - EPS;
-    const qualifies = rising ? isUpstream : (st.s <= pin.s + EPS);
-    if(!qualifies) continue;
-    const d = Math.abs(st.s - pin.s);
+  for(const st of sp){
+    const d = (st.arm===pin.arm) ? Math.abs(st.s - pin.s) : segKm(lat,lng,st.lat,st.lng);
     if(d < bestD){ bestD=d; pick=st; }
   }
-  if(!pick){ // nothing on the required side -> closest station along this arm
-    for(const st of pool){ const d=Math.abs(st.s-pin.s); if(d<bestD){ bestD=d; pick=st; } }
-  }
-  if(!pick) pick = stationPositions()[0];
-  return Object.assign({}, pick, { chosenBy: rising?'flood':'ebb', pinArm:pin.arm });
+  return Object.assign({}, pick || sp[0], {});
 }
 
 function tideHeight(dateObj){
@@ -4107,36 +4102,32 @@ document.getElementById('tidePanelClose').addEventListener('click', ()=>{
   if(tidePinMarker){ map.removeLayer(tidePinMarker); tidePinMarker = null; }
 });
 function tideForecastHTML(latlng){
-  const start = new Date();
-  start.setHours(0,0,0,0);
-  const station = nearestTideLag(latlng.lat, latlng.lng);
-  const ext = tideExtremes(start, 3, station);
   const now = new Date();
-  const byDay = {};
-  ext.forEach(x=>{
-    const key = x.t.toLocaleDateString('en-US',{weekday:'long', month:'short', day:'numeric'});
-    (byDay[key] = byDay[key] || []).push(x);
-  });
-  let rows = '';
-  Object.entries(byDay).slice(0,3).forEach(([day, list])=>{
-    rows += `<div class="td-day">${day}</div>`;
-    list.forEach(x=>{
-      const past = x.t < now;
-      rows += `<div class="td-row${past?' past':''}"><span class="td-type td-${x.type.toLowerCase()}">${x.type}</span><span>${fmtTideTime(x.t)}</span><span class="td-ht">${x.h.toFixed(1)} ft</span></div>`;
-    });
-  });
-  const side = station.chosenBy === 'flood' ? 'upstream' : 'inlet-ward';
-  const dirWord = station.chosenBy === 'flood' ? 'rising (flood)' : 'falling (ebb)';
+  const start = new Date(now.getTime() - 12*3600000); // scan a little behind now
+  const station = nearestTideLag(latlng.lat, latlng.lng);
+  const ext = tideExtremes(start, 2, station).sort((a,b)=> a.t - b.t);
+  const upcoming = ext.filter(x=> x.t >= now);
+  const nextHigh = upcoming.find(x=> x.type === 'High');
+  const nextLow  = upcoming.find(x=> x.type === 'Low');
+  const prev = ext.filter(x=> x.t < now).slice(-1)[0];
+  // current state: rising if the next event is a High, falling if it's a Low
+  const nextEvent = upcoming[0];
+  const rising = nextEvent ? nextEvent.type === 'High' : tideRisingAt(now);
+  const stateWord = rising ? 'Rising →' : 'Falling ↓';
+  const row = (x)=> x
+    ? `<div class="td-row"><span class="td-type td-${x.type.toLowerCase()}">${x.type}</span><span>${fmtTideTime(x.t)}</span><span class="td-ht">${x.h.toFixed(1)} ft</span></div>`
+    : '';
+  const rows = `<div class="td-day">Tide now: <b>${stateWord}</b></div>${row(nextHigh)}${row(nextLow)}`;
+
   let lagNote;
-  if(station.id === '8721138'){
-    lagNote = `On a ${dirWord} tide the nearest waterway station is <b>Ponce Inlet</b> (reference) — times are exact.`;
-  } else if(station.lagKnown && (station.h || station.l)){
-    lagNote = `Nearest <b>${side}</b> station on a ${dirWord} tide: <b>${station.name}</b> — times shifted High +${station.h} / Low +${station.l} min from Ponce Inlet.`;
+  if(station.lagKind === 'reference'){
+    lagNote = `Closest station: <b>${station.name}</b> (reference) — times are exact.`;
+  } else if(station.lagKind === 'estimated'){
+    lagNote = `Closest station: <b>${station.name}</b> — times shifted by an <b>estimated</b> lag (High +${station.h} / Low +${station.l} min from Ponce Inlet). This offset is extrapolated, not measured — check against a live tide chart before relying on it.`;
   } else {
-    lagNote = `Nearest <b>${side}</b> station on a ${dirWord} tide: <b>${station.name}</b>. No local lag is set for it yet, so the times below are <b>Ponce Inlet</b> predictions — treat the exact minutes as approximate.`;
+    lagNote = `Closest station: <b>${station.name}</b>. No reliable lag is set this far from the inlet, so the times shown are <b>Ponce Inlet</b> predictions — treat them as approximate.`;
   }
-  const winEnd = start.getTime() + 3*24*60*60000;
-  const usedNoaa = start.getTime() >= NOAA_BASE.getTime() && winEnd <= NOAA_END.getTime();
+  const usedNoaa = now.getTime() >= NOAA_BASE.getTime() && now.getTime()+2*24*3600000 <= NOAA_END.getTime();
   const srcNote = usedNoaa
     ? `Times are <b>official NOAA predictions</b> for Ponce Inlet (station 8721138), stored on your device — no internet needed. Heights relative to mean lower low water.`
     : `Computed offline from NOAA harmonic constituents for the Ponce Inlet area; heights are relative to mean lower low water and timing is a close approximation. Works with no internet.`;
