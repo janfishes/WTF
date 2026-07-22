@@ -1368,7 +1368,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap <b>🎨</b> to pick a color theme (dark options, light, and beige) — saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
 
       <div class="subhead">Tides (works offline)</div>
-      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b> for the Ponce Inlet area, using <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027), shifted by each spot's local lag. No internet needed.</p>
+      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b> built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). The app picks the reference station nearest your pin <b>along the waterway</b> — on a <b>rising (flood)</b> tide the nearest station <b>upstream</b>, on a <b>falling (ebb)</b> tide the nearest station toward the <b>inlet</b> — and shows which one it used. No internet needed. Note: a per-station timing offset is only set for Ponce Inlet so far, so other stations currently show Ponce Inlet times as an approximation.</p>
 
       <div class="subhead">Using it offline</div>
       <p class="sheet-note">Tap the <b>WTF Log fish</b> in the top corner to see the app credits.</p>
@@ -2783,11 +2783,12 @@ let placingPin = false;
 let previewMarker = null;
 let editingCatchId = null;
 
-// Verified NOAA CO-OPS tide prediction stations covering the app's footprint
+// Verified NOAA CO-OPS tide PREDICTION stations (only these have a real NOAA
+// datagetter feed). Used by the online photo-EXIF tide lookup. The Stevens-Connect
+// stations are live sensors, not NOAA prediction stations, so they can't go here.
 const TIDE_STATIONS = [
-  { id:'8721147', name:'Ponce Inlet South',            lat:29.0633, lng:-80.9161 },
-  { id:'8721138', name:'Halifax River at Ponce Inlet', lat:29.0850, lng:-80.9340 },
-  { id:'8721164', name:'New Smyrna Beach',             lat:29.0260, lng:-80.9220 }
+  { id:'8721138', name:'Ponce Inlet',                  lat:29.0817, lng:-80.9367 },
+  { id:'8721147', name:'Ponce De Leon Inlet South',    lat:29.0633, lng:-80.9158 }
 ];
 function nearestStation(lat,lng){
   let best = TIDE_STATIONS[0], bestD = Infinity;
@@ -3898,161 +3899,54 @@ searchInput.addEventListener('input', ()=>{
 
 const TIDE_MODEL = {"speeds":{"M2":28.9841042,"S2":30.0,"N2":28.4397295,"K1":15.0410686,"O1":13.9430356,"K2":30.0821373,"P1":14.9589314,"Q1":13.3986609,"M4":57.9682084,"M6":86.9523127},"amp":{"M2":1.68,"S2":0.27,"N2":0.38,"K1":0.16,"O1":0.13,"K2":0.08,"P1":0.05,"Q1":0.03,"M4":0.06,"M6":0.03},"phases":{"M2":109.50091344118118,"S2":216.0,"N2":354.2186843995005,"K1":108.70715952012688,"O1":0.7937539201229811,"K2":217.4634093604982,"P1":107.29284048080444,"Q1":245.51152488030493,"M4":219.00182688236237,"M6":328.55183063447475},"msl":2.6};
 
-/* Tide lag stations: minutes AFTER Ponce Inlet for High (h) and Low (l).
-   User-provided anchors + extrapolated points across the inshore system.
-   The nearest station to a dropped pin sets the lag. */
+/* ===================== TIDE STATIONS — waterway-aware selection =====================
+   Ten stations supplied by the app author. The offline forecast is built from ONE real
+   prediction source: official NOAA hi/low predictions for Ponce Inlet (8721138). Each
+   station's local times are produced by shifting those by a High/Low lag (minutes).
+
+   Only Ponce Inlet has a verified lag (0/0 — it IS the reference). The other stations
+   arrived without lag data, so their lag is a 0 PLACEHOLDER (lagKnown:false) and their
+   times currently equal Ponce Inlet's. Enter real High/Low offsets (minutes after Ponce
+   Inlet) below to make each station's timing correct. The Stevens-Connect entries are
+   live sensors (need internet); their station_id is kept for reference only. */
 const TIDE_LAG_STATIONS = [
-  { name:"Ponce Inlet",            lat:29.078252, lng:-80.910331, h:0,   l:0   },
-  { name:"Crooks Corner",          lat:29.030000, lng:-80.910000, h:120, l:140 },
-  { name:"Turnbull Bay Trestle",   lat:29.140000, lng:-81.010000, h:105, l:120 },
-  { name:"Three Bridges",          lat:29.060000, lng:-80.945000, h:75,  l:90  },
-  { name:"Dunlawton Bridge",       lat:29.185000, lng:-80.980000, h:125, l:150 },
-  { name:"DJM",                    lat:29.032674, lng:-80.947043, h:135, l:160 },
-  /* extrapolated from the anchors above, by position in the estuary */
-  { name:"Rockhouse Creek",        lat:29.063900, lng:-80.930000, h:55,  l:65  },
-  { name:"Spruce Creek Mouth",     lat:29.081500, lng:-80.977000, h:95,  l:110 },
-  { name:"Rose Bay",               lat:29.099700, lng:-80.965700, h:110, l:130 },
-  { name:"Mosquito Lagoon",        lat:28.798414, lng:-80.844687, h:150, l:175 },
-  { name:"Tomoka River",           lat:29.338427, lng:-81.087635, h:160, l:185 },
-  { name:"Halifax N (Ormond)",     lat:29.287489, lng:-81.050940, h:140, l:165 }
+  { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0, l:0, lagKnown:true,  src:'noaa' },
+  { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0, l:0, lagKnown:false, src:'noaa' },
+  { id:'4774',    name:'Ponce DeLeon Inlet USCG Station',lat:29.0633, lng:-80.9155, h:0, l:0, lagKnown:false, src:'stevens' },
+  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:0, l:0, lagKnown:false, src:'stevens' },
+  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:0, l:0, lagKnown:false, src:'stevens' },
+  { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:0, l:0, lagKnown:false, src:'stevens' },
+  { id:'4472',    name:'Bulow Plantation',               lat:29.4350, lng:-81.1366, h:0, l:0, lagKnown:false, src:'stevens' },
+  { id:'5286',    name:'Scottsmoor Turnbull Creek Ramp', lat:28.8985, lng:-80.8516, h:0, l:0, lagKnown:false, src:'stevens' },
+  { id:'5287',    name:'Mosquito Lagoon Biolab',         lat:28.7059, lng:-80.7203, h:0, l:0, lagKnown:false, src:'stevens' },
+  { id:'5068',    name:'Williams Point',                 lat:28.4555, lng:-80.7605, h:0, l:0, lagKnown:false, src:'stevens' }
 ];
-function nearestTideLag(lat, lng){
-  // Assign a dropped pin to its GOVERNING tide station along the waterway —
-  // the closest station downstream toward Ponce Inlet — not the closest as-the-crow-flies.
-  // We approximate the channels with labeled sample points; a pin uses the station
-  // of the nearest sample. Seeded with known spots (Strickland Bay -> Three Bridges,
-  // Trout Flats -> Turnbull Bay Trestle). Add/move samples here to correct assignments.
-  const S = {};
-  for(const st of TIDE_LAG_STATIONS) S[st.name] = st;
-  const CHANNEL_SAMPLES = [
-    // Ponce Inlet reach — inlet, Rockhouse Creek, Tata Island, and the Spruce Creek
-    // junction with the Halifax all take Ponce Inlet timing (per user)
-    ["Ponce Inlet", 29.078252, -80.910331], ["Ponce Inlet", 29.072, -80.922],
-    ["Ponce Inlet", 29.0639, -80.930], ["Ponce Inlet", 29.066, -80.938], ["Ponce Inlet", 29.070, -80.925],
-    ["Ponce Inlet", 29.081685, -80.939863],            // Tata Island
-    ["Ponce Inlet", 29.0815, -80.9770],                // Spruce Creek @ Halifax branch
-    // Three Bridges reach (NSB bridges) + Strickland Bay (per user)
-    ["Three Bridges", 29.060, -80.945], ["Three Bridges", 29.065, -80.950], ["Three Bridges", 29.070, -80.958],
-    ["Three Bridges", 29.0799, -80.9794], ["Three Bridges", 29.075, -80.968],
-    // Rose Bay proper only
-    ["Rose Bay", 29.0997, -80.9657], ["Rose Bay", 29.110, -80.972],
-    // Dunlawton Bridge — its own gauge (+125/+150); also governs the Halifax NORTH of it
-    // (bridges north of Dunlawton use Dunlawton timing per USACE gauge study, per user)
-    ["Dunlawton Bridge", 29.185, -80.980], ["Dunlawton Bridge", 29.162, -80.978], ["Dunlawton Bridge", 29.175, -80.982],
-    ["Dunlawton Bridge", 29.210, -80.995], ["Dunlawton Bridge", 29.250, -81.030],
-    ["Dunlawton Bridge", 29.287, -81.051], ["Dunlawton Bridge", 29.320, -81.070],
-    // DJM (810 Fairway Dr, New Smyrna canal) — verified on the water within 5 min
-    ["DJM", 29.032674, -80.947043],
-    // Turnbull Bay Trestle arm (west) — includes Trout Flats (per user)
-    ["Turnbull Bay Trestle", 29.140, -81.010], ["Turnbull Bay Trestle", 29.1497, -80.9803],
-    ["Turnbull Bay Trestle", 29.145, -80.995], ["Turnbull Bay Trestle", 29.135, -81.000], ["Turnbull Bay Trestle", 29.155, -80.988],
-    // Crooks Corner (south of inlet)
-    ["Crooks Corner", 29.030, -80.910], ["Crooks Corner", 29.045, -80.912], ["Crooks Corner", 29.020, -80.905],
-    // Mosquito Lagoon (far south)
-    ["Mosquito Lagoon", 28.798, -80.845], ["Mosquito Lagoon", 28.900, -80.870], ["Mosquito Lagoon", 28.980, -80.900]
-  ];
-  let bestName = "Ponce Inlet", bestD = Infinity;
-  for(const [name, slat, slng] of CHANNEL_SAMPLES){
-    const dLat = slat - lat, dLng = (slng - lng)*Math.cos(lat*Math.PI/180);
-    const d = dLat*dLat + dLng*dLng;
-    if(d < bestD){ bestD = d; bestName = name; }
-  }
-  // North of Dunlawton: extrapolate using the tide-wave travel rate derived from
-  // the measured Ponce -> Dunlawton lag (+125 high / +150 low over the water route).
-  if(bestName === "Dunlawton Bridge"){
-    const ext = extrapolateBeyondDunlawton(lat, lng);
-    if(ext) return ext;
-  }
-  // Main channel SOUTH of the inlet: smooth interpolation along the water route
-  // between anchors (Ponce 0/0 -> Three Bridges +75/+90 -> Crooks Corner +120/+140),
-  // extrapolating beyond Crooks Corner into Mosquito Lagoon at the observed rate.
-  // Branch areas (Strickland/Spruce, Turnbull arm, Rose Bay) keep their pinned stations.
-  if(bestName === "Ponce Inlet" || bestName === "Three Bridges" || bestName === "Crooks Corner" || bestName === "Mosquito Lagoon"){
-    const si = southMainInterp(lat, lng, bestName);
-    if(si) return si;
-  }
-  return S[bestName] || TIDE_LAG_STATIONS[0];
-}
 
-/* ---- South main channel: along-route interpolation between measured anchors ---- */
-const SOUTH_ROUTE = [
-  [29.0783,-80.9103],[29.070,-80.925],[29.065,-80.935],[29.060,-80.945],  // inlet -> Three Bridges
-  [29.048,-80.932],[29.038,-80.920],[29.030,-80.910],                      // -> Crooks Corner
-  [28.980,-80.900],[28.900,-80.870],[28.798,-80.845]                       // -> Mosquito Lagoon
-];
-let _southAnchors = null;
-function southAnchors(){
-  if(!_southAnchors){
-    const tb = alongPathKm(SOUTH_ROUTE, 29.060, -80.945).s;   // Three Bridges anchor
-    const cc = alongPathKm(SOUTH_ROUTE, 29.030, -80.910).s;   // Crooks Corner anchor
-    _southAnchors = [
-      {s:0,  h:0,   l:0,   name:"Ponce Inlet"},
-      {s:tb, h:75,  l:90,  name:"Three Bridges"},
-      {s:cc, h:120, l:140, name:"Crooks Corner"}
-    ];
-  }
-  return _southAnchors;
-}
-function southMainInterp(lat, lng, bestName){
-  const proj = alongPathKm(SOUTH_ROUTE, lat, lng);
-  // Only apply on/near the main channel; branch samples sit well off this line.
-  // (Mosquito Lagoon is wide, so allow a broader corridor down there.)
-  const corridor = (bestName === "Mosquito Lagoon") ? 6.0 : 2.2;
-  if(proj.d > corridor) return null;
-  const A = southAnchors();
-  const s = proj.s;
-  const mi = (s*0.621371).toFixed(1);
-  if(s <= A[0].s) return { name:"Ponce Inlet", lat, lng, h:0, l:0 };
-  for(let i=1;i<A.length;i++){
-    if(s <= A[i].s){
-      const a=A[i-1], b=A[i], f=(s-a.s)/(b.s-a.s);
-      const h=Math.round((a.h+f*(b.h-a.h))/5)*5, l=Math.round((a.l+f*(b.l-a.l))/5)*5;
-      if(f>0.93) return { name:b.name, lat, lng, h:b.h, l:b.l };
-      if(f<0.07) return { name:a.name, lat, lng, h:a.h, l:a.l };
-      return { name:`${mi} mi from Ponce Inlet (interpolated)`, lat, lng, h, l };
-    }
-  }
-  // beyond Crooks Corner: extrapolate at the Three Bridges -> Crooks rate
-  const a=A[1], b=A[2];
-  const rateH=(b.h-a.h)/(b.s-a.s), rateL=(b.l-a.l)/(b.s-a.s);
-  const h=Math.round((b.h+rateH*(s-b.s))/5)*5, l=Math.round((b.l+rateL*(s-b.s))/5)*5;
-  const miPast=((s-b.s)*0.621371).toFixed(1);
-  return { name:`Crooks Corner +${miPast} mi south (extrapolated)`, lat, lng, h, l };
-}
-
-/* ---- Tide-wave extrapolation up the Halifax past Dunlawton Bridge ----
-   Rate (min per km) = Dunlawton lag / water distance Ponce->Dunlawton.
-   A pin farther upriver gets Dunlawton's lag + rate x extra distance. ---- */
+/* ---- Waterway model. Ponce Inlet is the mouth (s = 0 km). Two arms run inland:
+   NORTH up the Halifax toward Ormond/Bulow, SOUTH down the Indian River North and
+   Mosquito Lagoon through Haulover to Williams Point. A pin (and each station) is
+   projected onto whichever arm is nearer; s = distance ALONG that arm from the inlet,
+   so a larger s means farther upstream (farther from the ocean). ---- */
 function segKm(aLat,aLng,bLat,bLng){
   const dLat=(bLat-aLat)*111.32;
   const dLng=(bLng-aLng)*111.32*Math.cos(((aLat+bLat)/2)*Math.PI/180);
   return Math.hypot(dLat,dLng);
 }
-// Approximate channel centerline of the Halifax, inlet -> Dunlawton -> Ormond/Tomoka
-const HALIFAX_SOUTH_PATH = [
-  [29.0783,-80.9103],[29.085,-80.925],[29.093,-80.941],[29.103,-80.952],
-  [29.118,-80.962],[29.135,-80.970],[29.155,-80.975],[29.170,-80.978],[29.185,-80.980]
-];
-const HALIFAX_NORTH_PATH = [
-  [29.185,-80.980],[29.205,-80.992],[29.225,-81.008],[29.245,-81.022],
-  [29.270,-81.040],[29.300,-81.058],[29.330,-81.075],[29.360,-81.090]
-];
 function pathLengthKm(path){
   let d=0; for(let i=1;i<path.length;i++) d+=segKm(path[i-1][0],path[i-1][1],path[i][0],path[i][1]);
   return d;
 }
 function alongPathKm(path, lat, lng){
-  // distance along the path of the closest projection of (lat,lng)
+  // {s: distance along path to nearest projection, d: perpendicular distance} (km)
   let best={d:Infinity, s:0}, acc=0;
   for(let i=1;i<path.length;i++){
     const [aLat,aLng]=path[i-1],[bLat,bLng]=path[i];
     const L=segKm(aLat,aLng,bLat,bLng);
-    // project in local planar coords
     const cos=Math.cos(((aLat+bLat)/2)*Math.PI/180);
     const ax=aLng*111.32*cos, ay=aLat*111.32, bx=bLng*111.32*cos, by=bLat*111.32;
     const px=lng*111.32*cos, py=lat*111.32;
     const vx=bx-ax, vy=by-ay, wx=px-ax, wy=py-ay;
-    let t=(vx*wx+vy*wy)/(vx*vx+vy*vy); t=Math.max(0,Math.min(1,t));
+    let t=(vx*wx+vy*wy)/((vx*vx+vy*vy)||1); t=Math.max(0,Math.min(1,t));
     const cx=ax+t*vx, cy=ay+t*vy;
     const d=Math.hypot(px-cx,py-cy);
     if(d<best.d) best={d, s:acc+t*L};
@@ -4060,15 +3954,59 @@ function alongPathKm(path, lat, lng){
   }
   return best;
 }
-function extrapolateBeyondDunlawton(lat, lng){
-  const proj = alongPathKm(HALIFAX_NORTH_PATH, lat, lng);
-  if(proj.s < 0.4) return null;                     // effectively at the bridge: use base values
-  const D0 = pathLengthKm(HALIFAX_SOUTH_PATH);      // Ponce -> Dunlawton water distance
-  const rateH = 125/D0, rateL = 150/D0;             // min per km of tide-wave travel
-  const h = Math.round((125 + rateH*proj.s)/5)*5;
-  const l = Math.round((150 + rateL*proj.s)/5)*5;
-  const mi = (proj.s*0.621371).toFixed(1);
-  return { name:`Dunlawton +${mi} mi upriver (extrapolated)`, lat, lng, h, l };
+// Approximate ICW centrelines (index 0 = inlet, so s grows inland)
+const WW_NORTH = [
+  [29.0783,-80.9103],[29.085,-80.925],[29.093,-80.941],[29.103,-80.952],[29.118,-80.962],
+  [29.135,-80.970],[29.150,-80.975],[29.170,-80.978],[29.185,-80.980],[29.205,-80.992],
+  [29.225,-81.008],[29.245,-81.022],[29.270,-81.040],[29.300,-81.058],[29.330,-81.075],
+  [29.360,-81.090],[29.390,-81.108],[29.415,-81.124],[29.435,-81.1366]
+];
+const WW_SOUTH = [
+  [29.0783,-80.9103],[29.070,-80.924],[29.058,-80.934],[29.043,-80.928],[29.028,-80.912],
+  [29.000,-80.893],[28.960,-80.878],[28.920,-80.863],[28.8985,-80.8516],[28.850,-80.828],
+  [28.800,-80.800],[28.760,-80.766],[28.7273,-80.7669],[28.7059,-80.7203],[28.660,-80.740],
+  [28.600,-80.750],[28.540,-80.758],[28.4555,-80.7605]
+];
+function waterwayPos(lat,lng){
+  const n=alongPathKm(WW_NORTH,lat,lng), s=alongPathKm(WW_SOUTH,lat,lng);
+  return (n.d<=s.d) ? {arm:'N', s:n.s, off:n.d} : {arm:'S', s:s.s, off:s.d};
+}
+let _stationPos=null;
+function stationPositions(){
+  if(!_stationPos){
+    _stationPos = TIDE_LAG_STATIONS.map(st=>{
+      const p = waterwayPos(st.lat, st.lng);
+      return Object.assign({}, st, {arm:p.arm, s:p.s});
+    });
+  }
+  return _stationPos;
+}
+// Rising (flood) vs falling (ebb) at a moment, read straight off the tide curve
+function tideRisingAt(date){
+  return tideHeight(new Date(date.getTime()+6*60000)) > tideHeight(date);
+}
+function nearestTideLag(lat, lng){
+  // Choose the governing station ALONG THE WATERWAY, by tide direction right now:
+  //   flooding -> nearest station UPSTREAM of the pin (water arriving from inland)
+  //   ebbing   -> nearest station toward the INLET (water heading to the ocean)
+  const pin = waterwayPos(lat, lng);
+  const rising = tideRisingAt(new Date());
+  const armPool = stationPositions().filter(st=> st.arm===pin.arm);
+  const pool = armPool.length ? armPool : stationPositions();
+  const EPS = 0.05; // km tolerance: a station essentially at the pin still qualifies
+  let pick=null, bestD=Infinity;
+  for(const st of pool){
+    const isUpstream = st.s >= pin.s - EPS;
+    const qualifies = rising ? isUpstream : (st.s <= pin.s + EPS);
+    if(!qualifies) continue;
+    const d = Math.abs(st.s - pin.s);
+    if(d < bestD){ bestD=d; pick=st; }
+  }
+  if(!pick){ // nothing on the required side -> closest station along this arm
+    for(const st of pool){ const d=Math.abs(st.s-pin.s); if(d<bestD){ bestD=d; pick=st; } }
+  }
+  if(!pick) pick = stationPositions()[0];
+  return Object.assign({}, pick, { chosenBy: rising?'flood':'ebb', pinArm:pin.arm });
 }
 
 function tideHeight(dateObj){
@@ -4187,9 +4125,16 @@ function tideForecastHTML(latlng){
       rows += `<div class="td-row${past?' past':''}"><span class="td-type td-${x.type.toLowerCase()}">${x.type}</span><span>${fmtTideTime(x.t)}</span><span class="td-ht">${x.h.toFixed(1)} ft</span></div>`;
     });
   });
-  const lagNote = station.h || station.l
-    ? `Timing adjusted for <b>${station.name}</b> (High +${station.h} min, Low +${station.l} min after Ponce Inlet).`
-    : `Timing at <b>Ponce Inlet</b> (reference station).`;
+  const side = station.chosenBy === 'flood' ? 'upstream' : 'inlet-ward';
+  const dirWord = station.chosenBy === 'flood' ? 'rising (flood)' : 'falling (ebb)';
+  let lagNote;
+  if(station.id === '8721138'){
+    lagNote = `On a ${dirWord} tide the nearest waterway station is <b>Ponce Inlet</b> (reference) — times are exact.`;
+  } else if(station.lagKnown && (station.h || station.l)){
+    lagNote = `Nearest <b>${side}</b> station on a ${dirWord} tide: <b>${station.name}</b> — times shifted High +${station.h} / Low +${station.l} min from Ponce Inlet.`;
+  } else {
+    lagNote = `Nearest <b>${side}</b> station on a ${dirWord} tide: <b>${station.name}</b>. No local lag is set for it yet, so the times below are <b>Ponce Inlet</b> predictions — treat the exact minutes as approximate.`;
+  }
   const winEnd = start.getTime() + 3*24*60*60000;
   const usedNoaa = start.getTime() >= NOAA_BASE.getTime() && winEnd <= NOAA_END.getTime();
   const srcNote = usedNoaa
