@@ -1253,7 +1253,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <div id="speciesCol"></div>
   <div id="tideBanner" style="display:none;">
-    <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tap a spot for its current tide & next high/low</span>
+    <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tap a spot for its 3-day tide forecast</span>
     <button id="tideBannerCancel">Cancel</button>
   </div>
   <div id="tidePanel">
@@ -1368,7 +1368,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap <b>🎨</b> to pick a color theme (dark options, light, and beige) — saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
 
       <div class="subhead">Tides (works offline)</div>
-      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get the <b>current tide state and the next high and low</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). The app uses the <b>closest tide station</b> to your pin and shows which one it used. No internet needed. Note: a verified timing offset is only set for the near-inlet Halifax stations so far (Spruce Creek, Rose Bay, Dunlawton are estimates); farther stations show Ponce Inlet times as an approximation until real lags are measured.</p>
+      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). The app uses the <b>closest tide station</b> to your pin and shows which one it used. No internet needed. Note: most stations now carry a <b>measured</b> timing offset calibrated from station data; <b>Mosquito Lagoon Biolab</b> and <b>Williams Point</b> aren't calibrated yet and show Ponce Inlet times as an approximation.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Calibrate tide lags from station data</button></div>
 
       <div class="subhead">Using it offline</div>
@@ -3947,21 +3947,22 @@ const TIDE_MODEL = {"speeds":{"M2":28.9841042,"S2":30.0,"N2":28.4397295,"K1":15.
    Inlet) below to make each station's timing correct. The Stevens-Connect entries are
    live sensors (need internet); their station_id is kept for reference only. */
 const TIDE_LAG_STATIONS = [
-  // lagKind: 'reference' = the NOAA source (exact); 'estimated' = carried over from the
-  // app's prior anchors for the same near-inlet locations + propagation distance, NOT
-  // measured — verify against a live chart; 'unset' = no reliable value (shows Ponce Inlet
-  // times). Extrapolation is only trustworthy in the near-inlet Halifax corridor; the far
-  // lagoon/creek stations are left 'unset' rather than given fabricated multi-hour lags.
-  { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0,   l:0,   lagKind:'reference', src:'noaa' },
-  { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0,   l:0,   lagKind:'reference', src:'noaa' },
-  { id:'4774',    name:'Ponce DeLeon Inlet USCG Station',lat:29.0633, lng:-80.9155, h:0,   l:0,   lagKind:'reference', src:'stevens' },
-  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:95,  l:110, lagKind:'estimated', src:'stevens' },
-  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:110, l:130, lagKind:'estimated', src:'stevens' },
-  { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:125, l:150, lagKind:'estimated', src:'stevens' },
-  { id:'4472',    name:'Bulow Plantation',               lat:29.4350, lng:-81.1366, h:0,   l:0,   lagKind:'unset',     src:'stevens' },
-  { id:'5286',    name:'Scottsmoor Turnbull Creek Ramp', lat:28.8985, lng:-80.8516, h:0,   l:0,   lagKind:'unset',     src:'stevens' },
-  { id:'5287',    name:'Mosquito Lagoon Biolab',         lat:28.7059, lng:-80.7203, h:0,   l:0,   lagKind:'unset',     src:'stevens' },
-  { id:'5068',    name:'Williams Point',                 lat:28.4555, lng:-80.7605, h:0,   l:0,   lagKind:'unset',     src:'stevens' }
+  // lagKind: 'reference' = the NOAA source (exact); 'measured' = calibrated from the
+  // station's own recorded water level vs the inlet; 'estimated' = extrapolated, not
+  // measured; 'unset' = no reliable value (shows Ponce Inlet times). Measured values below
+  // were calibrated by the app author from Stevens-Connect exports. Note: Bulow's negative
+  // lag is a cycle-alias of a large positive lag (prints correct clock times either way);
+  // Bulow/Scottsmoor are wind-driven lagoon/creek reaches and least reliable.
+  { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0,    l:0,   lagKind:'reference', src:'noaa' },
+  { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0,    l:0,   lagKind:'reference', src:'noaa' },
+  { id:'4774',    name:'Ponce DeLeon Inlet USCG Station',lat:29.0633, lng:-80.9155, h:-5,   l:-25, lagKind:'measured',  src:'stevens' },
+  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:95,   l:130, lagKind:'measured',  src:'stevens' },
+  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:60,   l:80,  lagKind:'measured',  src:'stevens' },
+  { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:90,   l:105, lagKind:'measured',  src:'stevens' },
+  { id:'4472',    name:'Bulow Plantation',               lat:29.4350, lng:-81.1366, h:-100, l:-60, lagKind:'measured',  src:'stevens', windDriven:true },
+  { id:'5286',    name:'Scottsmoor Turnbull Creek Ramp', lat:28.8985, lng:-80.8516, h:-10,  l:25,  lagKind:'measured',  src:'stevens', windDriven:true },
+  { id:'5287',    name:'Mosquito Lagoon Biolab',         lat:28.7059, lng:-80.7203, h:0,    l:0,   lagKind:'unset',     src:'stevens', windDriven:true },
+  { id:'5068',    name:'Williams Point',                 lat:28.4555, lng:-80.7605, h:0,    l:0,   lagKind:'unset',     src:'stevens', windDriven:true }
 ];
 
 /* ---- Waterway model. Ponce Inlet is the mouth (s = 0 km). Two arms run inland:
@@ -4139,40 +4140,48 @@ document.getElementById('tidePanelClose').addEventListener('click', ()=>{
   if(tidePinMarker){ map.removeLayer(tidePinMarker); tidePinMarker = null; }
 });
 function tideForecastHTML(latlng){
-  const now = new Date();
-  const start = new Date(now.getTime() - 12*3600000); // scan a little behind now
+  const start = new Date();
+  start.setHours(0,0,0,0);
   const station = nearestTideLag(latlng.lat, latlng.lng);
-  const ext = tideExtremes(start, 2, station).sort((a,b)=> a.t - b.t);
-  const upcoming = ext.filter(x=> x.t >= now);
-  const nextHigh = upcoming.find(x=> x.type === 'High');
-  const nextLow  = upcoming.find(x=> x.type === 'Low');
-  const prev = ext.filter(x=> x.t < now).slice(-1)[0];
-  // current state: rising if the next event is a High, falling if it's a Low
-  const nextEvent = upcoming[0];
-  const rising = nextEvent ? nextEvent.type === 'High' : tideRisingAt(now);
-  const stateWord = rising ? 'Rising →' : 'Falling ↓';
-  const row = (x)=> x
-    ? `<div class="td-row"><span class="td-type td-${x.type.toLowerCase()}">${x.type}</span><span>${fmtTideTime(x.t)}</span><span class="td-ht">${x.h.toFixed(1)} ft</span></div>`
-    : '';
-  const rows = `<div class="td-day">Tide now: <b>${stateWord}</b></div>${row(nextHigh)}${row(nextLow)}`;
+  const ext = tideExtremes(start, 3, station);
+  const now = new Date();
+  const byDay = {};
+  ext.forEach(x=>{
+    const key = x.t.toLocaleDateString('en-US',{weekday:'long', month:'short', day:'numeric'});
+    (byDay[key] = byDay[key] || []).push(x);
+  });
+  let rows = '';
+  Object.entries(byDay).slice(0,3).forEach(([day, list])=>{
+    rows += `<div class="td-day">${day}</div>`;
+    list.forEach(x=>{
+      const past = x.t < now;
+      rows += `<div class="td-row${past?' past':''}"><span class="td-type td-${x.type.toLowerCase()}">${x.type}</span><span>${fmtTideTime(x.t)}</span><span class="td-ht">${x.h.toFixed(1)} ft</span></div>`;
+    });
+  });
 
+  const sgn = v => (v>=0?'+':'−')+Math.abs(v);
   let lagNote;
   if(station.lagKind === 'reference'){
     lagNote = `Closest station: <b>${station.name}</b> (reference) — times are exact.`;
   } else if(station.lagKind === 'measured'){
-    lagNote = `Closest station: <b>${station.name}</b> — times shifted by a <b>measured</b> lag (High +${station.h} / Low +${station.l} min from Ponce Inlet, from ${station.n||'?'} matched cycles ±${Math.round(station.sd||0)} min).`;
+    const detail = station.n ? ` from ${station.n} matched cycles ±${Math.round(station.sd||0)} min` : ' calibrated from station water-level data';
+    lagNote = `Closest station: <b>${station.name}</b> — times shifted by a <b>measured</b> lag (High ${sgn(station.h)} / Low ${sgn(station.l)} min vs Ponce Inlet,${detail}).`;
   } else if(station.lagKind === 'estimated'){
-    lagNote = `Closest station: <b>${station.name}</b> — times shifted by an <b>estimated</b> lag (High +${station.h} / Low +${station.l} min from Ponce Inlet). This offset is extrapolated, not measured — check against a live tide chart before relying on it.`;
+    lagNote = `Closest station: <b>${station.name}</b> — times shifted by an <b>estimated</b> lag (High ${sgn(station.h)} / Low ${sgn(station.l)} min from Ponce Inlet). This offset is extrapolated, not measured — check against a live tide chart before relying on it.`;
   } else {
     lagNote = `Closest station: <b>${station.name}</b>. No reliable lag is set this far from the inlet, so the times shown are <b>Ponce Inlet</b> predictions — treat them as approximate.`;
   }
-  const usedNoaa = now.getTime() >= NOAA_BASE.getTime() && now.getTime()+2*24*3600000 <= NOAA_END.getTime();
+  const winEnd = start.getTime() + 3*24*60*60000;
+  const usedNoaa = start.getTime() >= NOAA_BASE.getTime() && winEnd <= NOAA_END.getTime();
   const srcNote = usedNoaa
     ? `Times are <b>official NOAA predictions</b> for Ponce Inlet (station 8721138), stored on your device — no internet needed. Heights relative to mean lower low water.`
     : `Computed offline from NOAA harmonic constituents for the Ponce Inlet area; heights are relative to mean lower low water and timing is a close approximation. Works with no internet.`;
+  const windNote = station.windDriven
+    ? `<p style="font-size:10px; color:var(--brass); line-height:1.5; margin:6px 0 0;">⚠ ${station.name} is a shallow, wind-driven reach. Sustained or strong wind can push the real tide off these times by an hour or more, and hold water in or out longer than predicted — treat the timing as approximate and read the conditions on the water.</p>`
+    : '';
   return `<div class="pop-meta"><span>${toDMS(latlng.lat, latlng.lng)}</span></div>
     <div class="td-wrap">${rows}</div>
-    <p style="font-size:10px; color:var(--muted); line-height:1.5; margin:10px 0 0;">${lagNote} ${srcNote}</p>`;
+    <p style="font-size:10px; color:var(--muted); line-height:1.5; margin:10px 0 0;">${lagNote} ${srcNote}</p>${windNote}`;
 }
 
 /* ===================== TIDE LAG CALIBRATOR =====================
@@ -4313,15 +4322,37 @@ function findExtrema(series){
   }
   return kept;
 }
+function inletRefExtremes(t0, t1){
+  // Inlet high/low events across [t0,t1]: use the exact stored NOAA table where it
+  // covers, and the offline harmonic model (approximate) for dates outside it, so an
+  // export from before Jul 2026 (or after Jul 2027) can still be matched.
+  const base = NOAA_BASE.getTime(), end = NOAA_END.getTime(), pad = 6*3600000;
+  const evs = [];
+  if(t1 >= base && t0 <= end){
+    for(const e of getNoaaEvents()){ const t=e.t.getTime(); if(t>=t0-pad && t<=t1+pad) evs.push({t:e.t, type:e.type, approx:false}); }
+  }
+  if(t0 < base){
+    const s = new Date(t0 - pad), days = Math.ceil((Math.min(t1, base) - s.getTime())/86400000)+1;
+    tideExtremesHarmonic(s, Math.max(1,days), {h:0,l:0}).forEach(e=> evs.push({t:e.t, type:e.type, approx:true}));
+  }
+  if(t1 > end){
+    const s = new Date(Math.max(t0, end) - pad), days = Math.ceil((t1 - s.getTime())/86400000)+1;
+    tideExtremesHarmonic(s, Math.max(1,days), {h:0,l:0}).forEach(e=> evs.push({t:e.t, type:e.type, approx:true}));
+  }
+  return evs;
+}
 function computeLagFromExtrema(extrema){
-  const noaa = getNoaaEvents();
-  const nH = noaa.filter(e=>e.type==='High'), nL = noaa.filter(e=>e.type==='Low');
-  function diffs(list, ref){
+  if(!extrema.length) return { h:{n:0}, l:{n:0}, approx:0 };
+  const times = extrema.map(e=>e.t.getTime());
+  const ref = inletRefExtremes(Math.min(...times), Math.max(...times));
+  const nH = ref.filter(e=>e.type==='High'), nL = ref.filter(e=>e.type==='Low');
+  let approxUsed = 0;
+  function diffs(list, refList){
     const ds=[];
     for(const e of list){
       let best=null, bd=Infinity;
-      for(const r of ref){ const d=Math.abs(e.t-r.t); if(d<bd){bd=d; best=r;} }
-      if(best){ const mins=(e.t-best.t)/60000; if(Math.abs(mins)<=210) ds.push(mins); }
+      for(const r of refList){ const d=Math.abs(e.t-r.t); if(d<bd){bd=d; best=r;} }
+      if(best){ const mins=(e.t-best.t)/60000; if(Math.abs(mins)<=210){ ds.push(mins); if(best.approx) approxUsed++; } }
     }
     return ds;
   }
@@ -4332,11 +4363,13 @@ function computeLagFromExtrema(extrema){
     return {n:arr.length, mean, sd};
   };
   return { h: stat(diffs(extrema.filter(e=>e.type==='High'), nH)),
-           l: stat(diffs(extrema.filter(e=>e.type==='Low'),  nL)) };
+           l: stat(diffs(extrema.filter(e=>e.type==='Low'),  nL)),
+           approx: approxUsed };
 }
 
 // --- UI wiring ---
 let calPending = null;
+function lagSgn(v){ return (v>=0?'+':'\u2212')+Math.abs(v); }
 const tideCalSheet  = document.getElementById('tideCalSheet');
 const tideCalScrim  = document.getElementById('tideCalScrim');
 function calStationName(id){ const s=TIDE_LAG_STATIONS.find(x=>x.id===id); return s?s.name:id; }
@@ -4348,14 +4381,14 @@ function refreshCalCurrent(){
   const kind = st.lagKind==='measured' ? `measured (${st.n||'?'} cycles, ±${Math.round(st.sd||0)} min)`
              : st.lagKind==='estimated' ? 'estimated (not measured)'
              : st.lagKind==='reference' ? 'reference — no lag' : 'not set';
-  el.innerHTML = `Current lag for <b>${st.name}</b>: High +${st.h} / Low +${st.l} min — <i>${kind}</i>.`;
+  el.innerHTML = `Current lag for <b>${st.name}</b>: High ${lagSgn(st.h)} / Low ${lagSgn(st.l)} min — <i>${kind}</i>.`;
 }
 function refreshCalSaved(){
   const el = document.getElementById('calSavedList');
   const ids = Object.keys(tideLagOverrides);
   if(!ids.length){ el.textContent='None yet.'; return; }
   el.innerHTML = ids.map(id=>{ const o=tideLagOverrides[id];
-    return `<div style="display:flex; justify-content:space-between; gap:8px; padding:3px 0;"><span>${calStationName(id)}</span><span class="td-ht">High +${o.h} / Low +${o.l} <button class="mini-btn" data-clear="${id}" style="padding:1px 7px; margin-left:6px;">✕</button></span></div>`;
+    return `<div style="display:flex; justify-content:space-between; gap:8px; padding:3px 0;"><span>${calStationName(id)}</span><span class="td-ht">High ${lagSgn(o.h)} / Low ${lagSgn(o.l)} <button class="mini-btn" data-clear="${id}" style="padding:1px 7px; margin-left:6px;">✕</button></span></div>`;
   }).join('');
   el.querySelectorAll('[data-clear]').forEach(b=> b.addEventListener('click', async ()=>{
     delete tideLagOverrides[b.dataset.clear]; await saveTideLags();
@@ -4393,11 +4426,6 @@ function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.cla
     saveBtn.style.display='none'; calPending=null;
     const series = parseSeries(text, utc);
     if(series.length < 12){ res.innerHTML = `<span style="color:var(--brass);">Couldn't read enough rows. I need a timestamp column and a water-level column, at least a day or two of data.</span>`; return; }
-    // overlap with stored NOAA range
-    const t0=series[0].t.getTime(), t1=series[series.length-1].t.getTime();
-    if(t1 < NOAA_BASE.getTime() || t0 > NOAA_END.getTime()){
-      res.innerHTML = `<span style="color:var(--brass);">These timestamps fall outside the stored NOAA inlet table (Jul 2026 – Jul 2027), so I can't match them. Export a recent period.</span>`; return;
-    }
     const ext = findExtrema(series);
     const lag = computeLagFromExtrema(ext);
     if(!lag.h.n && !lag.l.n){ res.innerHTML = `<span style="color:var(--brass);">Found ${ext.length} turning points but couldn't match them to inlet highs/lows. If the offset looks like whole hours, try the “Times are UTC” box.</span>`; return; }
@@ -4409,11 +4437,12 @@ function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.cla
     else if(n>=4 && sd<=45){ verdict='Usable — export a longer period for more confidence.'; color='var(--brass)'; }
     else { verdict='Not reliable yet — export ~1–2 weeks and recompute.'; color='var(--brass)'; }
     const tzWarn = ([H,L].some(x=> x!==null && Math.abs(Math.abs(x)-240)<25) ) ? `<div style="color:var(--brass); margin-top:4px;">That's near a 4-hour (EDT) offset — if the export is in UTC, tick the box and recompute.</div>` : '';
+    const approxWarn = lag.approx ? `<div style="color:var(--brass); margin-top:4px;">${lag.approx} match(es) fell outside the stored NOAA table (Jul 2026–Jul 2027) and were matched against the offline harmonic model instead — slightly less precise, but fine for an average over many cycles.</div>` : '';
     res.innerHTML = `<div class="loc-preview">
         <div>Detected <b>${ext.length}</b> turning points.</div>
         <div style="margin-top:4px;">High lag: <b>${H!==null?('+'+H+' min'):'—'}</b> ${lag.h.n?`(${lag.h.n} matched, ±${Math.round(lag.h.sd)} min)`:''}</div>
         <div>Low lag: <b>${L!==null?('+'+L+' min'):'—'}</b> ${lag.l.n?`(${lag.l.n} matched, ±${Math.round(lag.l.sd)} min)`:''}</div>
-        <div style="color:${color}; margin-top:6px;">${verdict}</div>${tzWarn}
+        <div style="color:${color}; margin-top:6px;">${verdict}</div>${tzWarn}${approxWarn}
       </div>`;
     if(H!==null && L!==null){ calPending = {id, h:H, l:L, n, sd:Math.round(sd)}; saveBtn.style.display=''; }
   });
