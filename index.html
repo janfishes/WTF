@@ -1369,6 +1369,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Tides (works offline)</div>
       <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get the <b>current tide state and the next high and low</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). The app uses the <b>closest tide station</b> to your pin and shows which one it used. No internet needed. Note: a verified timing offset is only set for the near-inlet Halifax stations so far (Spruce Creek, Rose Bay, Dunlawton are estimates); farther stations show Ponce Inlet times as an approximation until real lags are measured.</p>
+      <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Calibrate tide lags from station data</button></div>
 
       <div class="subhead">Using it offline</div>
       <p class="sheet-note">Tap the <b>WTF Log fish</b> in the top corner to see the app credits.</p>
@@ -1501,6 +1502,40 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="restoreBuiltinBtn">↺ Restore built-in spots</button>
     </div>
     <p class="sheet-note" style="margin-top:6px;">Restoring brings back any built-in spots you edited or deleted. Your own added spots are not affected.</p>
+  </div>
+</div>
+
+<div class="scrim" id="tideCalScrim"></div>
+<div class="sheet" id="tideCalSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2>Calibrate tide lags</h2>
+    <button class="close" id="tideCalClose">CLOSE ✕</button>
+  </div>
+  <div class="sheet-body">
+    <p class="sheet-note">Turn a station's recorded water level into a real timing offset. The app already stores the inlet's NOAA high/low times, so this works offline once you paste the data. Pick a station, paste (or upload) a Stevens-Connect export, and tap Compute. If it looks solid, Save it — the tide panel will use it right away.</p>
+    <label class="field-label">Station</label>
+    <select id="calStation" style="width:100%; box-sizing:border-box; padding:8px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px;"></select>
+    <div class="loc-preview" id="calCurrent" style="margin-top:8px;">—</div>
+    <label class="field-label" style="margin-top:12px;">Exported data (CSV or pasted rows)</label>
+    <p class="sheet-note" style="margin:2px 0 6px;">Needs a timestamp and a water-level column (extra columns like sigma/temp are fine — it finds the level column). Best export: <b>Normalized interval</b> or <b>Raw readings</b> in CSV at 6–15 min. Avoid hourly/daily aggregates (too coarse to time a high/low). NOAA CO-OPS / Ready formats work too, but are usually UTC — tick the box below. On the dashboard: station → <b>Exports</b> (or Trends) → <b>1w</b> or a custom 1–2 week range. Two weeks gives the most trustworthy result.</p>
+    <textarea id="calData" placeholder="2026-07-20 08:12, 3.41&#10;2026-07-20 08:24, 3.55&#10;..." style="width:100%; box-sizing:border-box; height:110px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:11px; padding:8px;"></textarea>
+    <div class="loc-btns" style="margin-top:8px; align-items:center;">
+      <label class="mini-btn" style="cursor:pointer;">📄 Upload file<input type="file" id="calFile" accept=".csv,.txt,.tsv" style="display:none;"></label>
+      <label style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px;"><input type="checkbox" id="calUtc"> Times are UTC</label>
+    </div>
+    <div class="loc-btns" style="margin-top:12px;">
+      <button class="mini-btn" id="calCompute" style="font-weight:700;">Compute lag</button>
+    </div>
+    <div id="calResult" style="margin-top:12px;"></div>
+    <div class="loc-btns" style="margin-top:12px;">
+      <button class="mini-btn" id="calSave" style="font-weight:700; display:none;">Save lag to station</button>
+    </div>
+    <p class="sheet-note" style="margin-top:16px;">Saved measured lags:</p>
+    <div id="calSavedList" class="loc-preview">None yet.</div>
+    <div class="loc-btns" style="margin-top:10px;">
+      <button class="mini-btn" id="calResetAll">↺ Clear all measured lags</button>
+    </div>
   </div>
 </div>
 
@@ -2203,7 +2238,7 @@ applySpotLabels();
 
 const STORAGE_KEY = 'catch-log';
 const NOTES_KEY = 'spot-notes';
-const APP_KEYS = [STORAGE_KEY, NOTES_KEY, 'theme', 'spot-overrides', 'custom-spots'];
+const APP_KEYS = [STORAGE_KEY, NOTES_KEY, 'theme', 'spot-overrides', 'custom-spots', 'tide-lags'];
 let catches = [];
 let storageMode = 'memory';
 let idb = null;
@@ -2297,6 +2332,8 @@ async function loadAll(){
   await loadSpotOverrides();
   applySpotOverrides();
   await loadCustomSpots();
+  await loadTideLags();
+  applyTideLags();
   renderCatchMarkers();
   renderCatchList();
   updateCatchCount();
@@ -4122,6 +4159,8 @@ function tideForecastHTML(latlng){
   let lagNote;
   if(station.lagKind === 'reference'){
     lagNote = `Closest station: <b>${station.name}</b> (reference) — times are exact.`;
+  } else if(station.lagKind === 'measured'){
+    lagNote = `Closest station: <b>${station.name}</b> — times shifted by a <b>measured</b> lag (High +${station.h} / Low +${station.l} min from Ponce Inlet, from ${station.n||'?'} matched cycles ±${Math.round(station.sd||0)} min).`;
   } else if(station.lagKind === 'estimated'){
     lagNote = `Closest station: <b>${station.name}</b> — times shifted by an <b>estimated</b> lag (High +${station.h} / Low +${station.l} min from Ponce Inlet). This offset is extrapolated, not measured — check against a live tide chart before relying on it.`;
   } else {
@@ -4135,6 +4174,264 @@ function tideForecastHTML(latlng){
     <div class="td-wrap">${rows}</div>
     <p style="font-size:10px; color:var(--muted); line-height:1.5; margin:10px 0 0;">${lagNote} ${srcNote}</p>`;
 }
+
+/* ===================== TIDE LAG CALIBRATOR =====================
+   Compute a measured High/Low lag for a station from its recorded water level,
+   matched against the inlet's stored NOAA high/low times. All on-device. */
+const TIDE_LAGS_KEY = 'tide-lags';
+let tideLagOverrides = {};
+async function loadTideLags(){
+  try{ const raw = await storeGet(TIDE_LAGS_KEY); tideLagOverrides = raw ? JSON.parse(raw) : {}; }
+  catch(e){ tideLagOverrides = {}; }
+}
+async function saveTideLags(){
+  try{ await storeSet(TIDE_LAGS_KEY, JSON.stringify(tideLagOverrides)); }catch(e){}
+}
+function applyTideLags(){
+  TIDE_LAG_STATIONS.forEach(st=>{
+    const ov = tideLagOverrides[st.id];
+    if(ov && typeof ov.h === 'number' && typeof ov.l === 'number'){
+      st.h = ov.h; st.l = ov.l; st.lagKind = 'measured'; st.n = ov.n; st.sd = ov.sd;
+    }
+  });
+  _stationPos = null; // recompute cached positions if needed
+}
+
+// --- tolerant datetime + CSV parsing ---
+function parseWhen(str, utc){
+  str = String(str).trim().replace(/^["']|["']$/g,'');
+  let m = str.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})[ T]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(Z)?/i);
+  if(m){
+    const [_,Y,Mo,D,H,Mi,S,z] = m;
+    if(utc || z) return new Date(Date.UTC(+Y,+Mo-1,+D,+H,+Mi,+(S||0)));
+    return new Date(+Y,+Mo-1,+D,+H,+Mi,+(S||0));
+  }
+  m = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})[ ,T]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([AaPp][Mm])?/);
+  if(m){
+    let [_,Mo,D,Y,H,Mi,S,ap] = m;
+    Y = +Y < 100 ? 2000+ +Y : +Y; H = +H;
+    if(ap){ const pm=/p/i.test(ap); if(pm&&H<12)H+=12; if(!pm&&H===12)H=0; }
+    if(utc) return new Date(Date.UTC(Y,+Mo-1,+D,H,+Mi,+(S||0)));
+    return new Date(Y,+Mo-1,+D,H,+Mi,+(S||0));
+  }
+  const d = new Date(str); return isNaN(d) ? null : d;
+}
+function parseSeries(text, utc){
+  const raw = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  if(!raw.length) return [];
+  const rows = raw.map(l=> l.split(/[\t,;]/).map(c=>c.trim()));
+  const nCols = Math.max(...rows.map(r=>r.length));
+  const looksHeader = rows[0].some(c=>/[A-Za-z]/.test(c)) && !rows[0].some(c=>parseWhen(c, utc));
+  const headerCells = looksHeader ? rows[0].map(c=>c.toLowerCase()) : null;
+  const startRow = looksHeader ? 1 : 0;
+  const sample = rows.slice(startRow, startRow+40);
+  // timestamp column = the one that parses as a datetime most often
+  let tsCol=-1, bestHits=0;
+  for(let c=0;c<nCols;c++){
+    let hits=0;
+    for(const r of sample){ if(r[c]!=null && parseWhen(r[c], utc)) hits++; }
+    if(hits>bestHits){ bestHits=hits; tsCol=c; }
+  }
+  if(tsCol<0) return [];
+  // join with the next column only when the ts column is date-only (all midnight) and
+  // the next column looks like a clock time (split Date / Time export)
+  let tsJoin=false;
+  { let mid=0,tot=0,tim=0,tot2=0;
+    for(const r of sample){
+      const d=parseWhen(r[tsCol], utc);
+      if(d){ tot++; if(d.getHours()===0&&d.getMinutes()===0&&d.getSeconds()===0) mid++; }
+      if(r[tsCol+1]!=null){ tot2++; if(/^\d{1,2}:\d{2}/.test(r[tsCol+1])) tim++; }
+    }
+    if(tot && mid/tot>0.8 && tot2 && tim/tot2>0.6) tsJoin=true;
+  }
+  const tsCols = tsJoin ? [tsCol, tsCol+1] : [tsCol];
+  // value column: header keyword first, else first real measurement column
+  let valCol=-1;
+  if(headerCells){
+    const kw=/water|level|stage|elev|tide|height|gauge|\bwl\b/;
+    for(let c=0;c<headerCells.length;c++){ if(!tsCols.includes(c) && kw.test(headerCells[c])){ valCol=c; break; } }
+  }
+  if(valCol<0){
+    const cols=[];
+    for(let c=0;c<nCols;c++){
+      if(tsCols.includes(c)) continue;
+      const vals=[]; let counter=true, prev=null, ok=true;
+      for(const r of sample){ const s=r[c]; if(s==null) continue;
+        const n=parseFloat(s);
+        if(isNaN(n) || !/^[+-]?\.?\d/.test(s) || /[/:]/.test(s)){ ok=false; break; }
+        vals.push(n);
+        if(prev!==null && !(Number.isInteger(n) && n>prev)) counter=false;
+        prev=n;
+      }
+      if(!ok || vals.length < sample.length*0.5) continue;
+      vals.sort((a,b)=>a-b);
+      const iqr=vals[Math.floor(vals.length*0.75)]-vals[Math.floor(vals.length*0.25)];
+      cols.push({c, iqr, counter});
+    }
+    const good = cols.filter(x=>!x.counter && x.iqr>0);   // skip id/rownum + constant flags
+    if(good.length) valCol = good[0].c;                   // first real data column
+    else if(cols.length){ cols.sort((a,b)=>b.iqr-a.iqr); valCol=cols[0].c; }
+  }
+  if(valCol<0) return [];
+  const out=[];
+  for(const r of rows.slice(startRow)){
+    const when = tsJoin ? parseWhen((r[tsCol]||'')+' '+(r[tsCol+1]||''), utc) : parseWhen(r[tsCol], utc);
+    if(!when) continue;
+    const v = parseFloat(r[valCol]); if(isNaN(v)) continue;
+    out.push({t:when, v});
+  }
+  out.sort((a,b)=>a.t-b.t);
+  return out;
+}
+function medianDtMin(series){
+  const dts=[]; for(let i=1;i<series.length;i++) dts.push((series[i].t-series[i-1].t)/60000);
+  dts.sort((a,b)=>a-b); return dts.length ? dts[Math.floor(dts.length/2)] : 6;
+}
+function findExtrema(series){
+  if(series.length < 12) return [];
+  const dt = Math.max(1, medianDtMin(series));
+  const smoothW = Math.max(1, Math.round(30/dt));       // ~30 min smoothing
+  const winW = Math.max(2, Math.round(150/dt));         // ~2.5 h search window
+  const v = series.map(p=>p.v);
+  const sm = v.map((_,i)=>{ let s=0,c=0; for(let k=-smoothW;k<=smoothW;k++){ const j=i+k; if(j>=0&&j<v.length){s+=v[j];c++;} } return s/c; });
+  const lo = Math.min(...sm), hi = Math.max(...sm), range = (hi-lo)||1;
+  const cand = [];
+  for(let i=winW;i<sm.length-winW;i++){
+    let isMax=true, isMin=true;
+    for(let k=-winW;k<=winW;k++){ if(sm[i+k]>sm[i]) isMax=false; if(sm[i+k]<sm[i]) isMin=false; }
+    if(isMax && (sm[i]-lo)/range > 0.55) cand.push({t:series[i].t, type:'High', v:sm[i]});
+    else if(isMin && (hi-sm[i])/range > 0.55) cand.push({t:series[i].t, type:'Low', v:sm[i]});
+  }
+  // dedupe: keep the most extreme within any 4 h same-type cluster
+  cand.sort((a,b)=>a.t-b.t);
+  const kept=[];
+  for(const c of cand){
+    const last = kept[kept.length-1];
+    if(last && last.type===c.type && (c.t-last.t)/3600000 < 4){
+      if((c.type==='High' && c.v>last.v) || (c.type==='Low' && c.v<last.v)) kept[kept.length-1]=c;
+    } else kept.push(c);
+  }
+  return kept;
+}
+function computeLagFromExtrema(extrema){
+  const noaa = getNoaaEvents();
+  const nH = noaa.filter(e=>e.type==='High'), nL = noaa.filter(e=>e.type==='Low');
+  function diffs(list, ref){
+    const ds=[];
+    for(const e of list){
+      let best=null, bd=Infinity;
+      for(const r of ref){ const d=Math.abs(e.t-r.t); if(d<bd){bd=d; best=r;} }
+      if(best){ const mins=(e.t-best.t)/60000; if(Math.abs(mins)<=210) ds.push(mins); }
+    }
+    return ds;
+  }
+  const stat = arr=>{
+    if(!arr.length) return {n:0};
+    const mean = arr.reduce((a,b)=>a+b,0)/arr.length;
+    const sd = Math.sqrt(arr.reduce((a,b)=>a+(b-mean)*(b-mean),0)/arr.length);
+    return {n:arr.length, mean, sd};
+  };
+  return { h: stat(diffs(extrema.filter(e=>e.type==='High'), nH)),
+           l: stat(diffs(extrema.filter(e=>e.type==='Low'),  nL)) };
+}
+
+// --- UI wiring ---
+let calPending = null;
+const tideCalSheet  = document.getElementById('tideCalSheet');
+const tideCalScrim  = document.getElementById('tideCalScrim');
+function calStationName(id){ const s=TIDE_LAG_STATIONS.find(x=>x.id===id); return s?s.name:id; }
+function refreshCalCurrent(){
+  const id = document.getElementById('calStation').value;
+  const st = TIDE_LAG_STATIONS.find(x=>x.id===id);
+  const el = document.getElementById('calCurrent');
+  if(!st){ el.textContent='—'; return; }
+  const kind = st.lagKind==='measured' ? `measured (${st.n||'?'} cycles, ±${Math.round(st.sd||0)} min)`
+             : st.lagKind==='estimated' ? 'estimated (not measured)'
+             : st.lagKind==='reference' ? 'reference — no lag' : 'not set';
+  el.innerHTML = `Current lag for <b>${st.name}</b>: High +${st.h} / Low +${st.l} min — <i>${kind}</i>.`;
+}
+function refreshCalSaved(){
+  const el = document.getElementById('calSavedList');
+  const ids = Object.keys(tideLagOverrides);
+  if(!ids.length){ el.textContent='None yet.'; return; }
+  el.innerHTML = ids.map(id=>{ const o=tideLagOverrides[id];
+    return `<div style="display:flex; justify-content:space-between; gap:8px; padding:3px 0;"><span>${calStationName(id)}</span><span class="td-ht">High +${o.h} / Low +${o.l} <button class="mini-btn" data-clear="${id}" style="padding:1px 7px; margin-left:6px;">✕</button></span></div>`;
+  }).join('');
+  el.querySelectorAll('[data-clear]').forEach(b=> b.addEventListener('click', async ()=>{
+    delete tideLagOverrides[b.dataset.clear]; await saveTideLags();
+    // reset that station back to its coded default by reloading page state lazily:
+    const st = TIDE_LAG_STATIONS.find(x=>x.id===b.dataset.clear);
+    if(st){ st.lagKind = (st.id==='8721138'||st.id==='8721147'||st.id==='4774')?'reference':(['4794','5397','4955'].includes(st.id)?'estimated':'unset');
+      const defs={'4794':[95,110],'5397':[110,130],'4955':[125,150]}; const d=defs[st.id]||[0,0]; st.h=d[0]; st.l=d[1]; delete st.n; delete st.sd; }
+    refreshCalSaved(); refreshCalCurrent(); showToast('Measured lag cleared.');
+  }));
+}
+function openTideCal(){
+  const sel = document.getElementById('calStation');
+  sel.innerHTML = TIDE_LAG_STATIONS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  document.getElementById('calResult').innerHTML=''; document.getElementById('calSave').style.display='none'; calPending=null;
+  refreshCalCurrent(); refreshCalSaved();
+  tideCalSheet.classList.add('open'); tideCalScrim.classList.add('open');
+}
+function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.classList.remove('open'); }
+(function initCal(){
+  const btn = document.getElementById('tideCalBtn');
+  if(btn) btn.addEventListener('click', ()=>{ try{ infoSheet.classList.remove('open'); infoScrim.classList.remove('open'); }catch(e){} openTideCal(); });
+  document.getElementById('tideCalClose').addEventListener('click', closeTideCal);
+  tideCalScrim.addEventListener('click', closeTideCal);
+  document.getElementById('calStation').addEventListener('change', refreshCalCurrent);
+  document.getElementById('calFile').addEventListener('change', ev=>{
+    const f = ev.target.files[0]; if(!f) return;
+    const r = new FileReader(); r.onload = ()=>{ document.getElementById('calData').value = r.result; }; r.readAsText(f);
+  });
+  document.getElementById('calCompute').addEventListener('click', ()=>{
+    const id = document.getElementById('calStation').value;
+    const utc = document.getElementById('calUtc').checked;
+    const text = document.getElementById('calData').value;
+    const res = document.getElementById('calResult');
+    const saveBtn = document.getElementById('calSave');
+    saveBtn.style.display='none'; calPending=null;
+    const series = parseSeries(text, utc);
+    if(series.length < 12){ res.innerHTML = `<span style="color:var(--brass);">Couldn't read enough rows. I need a timestamp column and a water-level column, at least a day or two of data.</span>`; return; }
+    // overlap with stored NOAA range
+    const t0=series[0].t.getTime(), t1=series[series.length-1].t.getTime();
+    if(t1 < NOAA_BASE.getTime() || t0 > NOAA_END.getTime()){
+      res.innerHTML = `<span style="color:var(--brass);">These timestamps fall outside the stored NOAA inlet table (Jul 2026 – Jul 2027), so I can't match them. Export a recent period.</span>`; return;
+    }
+    const ext = findExtrema(series);
+    const lag = computeLagFromExtrema(ext);
+    if(!lag.h.n && !lag.l.n){ res.innerHTML = `<span style="color:var(--brass);">Found ${ext.length} turning points but couldn't match them to inlet highs/lows. If the offset looks like whole hours, try the “Times are UTC” box.</span>`; return; }
+    const H = lag.h.n ? Math.round(lag.h.mean/5)*5 : null;
+    const L = lag.l.n ? Math.round(lag.l.mean/5)*5 : null;
+    const n = Math.min(lag.h.n||99, lag.l.n||99), sd = Math.max(lag.h.sd||0, lag.l.sd||0);
+    let verdict, color;
+    if(n>=6 && sd<=25){ verdict='Looks solid.'; color='var(--teal)'; }
+    else if(n>=4 && sd<=45){ verdict='Usable — export a longer period for more confidence.'; color='var(--brass)'; }
+    else { verdict='Not reliable yet — export ~1–2 weeks and recompute.'; color='var(--brass)'; }
+    const tzWarn = ([H,L].some(x=> x!==null && Math.abs(Math.abs(x)-240)<25) ) ? `<div style="color:var(--brass); margin-top:4px;">That's near a 4-hour (EDT) offset — if the export is in UTC, tick the box and recompute.</div>` : '';
+    res.innerHTML = `<div class="loc-preview">
+        <div>Detected <b>${ext.length}</b> turning points.</div>
+        <div style="margin-top:4px;">High lag: <b>${H!==null?('+'+H+' min'):'—'}</b> ${lag.h.n?`(${lag.h.n} matched, ±${Math.round(lag.h.sd)} min)`:''}</div>
+        <div>Low lag: <b>${L!==null?('+'+L+' min'):'—'}</b> ${lag.l.n?`(${lag.l.n} matched, ±${Math.round(lag.l.sd)} min)`:''}</div>
+        <div style="color:${color}; margin-top:6px;">${verdict}</div>${tzWarn}
+      </div>`;
+    if(H!==null && L!==null){ calPending = {id, h:H, l:L, n, sd:Math.round(sd)}; saveBtn.style.display=''; }
+  });
+  document.getElementById('calSave').addEventListener('click', async ()=>{
+    if(!calPending) return;
+    tideLagOverrides[calPending.id] = { h:calPending.h, l:calPending.l, n:calPending.n, sd:calPending.sd, at:Date.now() };
+    await saveTideLags(); applyTideLags();
+    // refresh an open tide panel
+    if(tidePinMarker){ document.getElementById('tidePanelBody').innerHTML = tideForecastHTML(tidePinMarker.getLatLng()); }
+    refreshCalCurrent(); refreshCalSaved();
+    document.getElementById('calSave').style.display='none';
+    showToast(`Saved measured lag for ${calStationName(calPending.id)}.`);
+  });
+  document.getElementById('calResetAll').addEventListener('click', async ()=>{
+    tideLagOverrides = {}; await saveTideLags();
+    location.reload();
+  });
+})();
 
 /* ===================== THEME PICKER ===================== */
 
