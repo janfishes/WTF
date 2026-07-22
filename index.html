@@ -1373,7 +1373,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Using it offline</div>
       <p class="sheet-note">Tap the <b>WTF Log fish</b> in the top corner to see the app credits.</p>
-      <p class="sheet-note">The app itself — all your spots, launches, reefs, catch log, notes, tide forecasts, search, and themes — works with <b>no internet</b>. The one thing that needs a connection is the <b>map imagery</b> — both the street map and the satellite view — which streams from map servers and can't be stored in the app. Areas you've already viewed while online stay cached by your browser for a while. So: pins, coordinates, and tides always work offline; the background map fills in when you have signal. Add the app to your home screen for the most reliable offline launch.</p>
+      <p class="sheet-note">The app itself — all your spots, launches, reefs, catch log, notes, tide forecasts, search, and themes — works with <b>no internet</b>. The <b>map imagery</b> normally streams from map servers, but you can now <b>download it for your fishing area</b> so even the satellite view works with the signal off — do it once on wifi and the tiles are stored on your device. Add the app to your home screen for the most reliable offline launch.</p>
+      <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="offlineBtn">⤓ Download map for offline use</button></div>
 
       <div class="subhead">Tips</div>
       <p class="sheet-note">On a phone, use <b>Add to Home Screen</b> to launch it like an app. Each person's catches and notes stay private on their own device. Use <b>Export backup</b> in the My Catches tab to save your log as a file, and <b>Import backup</b> to bring it into a new copy or another device.</p>
@@ -1553,6 +1554,38 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="toast"></div>
 
 <!-- Disclaimer modal (opened by the Disclaimer button) -->
+<div class="scrim" id="offlineScrim"></div>
+<div class="sheet" id="offlineSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2>Offline map</h2>
+    <button class="close" id="offlineClose">CLOSE ✕</button>
+  </div>
+  <div class="sheet-body">
+    <p class="sheet-note">Download the satellite map — <b>USGS Imagery Topo</b> over the land and <b>Sentinel-2</b> imagery over the water — for the whole fishing area (Ponce Inlet, the Halifax and Indian Rivers, Mosquito Lagoon, and the offshore reefs). Do this once while you have wifi; afterward the map draws with the signal off. Tiles are stored on this device only.</p>
+    <label class="field-label">Detail level</label>
+    <select id="offlineZoom" style="width:100%; box-sizing:border-box; padding:8px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px;">
+      <option value="13">Overview — zoom 13 (smallest)</option>
+      <option value="14" selected>Standard — zoom 14 (recommended)</option>
+      <option value="15">Detailed — zoom 15 (large)</option>
+    </select>
+    <p class="sheet-note" id="offlineEst" style="margin:8px 0 0;"></p>
+    <div class="loc-btns" style="margin-top:12px;">
+      <button class="mini-btn" id="offlineDownload" style="font-weight:700;">⤓ Download for offline use</button>
+      <button class="mini-btn" id="offlineCancelBtn" style="display:none;">■ Stop</button>
+    </div>
+    <div id="offlineBarWrap" style="display:none; margin-top:12px;">
+      <div style="height:8px; background:#0c1620; border:1px solid var(--line); border-radius:6px; overflow:hidden;"><div id="offlineBar" style="height:100%; width:0%; background:var(--teal); transition:width .2s;"></div></div>
+      <p class="sheet-note" id="offlineProg" style="margin:6px 0 0; font-family:'JetBrains Mono',monospace; font-size:11px;"></p>
+    </div>
+    <p class="sheet-note" id="offlineStatus" style="margin-top:12px;"></p>
+    <div class="loc-btns" style="margin-top:8px;">
+      <button class="mini-btn" id="offlineClear" style="display:none;">🗑 Clear offline map</button>
+    </div>
+    <p class="sheet-note" style="margin-top:10px; color:var(--muted);">Zoom 16 (closest) isn't offered for download — at well over a gigabyte it's too large to store reliably on a phone. The saved levels cover navigation and spot-finding; if you're offline and zoom in closer than the saved level, the imagery may go blank until you zoom back out or reconnect.</p>
+  </div>
+</div>
+
 <div class="scrim" id="disclaimerScrim"></div>
 <div class="sheet" id="disclaimerSheet">
   <div class="sheet-handle"></div>
@@ -1889,6 +1922,204 @@ const TILE_PROVIDERS = [
 const OFM_IDX = 0;  // OpenFreeMap vector street map (on-demand)
 const SAT_IDX = 1;  // Satellite view: USGS Imagery Topo (land) over Sentinel-2 ocean
 const OSM_IDX = 2;  // raster street map (fallback when vector is unavailable)
+
+/* ===================== OFFLINE MAP TILES =====================
+   Pre-download the satellite composite (USGS Imagery Topo land + Sentinel-2
+   ocean fill) for the fishing area into the browser's Cache Storage, so the map
+   renders with no connection. One online download; the tiles then live on the
+   device and are served cache-first by the layer below. */
+const TILE_CACHE_NAME = 'wtf-tiles-v1';
+const OFFLINE_MANIFEST_KEY = 'wtf:offline-map';
+// Fishing area: Bulow (N) → Williams Point (S), inshore to the west, offshore reefs to the east.
+const OFFLINE_BBOX = { s:28.40, n:29.48, w:-81.20, e:-80.30 };
+// The two satellite sublayers, in the same {z}/{y}/{x} form the map already uses.
+const OFFLINE_TILE_TEMPLATES = [
+  'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg',
+  'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}'
+];
+
+let _tileCachePromise = null;
+function tileCacheOpen(){
+  if(!('caches' in window)) return Promise.resolve(null);
+  if(!_tileCachePromise) _tileCachePromise = caches.open(TILE_CACHE_NAME).catch(()=>null);
+  return _tileCachePromise;
+}
+// Cache-first tile fetch: return a cached Response when we have one, otherwise
+// fetch live and (silently) tuck the result into the cache for next time.
+async function fetchTileCacheFirst(url){
+  const cache = await tileCacheOpen();
+  if(cache){ const hit = await cache.match(url); if(hit) return hit; }
+  const resp = await fetch(url, { credentials:'omit', referrerPolicy:'no-referrer' });
+  if(resp && resp.ok && cache){ try{ await cache.put(url, resp.clone()); }catch(e){} }
+  return resp;
+}
+// Leaflet tile layer that reads each tile cache-first, so a downloaded region
+// draws with the network off; anything fetched live is cached transparently.
+const OfflineTileLayer = L.TileLayer.extend({
+  createTile(coords, done){
+    const tile = document.createElement('img');
+    tile.alt = ''; tile.setAttribute('role','presentation');
+    let settled = false;
+    const finish = (err)=>{ if(settled) return; settled = true; done(err || null, tile); };
+    const url = this.getTileUrl(coords);
+    (async ()=>{
+      try{
+        const resp = await fetchTileCacheFirst(url);
+        if(!resp || !resp.ok){ finish(new Error('tile ' + (resp && resp.status))); return; }
+        const blob = await resp.blob();
+        const obj = URL.createObjectURL(blob);
+        tile.onload  = ()=>{ URL.revokeObjectURL(obj); finish(null); };
+        tile.onerror = ()=>{ URL.revokeObjectURL(obj); finish(new Error('decode')); };
+        tile.src = obj;
+      }catch(e){ finish(e); }   // offline + not cached, or USGS ocean 404 → tileerror (Sentinel shows through)
+    })();
+    return tile;
+  }
+});
+function offlineTileLayer(url, opts){ return new OfflineTileLayer(url, opts); }
+
+// ---- Web-Mercator tile math + region enumeration ----
+function _lon2x(lon,z){ return Math.floor((lon+180)/360*Math.pow(2,z)); }
+function _lat2y(lat,z){ const r=lat*Math.PI/180; return Math.floor((1 - Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Math.pow(2,z)); }
+function offlineTileCount(bbox, zmin, zmax){   // tiles per single layer
+  let n=0;
+  for(let z=zmin; z<=zmax; z++){
+    const x0=_lon2x(bbox.w,z), x1=_lon2x(bbox.e,z), y0=_lat2y(bbox.n,z), y1=_lat2y(bbox.s,z);
+    n += (Math.abs(x1-x0)+1)*(Math.abs(y1-y0)+1);
+  }
+  return n;
+}
+function offlineTileUrls(bbox, zmin, zmax){
+  const urls=[];
+  for(let z=zmin; z<=zmax; z++){
+    const x0=Math.min(_lon2x(bbox.w,z),_lon2x(bbox.e,z)), x1=Math.max(_lon2x(bbox.w,z),_lon2x(bbox.e,z));
+    const y0=Math.min(_lat2y(bbox.n,z),_lat2y(bbox.s,z)), y1=Math.max(_lat2y(bbox.n,z),_lat2y(bbox.s,z));
+    for(let x=x0; x<=x1; x++) for(let y=y0; y<=y1; y++)
+      for(const tpl of OFFLINE_TILE_TEMPLATES)
+        urls.push(tpl.replace('{z}',z).replace('{x}',x).replace('{y}',y));
+  }
+  return urls;
+}
+
+let _offlineCancel = false, _offlineRunning = false;
+async function offlineDownload(zmax, onProgress){
+  if(_offlineRunning) return; _offlineRunning = true; _offlineCancel = false;
+  const urls = offlineTileUrls(OFFLINE_BBOX, 1, zmax);
+  const total = urls.length;
+  const cache = await tileCacheOpen();
+  let done=0, ok=0, bytes=0, idx=0;
+  const CONC = 6;
+  async function worker(){
+    while(idx < urls.length && !_offlineCancel){
+      const url = urls[idx++];
+      try{
+        let resp = cache ? await cache.match(url) : null;
+        if(!resp){
+          resp = await fetch(url, { credentials:'omit', referrerPolicy:'no-referrer' });
+          if(resp && resp.ok && cache){ try{ await cache.put(url, resp.clone()); }catch(e){} }
+        }
+        if(resp && resp.ok){ ok++; const cl = resp.headers.get('content-length'); if(cl) bytes += +cl; }
+      }catch(e){ /* ocean 404 / offline / blocked — skip this tile */ }
+      done++;
+      if(done % 20 === 0 || done === total) onProgress && onProgress({done, total, ok, bytes, cancelled:_offlineCancel});
+    }
+  }
+  onProgress && onProgress({done:0, total, ok:0, bytes:0, cancelled:false});
+  await Promise.all(Array.from({length:CONC}, worker));
+  _offlineRunning = false;
+  const manifest = { bbox:OFFLINE_BBOX, zmax, tiles:ok, bytes, at:Date.now(), cancelled:_offlineCancel };
+  try{ localStorage.setItem(OFFLINE_MANIFEST_KEY, JSON.stringify(manifest)); }catch(e){}
+  onProgress && onProgress({done, total, ok, bytes, cancelled:_offlineCancel, finished:true});
+  return manifest;
+}
+function offlineCancel(){ _offlineCancel = true; }
+async function offlineClear(){
+  try{ if('caches' in window) await caches.delete(TILE_CACHE_NAME); }catch(e){}
+  _tileCachePromise = null;
+  try{ localStorage.removeItem(OFFLINE_MANIFEST_KEY); }catch(e){}
+}
+function offlineManifest(){ try{ return JSON.parse(localStorage.getItem(OFFLINE_MANIFEST_KEY)||'null'); }catch(e){ return null; } }
+
+(function initOfflineMap(){
+  const sheet = document.getElementById('offlineSheet');
+  const scrim = document.getElementById('offlineScrim');
+  if(!sheet || !scrim) return;
+  const zoomSel   = document.getElementById('offlineZoom');
+  const estEl     = document.getElementById('offlineEst');
+  const statusEl  = document.getElementById('offlineStatus');
+  const barWrap   = document.getElementById('offlineBarWrap');
+  const bar       = document.getElementById('offlineBar');
+  const progText  = document.getElementById('offlineProg');
+  const dlBtn     = document.getElementById('offlineDownload');
+  const cancelBtn = document.getElementById('offlineCancelBtn');
+  const clearBtn  = document.getElementById('offlineClear');
+  const fmtMB = b => b>=1073741824 ? (b/1073741824).toFixed(2)+' GB' : (b/1048576).toFixed(b>10485760?0:1)+' MB';
+
+  function estimate(){
+    const z = +zoomSel.value;
+    const perLayer = offlineTileCount(OFFLINE_BBOX, 1, z);
+    const tiles = perLayer * OFFLINE_TILE_TEMPLATES.length;
+    // Sentinel ~18 KB/tile everywhere + USGS ~28 KB but only ~40% of tiles carry land
+    const approxMB = perLayer*(18 + 0.4*28)/1024;
+    const size = approxMB<1000 ? Math.round(approxMB)+' MB' : (approxMB/1024).toFixed(1)+' GB';
+    estEl.innerHTML = `About <b>${tiles.toLocaleString()}</b> tiles, roughly <b>${size}</b> to store.`;
+  }
+  async function refreshStatus(){
+    const m = offlineManifest();
+    let s;
+    if(m && m.tiles){
+      s = `Saved: <b>${m.tiles.toLocaleString()}</b> tiles through zoom <b>${m.zmax}</b>${m.bytes?` (~${fmtMB(m.bytes)})`:''}, ${new Date(m.at).toLocaleDateString()}.`;
+      clearBtn.style.display = '';
+    } else {
+      s = 'No offline map saved yet.';
+      clearBtn.style.display = 'none';
+    }
+    if(navigator.storage && navigator.storage.estimate){
+      try{ const est = await navigator.storage.estimate(); if(est && est.usage!=null) s += ` <span style="color:var(--muted);">This app is using ${fmtMB(est.usage)} of device storage.</span>`; }catch(e){}
+    }
+    statusEl.innerHTML = s;
+  }
+  function setRunning(on){
+    dlBtn.style.display = on?'none':'';
+    cancelBtn.style.display = on?'':'none';
+    zoomSel.disabled = on;
+    barWrap.style.display = on?'':'none';
+  }
+  zoomSel.addEventListener('change', estimate);
+  dlBtn.addEventListener('click', async ()=>{
+    if(!('caches' in window)){ statusEl.textContent = 'This browser can\u2019t store offline maps (no Cache Storage support).'; return; }
+    if(navigator.onLine === false){ statusEl.innerHTML = '<span style="color:var(--brass);">You\u2019re offline right now — connect to wifi first, then download.</span>'; return; }
+    if(navigator.storage && navigator.storage.persist){ try{ await navigator.storage.persist(); }catch(e){} }
+    setRunning(true); bar.style.width='0%'; progText.textContent='Starting…';
+    await offlineDownload(+zoomSel.value, ({done,total,ok,bytes,cancelled,finished})=>{
+      const pct = total?Math.round(done/total*100):0;
+      bar.style.width = pct+'%';
+      progText.textContent = (cancelled?'Stopping… ':'') + `${done.toLocaleString()} / ${total.toLocaleString()} tiles${bytes?` · ${fmtMB(bytes)}`:''}`;
+      if(finished){
+        setRunning(false);
+        progText.textContent = cancelled
+          ? `Stopped — ${ok.toLocaleString()} tiles saved so far.`
+          : `Done — ${ok.toLocaleString()} tiles saved. The map now works offline.`;
+        refreshStatus();
+        if(!cancelled && typeof imageryLayer!=='undefined' && imageryLayer && imageryLayer.eachLayer) imageryLayer.eachLayer(l=> l.redraw && l.redraw());
+      }
+    });
+  });
+  cancelBtn.addEventListener('click', ()=> offlineCancel());
+  clearBtn.addEventListener('click', async ()=>{
+    if(_offlineRunning) offlineCancel();
+    await offlineClear();
+    progText.textContent=''; bar.style.width='0%'; barWrap.style.display='none';
+    refreshStatus();
+    if(typeof showToast==='function') showToast('Offline map cleared.');
+  });
+  function openSheet(){ estimate(); refreshStatus(); sheet.classList.add('open'); scrim.classList.add('open'); }
+  function closeSheet(){ sheet.classList.remove('open'); scrim.classList.remove('open'); }
+  const trigger = document.getElementById('offlineBtn');
+  if(trigger) trigger.addEventListener('click', ()=>{ try{ infoSheet.classList.remove('open'); infoScrim.classList.remove('open'); }catch(e){} openSheet(); });
+  document.getElementById('offlineClose').addEventListener('click', closeSheet);
+  scrim.addEventListener('click', closeSheet);
+})();
 let providerIdx = 0, imageryLayer = null, tileErrors = 0, tileLoads = 0;
 let everLoadedATile = false;
 
@@ -1950,7 +2181,7 @@ function mountBaseLayer(i){
     };
     const group = L.layerGroup();
     p.layers.forEach(sub=>{
-      const t = L.tileLayer(sub.url, {
+      const t = offlineTileLayer(sub.url, {
         maxZoom:19, maxNativeZoom:sub.nativeZoom, zIndex:(sub.zIndex||1),
         attribution:p.attribution, crossOrigin:true, referrerPolicy:'no-referrer'
       });
