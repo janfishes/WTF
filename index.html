@@ -1859,35 +1859,19 @@ L.control.zoom({position:'topright'}).addTo(map);
 const CLUSTER_ZOOM = 9; // at/below this zoom, spots collapse into category count ("totals") pills
 L.control.scale({position:'bottomright', imperial:true, metric:false}).addTo(map);
 
-// Base layers, all free for commercial redistribution:
-//   - Satellite view = a two-layer composite:
-//       • Bottom  Sentinel-2 cloudless 2016 by EOX (CC BY 4.0) as a global
-//                 ocean fill, so water past the offshore sites shows real
-//                 imagery instead of going blank. The 2016 layer is the CC BY
-//                 release; EOX's 2018+ layers are non-commercial, so we
-//                 deliberately request the 2016 one (s2cloudless_3857).
-//       • Top     USGS Imagery Topo (public domain) for land — aerial photo
-//                 with topographic labels/lines overlaid. It has no tiles over
-//                 open water, so the Sentinel-2 ocean shows through underneath.
+// Base layers, all cleared for redistribution:
+//   - USGS imagery (public domain) — the default satellite view
 //   - OpenFreeMap (MIT project, OpenStreetMap data) — vector street map, on demand
 //   - OpenStreetMap standard tiles — raster street-map fallback
-// (Esri and Google imagery stay out: their terms don't allow commercial
-//  redistribution without a paid license.)
+// (Esri and Google imagery were removed: their terms don't permit bundling in a
+//  distributed app.)
 const TILE_PROVIDERS = [
   { name:'OpenFreeMap (street map)', type:'vector', style:'https://tiles.openfreemap.org/styles/bright', attribution:'&copy; <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer">OpenFreeMap</a> &copy; OpenMapTiles Data from OpenStreetMap' },
-  { name:'USGS Imagery Topo + Sentinel-2 ocean', type:'composite',
-    attribution:'Land &copy; <a href="https://www.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS The National Map</a> &nbsp;|&nbsp; Ocean: <a href="https://s2maps.eu" target="_blank" rel="noopener noreferrer">Sentinel-2 cloudless 2016</a> by <a href="https://eox.at" target="_blank" rel="noopener noreferrer">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016) &mdash; CC BY 4.0',
-    layers:[
-      // Bottom: global ocean/land fill; shows through wherever USGS has no tile.
-      { url:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg', nativeZoom:16, zIndex:1 },
-      // Top: US land — aerial photo with topographic labels/lines overlaid.
-      { url:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', nativeZoom:16, zIndex:2 }
-    ]
-  },
+  { name:'USGS satellite', url:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}', attribution:'Imagery courtesy of the U.S. Geological Survey', nativeZoom:16 },
   { name:'OpenStreetMap (street map)', url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attribution:'&copy; OpenStreetMap contributors', nativeZoom:19 }
 ];
 const OFM_IDX = 0;  // OpenFreeMap vector street map (on-demand)
-const SAT_IDX = 1;  // Satellite view: USGS Imagery Topo (land) over Sentinel-2 ocean
+const SAT_IDX = 1;  // USGS satellite imagery (default view)
 const OSM_IDX = 2;  // raster street map (fallback when vector is unavailable)
 let providerIdx = 0, imageryLayer = null, tileErrors = 0, tileLoads = 0;
 let everLoadedATile = false;
@@ -1930,36 +1914,6 @@ function mountBaseLayer(i){
     }
     // Fallback: use the raster street map instead of the vector basemap.
     i = OSM_IDX; p = TILE_PROVIDERS[i];
-  }
-
-  // Composite raster basemap: several stacked tile layers that behave as one
-  // base layer. Used for the satellite view (USGS land over Sentinel-2 ocean).
-  if(p && p.type === 'composite'){
-    const idx = i;
-    const onErr = ()=>{
-      tileErrors++;
-      if(manualMode) return;   // user picked this source; don't auto-switch away
-      // USGS returns no tile over open ocean — that's expected and is covered by
-      // the Sentinel-2 layer underneath, so only fall back if the whole
-      // composite has produced nothing at all.
-      if(tileErrors >= 6 && tileLoads === 0 && idx < TILE_PROVIDERS.length-1){
-        providerIdx = idx+1; mountBaseLayer(providerIdx);
-      } else if(tileErrors >= 8 && tileLoads === 0 && !everLoadedATile){
-        setTimeout(()=>{ if(!everLoadedATile && tileLoads === 0) showTileHelp(); }, 3500);
-      }
-    };
-    const group = L.layerGroup();
-    p.layers.forEach(sub=>{
-      const t = L.tileLayer(sub.url, {
-        maxZoom:19, maxNativeZoom:sub.nativeZoom, zIndex:(sub.zIndex||1),
-        attribution:p.attribution, crossOrigin:true, referrerPolicy:'no-referrer'
-      });
-      t.on('tileload', markTilesLoaded);
-      t.on('tileerror', onErr);
-      group.addLayer(t);
-    });
-    imageryLayer = group.addTo(map);
-    return;
   }
 
   imageryLayer = L.tileLayer(p.url, { maxZoom:19, maxNativeZoom:p.nativeZoom, attribution:p.attribution, crossOrigin:true, referrerPolicy:'no-referrer' }).addTo(map);
@@ -2017,8 +1971,7 @@ providerIdx = SAT_IDX;
 mountBaseLayer(SAT_IDX);
 
 /* ---------- Satellite / Streets toggle ---------- */
-// Default view is the satellite composite (USGS Imagery Topo land over the
-// Sentinel-2 ocean fill); the button swaps in the OpenFreeMap street map.
+// Default view is USGS satellite; the button swaps in the OpenFreeMap street map.
 let satMode = true;
 let manualMode = false;
 document.getElementById('mapModeBtn').addEventListener('click', function(){
