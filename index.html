@@ -845,7 +845,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #labelsToggle{font-weight:700; border:1px solid #fff !important; box-shadow:none !important;}
   #labelsToggle:not(.active){background:#000 !important; color:#ffffff !important; border-color:#ffffff !important; opacity:1;}
   #speciesCol .chip:not(.active){filter:brightness(1.6) saturate(1.2);}
-  #speciesCol .chip.active{filter:brightness(1.7) saturate(1.4); border-color:#fff; box-shadow:0 0 8px rgba(255,255,255,.35);}
+  /* ON inverts: the species colour fills the button and the text goes black.
+     The brightness filter is dropped here or it washes the fill out. */
+  #speciesCol .chip.active{
+    background:var(--spc,#fff) !important; color:#000 !important;
+    border-color:#fff !important; box-shadow:0 0 8px rgba(255,255,255,.45);
+    filter:saturate(1.25);
+  }
+  #speciesCol .chip.active .dot{background:#000 !important;}
   .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:700; border:1px solid var(--inshore) !important; box-shadow:none !important;}
   .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important;}
   .chip[data-zone="inshore"]:not(.active){opacity:1; color:#8a9aff !important; border-color:#6b7ae0 !important;}
@@ -862,10 +869,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #logSpeciesRow .chip.sp .dot{width:7px; height:7px;}
   #logSpeciesRow .chip.sp.active{
-    filter:brightness(1.7) saturate(1.4); border-color:#fff;
-    box-shadow:0 0 8px rgba(255,255,255,.35); transform:scale(1.05);
+    background:var(--spc,#fff) !important; color:#000 !important;
+    border-color:#fff !important; box-shadow:0 0 8px rgba(255,255,255,.45);
+    filter:saturate(1.25); transform:scale(1.05);
   }
-  #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#fff; font-weight:800;}
+  #logSpeciesRow .chip.sp.active .dot{background:#000 !important;}
+  #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#000; font-weight:800;}
   #labelsToggle.active{background:#ffffff !important; color:#000000 !important; border-color:#ffffff !important;}
   .chip.util.active{border-color:var(--fog); box-shadow:0 0 0 1px var(--fog) inset;}
   #catchToggle.active{background:var(--teal) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
@@ -2365,7 +2374,7 @@ let userNotes = {};
 let labelsOn = true;
 
 function popupHTML(s){
-  const rows = (s.species||[]).map(k=>{
+  const rows = (s.species||[]).filter(k=>SPECIES[k]).map(k=>{
     const sp = SPECIES[k];
     const bars = sp.months.map(v=>`<div style="${monthCell(v, sp.color)}"></div>`).join("");
     return `<div class="ps-row"><div class="ps-tag" style="background:${sp.color}">${sp.short}</div><div class="ps-bar">${bars}</div></div>`;
@@ -2534,7 +2543,8 @@ let clustered = false;
 // Genuine user zooming (scroll/pinch/+-) and top-button taps are unaffected.
 let suppressClusterZoom = false;
 function updateClustering(){
-  const shouldCluster = map.getZoom() <= CLUSTER_ZOOM;
+  // A live species pick keeps the diamonds on screen at any zoom.
+  const shouldCluster = map.getZoom() <= CLUSTER_ZOOM && activeSpecies.size === 0;
   if(shouldCluster){
     // hide all individual markers, show cluster pills under the buttons
     markers.forEach(m=>{ if(map.hasLayer(m)) map.removeLayer(m); });
@@ -2718,6 +2728,12 @@ let showCatches = true;
 let showSpots = true;
 let showLaunches = true;
 
+/* Catches imported from a backup can carry a species key this build doesn't know.
+   Unguarded SPECIES[key] lookups threw on those and took out whichever view hit
+   them first — search died for every query on a single bad record. */
+const SPECIES_UNKNOWN = { label:'Unknown', short:'??', color:'#9aa4ac', months:[0,0,0,0,0,0,0,0,0,0,0,0] };
+function speciesOf(key){ return SPECIES[key] || SPECIES_UNKNOWN; }
+
 function catchTideStr(c){ return c.tideDetail ? c.tideDetail : (c.tide ? (TIDE_LABELS[c.tide] || c.tide) + ' tide' : ''); }
 
 /* Older versions saved photos the browser couldn't decode (HEIC especially) as raw
@@ -2735,7 +2751,7 @@ const BROKEN_PHOTO_NOTE =
   '</div>';
 
 function catchPopupHTML(c){
-  const sp = SPECIES[c.species];
+  const sp = speciesOf(c.species);
   const sizeBits = [];
   if(c.length) sizeBits.push(c.length+'"');
   if(c.weight) sizeBits.push(c.weight+' lb');
@@ -2758,7 +2774,7 @@ function renderCatchMarkers(){
   catchMarkers = catches.map(c=>{
     const icon = L.divIcon({
       className:'',
-      html:`<div class="catch-marker" style="background:${resolveVar(SPECIES[c.species].color)}"></div>`,
+      html:`<div class="catch-marker" style="background:${resolveVar(speciesOf(c.species).color)}"></div>`,
       iconSize:[16,16], iconAnchor:[8,8], popupAnchor:[0,-8]
     });
     const m = L.marker([c.lat, c.lng], {icon}).addTo(map);
@@ -2949,7 +2965,7 @@ function renderCatchList(){
   }
   const sorted = [...catches].sort((a,b)=> (b.date+' '+(b.time||'00:00')).localeCompare(a.date+' '+(a.time||'00:00')));
   body.innerHTML = sorted.map(c=>{
-    const sp = SPECIES[c.species];
+    const sp = speciesOf(c.species);
     const sizeBits = [];
     if(c.length) sizeBits.push(c.length+'"');
     if(c.weight) sizeBits.push(c.weight+' lb');
@@ -3027,10 +3043,15 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   chip.className = 'chip sp';
   chip.dataset.species = key;
   chip.style.color = sp.color;
+  chip.style.setProperty('--spc', sp.color);
   chip.innerHTML = `<span class="dot" style="background:${sp.color}"></span>${sp.label}`;
   chip.addEventListener('click', ()=>{
     if(activeSpecies.has(key)){ activeSpecies.delete(key); chip.classList.remove('active'); }
     else { activeSpecies.add(key); chip.classList.add('active'); }
+    // The app opens at CLUSTER_ZOOM, so it starts in the clustered totals view.
+    // Every other switch drops out of it before filtering; these didn't, which is
+    // why tapping a species used to do nothing but nudge the catches pill count.
+    if(clustered){ clearClusters(); clustered = false; }
     applyFilter();
   });
   speciesCol.appendChild(chip);
@@ -3050,20 +3071,22 @@ speciesCol.addEventListener('wheel', (e)=>{
 }, {passive:false});
 
 function applyFilter(){
-  if(clustered){ updateClustering(); return; }
   const speciesActive = activeSpecies.size > 0;
+  if(clustered && !speciesActive){ updateClustering(); return; }
   markers.forEach(m=>{
     const s = m.spotRef;
-    const visible = s.ramp ? showLaunches : activeZones.has(s.zone);
+    // Picking a species means "show me those catches" — the fishing-spot pins
+    // stand down so only the diamonds are left on the map.
+    const visible = speciesActive ? false : (s.ramp ? showLaunches : activeZones.has(s.zone));
     if(!visible){ if(map.hasLayer(m)) map.removeLayer(m); return; }
     if(!map.hasLayer(m)) m.addTo(map);
-    const el = m.getElement();
-    if(el){ const dot = el.querySelector('.spot-marker'); if(dot) dot.classList.remove('dim'); }
   });
   catchMarkers.forEach(m=>{
     const c = m.catchRef;
     const spOk = !speciesActive || activeSpecies.has(c.species);
-    if(!showCatches || !spOk){ if(map.hasLayer(m)) map.removeLayer(m); return; }
+    // A species pick shows its diamonds even when My Catches is switched off,
+    // otherwise the button looks dead.
+    if((!showCatches && !speciesActive) || !spOk){ if(map.hasLayer(m)) map.removeLayer(m); return; }
     if(!map.hasLayer(m)) m.addTo(map);
   });
   document.getElementById('map').classList.toggle('launches-only', showLaunches);
@@ -3246,6 +3269,7 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   chip.dataset.species = key;
   chip.innerHTML = `<span class="dot" style="background:${sp.color}"></span><span class="lbl">${sp.label}</span>`;
   chip.style.color = sp.color;
+  chip.style.setProperty('--spc', sp.color);
   chip.addEventListener('click', ()=>{
     activeLogSpecies = key;
     logSpeciesRow.querySelectorAll('.chip').forEach(c=> c.classList.remove('active'));
@@ -4371,14 +4395,14 @@ searchInput.addEventListener('input', ()=>{
 
   // Catch log: species, location label, or notes
   const catchHits = catches.filter(c=>
-    SPECIES[c.species].label.toLowerCase().includes(q) ||
+    speciesOf(c.species).label.toLowerCase().includes(q) ||
     (c.locationLabel||'').toLowerCase().includes(q) ||
     (c.notes||'').toLowerCase().includes(q)
   ).sort((a,b)=> (b.date+' '+(b.time||'')).localeCompare(a.date+' '+(a.time||''))).slice(0, 20);
   if(catchHits.length){
-    html += '<div class="subhead">My Catches</div>';
+    html += '<div class="subhead">My Log</div>';
     html += catchHits.map(c=>{
-      const sp = SPECIES[c.species];
+      const sp = speciesOf(c.species);
       return `<div class="search-row" data-go="catch" data-id="${c.id}">
         <div style="display:flex; align-items:center; gap:8px; min-width:0;"><span class="sw" style="background:${sp.color}"></span><span class="nm">${sp.label} — ${escapeHTML(c.locationLabel)}</span></div>
         <div class="mt">${fmtDate(c.date)}</div>
