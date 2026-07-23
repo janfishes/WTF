@@ -2702,6 +2702,7 @@ function updateCatch(id, fields){
   persistCatches();
   renderCatchMarkers();
   renderCatchList();
+  updateCatchCount();
 }
 function deleteCatch(id){
   catches = catches.filter(c=>c.id!==id);
@@ -2719,7 +2720,15 @@ function updateStorageNote(){
   };
   document.getElementById('storageNote').textContent = notes[storageMode];
 }
-function updateCatchCount(){ document.getElementById('catchCount').textContent = catches.length; }
+/* The number on the My Catches button tracks whatever the species filter is
+   showing: the total for the picked species (summed if several are on), or the
+   whole log when none is picked. Same figure the catches count pill shows. */
+function catchFilterCount(){
+  return activeSpecies.size
+    ? catches.filter(c=> activeSpecies.has(c.species)).length
+    : catches.length;
+}
+function updateCatchCount(){ document.getElementById('catchCount').textContent = catchFilterCount(); }
 
 /* ===================== CATCH MARKERS ===================== */
 
@@ -3048,6 +3057,7 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   chip.addEventListener('click', ()=>{
     if(activeSpecies.has(key)){ activeSpecies.delete(key); chip.classList.remove('active'); }
     else { activeSpecies.add(key); chip.classList.add('active'); }
+    updateCatchCount();
     if(activeSpecies.size === 0){
       // Last species switched off — go back to the normal view for this zoom,
       // which means the totals pills again if we're zoomed out.
