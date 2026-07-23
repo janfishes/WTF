@@ -685,10 +685,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* Species + zone colors (fixed across themes) */
     --inshore:#1636ff; --offshore:#7a2fd6; --launch:#e02020; --catch:#7a2fd6;
     --brass:#c99a4b; --rust:#b5573a;
-    --blackdrum:#8a7a9b; --bonito:#3d6b8c; --flounder:#c9a876; --grouper:#a24a3d;
-    --jack:#c9c14b; --kingfish:#9fb3bd; --mackerel:#63b8aa; --mahi:#a8d05a;
-    --permit:#8ab0c4; --pompano:#d9c36a; --redfish:#c1652f; --shark:#5e6a72; --sheepshead:#7c8b96;
-    --snapper:#4f9268; --snook:#93a25a; --tarpon:#cfd8dd; --trout:#5fa8c7; --whiting:#d8cdb8;
+    --blackdrum:#8a7a9b; --bonito:#7c8b96; --flounder:#ffe14d; --grouper:#bb594a;
+    --jack:#c9c14b; --kingfish:#e8639f; --mackerel:#63b8aa; --mahi:#a8d05a;
+    --permit:#8ab0c4; --pompano:#c9a876; --redfish:#ff3b30; --shark:#c1652f; --sheepshead:#467ba1;
+    --snapper:#4f9268; --snook:#ff9f1c; --tarpon:#a970d8; --trout:#5fa8c7; --whiting:#93a25a;
     /* Theme-driven UI surface (defaults = Deep Water dark) */
     --navy-950:#060f18; --navy-900:#0b1c2b; --navy-800:#132a3d; --navy-700:#1c3a51;
     --line:#25455f; --fog:#e9eef1; --muted:#8fa8b8; --teal:#2fa39a;
@@ -1366,7 +1366,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:2px;">Map controls</div>
-      <p class="sheet-note"><b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>My Catches</b> shows/hides your catch diamonds. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one to show only where you've caught that species, and hide the rest. They don't change the fishing-spot pins. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
+      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
 
       
 
@@ -1689,7 +1689,7 @@ const SPECIES = {
   kingfish:  { label:"Kingfish",   short:"KG", color:"var(--kingfish)",  months:[0,0,1,2,2,1,1,1,2,2,1,0] },
   mackerel:  { label:"Mackerel",   short:"MK", color:"var(--mackerel)",  months:[0,0,2,2,1,1,1,1,2,2,1,0] },
   mahi:      { label:"Mahi",       short:"MH", color:"var(--mahi)",      months:[0,0,0,1,2,2,2,1,1,0,0,0] },
-  other:     { label:"Other",   short:"OT", color:"#9aa4ac",       months:[0,0,0,0,0,0,0,0,0,0,0,0] },
+  other:     { label:"Other",   short:"OT", color:"#22c7e8",       months:[0,0,0,0,0,0,0,0,0,0,0,0] },
   permit:    { label:"Permit",     short:"PM", color:"var(--permit)",    months:[0,0,1,2,2,2,2,2,1,1,0,0] },
   pompano:   { label:"Pompano",    short:"PO", color:"var(--pompano)",   months:[1,1,2,2,1,0,0,0,0,2,2,1] },
   redfish:   { label:"Redfish",    short:"RD", color:"var(--redfish)",   months:[1,1,1,1,1,0,0,0,2,2,2,1] },
@@ -2439,11 +2439,12 @@ function applySpotLabels(){
    PONCE DELEON INLET label or any other map content. Tapping a pill flies to that
    group's centroid. */
 
+let clustered = false;
 const pillLayer = document.createElement('div');
 pillLayer.id = 'pillLayer';
 document.getElementById('map').appendChild(pillLayer);
 
-function clearClusters(){ pillLayer.innerHTML = ''; }
+function clearClusters(){ pillLayer.innerHTML = ''; clustered = false; }
 
 function pillAnchorEl(key){
   if(key === 'inshore')  return document.querySelector('#metaRow .chip[data-zone="inshore"]');
@@ -2454,7 +2455,7 @@ function pillAnchorEl(key){
 }
 
 function buildClusters(){
-  clearClusters();
+  clearClusters();   // clears the flag; set back on at the end of this function
   const groups = {
     inshore:  { pts:[], color:'var(--inshore)', label:'spots', show:activeZones.has('inshore') },
     offshore: { pts:[], color:'var(--offshore)', label:'sites', show:activeZones.has('offshore') },
@@ -2514,6 +2515,7 @@ function buildClusters(){
     el.addEventListener('click', ()=>{ soloCategory(p.key); map.flyTo(target, CLUSTER_ZOOM + 2); });
     pillLayer.appendChild(el);
   });
+  clustered = true;
 }
 
 // Tapping a count pill expands ONLY that category: switch the top buttons so
@@ -2537,7 +2539,6 @@ function centroid(pts){
   return [la, ln];
 }
 
-let clustered = false;
 // Set to true right before a "white button" (FAB) programmatically moves/zooms the map
 // (e.g. Waves, Locate Me) so that zoom doesn't silently break out of the totals view.
 // Genuine user zooming (scroll/pinch/+-) and top-button taps are unaffected.
@@ -2550,9 +2551,8 @@ function updateClustering(){
     markers.forEach(m=>{ if(map.hasLayer(m)) map.removeLayer(m); });
     catchMarkers.forEach(m=>{ if(map.hasLayer(m)) map.removeLayer(m); });
     buildClusters();
-    clustered = true;
   } else {
-    if(clustered){ clearClusters(); clustered = false; }
+    clearClusters();
     applyFilter();
   }
 }
@@ -3000,6 +3000,13 @@ const speciesCol = document.getElementById('speciesCol');
 let activeZones = new Set(['inshore','offshore']);
 let activeSpecies = new Set();
 
+// Row order: My Catches, Inshore, Offshore | Launches, Labels
+const catchToggle = document.createElement('div');
+catchToggle.className = 'chip util active';
+catchToggle.id = 'catchToggle';
+catchToggle.innerHTML = 'My Catches (<span id="catchCount">0</span>)';
+metaRow.appendChild(catchToggle);
+
 Object.entries(ZONES).forEach(([key,z])=>{
   const chip = document.createElement('div');
   chip.className = 'chip active';
@@ -3009,18 +3016,11 @@ Object.entries(ZONES).forEach(([key,z])=>{
   chip.addEventListener('click', ()=>{
     if(activeZones.has(key)){ activeZones.delete(key); chip.classList.remove('active'); }
     else { activeZones.add(key); chip.classList.add('active'); }
-    if(clustered){ clearClusters(); clustered = false; }
+    clearClusters();
     applyFilter();
   });
   metaRow.appendChild(chip);
 });
-
-// My Catches, Launches, Labels — built here so they sit to the right of the zone buttons
-const catchToggle = document.createElement('div');
-catchToggle.className = 'chip util active';
-catchToggle.id = 'catchToggle';
-catchToggle.innerHTML = 'My Catches (<span id="catchCount">0</span>)';
-metaRow.appendChild(catchToggle);
 
 const chipBreak = document.createElement('div');
 chipBreak.className = 'chip-break';
@@ -3048,11 +3048,19 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   chip.addEventListener('click', ()=>{
     if(activeSpecies.has(key)){ activeSpecies.delete(key); chip.classList.remove('active'); }
     else { activeSpecies.add(key); chip.classList.add('active'); }
-    // The app opens at CLUSTER_ZOOM, so it starts in the clustered totals view.
-    // Every other switch drops out of it before filtering; these didn't, which is
-    // why tapping a species used to do nothing but nudge the catches pill count.
-    if(clustered){ clearClusters(); clustered = false; }
-    applyFilter();
+    if(activeSpecies.size === 0){
+      // Last species switched off — go back to the normal view for this zoom,
+      // which means the totals pills again if we're zoomed out.
+      updateClustering();
+    } else {
+      // The app opens at CLUSTER_ZOOM, so it starts in the totals view; drop out
+      // of it so the diamonds actually have somewhere to appear.
+      clearClusters();
+      applyFilter();
+      if(!catches.some(c=> activeSpecies.has(c.species))){
+        showToast('No ' + sp.label.toLowerCase() + ' in your log yet');
+      }
+    }
   });
   speciesCol.appendChild(chip);
 });
@@ -3073,6 +3081,7 @@ speciesCol.addEventListener('wheel', (e)=>{
 function applyFilter(){
   const speciesActive = activeSpecies.size > 0;
   if(clustered && !speciesActive){ updateClustering(); return; }
+  clearClusters();   // individual pins and totals pills must never be on screen together
   markers.forEach(m=>{
     const s = m.spotRef;
     // Picking a species means "show me those catches" — the fishing-spot pins
@@ -3096,13 +3105,13 @@ function applyFilter(){
 document.getElementById('launchToggle').addEventListener('click', function(){
   showLaunches = !showLaunches;
   this.classList.toggle('active', showLaunches);
-  if(clustered){ clearClusters(); clustered = false; }
+  clearClusters();
   applyFilter();
 });
 document.getElementById('catchToggle').addEventListener('click', function(){
   showCatches = !showCatches;
   this.classList.toggle('active', showCatches);
-  if(clustered){ clearClusters(); clustered = false; }
+  clearClusters();
   applyFilter();
 });
 document.getElementById('labelsToggle').addEventListener('click', function(){
