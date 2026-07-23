@@ -679,7 +679,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     /* Species + zone colors (fixed across themes) */
@@ -765,7 +765,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     color:var(--teal); pointer-events:none;
   }
   #speciesCol{
-    position:absolute; left:10px; top:10px; bottom:14px; z-index:1100;
+    /* Stops short of the bottom so the zoom buttons can sit underneath it. */
+    position:absolute; left:10px; top:10px; bottom:84px; z-index:1100;
     display:flex; flex-direction:column; gap:3px; overflow-y:auto;
     pointer-events:auto; padding-right:4px; padding-bottom:8px; align-items:flex-start;
     scrollbar-width:none;
@@ -788,11 +789,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-control-attribution{background:rgba(6,15,24,.75) !important; color:var(--muted) !important; font-size:9.5px !important;}
   .leaflet-control-attribution a{color:var(--teal) !important;}
   .leaflet-control-zoom a{background:var(--navy-900) !important; color:var(--fog) !important; border-color:var(--line) !important;}
-  /* Fallback only — sizeZoomControl() below measures the real stack and overrides this. */
-  .leaflet-bottom.leaflet-right .leaflet-control-zoom{margin-bottom:360px; margin-right:12px;}
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom{margin-bottom:14px; margin-left:10px;}
   .leaflet-control-scale-line{
-    background:rgba(6,15,24,.75) !important; color:var(--fog) !important; border-color:var(--muted) !important;
-    font-family:'JetBrains Mono',monospace !important; font-size:10px !important;
+    background:rgba(6,15,24,.8) !important; color:#fff !important; border-color:var(--fog) !important;
+    font-family:'JetBrains Mono',monospace !important; font-size:11px !important; font-weight:600 !important;
+    /* Leaflet ships a white text-shadow meant for light maps; on this one it just blurs the digits. */
+    text-shadow:none !important;
   }
 
   /* Spot name labels: plain white, clean font, no bubble/arrow/shading */
@@ -843,7 +845,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
   /* My Catches matches the other switches: black when off (accent text/border),
      filled with the current theme accent when on. */
-  #metaRow .chip{font-weight:800;}
+  /* Space Grotesk stops at 700, so the extra weight comes from a hairline stroke. */
+  #metaRow .chip{font-weight:800; -webkit-text-stroke:0.35px currentColor;
+                 padding:3px 9px 7px; font-size:clamp(11.5px, 2.9vw, 13.5px);}
+  /* The catch count stays at normal weight — only the label is bolded. */
+  #metaRow .chip #catchCount{font-weight:500; -webkit-text-stroke:0;}
   #catchToggle{background:#000 !important; color:var(--teal) !important; font-weight:700; border:1px solid var(--teal) !important; box-shadow:none !important;}
   #catchToggle:not(.active){opacity:1; background:#000 !important; color:var(--teal) !important; border-color:var(--teal) !important;}
   /* Labels: black with white text when off, inverted to white-on-black when on */
@@ -894,19 +900,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Floating action buttons ---------- */
   .fab-col{
-    position:absolute; right:10px; bottom:24px; z-index:1100;
-    display:flex; flex-direction:column; gap:8px; align-items:flex-end;
-    max-height:calc(100% - 120px); 
+    /* bottom:56px keeps the stack off the scale bar and attribution credits below it. */
+    position:absolute; right:10px; bottom:56px; z-index:1100;
+    display:flex; flex-direction:column; gap:7px; align-items:flex-end;
+    max-height:calc(100% - 150px); 
   }
   .fab{
-    display:flex; align-items:center; gap:5px; padding:3px 9px; border-radius:100px;
+    display:flex; align-items:center; gap:5px; padding:2px 8px; border-radius:100px;
     background:rgba(11,28,43,.92); border:1px solid var(--line); color:var(--fog);
-    font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600;
+    font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:600;
     cursor:pointer; backdrop-filter:blur(6px); box-shadow:0 4px 14px rgba(0,0,0,.35);
   }
-  .fab svg{width:14px; height:14px; flex:0 0 auto;}
+  .fab svg{width:13px; height:13px; flex:0 0 auto;}
   .fab.primary{background:#fff; border-color:#fff; color:#000;}
-  .fab svg{width:15px; height:15px; flex:0 0 auto;}
+  .fab svg{width:13px; height:13px; flex:0 0 auto;}
 
   /* ---------- Bottom sheets ---------- */
   .scrim{position:absolute; inset:0; background:rgba(3,9,15,.55); z-index:1200; opacity:0; pointer-events:none; transition:opacity .2s;}
@@ -963,14 +970,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     #filterWrap .chiprow{justify-content:center; flex-wrap:wrap;}
     #metaRow{row-gap:5px;}
     /* Let the top three shrink a little rather than wrap out of order */
-    #metaRow .chip{flex:0 1 auto; min-width:0;}
+    #metaRow .chip{flex:0 1 auto; min-width:0;}   /* size comes from the clamp() above */
     .chip-break{display:block; flex-basis:100%; height:0;}
     .chip{padding:4px 8px 7px; font-size:13px;}
     #speciesCol{top:8px;}
   }
   @media (max-width:400px){
     #filterWrap{left:86px;}
-    #metaRow .chip{padding:4px 6px 6px; font-size:12px;}
+    #metaRow .chip{padding:3px 6px 6px;}
   }
 
   /* ---------- Tabs ---------- */
@@ -1328,14 +1335,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
       Street Map
     </button>
-    <button class="fab" id="disclaimerBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg>
-      Disclaimer
-    </button>
-    <button class="fab" id="copyrightBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M14.8 9.6a3.4 3.4 0 1 0 0 4.8"></path></svg>
-      Copyright
-    </button>
   </div>
 </div>
 
@@ -1447,7 +1446,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       
 
+      <div class="subhead">Disclaimer</div>
+      <p class="sheet-note">No liability is assumed by the developer or owners of this app for any use of this app.</p>
 
+      
+
+      <div class="subhead">Warning</div>
+      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
+
+      
+
+      <div class="subhead">Copyright</div>
+      <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
+      <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved.</p>
+      <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
     </div>
   </div>
 </div>
@@ -1654,34 +1666,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="offlineClear" style="display:none;">🗑 Clear offline map</button>
     </div>
     <p class="sheet-note" style="margin-top:10px; color:var(--muted);">Zoom 16 (closest) isn't offered for download — at well over a gigabyte it's too large to store reliably on a phone. The saved levels cover navigation and spot-finding; if you're offline and zoom in closer than the saved level, the imagery may go blank until you zoom back out or reconnect.</p>
-  </div>
-</div>
-
-<div class="scrim" id="disclaimerScrim"></div>
-<div class="sheet" id="disclaimerSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-head">
-    <h2>Disclaimer</h2>
-    <button class="close" id="disclaimerClose">CLOSE ✕</button>
-  </div>
-  <div class="sheet-body">
-    <p class="sheet-note">No liability is assumed by the developer or owners of this app for any use of this app.</p>
-    <div class="subhead">Warning</div>
-    <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
-  </div>
-</div>
-
-<div class="scrim" id="copyrightScrim"></div>
-<div class="sheet" id="copyrightSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-head">
-    <h2>Copyright</h2>
-    <button class="close" id="copyrightClose">CLOSE ✕</button>
-  </div>
-  <div class="sheet-body">
-    <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
-    <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved.</p>
-    <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
   </div>
 </div>
 
@@ -1976,7 +1960,7 @@ function showToast(msg, duration=2400){
 /* ===================== MAP INIT ===================== */
 
 const map = L.map('map', { zoomControl:false, attributionControl:true, minZoom:1 }).setView([29.06,-80.87],11);
-L.control.zoom({position:'bottomright'}).addTo(map);
+L.control.zoom({position:'bottomleft'}).addTo(map);
 const CLUSTER_ZOOM = 9; // at/below this zoom, spots collapse into category count ("totals") pills
 L.control.scale({position:'bottomright', imperial:true, metric:false}).addTo(map);
 
@@ -2357,22 +2341,6 @@ document.getElementById('mapModeBtn').addEventListener('click', function(){
     this.classList.add('street-on');
   }
 });
-
-/* The zoom buttons sit bottom-right, directly above the FAB stack. Measure the stack
-   rather than hard-coding a gap, so adding or removing a button can't bury the control. */
-function sizeZoomControl(){
-  const col = document.querySelector('.fab-col');
-  const zc  = document.querySelector('.leaflet-bottom.leaflet-right .leaflet-control-zoom');
-  if(!col || !zc) return;
-  const colBottom = parseFloat(getComputedStyle(col).bottom) || 24;
-  zc.style.marginBottom = Math.round(col.getBoundingClientRect().height + colBottom + 10) + 'px';
-}
-sizeZoomControl();
-window.addEventListener('resize', sizeZoomControl);
-window.addEventListener('orientationchange', ()=> setTimeout(sizeZoomControl, 250));
-// Web fonts land after first paint and change the stack's height, so measure again.
-[100, 400, 1200].forEach(t=> setTimeout(sizeZoomControl, t));
-if(document.fonts && document.fonts.ready) document.fonts.ready.then(sizeZoomControl);
 
 // Recover map sizing on devices where the container size settles late (iOS Safari)
 function kickMap(){
@@ -5187,30 +5155,6 @@ THEMES.forEach(t=>{
 const themeSheet = document.getElementById('themeSheet');
 const themeScrim = document.getElementById('themeScrim');
 document.getElementById('themeBtn').addEventListener('click', ()=>{ themeSheet.classList.add('open'); themeScrim.classList.add('open'); });
-
-// Disclaimer modal (bottom-sheet)
-(function(){
-  const sheet = document.getElementById('disclaimerSheet');
-  const scrim = document.getElementById('disclaimerScrim');
-  const btn = document.getElementById('disclaimerBtn');
-  const open = ()=>{ sheet.classList.add('open'); scrim.classList.add('open'); if(btn) btn.classList.add('pressed'); };
-  const close = ()=>{ sheet.classList.remove('open'); scrim.classList.remove('open'); if(btn) btn.classList.remove('pressed'); };
-  if(btn) btn.addEventListener('click', open);
-  document.getElementById('disclaimerClose').addEventListener('click', close);
-  scrim.addEventListener('click', close);
-})();
-
-// Copyright sheet (bottom-sheet)
-(function(){
-  const sheet = document.getElementById('copyrightSheet');
-  const scrim = document.getElementById('copyrightScrim');
-  const btn = document.getElementById('copyrightBtn');
-  const open = ()=>{ sheet.classList.add('open'); scrim.classList.add('open'); if(btn) btn.classList.add('pressed'); };
-  const close = ()=>{ sheet.classList.remove('open'); scrim.classList.remove('open'); if(btn) btn.classList.remove('pressed'); };
-  if(btn) btn.addEventListener('click', open);
-  document.getElementById('copyrightClose').addEventListener('click', close);
-  scrim.addEventListener('click', close);
-})();
 
 // Startup acceptance gate — shown once per device, then remembered
 (function(){
