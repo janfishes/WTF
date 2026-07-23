@@ -731,7 +731,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   /* Fish logo sits centred in the bar, its baseline on the "Where's The Fish?" line */
   header > .logo-wrap{
-    position:absolute; left:50%; bottom:2px; transform:translateX(-50%);
+    position:absolute; left:50%; top:50%; bottom:auto; transform:translate(-50%,-50%);
     pointer-events:none; z-index:1;
   }
   .hdr-left{display:inline-flex; flex-direction:column; align-items:stretch; justify-content:flex-start;}
@@ -788,7 +788,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-control-attribution{background:rgba(6,15,24,.75) !important; color:var(--muted) !important; font-size:9.5px !important;}
   .leaflet-control-attribution a{color:var(--teal) !important;}
   .leaflet-control-zoom a{background:var(--navy-900) !important; color:var(--fog) !important; border-color:var(--line) !important;}
-  .leaflet-bottom.leaflet-right .leaflet-control-zoom{margin-bottom:180px; margin-right:12px;}
+  /* Fallback only — sizeZoomControl() below measures the real stack and overrides this. */
+  .leaflet-bottom.leaflet-right .leaflet-control-zoom{margin-bottom:360px; margin-right:12px;}
   .leaflet-control-scale-line{
     background:rgba(6,15,24,.75) !important; color:var(--fog) !important; border-color:var(--muted) !important;
     font-family:'JetBrains Mono',monospace !important; font-size:10px !important;
@@ -820,7 +821,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     position:absolute; top:10px; left:150px; right:10px; z-index:1100;
     display:flex; flex-direction:column; gap:6px; pointer-events:none;
   }
-  #filterWrap .chiprow{justify-content:flex-end;}
+  /* The row spans the map's full width but only the chips should catch taps —
+     without this the empty stretch swallows drags and taps meant for the map. */
+  #filterWrap .chiprow{justify-content:flex-end; pointer-events:none;}
+  #filterWrap .chiprow > *{pointer-events:auto;}
   .chiprow{
     display:flex; gap:6px; overflow-x:auto; padding-bottom:2px;
     pointer-events:auto; scrollbar-width:none;
@@ -839,6 +843,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
   /* My Catches matches the other switches: black when off (accent text/border),
      filled with the current theme accent when on. */
+  #metaRow .chip{font-weight:800;}
   #catchToggle{background:#000 !important; color:var(--teal) !important; font-weight:700; border:1px solid var(--teal) !important; box-shadow:none !important;}
   #catchToggle:not(.active){opacity:1; background:#000 !important; color:var(--teal) !important; border-color:var(--teal) !important;}
   /* Labels: black with white text when off, inverted to white-on-black when on */
@@ -952,9 +957,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     .hdr-right{min-width:0;}
     /* Top toggles: 3 on top (Inshore, Offshore, My Catches), 2 underneath (Launches, Labels),
        centered between the species column (left) and the zoom buttons (right) */
-    /* Nothing sits in the map's top-right corner (the zoom buttons live bottom-right),
-       so the button block gets that width back. Without it, Inshore+Offshore+My Catches
-       couldn't fit on one line and the row order broke up on narrow screens. */
+    /* The row runs the full width so Inshore+Offshore+My Catches keep one line; the row
+       itself is pointer-events:none so only the chips take taps. */
     #filterWrap{left:92px; right:8px; top:8px; gap:4px; max-width:none;}
     #filterWrap .chiprow{justify-content:center; flex-wrap:wrap;}
     #metaRow{row-gap:5px;}
@@ -1055,8 +1059,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     display:none; flex-direction:column; align-items:center; justify-content:center; padding:18px; gap:14px;
   }
   #cropModal.open{display:flex;}
-  #cropStage{position:relative; max-width:100%; max-height:70vh; touch-action:none; user-select:none; line-height:0;}
-  #cropStage img{max-width:100%; max-height:70vh; display:block; border-radius:8px;}
+  #cropStage{position:relative; max-width:100%; max-height:70vh; max-height:70dvh; touch-action:none; user-select:none; line-height:0;}
+  #cropStage img{max-width:100%; max-height:70vh; max-height:70dvh; display:block; border-radius:8px;}
   #cropRect{position:absolute; border:2px solid #fff; box-shadow:0 0 0 9999px rgba(0,0,0,.5); cursor:move;}
   #cropRect .h{position:absolute; width:16px; height:16px; background:#fff; border-radius:50%;}
   #cropRect .h.br{right:-8px; bottom:-8px; cursor:nwse-resize;}
@@ -1128,7 +1132,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   /* All bottom buttons: white bg + black text when off; colored fill + black text when active (like Tides) */
   .fab{background:#fff !important; border-color:#fff !important; color:#000 !important;}
-  .fab svg{stroke:var(--teal) !important;}
+  .fab svg{stroke:var(--teal) !important; stroke-width:2.6;}
   /* Selected white buttons all adopt the current theme's accent color (--teal),
      so they follow whatever theme the user picks. */
   #tidePinBtn.tide-active{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
@@ -1328,6 +1332,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg>
       Disclaimer
     </button>
+    <button class="fab" id="copyrightBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M14.8 9.6a3.4 3.4 0 1 0 0 4.8"></path></svg>
+      Copyright
+    </button>
   </div>
 </div>
 
@@ -1359,7 +1367,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div class="zk"><div class="dot" style="background:var(--offshore)"></div>Offshore — natural reefs, artificial sites &amp; wrecks 3–34nm out</div>
       </div>
       <div class="subhead">Offshore targets</div>
-      <p class="sheet-note">Primary bottom fishing targets: <b>flounder, grouper, snapper, snook</b>. Primary trolling / topwater targets: <b>kingfish, mackerel, jack, tarpon, mahi</b>.</p>
+      <p class="sheet-note">Primary bottom fishing targets: <b>flounder, grouper, snapper, snook, sheepshead</b>. Primary trolling / topwater targets: <b>kingfish, mackerel, jack, tarpon, mahi</b>.</p>
+      <div class="subhead">Offshore sites</div>
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 17–34nm out and are outside the default view; pan/zoom to find them.</p>
     </div>
     <div id="panel-catches" style="display:none;">
@@ -1372,12 +1381,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="catchListBody"></div>
     </div>
     <div id="panel-help" style="display:none;">
-      <div class="subhead" style="margin-top:2px;">Disclaimer</div>
-      <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida. No liability is assumed by the developer or owners of this app for any use of this app.<br><br><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
-
-      
-
-      <div class="subhead">Map controls</div>
+      <div class="subhead" style="margin-top:2px;">Map controls</div>
       <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
 
       
@@ -1661,7 +1665,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="disclaimerClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida. No liability is assumed by the developer or owners of this app for any use of this app.<br><br><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
+    <p class="sheet-note">No liability is assumed by the developer or owners of this app for any use of this app.</p>
+    <div class="subhead">Warning</div>
+    <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
+  </div>
+</div>
+
+<div class="scrim" id="copyrightScrim"></div>
+<div class="sheet" id="copyrightSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2>Copyright</h2>
+    <button class="close" id="copyrightClose">CLOSE ✕</button>
+  </div>
+  <div class="sheet-body">
+    <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
+    <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved.</p>
+    <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
   </div>
 </div>
 
@@ -1956,7 +1976,7 @@ function showToast(msg, duration=2400){
 /* ===================== MAP INIT ===================== */
 
 const map = L.map('map', { zoomControl:false, attributionControl:true, minZoom:1 }).setView([29.06,-80.87],11);
-L.control.zoom({position:'topright'}).addTo(map);
+L.control.zoom({position:'bottomright'}).addTo(map);
 const CLUSTER_ZOOM = 9; // at/below this zoom, spots collapse into category count ("totals") pills
 L.control.scale({position:'bottomright', imperial:true, metric:false}).addTo(map);
 
@@ -2337,6 +2357,22 @@ document.getElementById('mapModeBtn').addEventListener('click', function(){
     this.classList.add('street-on');
   }
 });
+
+/* The zoom buttons sit bottom-right, directly above the FAB stack. Measure the stack
+   rather than hard-coding a gap, so adding or removing a button can't bury the control. */
+function sizeZoomControl(){
+  const col = document.querySelector('.fab-col');
+  const zc  = document.querySelector('.leaflet-bottom.leaflet-right .leaflet-control-zoom');
+  if(!col || !zc) return;
+  const colBottom = parseFloat(getComputedStyle(col).bottom) || 24;
+  zc.style.marginBottom = Math.round(col.getBoundingClientRect().height + colBottom + 10) + 'px';
+}
+sizeZoomControl();
+window.addEventListener('resize', sizeZoomControl);
+window.addEventListener('orientationchange', ()=> setTimeout(sizeZoomControl, 250));
+// Web fonts land after first paint and change the stack's height, so measure again.
+[100, 400, 1200].forEach(t=> setTimeout(sizeZoomControl, t));
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(sizeZoomControl);
 
 // Recover map sizing on devices where the container size settles late (iOS Safari)
 function kickMap(){
@@ -5161,6 +5197,18 @@ document.getElementById('themeBtn').addEventListener('click', ()=>{ themeSheet.c
   const close = ()=>{ sheet.classList.remove('open'); scrim.classList.remove('open'); if(btn) btn.classList.remove('pressed'); };
   if(btn) btn.addEventListener('click', open);
   document.getElementById('disclaimerClose').addEventListener('click', close);
+  scrim.addEventListener('click', close);
+})();
+
+// Copyright sheet (bottom-sheet)
+(function(){
+  const sheet = document.getElementById('copyrightSheet');
+  const scrim = document.getElementById('copyrightScrim');
+  const btn = document.getElementById('copyrightBtn');
+  const open = ()=>{ sheet.classList.add('open'); scrim.classList.add('open'); if(btn) btn.classList.add('pressed'); };
+  const close = ()=>{ sheet.classList.remove('open'); scrim.classList.remove('open'); if(btn) btn.classList.remove('pressed'); };
+  if(btn) btn.addEventListener('click', open);
+  document.getElementById('copyrightClose').addEventListener('click', close);
   scrim.addEventListener('click', close);
 })();
 
