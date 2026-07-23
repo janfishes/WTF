@@ -859,6 +859,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:700; border:1px solid var(--offshore) !important; box-shadow:none !important;}
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:#c09aff !important; border-color:#9a6ae0 !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
+  .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:700; border:1px solid var(--launch) !important; box-shadow:none !important;}
+  .chip[data-zone="launch"]:not(.active){opacity:1; color:#ff8585 !important; border-color:#d05050 !important;}
+  .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
   /* Log-sheet species picker: match the bright left-column buttons (black bg,
      vivid brightened/saturated species color) and keep a clear selected state. */
@@ -1125,13 +1128,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   /* All bottom buttons: white bg + black text when off; colored fill + black text when active (like Tides) */
   .fab{background:#fff !important; border-color:#fff !important; color:#000 !important;}
-  .fab svg{stroke:#000 !important;}
+  .fab svg{stroke:var(--teal) !important;}
   /* Selected white buttons all adopt the current theme's accent color (--teal),
      so they follow whatever theme the user picks. */
   #tidePinBtn.tide-active{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
   #tidePinBtn.tide-active svg{stroke:#fff !important;}
-  .fab.primary.pressed{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
-  .fab.primary.pressed svg{stroke:#fff !important;}
+  .fab.pressed{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
+  .fab.pressed svg{stroke:#fff !important;}
   #locateBtn.active-locate{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
   #locateBtn.active-locate svg{stroke:#fff !important;}
   #mapModeBtn.street-on{background:var(--teal) !important; border-color:var(--teal) !important; color:#fff !important;}
@@ -1289,21 +1292,21 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="tidePanelBody"></div>
   </div>
   <div class="fab-col">
+    <button class="fab primary" id="logCatchFab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+      Catch
+    </button>
+    <button class="fab" id="myLogBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 21 12 12 21 3 12Z"></path></svg>
+      My Log
+    </button>
     <button class="fab" id="addSpotBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
       Spot
     </button>
-    <button class="fab primary" id="logCatchFab">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
-      Log Catch
-    </button>
-    <button class="fab" id="locateBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg>
-      Locate Me
-    </button>
     <button class="fab" id="guideBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg>
-      Guide &amp; Log
+      Guide
     </button>
     <button class="fab" id="tidePinBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
@@ -1313,9 +1316,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 14c2.5-4 5-4 7.5 0s5 4 7.5 0 3.5-3 5-1M2 19c2.5-4 5-4 7.5 0s5 4 7.5 0 3.5-3 5-1"></path><circle cx="17" cy="6" r="2.2"></circle></svg>
       Waves
     </button>
+    <button class="fab" id="locateBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg>
+      Locate Me
+    </button>
     <button class="fab" id="mapModeBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
-      Streets
+      Street Map
     </button>
     <button class="fab" id="disclaimerBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg>
@@ -1332,7 +1339,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <h2 id="infoTitle">Season Guide</h2>
     <button class="close" id="infoClose">CLOSE ✕</button>
   </div>
-  <div class="tabs">
+  <div class="tabs" style="display:none;">
     <button class="tab active" data-tab="season">Season Guide</button>
     <button class="tab" data-tab="catches">My Log</button>
     <button class="tab" data-tab="help">Help</button>
@@ -1356,7 +1363,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 17–34nm out and are outside the default view; pan/zoom to find them.</p>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Use ✎ to edit an entry or ✕ to delete it.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Use ✎ to edit an entry or ✕ to delete it. <b>Export backup</b> saves your whole log to a file named <b>wtf-log-backup.json</b>, and <b>Import backup</b> reads that same file back in — on this device, another one, or a fresh copy of the app.</p>
       <div class="loc-btns" style="margin-bottom:12px;">
         <button class="mini-btn" id="exportBtn">⬇ Export backup</button>
         <button class="mini-btn" id="importBtn">⬆ Import backup</button>
@@ -1365,7 +1372,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="catchListBody"></div>
     </div>
     <div id="panel-help" style="display:none;">
-      <div class="subhead" style="margin-top:2px;">Map controls</div>
+      <div class="subhead" style="margin-top:2px;">Disclaimer</div>
+      <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida. No liability is assumed by the developer or owners of this app for any use of this app.<br><br><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
+
+      
+
+      <div class="subhead">Map controls</div>
       <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
 
       
@@ -1374,7 +1386,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Any popup that opens on the map — a spot, a catch, a reef with its drops showing — can be <b>dragged anywhere on screen</b> so it isn't covering the pins underneath. <b>On a phone:</b> press and hold anywhere on the popup that isn't a button, then slide your finger; the popup follows and stays put when you lift off. <b>On a computer:</b> click and hold anywhere on the popup that isn't a button or link, then drag. Buttons, links and the scrolling drops list still work normally, so you can drag from the popup's title or body text. The <b>3-Day Tide Forecast</b> panel moves the same way — drag it by its title bar.</p>
 
       <div class="subhead">Log a catch</div>
-      <p class="sheet-note">Tap <b>Log Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; needs internet), and set the location three ways: choose a known spot from the alphabetical list, <b>Drop pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Length, weight, and notes are optional.</p>
+      <p class="sheet-note">Tap <b>+ Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; needs internet), and set the location three ways: choose a known spot from the alphabetical list, <b>Drop pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Length, weight, and notes are optional.</p>
 
       
 
@@ -1384,8 +1396,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Edit or delete a catch</div>
-      <p class="sheet-note">In the Log Catch sheet, the <b>Location</b> list holds every known fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, since they're put-in points rather than places you fish; use <b>Drop pin</b> or <b>My location</b> if you did catch something at one. The <b>Inshore</b> and <b>Offshore</b> switches just above the list narrow it down when you're only fishing one of them.</p>
-      <p class="sheet-note">Tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and ✕ buttons on any entry in the My Log tab. Editing reopens the form with everything filled in.</p>
+      <p class="sheet-note">In the <b>+ Catch</b> sheet, the <b>Location</b> list holds every known fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, since they're put-in points rather than places you fish; use <b>Drop pin</b> or <b>My location</b> if you did catch something at one. The <b>Inshore</b> and <b>Offshore</b> switches just above the list narrow it down when you're only fishing one of them.</p>
+      <p class="sheet-note">Tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
 
       
 
@@ -1415,7 +1427,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Tides (works offline)</div>
-      <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed. Stations north of the inlet (Spruce Creek, Rose Bay, Dunlawton) are calibrated; the wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
+      <p class="sheet-note">Tap <b>Street Map</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed. Stations north of the inlet (Spruce Creek, Rose Bay, Dunlawton) are calibrated; the wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Calibrate tide lags from station data</button></div>
 
       
@@ -1427,12 +1439,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Tips</div>
-      <p class="sheet-note">On a phone, use <b>Add to Home Screen</b> to launch it like an app. Each person's catches and notes stay private on their own device. Use <b>Export backup</b> in the My Log tab to save your log as a file, and <b>Import backup</b> to bring it into a new copy or another device.</p>
+      <p class="sheet-note">On a phone, use <b>Add to Home Screen</b> to launch it like an app. Each person's catches and notes stay private on their own device. Use <b>Export backup</b> in the My Log sheet to save your log as a file, and <b>Import backup</b> to bring it into a new copy or another device.</p>
 
       
 
-      <div class="subhead">Disclaimer</div>
-      <p class="sheet-note">This app was developed by Jan G. Neal for the express use of saltwater anglers in Volusia County, Florida. No liability is assumed by the developer or owners of this app for any use of this app.<br><br><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
 
     </div>
   </div>
@@ -1536,7 +1546,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="addSpotClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <p class="sheet-note">Save your own fishing spot to the map. It's stored on this device and shows up like the built-in spots, including in the Log Catch location list. Drop a pin or use your current location, name it, and choose inshore or offshore.</p>
+    <p class="sheet-note">Save your own fishing spot to the map. It's stored on this device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location, name it, and choose inshore or offshore.</p>
     <label class="field-label">Name</label>
     <input type="text" id="addSpotName" placeholder="e.g. My honey hole" style="width:100%; box-sizing:border-box;">
     <label class="field-label">Type</label>
@@ -1651,7 +1661,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="disclaimerClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <p class="sheet-note">This app was developed by Jan G. Neal for the express use of saltwater anglers in Volusia County, Florida. No liability is assumed by the developer or owners of this app for any use of this app.<br><br><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
+    <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida. No liability is assumed by the developer or owners of this app for any use of this app.<br><br><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
   </div>
 </div>
 
@@ -2305,7 +2315,7 @@ function showTileHelp(){
 providerIdx = SAT_IDX;
 mountBaseLayer(SAT_IDX);
 
-/* ---------- Satellite / Streets toggle ---------- */
+/* ---------- Satellite / Street Map toggle ---------- */
 // Default view is the satellite composite (USGS Imagery Topo land over the
 // Sentinel-2 ocean fill); the button swaps in the OpenFreeMap street map.
 let satMode = true;
@@ -2318,7 +2328,7 @@ document.getElementById('mapModeBtn').addEventListener('click', function(){
   if(satMode){
     providerIdx = SAT_IDX;
     mountBaseLayer(SAT_IDX);
-    label.textContent = ' Streets';
+    label.textContent = ' Street Map';
     this.classList.remove('street-on');
   } else {
     providerIdx = OFM_IDX;
@@ -2969,7 +2979,7 @@ function wirePopup(popup){
 function renderCatchList(){
   const body = document.getElementById('catchListBody');
   if(catches.length===0){
-    body.innerHTML = `<p class="empty-note">No catches logged yet. Tap <b>Log Catch</b> to add your first one.</p>`;
+    body.innerHTML = `<p class="empty-note">No catches logged yet. Tap <b>+ Catch</b> to add your first one.</p>`;
     return;
   }
   const sorted = [...catches].sort((a,b)=> (b.date+' '+(b.time||'00:00')).localeCompare(a.date+' '+(a.time||'00:00')));
@@ -3156,19 +3166,27 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
 const infoSheet = document.getElementById('infoSheet');
 const infoScrim = document.getElementById('infoScrim');
 const infoTitle = document.getElementById('infoTitle');
-// Guide & Log shows the Season Guide + My Log tabs; the ? Help button shows only Help.
-// (Season Guide and My Log were removed from Help since they're reachable from the white Guide & Log button.)
+// One sheet, three panels, no tab strip: the Guide button opens the Season Guide,
+// the My Log button opens the catch log, and the ? Help button opens Help.
+// The .tab elements still drive panel visibility and the sheet title; they're just hidden.
+const INFO_BTNS = ['guideBtn','myLogBtn'];
 function setInfoMode(mode){
-  const showHelp = (mode === 'help');
-  document.querySelector('.tab[data-tab="season"]').style.display  = showHelp ? 'none' : '';
-  document.querySelector('.tab[data-tab="catches"]').style.display = showHelp ? 'none' : '';
-  document.querySelector('.tab[data-tab="help"]').style.display    = showHelp ? '' : 'none';
-  document.querySelector(showHelp ? '.tab[data-tab="help"]' : '.tab[data-tab="season"]').click();
+  const tab = document.querySelector('.tab[data-tab="' + mode + '"]');
+  if(tab) tab.click();
 }
-document.getElementById('guideBtn').addEventListener('click', ()=>{ setInfoMode('guide'); infoSheet.classList.add('open'); infoScrim.classList.add('open'); });
+function openInfoSheet(mode, btnId){
+  setInfoMode(mode);
+  infoSheet.classList.add('open'); infoScrim.classList.add('open');
+  INFO_BTNS.forEach(id=>{ const b = document.getElementById(id); if(b) b.classList.toggle('pressed', id === btnId); });
+}
+document.getElementById('guideBtn').addEventListener('click', ()=> openInfoSheet('season', 'guideBtn'));
+document.getElementById('myLogBtn').addEventListener('click', ()=> openInfoSheet('catches', 'myLogBtn'));
 document.getElementById('infoClose').addEventListener('click', closeInfoSheet);
 infoScrim.addEventListener('click', closeInfoSheet);
-function closeInfoSheet(){ infoSheet.classList.remove('open'); infoScrim.classList.remove('open'); }
+function closeInfoSheet(){
+  infoSheet.classList.remove('open'); infoScrim.classList.remove('open');
+  INFO_BTNS.forEach(id=>{ const b = document.getElementById(id); if(b) b.classList.remove('pressed'); });
+}
 
 const TAB_TITLES = { season:'Season Guide', catches:'My Log', help:'Help' };
 document.querySelectorAll('.tab').forEach(tab=>{
@@ -3512,7 +3530,7 @@ window.removeCustomSpot = function(id){
   map.closePopup();
 };
 function refreshCustomSpotSelect(){
-  // User-added spots now appear in the Log Catch list alongside the built-ins,
+  // User-added spots now appear in the + Catch list alongside the built-ins,
   // grouped under their own zone. rebuildSpotSelect() reads customSpots directly.
   rebuildSpotSelect();
 }
@@ -3537,9 +3555,10 @@ let addSpotZone = 'inshore';
 let placingSpotPin = false;
 const addSpotSheet = document.getElementById('addSpotSheet');
 const addSpotScrim = document.getElementById('addSpotScrim');
-function openAddSpot(){ addSpotSheet.classList.add('open'); addSpotScrim.classList.add('open'); }
+function openAddSpot(){ addSpotSheet.classList.add('open'); addSpotScrim.classList.add('open'); document.getElementById('addSpotBtn').classList.add('pressed'); }
 function closeAddSpot(){
   addSpotSheet.classList.remove('open'); addSpotScrim.classList.remove('open');
+  document.getElementById('addSpotBtn').classList.remove('pressed');
   if(typeof clearAddSpotPreview === 'function') clearAddSpotPreview();
   if(!placingSpotPin){ editingSpotId = null; editingBuiltinId = null; const sv = document.getElementById('addSpotSave'); if(sv) sv.textContent = 'Save spot'; }
 }
@@ -4232,6 +4251,9 @@ async function loadBuoyData(){
   }
 }
 buoyMarker.on('popupopen', loadBuoyData);
+// The Waves button stays lit for as long as the buoy popup it opened is showing.
+buoyMarker.on('popupopen',  ()=>{ const b = document.getElementById('waveBtn'); if(b) b.classList.add('pressed'); });
+buoyMarker.on('popupclose', ()=>{ const b = document.getElementById('waveBtn'); if(b) b.classList.remove('pressed'); });
 document.getElementById('waveBtn').addEventListener('click', ()=>{
   suppressClusterZoom = true;
   setTimeout(()=>{ suppressClusterZoom = false; }, 1200); // safety reset if zoomend doesn't fire
@@ -5134,9 +5156,9 @@ document.getElementById('themeBtn').addEventListener('click', ()=>{ themeSheet.c
 (function(){
   const sheet = document.getElementById('disclaimerSheet');
   const scrim = document.getElementById('disclaimerScrim');
-  const open = ()=>{ sheet.classList.add('open'); scrim.classList.add('open'); };
-  const close = ()=>{ sheet.classList.remove('open'); scrim.classList.remove('open'); };
   const btn = document.getElementById('disclaimerBtn');
+  const open = ()=>{ sheet.classList.add('open'); scrim.classList.add('open'); if(btn) btn.classList.add('pressed'); };
+  const close = ()=>{ sheet.classList.remove('open'); scrim.classList.remove('open'); if(btn) btn.classList.remove('pressed'); };
   if(btn) btn.addEventListener('click', open);
   document.getElementById('disclaimerClose').addEventListener('click', close);
   scrim.addEventListener('click', close);
