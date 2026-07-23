@@ -714,7 +714,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --navy-950:#e8e0d0; --navy-900:#f7f1e5; --navy-800:#efe6d5; --navy-700:#e0d3bd;
     --line:#c9b8a0; --fog:#3a2f22; --muted:#7a6e5c; --teal:#b07a3a; --map-bg:#cfdae0;
   }
-  }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{height:100%; margin:0; overscroll-behavior:none;}
   body{
@@ -725,20 +724,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Header ---------- */
   header{
-    flex:0 0 auto; display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
-    padding:6px 14px; background:linear-gradient(180deg,var(--navy-900),var(--navy-950));
+    flex:0 0 auto; position:relative;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
+    padding:3px 14px 4px; background:linear-gradient(180deg,var(--navy-900),var(--navy-950));
     border-bottom:1px solid var(--line); z-index:1050;
+  }
+  /* Fish logo sits centred in the bar, its baseline on the "Where's The Fish?" line */
+  header > .logo-wrap{
+    position:absolute; left:50%; bottom:2px; transform:translateX(-50%);
+    pointer-events:none; z-index:1;
   }
   .hdr-left{display:inline-flex; flex-direction:column; align-items:stretch; justify-content:flex-start;}
   .hdr-left .kicker{
     font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; font-style:italic;
-    color:var(--teal); text-transform:none; margin-top:3px; letter-spacing:.12em; line-height:24px;
+    color:var(--teal); text-transform:none; margin-top:1px; letter-spacing:.12em; line-height:20px;
     width:100%; display:block; white-space:nowrap;
   }
-  .hdr-left h1{font-family:'Space Grotesk',sans-serif; font-size:26px; line-height:28px; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap;}
+  .hdr-left h1{font-family:'Space Grotesk',sans-serif; font-size:23px; line-height:25px; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap;}
   .hdr-right{display:flex; align-items:center; gap:12px;}
   .help-btn{
-    flex:0 0 auto; width:32px; height:32px; border-radius:50%;
+    flex:0 0 auto; width:29px; height:29px; border-radius:50%;
     background:var(--navy-800); border:1px solid var(--line); color:var(--teal);
     font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; cursor:pointer; line-height:1;
   }
@@ -747,15 +752,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     font-family:'JetBrains Mono',monospace; font-size:17px; font-weight:700; color:var(--teal);
     text-align:right; line-height:1.2; letter-spacing:.04em; white-space:nowrap;
   }
-  .logo-wrap{position:relative; display:inline-flex; align-items:center; cursor:pointer;}
-  .logo-mini{width:112px; height:auto; display:block;}
+  .logo-wrap{position:relative; display:inline-flex; align-items:center;}
+  .logo-mini{width:92px; height:auto; display:block;}
   .credit-c{
-    font-size:14px; font-weight:700; color:var(--teal); cursor:pointer;
+    font-size:14px; font-weight:700; color:var(--teal);
     vertical-align:super; line-height:0; margin-left:3px; position:relative; top:-2px;
     font-style:normal;
   }
-  .credit-tap{cursor:pointer;}
-  .credit-tap:hover{opacity:.75;}
   .logo-wtf{
     position:absolute; left:47%; top:44%; transform:translate(-50%,-50%);
     font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:900; letter-spacing:2px;
@@ -807,7 +810,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .place-label{
     background:transparent !important; border:none !important; box-shadow:none !important;
     color:#fff !important; font-family:'Space Grotesk',sans-serif !important;
-    font-size:11.5px !important; font-weight:700 !important; letter-spacing:.12em; text-transform:uppercase;
+    font-size:17px !important; font-weight:700 !important; letter-spacing:.04em;
+    text-shadow:0 1px 3px rgba(0,0,0,.95), 0 0 10px rgba(0,0,0,.75);
   }
   .place-label::before{display:none !important;}
 
@@ -833,9 +837,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip .dot{width:8px; height:8px; border-radius:50%; flex:0 0 auto;}
   .chip.active:not(.sp){color:var(--fog); background:rgba(20,42,61,.95);}
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
-  #catchToggle{background:#000 !important; color:#fff !important; border-color:#fff !important;}
-  #catchToggle:not(.active){background:rgba(20,42,61,.95) !important; color:#ffffff !important; border-color:#6b7688 !important; opacity:1;}
-  #labelsToggle:not(.active){background:rgba(20,42,61,.95) !important; color:#ffffff !important; border-color:#6b7688 !important; opacity:1;}
+  /* My Catches matches the other switches: black when off (accent text/border),
+     filled with the current theme accent when on. */
+  #catchToggle{background:#000 !important; color:var(--teal) !important; font-weight:700; border:1px solid var(--teal) !important; box-shadow:none !important;}
+  #catchToggle:not(.active){opacity:1; background:#000 !important; color:var(--teal) !important; border-color:var(--teal) !important;}
+  /* Labels: black with white text when off, inverted to white-on-black when on */
+  #labelsToggle{font-weight:700; border:1px solid #fff !important; box-shadow:none !important;}
+  #labelsToggle:not(.active){background:#000 !important; color:#ffffff !important; border-color:#ffffff !important; opacity:1;}
   #speciesCol .chip:not(.active){filter:brightness(1.6) saturate(1.2);}
   #speciesCol .chip.active{filter:brightness(1.7) saturate(1.4); border-color:#fff; box-shadow:0 0 8px rgba(255,255,255,.35);}
   .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:700; border:1px solid var(--inshore) !important; box-shadow:none !important;}
@@ -858,10 +866,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
     box-shadow:0 0 8px rgba(255,255,255,.35); transform:scale(1.05);
   }
   #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#fff; font-weight:800;}
-  #labelsToggle.active{background:var(--teal) !important; color:#fff !important; border-color:var(--teal) !important;}
-  body[data-theme="beige"] #labelsToggle.active{background:#8a5620 !important; color:#fff !important; border-color:#6e4416 !important;}
+  #labelsToggle.active{background:#ffffff !important; color:#000000 !important; border-color:#ffffff !important;}
   .chip.util.active{border-color:var(--fog); box-shadow:0 0 0 1px var(--fog) inset;}
-  #catchToggle.active{background:#000 !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
+  #catchToggle.active{background:var(--teal) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
+  body[data-theme="beige"] #catchToggle{color:#8a5620 !important; border-color:#8a5620 !important;}
+  body[data-theme="beige"] #catchToggle.active{background:#8a5620 !important; color:#fff !important; border-color:#6e4416 !important;}
   #launchToggle{background:#000 !important; color:#e02020 !important; font-weight:700; border:1px solid #e02020 !important; box-shadow:none !important;}
   #launchToggle:not(.active){opacity:1; color:#ff8585 !important; border-color:#d05050 !important;}
   #launchToggle.active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
@@ -918,25 +927,34 @@ svg.leaflet-image-layer.leaflet-interactive path {
     #tidePanel{ top:auto; bottom:12px; right:8px; left:8px; width:auto;
                 max-height:70dvh; height:auto; border-radius:16px; }
     /* Header: shrink so title, tagline, name, logo, and all three buttons fit on-screen */
-    header{padding:5px 8px; gap:5px;}
-    .hdr-left h1{font-size:19px; line-height:21px;}
-    .hdr-left .kicker{font-size:10px; letter-spacing:.05em; line-height:19px; margin-top:2px;}
+    header{padding:3px 8px 4px; gap:5px;}
+    .hdr-left h1{font-size:17px; line-height:19px;}
+    .hdr-left .kicker{font-size:10px; letter-spacing:.05em; line-height:16px; margin-top:1px;}
     /* Move the name out of the button row: bottom-center of the header, same line as the tagline */
     header{position:relative;}
     .credit{position:absolute; left:50%; transform:translateX(-50%); bottom:6px;
             font-size:10px; letter-spacing:.02em; white-space:nowrap;}
-    .logo-mini{width:78px;}
-    .logo-wtf{font-size:11px; letter-spacing:1.3px;}
-    .help-btn{width:25px; height:25px; font-size:13px;}
+    .logo-mini{width:66px;}
+    .logo-wtf{font-size:10px; letter-spacing:1.1px;}
+    .help-btn{width:24px; height:24px; font-size:12px;}
     .hdr-right{min-width:0;}
     /* Top toggles: 3 on top (Inshore, Offshore, My Catches), 2 underneath (Launches, Labels),
        centered between the species column (left) and the zoom buttons (right) */
-    #filterWrap{left:96px; right:56px; top:8px; gap:4px; max-width:none;}
+    /* Nothing sits in the map's top-right corner (the zoom buttons live bottom-right),
+       so the button block gets that width back. Without it, Inshore+Offshore+My Catches
+       couldn't fit on one line and the row order broke up on narrow screens. */
+    #filterWrap{left:92px; right:8px; top:8px; gap:4px; max-width:none;}
     #filterWrap .chiprow{justify-content:center; flex-wrap:wrap;}
     #metaRow{row-gap:5px;}
+    /* Let the top three shrink a little rather than wrap out of order */
+    #metaRow .chip{flex:0 1 auto; min-width:0;}
     .chip-break{display:block; flex-basis:100%; height:0;}
     .chip{padding:4px 8px 7px; font-size:13px;}
     #speciesCol{top:8px;}
+  }
+  @media (max-width:400px){
+    #filterWrap{left:86px;}
+    #metaRow .chip{padding:4px 6px 6px; font-size:12px;}
   }
 
   /* ---------- Tabs ---------- */
@@ -1006,7 +1024,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .photo-box.has{border-style:solid; border-color:var(--teal); padding:0;}
   .photo-box.has #photoPlaceholderText{display:none;}
-  #photoPreview{width:100%; max-height:220px; object-fit:contain; display:block; background:#000;}
+  #photoPreview{width:100%; max-height:260px; object-fit:contain; display:block; background:var(--navy-950);}
   .photo-remove{
     position:absolute; top:7px; right:7px; background:rgba(6,15,24,.92); border:1.5px solid rgba(255,255,255,.85);
     color:#fff; border-radius:50%; width:29px; height:29px; cursor:pointer; font-size:13px; font-weight:700; line-height:1;
@@ -1146,7 +1164,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1; padding:12px; box-sizing:border-box;
   }
   .cluster-pill .cn{font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:800;}
-  .cluster-pill .cl{font-family:'JetBrains Mono',monospace; font-size:8px; text-transform:uppercase; letter-spacing:.02em; margin-top:3px; text-align:center; line-height:1; white-space:nowrap;}
+  .cluster-pill .cl{font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.02em; margin-top:3px; text-align:center; line-height:1; white-space:nowrap;}
   #themeGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
   .theme-opt{
     display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:11px;
@@ -1229,20 +1247,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 <header>
   <div class="hdr-left">
-    <h1 class="credit-tap" id="creditTitle" title="Credits" role="button">WTF Log</h1>
-    <div class="kicker"><span class="credit-tap" id="creditKicker" title="Credits" role="button">Where's The Fish?</span><sup class="credit-c" id="creditC" title="Credits" role="button">&copy;</sup></div>
+    <h1 id="creditTitle">WTF Log</h1>
+    <div class="kicker"><span id="creditKicker">Where's The Fish?</span><sup class="credit-c" id="creditC">&copy;</sup></div>
+  </div>
+  <div class="logo-wrap" id="logoBtn" aria-hidden="true">
+    <img class="logo-mini" src="data:image/png;base64,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" alt="WTF Log redfish">
+    <span class="logo-wtf">WTF</span>
   </div>
   <div class="hdr-right">
-    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-    <div class="logo-wrap" id="logoBtn" role="button" aria-label="WTF Log" title="Credits">
-      <img class="logo-mini" src="data:image/png;base64,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" alt="WTF Log redfish">
-      <span class="logo-wtf">WTF</span>
-    </div>
     <div style="display:flex; gap:8px; align-items:center;">
       <button class="help-btn" id="themeBtn" title="Theme" style="font-size:15px;">🎨</button>
       <button class="help-btn" id="searchBtn" title="Search" style="font-size:13px;">🔍</button>
       <button class="help-btn" id="helpBtn" title="Help">?</button>
-    </div>
     </div>
   </div>
 </header>
@@ -1309,7 +1325,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <div class="tabs">
     <button class="tab active" data-tab="season">Season Guide</button>
-    <button class="tab" data-tab="catches">My Catches</button>
+    <button class="tab" data-tab="catches">My Log</button>
     <button class="tab" data-tab="help">Help</button>
   </div>
   <div class="sheet-body">
@@ -1323,8 +1339,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <div class="subhead">Map zones</div>
       <div class="zone-legend">
-        <div class="zk"><div class="dot" style="background:var(--inshore)"></div>Inshore — creeks, flats, jetties, docks, ramps</div>
-        <div class="zk"><div class="dot" style="background:var(--offshore)"></div>Offshore — reefs &amp; wrecks 3–34nm out</div>
+        <div class="zk"><div class="dot" style="background:var(--inshore)"></div>Inshore — creeks, rivers, cuts, streams, flats, jetties, docks, ramps</div>
+        <div class="zk"><div class="dot" style="background:var(--offshore)"></div>Offshore — natural reefs, artificial sites &amp; wrecks 3–34nm out</div>
       </div>
       <div class="subhead">Offshore targets</div>
       <p class="sheet-note">Primary bottom fishing targets: <b>flounder, grouper, snapper, snook</b>. Primary trolling / topwater targets: <b>kingfish, mackerel, jack, tarpon, mahi</b>.</p>
@@ -1340,47 +1356,75 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="catchListBody"></div>
     </div>
     <div id="panel-help" style="display:none;">
-      <div class="subhead" style="margin-top:2px;">Reading the month bars</div>
-      <p class="sheet-note">Every colored bar row you see — in a pin's popup or the Season Guide — is a calendar: 12 cells, January on the left through December on the right. Brighter cells = better months for that species at that spot. In popups, the letters above the bars mark the months.</p>
+      <div class="subhead" style="margin-top:2px;">Map controls</div>
+      <p class="sheet-note"><b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>My Catches</b> shows/hides your catch diamonds. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one to show only where you've caught that species, and hide the rest. They don't change the fishing-spot pins. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
 
-      <div class="subhead">Add your own detail to a pin</div>
-      <p class="sheet-note">Tap any pin, then tap <b>＋ Add my note</b> at the bottom of its popup. Type your details — bait, rig, tide, timing — and Save. Notes persist between sessions and can be edited or cleared anytime with <b>✎ Edit my note</b>.</p>
+      
+
+      <div class="subhead">Moving a popup or panel out of the way</div>
+      <p class="sheet-note">Any popup that opens on the map — a spot, a catch, a reef with its drops showing — can be <b>dragged anywhere on screen</b> so it isn't covering the pins underneath. <b>On a phone:</b> press and hold anywhere on the popup that isn't a button, then slide your finger; the popup follows and stays put when you lift off. <b>On a computer:</b> click and hold anywhere on the popup that isn't a button or link, then drag. Buttons, links and the scrolling drops list still work normally, so you can drag from the popup's title or body text. The <b>3-Day Tide Forecast</b> panel moves the same way — drag it by its title bar.</p>
 
       <div class="subhead">Log a catch</div>
       <p class="sheet-note">Tap <b>Log Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; needs internet), and set the location three ways: choose a known spot from the alphabetical list, <b>Drop pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Length, weight, and notes are optional.</p>
 
+      
+
       <div class="subhead">Photos</div>
-      <p class="sheet-note">Tap the photo box to attach a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), just set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save.</p>
+      <p class="sheet-note">Tap the photo box to attach a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), just set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
+
+      
 
       <div class="subhead">Edit or delete a catch</div>
-      <p class="sheet-note">Tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and ✕ buttons on any entry in the My Catches tab. Editing reopens the form with everything filled in.</p>
+      <p class="sheet-note">In the Log Catch sheet, the <b>Location</b> list holds every known fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, since they're put-in points rather than places you fish; use <b>Drop pin</b> or <b>My location</b> if you did catch something at one. The <b>Inshore</b> and <b>Offshore</b> switches just above the list narrow it down when you're only fishing one of them.</p>
+      <p class="sheet-note">Tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and ✕ buttons on any entry in the My Log tab. Editing reopens the form with everything filled in.</p>
+
+      
+
+      <div class="subhead">Add your own detail to a pin</div>
+      <p class="sheet-note">Tap any pin, then tap <b>＋ Add my note</b> at the bottom of its popup. Type your details — bait, rig, tide, timing — and Save. Notes persist between sessions and can be edited or cleared anytime with <b>✎ Edit my note</b>.</p>
+
+      
 
       <div class="subhead">Reef drops</div>
       <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs (CR) and for clustered natural reef sites — coordinates in degrees/minutes/seconds, depth, and distance — sorted closest to farthest from the inlet, and plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. If a popup covers the pins, <b>drag it out of the way</b> by its title area.</p>
 
+      
+
+      <div class="subhead">Themes</div>
+      <p class="sheet-note">Tap <b>🎨</b> to pick a color theme (dark options, light, and beige) — saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
+
+      
+
       <div class="subhead">Search</div>
       <p class="sheet-note">Tap the 🔍 button next to Help (top right) and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched back on automatically.</p>
 
-      <div class="subhead">Map controls</div>
-      <p class="sheet-note"><b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>My Catches</b> shows/hides your catch diamonds. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one to show only where you've caught that species, and hide the rest. They don't change the fishing-spot pins. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
+      
 
-      <div class="subhead">Themes &amp; zoom</div>
-      <p class="sheet-note">Tap <b>🎨</b> to pick a color theme (dark options, light, and beige) — saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
+      <div class="subhead" style="margin-top:2px;">Reading the month bars</div>
+      <p class="sheet-note">Every colored bar row you see — in a pin's popup or the Season Guide — is a calendar: 12 cells, January on the left through December on the right. Brighter cells = better months for that species at that spot. In popups, the letters above the bars mark the months.</p>
+
+      
 
       <div class="subhead">Tides (works offline)</div>
       <p class="sheet-note">Tap <b>Streets</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed. Stations north of the inlet (Spruce Creek, Rose Bay, Dunlawton) are calibrated; the wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Calibrate tide lags from station data</button></div>
 
+      
+
       <div class="subhead">Using it offline</div>
-      <p class="sheet-note">Tap the <b>WTF Log fish</b> in the top corner to see the app credits.</p>
       <p class="sheet-note">The app itself — all your spots, launches, reefs, catch log, notes, tide forecasts, search, and themes — works with <b>no internet</b>. The <b>map imagery</b> normally streams from map servers, but you can now <b>download it for your fishing area</b> so even the satellite view works with the signal off — do it once on wifi and the tiles are stored on your device. Add the app to your home screen for the most reliable offline launch.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="offlineBtn">⤓ Download map for offline use</button></div>
 
+      
+
       <div class="subhead">Tips</div>
-      <p class="sheet-note">On a phone, use <b>Add to Home Screen</b> to launch it like an app. Each person's catches and notes stay private on their own device. Use <b>Export backup</b> in the My Catches tab to save your log as a file, and <b>Import backup</b> to bring it into a new copy or another device.</p>
+      <p class="sheet-note">On a phone, use <b>Add to Home Screen</b> to launch it like an app. Each person's catches and notes stay private on their own device. Use <b>Export backup</b> in the My Log tab to save your log as a file, and <b>Import backup</b> to bring it into a new copy or another device.</p>
+
+      
 
       <div class="subhead">Disclaimer</div>
-      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
+      <p class="sheet-note">This app was developed by Jan G. Neal for the express use of saltwater anglers in Volusia County, Florida. No liability is assumed by the developer or owners of this app for any use of this app.<br><br><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
+
     </div>
   </div>
 </div>
@@ -1421,6 +1465,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <p class="storage-note" style="text-align:left; margin-top:7px;" id="tideStatus"></p>
 
     <label class="field-label">Location</label>
+    <div class="chiprow wrap" id="logZoneRow" style="margin-bottom:8px;">
+      <div class="chip active" data-zone="inshore">Inshore</div>
+      <div class="chip active" data-zone="offshore">Offshore</div>
+    </div>
     <select id="logSpotSelect"><option value="">— choose a known spot —</option></select>
     <div class="loc-btns">
       <button class="mini-btn" id="pinOnMap">📍 Drop pin</button>
@@ -1594,7 +1642,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="disclaimerClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
+    <p class="sheet-note">This app was developed by Jan G. Neal for the express use of saltwater anglers in Volusia County, Florida. No liability is assumed by the developer or owners of this app for any use of this app.<br><br><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app.</p>
   </div>
 </div>
 
@@ -1684,6 +1732,7 @@ const SPOTS = [
   { id:"nsb-north-causeway-bridge", name:"NSB North Causeway Bridge", zone:"inshore", lat:29.038667, lng:-80.906017, meta:"Bridge", species:[] },
   { id:"aqua-ct", name:"Aqua Ct", zone:"inshore", lat:29.032683, lng:-80.947067, meta:"Inshore spot", species:[] },
   { id:"nsb-south-causeway-bridge", name:"NSB South Causeway Bridge", zone:"inshore", lat:29.023583, lng:-80.917483, meta:"Bridge", species:[] },
+  { id:"rockhouse-creek", name:"Rockhouse Creek", zone:"inshore", lat:29.0644293, lng:-80.9278316, meta:"Creek", species:[] },
   { id:"orange-ave-bridge", name:"Orange Ave Bridge", zone:"inshore", lat:29.21145, lng:-81.01035, meta:"Bridge", species:[] },
   { id:"browns-bay", name:"Browns Bay", zone:"inshore", lat:29.00185, lng:-80.891267, meta:"Bay", species:[] },
   { id:"blue-hole", name:"Blue Hole", zone:"inshore", lat:28.93615, lng:-80.86655, meta:"Hole", species:[] },
@@ -2308,7 +2357,7 @@ map.setView(bounds.getCenter(), CLUSTER_ZOOM);
 L.marker([29.078252, -80.910331], {
   icon: L.divIcon({className:'', html:'', iconSize:[0,0]}),
   interactive:false, keyboard:false
-}).addTo(map).bindTooltip('PONCE DELEON INLET', {permanent:true, direction:'center', className:'place-label', opacity:1});
+}).addTo(map).bindTooltip('Ponce DeLeon Inlet', {permanent:true, direction:'center', className:'place-label', opacity:1});
 
 /* ===================== SPOT MARKERS ===================== */
 
@@ -2400,7 +2449,7 @@ function buildClusters(){
   const groups = {
     inshore:  { pts:[], color:'var(--inshore)', label:'spots', show:activeZones.has('inshore') },
     offshore: { pts:[], color:'var(--offshore)', label:'sites', show:activeZones.has('offshore') },
-    catch:    { pts:[], color:'#000000', label:'catches', show:showCatches },
+    catch:    { pts:[], color:'var(--teal)', label:'catches', show:showCatches },
     launch:   { pts:[], color:'var(--launch)', label:'launches', show:showLaunches }
   };
   SPOTS.forEach(s=>{
@@ -2671,6 +2720,20 @@ let showLaunches = true;
 
 function catchTideStr(c){ return c.tideDetail ? c.tideDetail : (c.tide ? (TIDE_LABELS[c.tide] || c.tide) + ' tide' : ''); }
 
+/* Older versions saved photos the browser couldn't decode (HEIC especially) as raw
+   data URLs, which then render as a black rectangle. Spot those and show a note
+   instead of a black box, so it's obvious the photo needs re-adding. */
+function photoIsDrawable(src){
+  if(!src) return false;
+  if(src.indexOf('data:') !== 0) return true;
+  const head = src.slice(0, 40).toLowerCase();
+  return head.indexOf('heic') < 0 && head.indexOf('heif') < 0;
+}
+const BROKEN_PHOTO_NOTE =
+  '<div class="cc-notes" style="border-left:3px solid var(--rust); padding-left:8px;">' +
+  '\u26a0 This photo was saved in a format the browser can\u2019t display. Tap \u270e and add it again as a JPEG.' +
+  '</div>';
+
 function catchPopupHTML(c){
   const sp = SPECIES[c.species];
   const sizeBits = [];
@@ -2678,7 +2741,7 @@ function catchPopupHTML(c){
   if(c.weight) sizeBits.push(c.weight+' lb');
   const tide = catchTideStr(c);
   return `<div class="pop">
-    ${c.photo? `<img class="pop-photo" src="${c.photo}">`:''}
+    ${c.photo? (photoIsDrawable(c.photo) ? `<img class="pop-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
     <div class="pop-top"><div class="pop-name">${sp.label}</div><div class="pop-zone" style="background:${sp.color}; color:#04141e;">Catch</div></div>
     <div class="pop-meta"><span>${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}</span>${tide? `<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> ${tide}</span>`:''}<span>${toDMS(c.lat, c.lng)}</span></div>
     <div class="pop-desc">${escapeHTML(c.locationLabel)}${sizeBits.length? ' \u00b7 '+sizeBits.join(', '):''}</div>
@@ -2902,7 +2965,7 @@ function renderCatchList(){
       <div class="cc-meta">${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}${tide? ' \u00b7 '+`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>`+' '+tide:''}<br>${escapeHTML(c.locationLabel)} \u00b7 ${toDMS(c.lat, c.lng)}</div>
       ${sizeBits.length? `<div class="cc-size">${sizeBits.join(', ')}</div>`:''}
       ${c.notes? `<div class="cc-notes">${escapeHTML(c.notes)}</div>`:''}
-      ${c.photo? `<img class="cc-photo" src="${c.photo}">`:''}
+      ${c.photo? (photoIsDrawable(c.photo) ? `<img class="cc-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
     </div>`;
   }).join("");
   body.querySelectorAll('.cc-del').forEach(btn=> btn.addEventListener('click', ()=> deleteCatch(btn.dataset.id)));
@@ -3051,8 +3114,8 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
 const infoSheet = document.getElementById('infoSheet');
 const infoScrim = document.getElementById('infoScrim');
 const infoTitle = document.getElementById('infoTitle');
-// Guide & Log shows the Season Guide + My Catches tabs; the ? Help button shows only Help.
-// (Season Guide and My Catches were removed from Help since they're reachable from the white Guide & Log button.)
+// Guide & Log shows the Season Guide + My Log tabs; the ? Help button shows only Help.
+// (Season Guide and My Log were removed from Help since they're reachable from the white Guide & Log button.)
 function setInfoMode(mode){
   const showHelp = (mode === 'help');
   document.querySelector('.tab[data-tab="season"]').style.display  = showHelp ? 'none' : '';
@@ -3065,7 +3128,7 @@ document.getElementById('infoClose').addEventListener('click', closeInfoSheet);
 infoScrim.addEventListener('click', closeInfoSheet);
 function closeInfoSheet(){ infoSheet.classList.remove('open'); infoScrim.classList.remove('open'); }
 
-const TAB_TITLES = { season:'Season Guide', catches:'My Catches', help:'Help' };
+const TAB_TITLES = { season:'Season Guide', catches:'My Log', help:'Help' };
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.addEventListener('click', ()=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -3075,6 +3138,9 @@ document.querySelectorAll('.tab').forEach(tab=>{
       document.getElementById('panel-'+k).style.display = (k===which) ? 'block' : 'none';
     });
     infoTitle.textContent = TAB_TITLES[which];
+    // Always show a freshly opened tab from the top, not wherever it was left
+    const body = infoSheet.querySelector('.sheet-body');
+    if(body){ body.scrollTop = 0; requestAnimationFrame(()=>{ body.scrollTop = 0; }); }
   });
 });
 document.getElementById('helpBtn').addEventListener('click', ()=>{
@@ -3212,18 +3278,65 @@ function setTideUI(key){
   tideRow.querySelectorAll('.chip').forEach(c=> c.classList.toggle('active', c.dataset.tide === key));
 }
 
-['inshore','offshore'].forEach(zone=>{
-  const group = document.createElement('optgroup');
-  group.label = ZONES[zone].label;
-  // Jan's imported offshore numbers (jan-*) stay on the map but out of the Log Catch list
-  SPOTS.filter(s=>s.zone===zone && !s.id.startsWith('jan-')).slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(s=>{
-    const opt = document.createElement('option');
-    opt.value = s.id;
-    opt.textContent = s.name;
-    group.appendChild(opt);
+/* The location list carries every known fishing spot — built-in inshore and offshore
+   (including the imported jan-* offshore numbers, which used to be filtered out)
+   plus anything the user has added themselves. Boat ramps and kayak launches are
+   excluded. The Inshore/Offshore switches above the list narrow it down; both on
+   means everything. */
+const logZoneRow = document.getElementById('logZoneRow');
+let logZones = new Set(['inshore','offshore']);
+
+function rebuildSpotSelect(){
+  const keep = spotSelect.value;
+  spotSelect.innerHTML = '<option value="">— choose a known spot —</option>';
+
+  const byName = (a,b)=> a.name.localeCompare(b.name, undefined, {numeric:true, sensitivity:'base'});
+  const addGroup = (label, list)=>{
+    if(!list.length) return;
+    const group = document.createElement('optgroup');
+    group.label = label;
+    list.slice().sort(byName).forEach(s=>{
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name;
+      group.appendChild(opt);
+    });
+    spotSelect.appendChild(group);
+  };
+
+  // customSpots is declared further down, so on the very first build it isn't
+  // initialised yet — the list gets rebuilt again once they load.
+  let custom = [];
+  try{ if(Array.isArray(customSpots)) custom = customSpots; }catch(e){}
+
+  // Boat ramps and kayak launches are where you put in, not where you catch fish,
+  // so they stay off this list — they're still on the map under the Launches switch.
+  // Anything left that isn't explicitly offshore counts as inshore.
+  const bucket = s => (s.zone === 'offshore' ? 'offshore' : 'inshore');
+  const isLaunch = s => !!s.ramp || s.zone === 'launch';
+
+  ['inshore','offshore'].forEach(zone=>{
+    if(!logZones.has(zone)) return;
+    addGroup(ZONES[zone].label, SPOTS.filter(s=> !s._deleted && !isLaunch(s) && bucket(s) === zone));
+    addGroup(ZONES[zone].label + ' — My Spots', custom.filter(s=> !isLaunch(s) && bucket(s) === zone));
   });
-  spotSelect.appendChild(group);
-});
+
+  // Keep the current pick if it survived the filter
+  if(keep && spotSelect.querySelector(`option[value="${keep}"]`)) spotSelect.value = keep;
+}
+
+if(logZoneRow){
+  logZoneRow.querySelectorAll('.chip[data-zone]').forEach(chip=>{
+    const zone = chip.dataset.zone;
+    chip.addEventListener('click', ()=>{
+      if(logZones.has(zone)){ logZones.delete(zone); chip.classList.remove('active'); }
+      else { logZones.add(zone); chip.classList.add('active'); }
+      rebuildSpotSelect();
+    });
+  });
+}
+
+rebuildSpotSelect();
 
 spotSelect.addEventListener('change', ()=>{
   const id = spotSelect.value;
@@ -3261,20 +3374,19 @@ function applySpotOverrides(){
     const ov = spotOverrides[id];
     const s = SPOTS.find(x=>x.id===id);
     const m = builtinMarkerById[id];
-    const opt = spotSelect ? spotSelect.querySelector(`option[value="${id}"]`) : null;
     if(!s) return;
     if(ov.deleted){
       s._deleted = true;
       if(m){ map.removeLayer(m); const idx = markers.indexOf(m); if(idx>=0) markers.splice(idx,1); delete builtinMarkerById[id]; }
-      if(opt) opt.remove();
       return;
     }
-    if(ov.name != null){ s.name = ov.name; if(opt) opt.textContent = ov.name; }
+    if(ov.name != null){ s.name = ov.name; }
     if(ov.zone != null) s.zone = ov.zone;
     if(ov.lat != null) s.lat = ov.lat;
     if(ov.lng != null) s.lng = ov.lng;
     if(m){ m.setLatLng([s.lat, s.lng]); m.setIcon(builtinSpotIcon(s)); }
   });
+  if(typeof rebuildSpotSelect === 'function') rebuildSpotSelect();
   if(typeof applyFilter === 'function') applyFilter();
   if(typeof applySpotLabels === 'function') applySpotLabels();
 }
@@ -3297,8 +3409,7 @@ window.deleteBuiltinSpot = function(id){
   const s = SPOTS.find(x=>x.id===id); if(s) s._deleted = true;
   const m = builtinMarkerById[id];
   if(m){ map.removeLayer(m); const idx = markers.indexOf(m); if(idx>=0) markers.splice(idx,1); delete builtinMarkerById[id]; }
-  const opt = spotSelect ? spotSelect.querySelector(`option[value="${id}"]`) : null;
-  if(opt) opt.remove();
+  rebuildSpotSelect();
   map.closePopup();
   showToast('Spot deleted. (Use "Restore built-in spots" in Add-a-spot to bring them back.)');
 };
@@ -3358,20 +3469,9 @@ window.removeCustomSpot = function(id){
   map.closePopup();
 };
 function refreshCustomSpotSelect(){
-  // Custom spots are intentionally NOT added to the Log Catch dropdown.
-  // Just ensure no stale custom optgroup remains.
-  Array.from(spotSelect.querySelectorAll('optgroup[data-custom="1"]')).forEach(g=>g.remove());
-  return;
-  /* eslint-disable no-unreachable */
-  const group = document.createElement('optgroup');
-  group.label = 'My spots';
-  group.dataset.custom = '1';
-  customSpots.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(s=>{
-    const opt = document.createElement('option');
-    opt.value = s.id; opt.textContent = s.name;
-    group.appendChild(opt);
-  });
-  spotSelect.appendChild(group);
+  // User-added spots now appear in the Log Catch list alongside the built-ins,
+  // grouped under their own zone. rebuildSpotSelect() reads customSpots directly.
+  rebuildSpotSelect();
 }
 function updateCustomSpotList(){
   const cnt = document.getElementById('customSpotCount');
@@ -3473,8 +3573,7 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
       saveSpotOverrides();
       const m = builtinMarkerById[editingBuiltinId];
       if(m){ m.setLatLng([s.lat, s.lng]); m.setIcon(builtinSpotIcon(s)); }
-      const opt = spotSelect ? spotSelect.querySelector(`option[value="${editingBuiltinId}"]`) : null;
-      if(opt) opt.textContent = name;
+      rebuildSpotSelect();
       if(typeof applyFilter === 'function') applyFilter();
       if(typeof applySpotLabels === 'function') applySpotLabels();
     }
@@ -3599,13 +3698,16 @@ function openLogSheet(editCatch){
     document.getElementById('logNotes').value = editCatch.notes || '';
     pendingLoc = {lat:editCatch.lat, lng:editCatch.lng, label:editCatch.locationLabel};
     updateLocPreview();
-    if(editCatch.photo){
+    if(editCatch.photo && photoIsDrawable(editCatch.photo)){
       pendingPhotoThumb = editCatch.photo;
       photoPreview.src = editCatch.photo;
       photoPreview.style.display = 'block';
       photoRemove.style.display = 'block';
       photoCrop.style.display = 'block';
       photoBox.classList.add('has');
+    } else if(editCatch.photo){
+      // Undrawable leftover — drop it so the box is tappable and a JPEG can replace it.
+      photoStatus.textContent = "The saved photo can\u2019t be displayed by this browser \u2014 tap the box to add it again as a JPEG.";
     }
   }
   logSheet.classList.add('open');
@@ -3819,21 +3921,117 @@ function parseTiff(view, tiffStart){
   return out;
 }
 
-function resizeToDataURL(file, maxDim, quality){
+/* ---------- Photo decoding ----------
+   Two problems this solves:
+   1) iOS Safari sub-samples large camera-roll images when they're decoded through
+      an <img> element, so drawImage() lands only part of the picture on the canvas
+      and the rest comes out blank — that's the "top half is missing" bug.
+      createImageBitmap() decodes to a real bitmap with no sub-sampling, so it's
+      tried first; the <img> path is kept as a fallback and steps the size down in
+      halves, which keeps old iOS honest.
+   2) HEIC/HEIF only decodes in Safari. Everywhere else it fails, and the old code
+      then stored the raw file bytes as a data URL — which no browser could draw,
+      so the entry rendered as a black box forever. Now an undecodable file is
+      refused up front with an explanation instead of being saved broken. */
+
+function isHeicFile(file){
+  const t = (file.type || '').toLowerCase();
+  const n = (file.name || '').toLowerCase();
+  return t.indexOf('heic') >= 0 || t.indexOf('heif') >= 0 || /\.(heic|heif)$/.test(n);
+}
+
+function decodeImageFile(file){
   return new Promise((resolve, reject)=>{
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = ()=>{
-      const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
-      const c = document.createElement('canvas');
-      c.width = Math.max(1, Math.round(img.width*scale));
-      c.height = Math.max(1, Math.round(img.height*scale));
-      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(url);
-      resolve(c.toDataURL('image/jpeg', quality));
+    const viaImg = ()=>{
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = ()=>{
+        if(!img.naturalWidth || !img.naturalHeight){
+          URL.revokeObjectURL(url); reject(new Error('decode failed')); return;
+        }
+        resolve({ src:img, w:img.naturalWidth, h:img.naturalHeight,
+                  stepped:true, release:()=> URL.revokeObjectURL(url) });
+      };
+      img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('decode failed')); };
+      img.src = url;
     };
-    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('decode failed')); };
-    img.src = url;
+    if(typeof createImageBitmap === 'function'){
+      let p;
+      try{ p = createImageBitmap(file, { imageOrientation:'from-image' }); }
+      catch(e){ p = null; }
+      if(!p || typeof p.then !== 'function'){ viaImg(); return; }
+      p.then(bm=>{
+        if(!bm || !bm.width || !bm.height){ viaImg(); return; }
+        resolve({ src:bm, w:bm.width, h:bm.height,
+                  stepped:false, release:()=>{ try{ bm.close(); }catch(e){} } });
+      }).catch(()=>{
+        // Older Safari rejects the options bag — retry bare before giving up.
+        let p2;
+        try{ p2 = createImageBitmap(file); }catch(e){ viaImg(); return; }
+        if(!p2 || typeof p2.then !== 'function'){ viaImg(); return; }
+        p2.then(bm=>{
+          if(!bm || !bm.width || !bm.height){ viaImg(); return; }
+          resolve({ src:bm, w:bm.width, h:bm.height,
+                    stepped:false, release:()=>{ try{ bm.close(); }catch(e){} } });
+        }).catch(()=> viaImg());
+      });
+    } else viaImg();
+  });
+}
+
+// True when every sampled pixel is identical — i.e. the decode silently produced
+// a blank or solid-black canvas rather than a picture.
+function canvasLooksBlank(canvas){
+  try{
+    const ctx = canvas.getContext('2d');
+    const steps = 8;
+    let first = null;
+    for(let y=0; y<steps; y++){
+      for(let x=0; x<steps; x++){
+        const px = Math.min(canvas.width-1,  Math.floor(canvas.width  * (x+0.5)/steps));
+        const py = Math.min(canvas.height-1, Math.floor(canvas.height * (y+0.5)/steps));
+        const d = ctx.getImageData(px, py, 1, 1).data;
+        const key = d[0]+','+d[1]+','+d[2]+','+d[3];
+        if(first === null) first = key;
+        else if(key !== first) return false;
+      }
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
+function resizeToDataURL(file, maxDim, quality){
+  return decodeImageFile(file).then(dec=>{
+    try{
+      const scale = Math.min(1, maxDim / Math.max(dec.w, dec.h));
+      const tw = Math.max(1, Math.round(dec.w * scale));
+      const th = Math.max(1, Math.round(dec.h * scale));
+
+      let from = dec.src, fw = dec.w, fh = dec.h;
+      if(dec.stepped){
+        // Halve repeatedly so no single drawImage asks for a huge reduction.
+        while(fw > tw * 2 && fh > th * 2){
+          const nw = Math.max(tw, Math.round(fw/2));
+          const nh = Math.max(th, Math.round(fh/2));
+          const step = document.createElement('canvas');
+          step.width = nw; step.height = nh;
+          step.getContext('2d').drawImage(from, 0, 0, fw, fh, 0, 0, nw, nh);
+          from = step; fw = nw; fh = nh;
+        }
+      }
+
+      const c = document.createElement('canvas');
+      c.width = tw; c.height = th;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(from, 0, 0, fw, fh, 0, 0, tw, th);
+      if(canvasLooksBlank(c)) throw new Error('blank output');
+      const out = c.toDataURL('image/jpeg', quality);
+      dec.release();
+      return out;
+    }catch(err){
+      dec.release();
+      throw err;
+    }
   });
 }
 
@@ -3852,26 +4050,13 @@ photoInput.addEventListener('change', async ()=>{
     previewUrl = await resizeToDataURL(file, maxDim, jpegQ);
     pendingPhotoThumb = previewUrl;   // one high-quality asset; display size is CSS-limited
   }catch(e){
-    // Fallback for formats the canvas can't decode: store the raw file if it's small enough
-    const rawLimit = hiRes ? 15000000 : 4000000;
-    if(file.size <= rawLimit){
-      try{
-        const raw = await new Promise((res, rej)=>{
-          const r = new FileReader();
-          r.onload = ()=> res(r.result);
-          r.onerror = ()=> rej(new Error('read failed'));
-          r.readAsDataURL(file);
-        });
-        previewUrl = raw;
-        pendingPhotoThumb = raw;
-      }catch(e2){
-        photoStatus.textContent = "Couldn't read this image — try a JPEG from your camera roll.";
-        return;
-      }
-    } else {
-      photoStatus.textContent = "Couldn't read this image format — try a JPEG from your camera roll.";
-      return;
-    }
+    // Nothing is stored unless it decoded — saving the raw bytes of a format this
+    // browser can't draw is what produced the black photos in older logs.
+    photoInput.value = '';
+    photoStatus.textContent = isHeicFile(file)
+      ? "This is a HEIC photo and this browser can't open it. On iPhone: Settings \u2192 Camera \u2192 Formats \u2192 Most Compatible saves new photos as JPEG. For a photo you already have, open it in Photos, tap Share \u2192 Copy Photo, then paste or save it \u2014 that gives you a JPEG."
+      : "Couldn't read this image \u2014 try a JPEG from your camera roll.";
+    return;
   }
   photoPreview.src = previewUrl;
   photoPreview.style.display = 'block';
@@ -4928,45 +5113,8 @@ document.getElementById('themeBtn').addEventListener('click', ()=>{ themeSheet.c
     try{ setTimeout(()=> map.invalidateSize(), 60); }catch(e){}
   });
 })();
-(function(){
-  try{
-    if(!localStorage.getItem('pifc:seenCreditHint')){
-      setTimeout(()=>{
-        const t = document.getElementById('toast');
-        if(!t) return;
-        t.innerHTML = 'Tip: tap the fish for app credits';
-        t.classList.add('show');
-        setTimeout(()=> t.classList.remove('show'), 4200);
-        try{ localStorage.setItem('pifc:seenCreditHint','1'); }catch(e){}
-      }, 1800);
-    }
-  }catch(e){}
-})();
-(function(){
-  const logo = document.getElementById('logoBtn');
-  const showCredit = ()=>{
-    const t = document.getElementById('toast');
-    t.innerHTML = 'Developed by Jan G. Neal.<br>Copyright \u00a9 2026 Denise J. Morrissette';
-    t.classList.add('show');
-    clearTimeout(window._creditTimer);
-    window._creditTimer = setTimeout(()=> t.classList.remove('show'), 3600);
-  };
-  const cc = document.getElementById('creditC');
-  if(cc) cc.addEventListener('click', (e)=>{ e.stopPropagation(); showCredit(); });
-  ['creditTitle','creditKicker'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.addEventListener('click', (e)=>{ e.stopPropagation(); showCredit(); });
-  });
-  if(!logo) return;
-  logo.style.cursor = 'pointer';
-  logo.addEventListener('click', ()=>{
-    const t = document.getElementById('toast');
-    t.innerHTML = 'Developed by Jan G. Neal.<br>Copyright \u00a9 2026 Denise J. Morrissette';
-    t.classList.add('show');
-    clearTimeout(window._creditTimer);
-    window._creditTimer = setTimeout(()=> t.classList.remove('show'), 3600);
-  });
-})();
+/* Credits are no longer surfaced by tapping the title, tagline, © or fish logo.
+   The developer credit lives in the Disclaimer. */
 document.getElementById('themeClose').addEventListener('click', ()=>{ themeSheet.classList.remove('open'); themeScrim.classList.remove('open'); });
 themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); themeScrim.classList.remove('open'); });
 
