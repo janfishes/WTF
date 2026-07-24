@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- maximum-scale / user-scalable are deliberately absent. iOS has ignored both since iOS 10,
+     so they never blocked the auto-zoom above, but they DID stop the user pinching back out
+     of a stuck scale. Leaving them off makes that state recoverable. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WTF Log — Where's the Fish</title>
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -844,7 +847,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* The panel is hardcoded dark on EVERY theme, so its text cannot follow --fog: on the light
        themes that resolves to near-black and disappears. Pinned to fixed light values. */
     background:rgba(6,15,24,.85) !important; color:#e9eef1 !important; font-size:10.5px !important;
-    white-space:normal !important; max-width:min(78vw, 560px, calc(100% - 170px)); text-align:right;
+    /* `calc(100% - 170px)` was wrong: Leaflet's corner container shrink-wraps to its own
+       content, so the percentage was self-referential and collapsed the box to ~38px on a
+       phone, clipping the right-hand end instead of wrapping. Clamped against the viewport. */
+    white-space:normal !important; max-width:min(88vw, 560px); text-align:right;
     line-height:1.45; padding:3px 6px !important; border-radius:6px 0 0 0;
   }
   .leaflet-control-attribution a{color:#7fd0ff !important;}
@@ -938,6 +944,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #speciesCol .chip.active .dot{background:#000 !important;}
   .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:700; border:1px solid var(--inshore) !important; box-shadow:none !important;}
   .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important;}
+  /* Shadow on the zone chips while OFF, and on Labels while ON — the two states whose text
+     sits on the weakest ground (saturated colour on black, and black on solid white). */
+  #metaRow .chip[data-zone]:not(.active),
+  #metaRow #launchToggle:not(.active),
+  #metaRow #labelsToggle.active{text-shadow:0 1px 2px rgba(0,0,0,.65), 0 0 3px rgba(0,0,0,.4);}
+  #metaRow #labelsToggle.active{text-shadow:0 1px 1px rgba(255,255,255,.9), 0 0 2px rgba(255,255,255,.7);}
   .chip[data-zone="inshore"]:not(.active){opacity:1; color:#6b8cff !important; border-color:#6b8cff !important;}
   .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:700; border:1px solid var(--offshore) !important; box-shadow:none !important;}
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:#b478ff !important; border-color:#b478ff !important;}
@@ -1124,8 +1136,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin:16px 0 6px;
   }
   .field-row{display:flex; gap:8px;}
+  /* 16px is NOT a style choice — it is the iOS Safari threshold. Below 16px, Safari auto-zooms
+     the page whenever a form control takes focus, and if that control is then hidden (as the
+     known-spot select is when "Drop pin" closes the sheet) the page can be left stuck at the
+     wrong scale, shrinking the whole UI. Do not lower this. */
   input, select, textarea{
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:13px; color:var(--fog);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:16px; color:var(--fog);
     background:var(--navy-800); border:1px solid var(--line); border-radius:8px;
     padding:9px 10px; width:100%; color-scheme:dark;
   }
@@ -2106,7 +2122,7 @@ const SPOTS = [
   { id:"jan-scallopboat", name:"Scallop Boat", zone:"offshore", lat:29.376258, lng:-80.351392, meta:"Offshore · 4 spots · 34.3 nm from Inlet", desc:"4 marks at this ground — tap Show drops for each one with its coordinates and details.", species:["grouper", "jack", "snapper"], big:true, farOut:true },
   { id:"jan-semarca", name:"Semarca", zone:"offshore", lat:29.152417, lng:-80.677333, meta:"Offshore · 13.0 nm from Inlet", desc:"Wreck", species:[], farOut:true },
   { id:"jan-steamship", name:"Steamship", zone:"offshore", lat:29.220378, lng:-80.773883, meta:"Offshore · 2 spots · 11.1 nm from Inlet", desc:"2 marks at this ground — tap Show drops for each one with its coordinates and details.", species:["grouper"], big:true, farOut:true },
-  { id:"jan-tomsanchor", name:"Tom’s Anchor", zone:"offshore", lat:28.935317, lng:-80.500433, meta:"Offshore · 23.2 nm from Inlet", desc:"Grouper cave", species:["grouper"], farOut:true },
+  { id:"jan-tomsanchor", name:"10F Grouper Cave", zone:"offshore", lat:28.935317, lng:-80.500433, meta:"Offshore · 23.2 nm from Inlet", desc:"Grouper cave", species:["grouper"], farOut:true },
   { id:"jan-victorywreck", name:"Victory Wreck", zone:"offshore", lat:29.287167, lng:-80.880500, meta:"Offshore · 12.6 nm from Inlet", species:[], farOut:true },
   { id:"jan-wreck", name:"Steamship boiler", zone:"offshore", lat:29.204868, lng:-80.774283, meta:"Offshore · 10.4 nm from Inlet", desc:"Boiler and engine. Converted from Loran-C.", species:[], farOut:true },
   { id:"jan-wreck28", name:"Wreck 28", zone:"offshore", lat:28.980617, lng:-80.188583, meta:"Offshore · 38.3 nm from Inlet", desc:"37 miles from inlet", species:[], farOut:true },
@@ -4072,6 +4088,8 @@ function updateLocPreview(){
 }
 
 document.getElementById('pinOnMap').addEventListener('click', ()=>{
+  // Blur first: hiding a control while it still has focus is what leaves iOS mid-zoom.
+  if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
   placingPin = true;
   logSheet.classList.remove('open');
   logScrim.classList.remove('open');
