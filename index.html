@@ -694,34 +694,42 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --line:#3d6d90; --fog:#e9eef1; --muted:#8fa8b8; --teal:#19cec0;
     --map-bg:#16344a;
     /* Text/icon colour to use ON TOP of a --teal accent fill. Light accents take the near-black,
-       dark accents (Beige, Sun Glasses) take white. Without this the accent push left white
+       dark accents (Sun Glasses) take white. Without this the accent push left white
        labels sitting on bright cyan at ~1.7:1. */
     --on-accent:#04141e;
+    /* --brass was a FIXED gold on every theme, so it failed on the light grounds (2.49:1 on
+       Sun Glasses). It is now per-theme. --emph is bold body copy in the sheets, --link is
+       hyperlinks (deliberately blue and separate from --emph), --accent-lite is the accent
+       lightened for use as TEXT on the black filter chips. All clear 4.5:1 on their ground. */
+    --brass:#d9a955; --emph:#f0b95e; --link:#5ab4ff; --accent-lite:#19cec0;
+    /* Reader text scale — 1 / 1.15 / 1.3, set by the A control in the header. Applies to the
+       text-heavy surfaces only (sheets, popups, tide panel); map furniture keeps fixed sizes
+       because chips and cluster circles have no room to grow. */
+    --ts:1;
   }
   body[data-theme="midnight"]{
     --navy-950:#05060a; --navy-900:#0d1017; --navy-800:#171b26; --navy-700:#242a3a;
     --line:#606a8f; --fog:#eef0f5; --muted:#9298ac; --teal:#9484ff; --map-bg:#141826;
     --on-accent:#04141e;
+      --brass:#d9a955; --emph:#f0b95e; --link:#6fb2ff; --accent-lite:#9484ff;
   }
   body[data-theme="forest"]{
     --navy-950:#071109; --navy-900:#0e2015; --navy-800:#183524; --navy-700:#234a33;
     --line:#42805e; --fog:#e9f2ea; --muted:#8fb59d; --teal:#2fce7c; --map-bg:#12261a;
     --on-accent:#04141e;
+      --brass:#d9a955; --emph:#f0b95e; --link:#5ab4ff; --accent-lite:#2fce7c;
   }
   body[data-theme="sunset"]{
     --navy-950:#1a0d12; --navy-900:#2a141d; --navy-800:#3d1f2b; --navy-700:#522a39;
     --line:#96566a; --fog:#f7ecef; --muted:#c48a9c; --teal:#ff7a3d; --map-bg:#2a1820;
     --on-accent:#04141e;
+      --brass:#d9a955; --emph:#ffc06a; --link:#6fb8ff; --accent-lite:#ff7a3d;
   }
   body[data-theme="light"]{
     --navy-950:#0f3a61; --navy-900:#154a7c; --navy-800:#0d3050; --navy-700:#0a2540;
     --line:#5e9ec9; --fog:#ffffff; --muted:#bcd7ec; --teal:#4ecbff; --map-bg:#1d5688;
     --on-accent:#04141e;
-  }
-  body[data-theme="beige"]{
-    --navy-950:#e8e0d0; --navy-900:#f7f1e5; --navy-800:#efe6d5; --navy-700:#e0d3bd;
-    --line:#8f7a62; --fog:#3a2f22; --muted:#7a6e5c; --teal:#7a4f18; --map-bg:#cfdae0;
-    --on-accent:#ffffff;
+      --brass:#f0cf8a; --emph:#ffd98f; --link:#b3e2ff; --accent-lite:#4ecbff;
   }
   /* Sun Glasses — built for direct sunlight through polarized (usually amber or copper)
      lenses. Near-white ground so ambient glare adds to a signal that is already bright,
@@ -732,6 +740,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --navy-950:#f2efe9; --navy-900:#fdfcf9; --navy-800:#f7f4ee; --navy-700:#e6e1d7;
     --line:#8a8378; --fog:#1a1714; --muted:#56504a; --teal:#8a4b0f; --map-bg:#e9e2d4;
     --on-accent:#ffffff;
+      --brass:#6b4a0c; --emph:#7a4308; --link:#0a56c4; --accent-lite:#e09a4a;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{height:100%; margin:0; overscroll-behavior:none;}
@@ -761,6 +770,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .hdr-left h1{font-family:'Space Grotesk',sans-serif; font-size:23px; line-height:25px; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap;}
   .hdr-right{display:flex; align-items:center; gap:12px;}
+  /* The A steps 100 -> 115 -> 130 -> 100. The current step rides as a superscript on the
+     glyph so the control shows its own state without needing a menu. */
+  #sizeBtn{position:relative; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px;}
+  #sizeBtn::after{
+    content:attr(data-step); position:absolute; top:2px; right:3px;
+    font-family:'JetBrains Mono',monospace; font-size:7.5px; font-weight:700; line-height:1;
+    opacity:.85; pointer-events:none;
+  }
   .help-btn{
     flex:0 0 auto; width:29px; height:29px; border-radius:50%;
     background:var(--navy-800); border:1px solid var(--line); color:var(--teal);
@@ -782,12 +799,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
     -webkit-mask:var(--logo-mask) center/contain no-repeat;
             mask:var(--logo-mask) center/contain no-repeat;
   }
-  /* Light-ground themes: a white fish is invisible on them, so the body takes the warm
-     accent brown and the WTF lettering flips to white. */
-  body[data-theme="beige"] .logo-mini,
-  body[data-theme="sunglasses"] .logo-mini{background-color:#7a4f18;}
-  body[data-theme="beige"] .logo-wtf,
-  body[data-theme="sunglasses"] .logo-wtf{color:#fff;}
+  /* Sun Glasses keeps the SAME white fish as the dark themes, so the black tail spot reads
+     against it. On a near-white ground that needs a hard edge, so the wrapper shadow is
+     tightened into a thin dark outline there instead of a soft drop shadow. */
+  body[data-theme="sunglasses"] .logo-wrap{
+    filter:drop-shadow(0 0 1px rgba(26,23,20,.95)) drop-shadow(0 1px 2px rgba(26,23,20,.55));
+  }
+  /* WTF sits on the white fish body, so it takes the accent and a shadow of its own. */
+  .logo-wtf{text-shadow:0 1px 2px rgba(0,0,0,.55);}
+  /* Redfish ocellus — the black spot at the base of the tail. Positioned as a share of the
+     logo box (x 79.5%, y 40% of the 308x120 bitmap) so it tracks the 92px/66px sizes. */
+  .logo-spot{
+    position:absolute; left:79.5%; top:40%; transform:translate(-50%,-50%);
+    width:4.55%; aspect-ratio:1; border-radius:50%; background:#000; pointer-events:none;
+  }
   .credit-c{
     font-size:14px; font-weight:700; color:var(--teal);
     vertical-align:super; line-height:0; margin-left:3px; position:relative; top:-2px;
@@ -898,8 +923,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
   /* My Catches matches the other switches: black when off (accent text/border),
      filled with the current theme accent when on. */
-  #catchToggle{background:#000 !important; color:var(--teal) !important; font-weight:700; border:1px solid var(--teal) !important; box-shadow:none !important;}
-  #catchToggle:not(.active){opacity:1; background:#000 !important; color:var(--teal) !important; border-color:var(--teal) !important;}
+  #catchToggle{background:#000 !important; color:var(--accent-lite) !important; font-weight:700; border:1px solid var(--accent-lite) !important; box-shadow:none !important;}
+  #catchToggle:not(.active){opacity:1; background:#000 !important; color:var(--accent-lite) !important; border-color:var(--accent-lite) !important;}
   /* Labels: black with white text when off, inverted to white-on-black when on */
   #labelsToggle{font-weight:700; border:1px solid #fff !important; box-shadow:none !important;}
   /* .chip padding is bottom-heavy (5 top / 8 bottom), which lifts the text ~1.5px above centre.
@@ -919,12 +944,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #speciesCol .chip.active .dot{background:#000 !important;}
   .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:700; border:1px solid var(--inshore) !important; box-shadow:none !important;}
   .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important;}
-  .chip[data-zone="inshore"]:not(.active){opacity:1; color:#8a9aff !important; border-color:#6b7ae0 !important;}
+  .chip[data-zone="inshore"]:not(.active){opacity:1; color:#6b8cff !important; border-color:#6b8cff !important;}
   .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:700; border:1px solid var(--offshore) !important; box-shadow:none !important;}
-  .chip[data-zone="offshore"]:not(.active){opacity:1; color:#c09aff !important; border-color:#9a6ae0 !important;}
+  .chip[data-zone="offshore"]:not(.active){opacity:1; color:#b478ff !important; border-color:#b478ff !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
   .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:700; border:1px solid var(--launch) !important; box-shadow:none !important;}
-  .chip[data-zone="launch"]:not(.active){opacity:1; color:#ff8585 !important; border-color:#d05050 !important;}
+  .chip[data-zone="launch"]:not(.active){opacity:1; color:#ff6b6b !important; border-color:#ff6b6b !important;}
   .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
   /* Log-sheet species picker: match the bright left-column buttons (black bg,
@@ -945,10 +970,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #labelsToggle.active{background:#ffffff !important; color:#000000 !important; border-color:#ffffff !important;}
   .chip.util.active{border-color:var(--fog); box-shadow:0 0 0 1px var(--fog) inset;}
   #catchToggle.active{background:var(--teal) !important; color:var(--on-accent) !important; border-color:#fff !important; box-shadow:none;}
-  body[data-theme="beige"] #catchToggle{color:#8a5620 !important; border-color:#8a5620 !important;}
-  body[data-theme="beige"] #catchToggle.active{background:#8a5620 !important; color:#fff !important; border-color:#6e4416 !important;}
   #launchToggle{background:#000 !important; color:#e02020 !important; font-weight:700; border:1px solid #e02020 !important; box-shadow:none !important;}
-  #launchToggle:not(.active){opacity:1; color:#ff8585 !important; border-color:#d05050 !important;}
+  #launchToggle:not(.active){opacity:1; color:#ff6b6b !important; border-color:#ff6b6b !important;}
   #launchToggle.active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
 
   /* ---------- Floating action buttons ---------- */
@@ -981,19 +1004,33 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .sheet.open{transform:translateY(0); visibility:visible;}
   .sheet-handle{width:36px; height:4px; background:var(--line); border-radius:4px; margin:10px auto 4px;}
   .sheet-head{display:flex; align-items:center; justify-content:space-between; padding:4px 18px 10px; border-bottom:1px solid var(--line);}
-  .sheet-head h2{font-family:'Space Grotesk',sans-serif; font-size:15px; margin:0; font-weight:700;}
+  .sheet-head h2{font-family:'Space Grotesk',sans-serif; font-size:calc(15px * var(--ts)); margin:0; font-weight:700;}
   .sheet-head .close{
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:#fff; font-weight:700;
+    font-family:'JetBrains Mono',monospace; font-size:calc(11px * var(--ts)); color:#fff; font-weight:700;
     background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.55); border-radius:8px; padding:5px 9px; cursor:pointer;
   }
   .sheet-head .close:active{background:rgba(255,255,255,.16);}
-  body[data-theme="beige"] .sheet-head .close{
-    color:#3a2f22; background:rgba(0,0,0,.05); border-color:rgba(58,47,34,.55);
+  /* Sun Glasses is read in direct sun, so accent text is bolded throughout rather than
+     relying on colour alone to carry it. */
+  body[data-theme="sunglasses"] .sheet-note b,
+  body[data-theme="sunglasses"] .pop-targets b,
+  body[data-theme="sunglasses"] .cc-size,
+  body[data-theme="sunglasses"] .td-day,
+  body[data-theme="sunglasses"] .pop-meta,
+  body[data-theme="sunglasses"] .drop-row .wn,
+  body[data-theme="sunglasses"] .sheet-note a{font-weight:800;}
+  body[data-theme="sunglasses"] .sheet-head .close{
+    color:var(--fog); background:rgba(0,0,0,.05); border-color:rgba(26,23,20,.55);
   }
-  body[data-theme="beige"] .sheet-head .close:active{background:rgba(0,0,0,.12);}
+  body[data-theme="sunglasses"] .sheet-head .close:active{background:rgba(0,0,0,.12);}
   .sheet-body{overflow-y:auto; padding:12px 18px 22px;}
-  .sheet-note{font-size:11.5px; color:var(--muted); line-height:1.5; margin:0 0 14px;}
-  .sheet-note b{color:var(--brass); font-weight:600;}
+  /* Body copy was 11.5px --muted. The ratio passed on the dark themes but small low-chroma
+     grey still reads faint, so it now takes --fog at a larger size. Bold takes --emph, which
+     is theme-driven; links take --link, deliberately blue so a link never reads as just
+     another emphasised phrase. */
+  .sheet-note{font-size:calc(12.5px * var(--ts)); color:var(--fog); line-height:1.6; margin:0 0 14px;}
+  .sheet-note b{color:var(--emph); font-weight:700;}
+  .sheet-note a, .pop a, .sheet-body a{color:var(--link); font-weight:700; text-decoration:underline;}
   @media (min-width:720px){
     .sheet{max-width:480px; left:auto; right:14px; bottom:40px; border-radius:16px; max-height:88vh;}
     #filterWrap{max-width:680px;}
@@ -1065,7 +1102,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Season chart ---------- */
   .season-row{margin-bottom:14px;}
-  .season-row .lbl{display:flex; align-items:center; gap:7px; margin-top:5px; font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:600;}
+  .season-row .lbl{display:flex; align-items:center; gap:7px; margin-top:5px; font-family:'Space Grotesk',sans-serif; font-size:calc(13px * var(--ts)); font-weight:600;}
   .season-row .lbl .sw{width:10px; height:10px; border-radius:3px;}
   .months{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:2px;}
   .months div{height:16px; border-radius:2px; background:var(--navy-800); border:1px solid var(--line);}
@@ -1134,7 +1171,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     font-family:'Space Grotesk',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,.5);
   }
   .photo-crop:active{filter:brightness(1.15);}
-  body[data-theme="beige"] .photo-crop{background:#8a5620; border-color:#fff;}
+  body[data-theme="sunglasses"] .photo-crop{background:var(--teal); border-color:#fff;}
   #cropModal{
     position:fixed; inset:0; z-index:2000; background:rgba(3,9,15,.9);
     display:none; flex-direction:column; align-items:center; justify-content:center; padding:18px; gap:14px;
@@ -1165,9 +1202,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .cc-edit, .cc-del{background:none; border:none; color:var(--muted); font-size:13px; cursor:pointer; padding:2px 5px;}
   .cc-edit:hover{color:var(--teal);}
   .cc-del:hover{color:var(--rust);}
-  .cc-meta{font-size:11.5px; color:var(--muted); margin-top:6px; font-family:'JetBrains Mono',monospace; line-height:1.6;}
-  .cc-size{font-size:11.5px; color:var(--teal); margin-top:3px;}
-  .cc-notes{font-size:12px; color:var(--fog); margin-top:5px; line-height:1.5;}
+  .cc-meta{font-size:calc(12px * var(--ts)); color:var(--fog); margin-top:6px; font-family:'JetBrains Mono',monospace; line-height:1.6;}
+  .cc-size{font-size:calc(12px * var(--ts)); color:var(--teal); margin-top:3px;}
+  .cc-notes{font-size:calc(12.5px * var(--ts)); color:var(--fog); margin-top:5px; line-height:1.5;}
 
   /* ---------- Popup ---------- */
   .leaflet-popup-content-wrapper{background:var(--navy-900); color:var(--fog); border:1px solid var(--line); border-radius:12px; padding:0;}
@@ -1176,13 +1213,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-popup-close-button{color:var(--muted) !important; padding:8px !important;}
   .pop{padding:13px 14px 14px;}
   .pop-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:4px;}
-  .pop-name{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14.5px; line-height:1.2;}
-  .pop-zone{flex:0 0 auto; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.06em; padding:2px 6px; border-radius:5px; text-transform:uppercase; font-weight:600;}
-  .pop-meta{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--brass); margin:2px 0 8px; display:flex; gap:8px; flex-wrap:wrap;}
-  .pop-desc{font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:9px;}
-  .pop-tip{font-size:11.5px; line-height:1.5; color:var(--fog); background:var(--navy-800); border-left:2px solid var(--teal); padding:7px 9px; border-radius:0 6px 6px 0; margin-bottom:10px;}
-  .pop-targets{font-size:11px; line-height:1.55; color:var(--muted); margin-bottom:9px;}
-  .pop-targets b{color:var(--fog); font-weight:600;}
+  .pop-name{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(15.5px * var(--ts)); line-height:1.2;}
+  .pop-zone{flex:0 0 auto; font-family:'JetBrains Mono',monospace; font-size:calc(9.5px * var(--ts)); letter-spacing:.06em; padding:2px 6px; border-radius:5px; text-transform:uppercase; font-weight:600;}
+  .pop-meta{font-family:'JetBrains Mono',monospace; font-size:calc(11.5px * var(--ts)); color:var(--brass); margin:2px 0 8px; display:flex; gap:8px; flex-wrap:wrap;}
+  .pop-desc{font-size:calc(12.5px * var(--ts)); color:var(--fog); line-height:1.55; margin-bottom:9px;}
+  .pop-tip{font-size:calc(12.5px * var(--ts)); line-height:1.55; color:var(--fog); background:var(--navy-800); border-left:2px solid var(--teal); padding:7px 9px; border-radius:0 6px 6px 0; margin-bottom:10px;}
+  .pop-targets{font-size:calc(12px * var(--ts)); line-height:1.6; color:var(--fog); margin-bottom:9px;}
+  .pop-targets b{color:var(--emph); font-weight:700;}
   .pop-species{display:flex; flex-direction:column; gap:5px; overflow:hidden;}
   .ps-cap{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); margin-bottom:2px;}
   .ps-row{display:flex; align-items:center; gap:7px; min-width:0;}
@@ -1192,7 +1229,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .ps-bar .mo{height:auto; background:none !important; border:none !important; font-family:'JetBrains Mono',monospace; font-size:7.5px; color:var(--muted); text-align:center; line-height:1;}
   .del-catch-btn{border-color:var(--rust) !important; color:var(--rust) !important;}
   .drops-list{display:none; margin-top:7px; max-height:150px; overflow-y:auto; border:1px solid var(--line); border-radius:8px; padding:6px 8px;}
-  .drop-row{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--fog); line-height:1.8; white-space:nowrap;}
+  .drop-row{font-family:'JetBrains Mono',monospace; font-size:calc(11px * var(--ts)); color:var(--fog); line-height:1.8; white-space:nowrap;}
   .drop-row .dd{color:var(--muted);}
   .drop-row .wn{color:var(--brass);}
 
@@ -1321,6 +1358,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     border:1.5px solid rgba(242,194,0,.8);
     filter:drop-shadow(0 2px 4px rgba(0,0,0,.75));
   }
+  /* Ponce wave buoy. Same 26px disc, same gold three-waves-plus-arrow glyph as the tide
+     stations, but on a brilliant blue ground rather than the near-black one, so it reads as
+     a wave gauge without being mistaken for a tide gauge. */
+  .buoy-pin{
+    width:26px; height:26px; box-sizing:border-box;
+    display:flex; align-items:center; justify-content:center;
+    background:#0a6fff; border-radius:50%;
+    border:1.5px solid rgba(242,194,0,.9);
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.75));
+  }
   /* A gauge the user calibrated themselves: white ring and a white halo, so their own
      stations read apart from the seven built-in ones at a glance. */
   .tide-station-pin.user-station{
@@ -1339,12 +1386,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #map.placing-tide, #map.placing-tide .leaflet-grab, #map.placing-tide .leaflet-interactive{cursor:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48ZyBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMyAxOGMzLTQgNi00IDkgMHM2IDQgOSAwIDYtNCA4IDAiLz48L2c+PGcgc3Ryb2tlPSIjMmZhMzlhIiBzdHJva2Utd2lkdGg9IjEuNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMyAxOGMzLTQgNi00IDkgMHM2IDQgOSAwIDYtNCA4IDAiLz48L2c+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMS40IiBmaWxsPSIjZTAyMDIwIi8+PC9zdmc+") 16 16, crosshair !important;}
   .td-wrap{margin-top:4px;}
-  .td-day{font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700; color:var(--teal); margin:8px 0 3px;}
-  .td-row{display:flex; align-items:center; gap:8px; font-size:11.5px; padding:2px 0; font-family:'JetBrains Mono',monospace;}
+  .td-day{font-family:'Space Grotesk',sans-serif; font-size:calc(11.5px * var(--ts)); font-weight:700; color:var(--teal); margin:8px 0 3px;}
+  .td-row{display:flex; align-items:center; gap:8px; font-size:calc(12px * var(--ts)); padding:2px 0; font-family:'JetBrains Mono',monospace;}
   .td-row.past{opacity:.4;}
   .td-row .td-type{flex:0 0 42px; font-weight:700; padding:1px 5px; border-radius:4px; text-align:center; font-size:9.5px; color:#04141e;}
   .td-type.td-high{background:var(--teal); color:var(--on-accent);}
-  .td-type.td-low{background:var(--brass);}
+  /* Fill, not text — pinned to the fixed gold so the near-black label on it stays legible
+     now that --brass is theme-driven and goes dark on the light grounds. */
+  .td-type.td-low{background:#c99a4b; color:#04141e;}
   .td-row .td-ht{margin-left:auto; color:var(--muted);}
   #tidePanel{
     position:fixed; top:56px; right:10px; bottom:16px; width:min(270px, 78vw);
@@ -1363,7 +1412,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     width:26px; height:26px; cursor:pointer; font-size:12px; flex:0 0 auto;
   }
   #tidePanelBody{overflow-y:auto; flex:1 1 auto; min-height:0; padding:12px 14px 36px;}
-  #tidePanelBody .pop-meta{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--brass); margin-bottom:8px;}
+  #tidePanelBody .pop-meta{font-family:'JetBrains Mono',monospace; font-size:calc(11.5px * var(--ts)); color:var(--brass); margin-bottom:8px;}
   #toast{ position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px);
     background:var(--navy-800); border:1px solid var(--line); color:var(--fog);
     padding:10px 18px; border-radius:18px; font-size:12.5px; text-align:center; line-height:1.5; max-width:80vw;
@@ -1390,7 +1439,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="kicker"><span id="creditKicker">Where's The Fish?</span><sup class="credit-c" id="creditC">&copy;</sup></div>
   </div>
   <div class="logo-wrap" id="logoBtn" aria-hidden="true">
-    <span class="logo-mini" role="img" aria-label="WTF Log redfish"></span>
+    <span class="logo-mini" role="img" aria-label="WTF Log redfish"></span><span class="logo-spot"></span>
     <span class="logo-wtf">WTF</span>
   </div>
   <div class="hdr-right">
@@ -1398,6 +1447,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-btn" id="searchBtn" title="Search" style="font-size:13px;">🔍</button>
       <button class="help-btn" id="helpBtn" title="Help">?</button>
       <button class="help-btn" id="themeBtn" title="Theme" style="font-size:15px;">🎨</button>
+      <button class="help-btn" id="sizeBtn" title="Text size" aria-label="Text size">A</button>
     </div>
   </div>
 </header>
@@ -1469,7 +1519,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <div class="sheet-body">
     <div id="panel-season">
-      <p class="sheet-note">Each species row shows the 12 months of the year, January through December. Brighter cells mean a better bite that month; dim cells are the slow season. These are general patterns for the Ponce de Leon Inlet region — not a substitute for a fishing report. <b>Many species have closed seasons and size, bag, and gear limits. Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank" style="color:var(--teal);">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
+      <p class="sheet-note">Each species row shows the 12 months of the year, January through December. Brighter cells mean a better bite that month; dim cells are the slow season. These are general patterns for the Ponce de Leon Inlet region — not a substitute for a fishing report. <b>Many species have closed seasons and size, bag, and gear limits. Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
       <div id="seasonChart"></div>
       <div class="legend-key">
         <div class="k"><div class="sq" style="background:var(--fog)"></div>Peak</div>
@@ -1531,7 +1581,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Themes</div>
-      <p class="sheet-note">Tap <b>🎨</b> to pick a color theme (dark options, light, and beige) — saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
+      <p class="sheet-note">Tap <b>🎨</b> to pick a color theme — four dark options, <b>Blue</b>, and <b>Sun Glasses</b>, which is built for reading in bright sun through polarized lenses. Tap <b>A</b> to set the reading text size (100%, 115% or 130%) for the panels and popups. Both are saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
 
       
 
@@ -2912,7 +2962,17 @@ async function loadAll(){
   await migrateToIDB();
   try{ const raw = await storeGet(STORAGE_KEY); catches = raw ? JSON.parse(raw) : []; }catch(e){ catches = []; }
   try{ const nraw = await storeGet(NOTES_KEY); userNotes = nraw ? JSON.parse(nraw) : {}; }catch(e){ userNotes = {}; }
-  try{ const th = await storeGet(THEME_KEY); if(th) applyTheme(th); }catch(e){}
+  // 'beige' was retired; anyone still holding it would otherwise get a data-theme with no
+  // matching CSS and silently fall back to the Deep Water tokens. Migrate to Sun Glasses.
+  try{
+    let th = await storeGet(THEME_KEY);
+    if(th === 'beige'){ th = 'sunglasses'; try{ await storeSet(THEME_KEY, th); }catch(e){} }
+    if(th) applyTheme(th);
+  }catch(e){}
+  try{
+    const ts = await storeGet(TEXT_SCALE_KEY);
+    applyTextScale(ts == null ? 0 : (parseInt(ts, 10) || 0));
+  }catch(e){ applyTextScale(0); }
   await loadSpotOverrides();
   applySpotOverrides();
   await loadCustomSpots();
@@ -4435,15 +4495,26 @@ photoInput.addEventListener('change', async ()=>{
   if(gotLoc && gotTime) autoTide(true);
 });
 
+/* Three waves plus a double arrow, gold on a dark disc. Shared by the fixed tide gauges and
+   the wave buoy. Declared here, above the WAVES block, because the buoy marker is built at
+   module load and a `const` declared further down would be in the temporal dead zone. */
+const TIDE_STATION_GLYPH =
+  '<svg viewBox="0 0 30 24" width="20" height="16" fill="none" stroke="#f2c200" stroke-width="2.6" stroke-linecap="round">'+
+  '<path d="M2 7c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
+  '<path d="M2 12c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
+  '<path d="M2 17c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
+  '<path d="M24 3v18M24 3l-2.6 3M24 3l2.6 3M24 21l-2.6-3M24 21l2.6-3"></path>'+
+  '</svg>';
+
 /* ===================== WAVES — NDBC Buoy 41070 (Ponce de Leon Inlet) ===================== */
 const BUOY_41070 = { lat:29.289, lng:-80.803, id:"41070", name:"Ponce Inlet Buoy 41070" };
 const buoyMarker = L.marker([BUOY_41070.lat, BUOY_41070.lng], {
-  icon: L.divIcon({ className:'', html:'<div style="width:16px;height:16px;border-radius:50%;background:#ffb703;border:2.5px solid #7a4a00;box-shadow:0 0 0 2px rgba(255,255,255,.65);"></div>', iconSize:[16,16], iconAnchor:[8,8], popupAnchor:[0,-9] })
+  icon: L.divIcon({ className:'', html:`<div class="buoy-pin">${TIDE_STATION_GLYPH}</div>`, iconSize:[26,26], iconAnchor:[13,13], popupAnchor:[0,-14] })
 }).addTo(map);
 buoyMarker.bindPopup(`<div class="pop">
   <div class="pop-top"><div class="pop-name">${BUOY_41070.name}</div></div>
   <div class="pop-meta"><span>NDBC live conditions</span><span>${toDMS(BUOY_41070.lat, BUOY_41070.lng)}</span></div>
-  <div id="buoyData" style="margin-top:8px; font-size:12.5px; line-height:1.7;">Loading latest buoy data… <span style="color:var(--muted); font-size:9.5px;">(build 0720b)</span></div>
+  <div id="buoyData" style="margin-top:8px; font-size:calc(13px * var(--ts)); line-height:1.7; color:var(--fog);">Loading latest buoy data… <span style="color:var(--muted); font-size:9.5px;">(build 0720b)</span></div>
 </div>`, {maxWidth:300});
 function degToCompass(d){
   const dirs=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
@@ -4459,7 +4530,7 @@ function buoyRowsHTML(f, obsTime){
   if(f.wtmp!=null) rows.push(['Water Temperature (WTMP)', (f.wtmp*9/5+32).toFixed(1)+' \u00b0F']);
   if(!rows.length) return null;
   return rows.map(r=>`<div style="display:flex; justify-content:space-between; gap:10px;"><span>${r[0]}:</span><b style="white-space:nowrap;">${r[1]}</b></div>`).join('')
-    + `<div style="color:var(--muted); font-size:10.5px; margin-top:6px;">Observed ${obsTime.toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})} \u00b7 NDBC 41070</div>`;
+    + `<div style="color:var(--brass); font-size:calc(11px * var(--ts)); margin-top:6px;">Observed ${obsTime.toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})} \u00b7 NDBC 41070</div>`;
 }
 function parseNdbcText(text){
   const lines = text.split('\n');
@@ -4502,7 +4573,7 @@ async function loadBuoyData(){
   const watchdog = setTimeout(()=>{
     const t = el.textContent || '';
     if(t.indexOf('Loading') === 0 || t.indexOf('Trying') === 0){
-      el.innerHTML = 'Buoy fetch stalled unexpectedly (build 0720b). See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC 41070</a>.';
+      el.innerHTML = 'Buoy fetch stalled unexpectedly (build 0720b). See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank">NDBC 41070</a>.';
     }
   }, 45000);
   try{
@@ -4517,7 +4588,7 @@ async function loadBuoyData(){
       fails.push(src.name+': empty');
     }catch(err){ fails.push(src.name+': '+(err && err.message ? err.message : 'failed')); }
   }
-  el.innerHTML = 'Couldn\u2019t reach the buoy feed right now. See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank" style="color:var(--teal);">NDBC station 41070</a>.'
+  el.innerHTML = 'Couldn\u2019t reach the buoy feed right now. See <a href="https://www.ndbc.noaa.gov/station_page.php?station=41070" target="_blank">NDBC station 41070</a>.'
     + '<div style="color:var(--muted); font-size:9.5px; margin-top:6px;">build 0720b \u00b7 ' + fails.join(' \u00b7 ') + '</div>';
   }catch(outer){
     el.innerHTML = 'Buoy fetch error: ' + (outer && outer.message ? outer.message : 'unknown') + ' (build 0720b)';
@@ -4902,19 +4973,12 @@ function tideRisingAt(date){
 /* ---- Fixed gauge pins. Only stations that actually carry lag data get a pin; the
    uncalibrated lagoon sensors (Mosquito Lagoon, Williams Point) are left off until they
    have numbers worth showing. These are read-only — no edit or delete in the popup. ---- */
-const TIDE_STATION_GLYPH =
-  '<svg viewBox="0 0 30 24" width="20" height="16" fill="none" stroke="#f2c200" stroke-width="2.6" stroke-linecap="round">'+
-  '<path d="M2 7c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
-  '<path d="M2 12c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
-  '<path d="M2 17c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
-  '<path d="M24 3v18M24 3l-2.6 3M24 3l2.6 3M24 21l-2.6-3M24 21l2.6-3"></path>'+
-  '</svg>';
 function tideStationHasData(st){
   return st.lagKind === 'reference' || st.lagKind === 'measured';
 }
 function tideStationPopup(st){
   const p = waterwayPos(st.lat, st.lng);
-  const armName = st.arm === 'N' ? 'north — Halifax River' : 'south — Indian River / Mosquito Lagoon';
+  const armName = st.arm === 'N' ? 'North — Halifax River' : 'South — Indian River / Mosquito Lagoon';
   const sign = m => (m > 0 ? '+' : '') + m;
   const body = (st.lagKind === 'reference')
     ? `<div class="pop-tip" style="border-left-color:#f2c200; margin-top:9px;">
@@ -5235,16 +5299,16 @@ function tideForecastHTML(latlng){
     : `Computed offline from NOAA harmonic constituents for the Ponce Inlet area; heights are relative to mean lower low water and timing is a close approximation. Works with no internet.`;
 
   const warnNote = (station.confidence === 'low')
-    ? `<p style="font-size:10px; color:var(--brass); line-height:1.5; margin:6px 0 0;">⚠ <b>Low-confidence timing</b>${station.reasons && station.reasons.length ? ' — '+station.reasons.join('; ') : ''}. Check against a live tide chart before relying on it.</p>`
+    ? `<p style="font-size:calc(11px * var(--ts)); color:var(--brass); line-height:1.6; margin:6px 0 0;">⚠ <b>Low-confidence timing</b>${station.reasons && station.reasons.length ? ' — '+station.reasons.join('; ') : ''}. Check against a live tide chart before relying on it.</p>`
     : '';
 
   const windNote = (station.windDriven && station.confidence !== 'low')
-    ? `<p style="font-size:10px; color:var(--brass); line-height:1.5; margin:6px 0 0;">⚠ This is a shallow, wind-driven reach. Sustained wind can push the real tide off these times by an hour or more — read the conditions on the water.</p>`
+    ? `<p style="font-size:calc(11px * var(--ts)); color:var(--brass); line-height:1.6; margin:6px 0 0;">⚠ This is a shallow, wind-driven reach. Sustained wind can push the real tide off these times by an hour or more — read the conditions on the water.</p>`
     : '';
 
   return `<div class="pop-meta"><span>${toDMS(latlng.lat, latlng.lng)}</span>${badge}</div>
     <div class="td-wrap">${rows}</div>
-    <p style="font-size:10px; color:var(--muted); line-height:1.5; margin:10px 0 0;">${lagNote} ${srcNote}</p>${warnNote}${windNote}`;
+    <p style="font-size:calc(11px * var(--ts)); color:var(--fog); line-height:1.6; margin:10px 0 0;">${lagNote} ${srcNote}</p>${warnNote}${windNote}`;
 }
 
 /* ===================== TIDE LAG CALIBRATOR =====================
@@ -5626,11 +5690,11 @@ const THEMES = [
   { id:'forest',    name:'Forest',     sw:['#0e2015','#3fae6b'] },
   { id:'sunset',    name:'Sunset',     sw:['#2a141d','#ff8c5a'] },
   { id:'light',     name:'Blue',       sw:['#154a7c','#7fd4ff'] },
-  { id:'beige',     name:'Beige',      sw:['#f7f1e5','#7a4f18'] },
   { id:'sunglasses',name:'Sun Glasses',sw:['#fdfcf9','#8a4b0f'] }
 ];
 const THEME_KEY = 'theme';
 function applyTheme(id){
+  if(id === 'beige') id = 'sunglasses';   // retired theme — never let it reach the attribute
   if(id === 'deepwater') document.body.removeAttribute('data-theme');
   else document.body.setAttribute('data-theme', id);
   document.querySelectorAll('.theme-opt').forEach(o=> o.classList.toggle('sel', o.dataset.theme === id));
@@ -5651,6 +5715,30 @@ THEMES.forEach(t=>{
   });
   themeGrid.appendChild(opt);
 });
+/* ---------- Reader text size ----------
+   Only the text-heavy surfaces scale: sheets, popups, the tide panel, My Log. Map furniture
+   (chips, cluster circles, FAB pills, labels) is deliberately left fixed — those sit in
+   tight boxes and would wrap or overflow well before 130%. */
+const TEXT_SCALE_KEY = 'text-scale';
+const TEXT_STEPS = [1, 1.15, 1.3];
+let textStepIdx = 0;
+function applyTextScale(idx){
+  textStepIdx = (idx + TEXT_STEPS.length) % TEXT_STEPS.length;
+  const v = TEXT_STEPS[textStepIdx];
+  document.body.style.setProperty('--ts', v);
+  const b = document.getElementById('sizeBtn');
+  if(b){
+    b.dataset.step = Math.round(v * 100);
+    b.title = 'Text size ' + Math.round(v * 100) + '%';
+  }
+  // An open popup keeps its old box until Leaflet re-measures it.
+  if(typeof map !== 'undefined' && map._popup) map._popup.update();
+}
+document.getElementById('sizeBtn').addEventListener('click', async ()=>{
+  applyTextScale(textStepIdx + 1);
+  try{ await storeSet(TEXT_SCALE_KEY, String(textStepIdx)); }catch(e){}
+});
+
 const themeSheet = document.getElementById('themeSheet');
 const themeScrim = document.getElementById('themeScrim');
 document.getElementById('themeBtn').addEventListener('click', ()=>{ themeSheet.classList.add('open'); themeScrim.classList.add('open'); });
