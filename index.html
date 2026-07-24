@@ -790,14 +790,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
      line, so it has to wrap or the tail runs off the map and is never seen. */
   .leaflet-control-attribution{
     background:rgba(6,15,24,.85) !important; color:var(--fog) !important; font-size:10.5px !important;
-    white-space:normal !important; max-width:min(78vw, 560px); text-align:right;
+    white-space:normal !important; max-width:min(78vw, 560px, calc(100% - 170px)); text-align:right;
     line-height:1.45; padding:3px 6px !important; border-radius:6px 0 0 0;
   }
   .leaflet-control-attribution a{color:var(--teal) !important;}
   .leaflet-control-zoom a{background:var(--navy-900) !important; color:var(--fog) !important; border-color:var(--line) !important;}
   /* Leaflet gives corner controls clear:both so they stack; a flex row puts the scale
      beside the zoom buttons instead, both sitting on the same baseline. */
-  .leaflet-bottom.leaflet-left{display:flex; align-items:flex-end;}
+  /* Above the attribution, which is painted after it and would otherwise cover the buttons. */
+  .leaflet-bottom.leaflet-left{display:flex; align-items:flex-end; z-index:1001;}
   .leaflet-bottom.leaflet-left .leaflet-control{float:none; clear:none;}
   .leaflet-bottom.leaflet-left .leaflet-control-zoom{margin-bottom:14px; margin-left:10px;}
   .leaflet-bottom.leaflet-left .leaflet-control-scale{margin-bottom:14px; margin-left:8px;}
@@ -1192,10 +1193,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1; box-sizing:border-box;
     /* Heavier bottom padding lifts the count and label into the upper half of the circle. */
-    padding:4px 4px 10px;
+    padding:2px 3px 8px;
   }
   .cluster-pill .cn{font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:800;}
-  .cluster-pill .cl{font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.02em; margin-top:2px; text-align:center; line-height:1; white-space:nowrap;}
+  .cluster-pill .cl{font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.02em; margin-top:2px; text-align:center;
+    /* letter-spacing adds a trailing gap after the last letter, which drags centred
+       text off to the left; the negative margin cancels it. */
+    margin-right:-.02em; line-height:1; white-space:nowrap;}
   #themeGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
   .theme-opt{
     display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:11px;
@@ -2353,6 +2357,10 @@ document.getElementById('mapModeBtn').addEventListener('click', function(){
 // Recover map sizing on devices where the container size settles late (iOS Safari)
 function kickMap(){
   try{
+    // iOS pans the whole document to reveal a focused field and doesn't always pan back.
+    if(window.scrollY || window.scrollX) window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     map.invalidateSize(true);
     if(imageryLayer && imageryLayer.redraw) imageryLayer.redraw();
   }catch(e){}
@@ -2364,6 +2372,19 @@ window.addEventListener('resize', kickMap);
 window.addEventListener('orientationchange', ()=> setTimeout(kickMap, 300));
 window.addEventListener('pageshow', ()=> setTimeout(kickMap, 200));
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) setTimeout(kickMap, 200); });
+/* The on-screen keyboard resizes the VISUAL viewport only — no window resize fires and dvh
+   doesn't move, so without these the map keeps the size it had before the keyboard opened. */
+if(window.visualViewport){
+  let vvTimer = null;
+  const vvKick = ()=>{ clearTimeout(vvTimer); vvTimer = setTimeout(kickMap, 120); };
+  window.visualViewport.addEventListener('resize', vvKick);
+  window.visualViewport.addEventListener('scroll', vvKick);
+}
+// Leaving a field in a sheet: undo the pan iOS applied to bring it into view.
+document.addEventListener('focusout', (e)=>{
+  if(!e.target || !e.target.closest || !e.target.closest('.sheet')) return;
+  setTimeout(kickMap, 150);
+});
 // Also re-kick the very first time the map area actually has a height
 (function waitForHeight(tries){
   const el = document.getElementById('map');
@@ -3791,7 +3812,13 @@ function openLogSheet(editCatch){
   const body = logSheet.querySelector('.sheet-body');
   if(body){ body.scrollTop = 0; requestAnimationFrame(()=>{ body.scrollTop = 0; }); }
 }
-function closeLogSheetFn(){ logSheet.classList.remove('open'); logScrim.classList.remove('open'); placingPin = false; clearPreviewMarker(); document.getElementById('logCatchFab').classList.remove('pressed'); }
+function closeLogSheetFn(){
+  logSheet.classList.remove('open'); logScrim.classList.remove('open');
+  placingPin = false; clearPreviewMarker();
+  document.getElementById('logCatchFab').classList.remove('pressed');
+  // Give the keyboard time to finish dismissing, then put the map back to full size.
+  setTimeout(kickMap, 60); setTimeout(kickMap, 350);
+}
 
 document.getElementById('logCatchFab').addEventListener('click', ()=> openLogSheet());
 document.getElementById('logClose').addEventListener('click', closeLogSheetFn);
@@ -4144,12 +4171,18 @@ photoInput.addEventListener('change', async ()=>{
     const buf = await file.arrayBuffer();
     const exif = readExif(buf);
     if(exif && exif.lat != null && exif.lng != null){
-      pendingLoc = { lat: exif.lat, lng: exif.lng, label:'Photo location' };
-      spotSelect.value = '';
-      setPreviewMarker(exif.lat, exif.lng);
-      updateLocPreview();
-      statusBits.push('\ud83d\udccd Location set from photo');
-      gotLoc = true;
+      // A pin, a picked spot or a GPS fix was a deliberate choice — the photo doesn't
+      // get to overwrite it. Say so rather than dropping the coordinates silently.
+      if(pendingLoc){
+        statusBits.push('\ud83d\udccd Photo has GPS \u2014 keeping the location you set');
+      } else {
+        pendingLoc = { lat: exif.lat, lng: exif.lng, label:'Photo location' };
+        spotSelect.value = '';
+        setPreviewMarker(exif.lat, exif.lng);
+        updateLocPreview();
+        statusBits.push('\ud83d\udccd Location set from photo');
+        gotLoc = true;
+      }
     }
     if(exif && exif.dateTime){
       const m = exif.dateTime.match(/(\d{4}):(\d{2}):(\d{2})[ T](\d{2}):(\d{2})/);
