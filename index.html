@@ -1257,6 +1257,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     100%{transform:translateY(-104vh) translateX(0); opacity:0;}
   }
   .tide-pin{line-height:0; background:rgba(0,0,0,.55); border-radius:50%; padding:2px; filter:drop-shadow(0 2px 3px rgba(0,0,0,.7));}
+  /* Fixed gauges. Same gold-on-dark scheme as a dropped tide pin, plus a thin gold ring
+     so a permanent station is still tellable from a pin you dropped yourself. */
+  .tide-station-pin{
+    line-height:0; background:rgba(0,0,0,.62); border-radius:50%; padding:3px;
+    border:1.5px solid rgba(242,194,0,.8); box-sizing:border-box;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.75));
+  }
   #tideBanner{
     position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:1160;
     display:flex; align-items:center; gap:10px; padding:8px 10px 8px 14px;
@@ -1399,7 +1406,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <div class="sheet-body">
     <div id="panel-season">
-      <p class="sheet-note">Each species row shows the 12 months of the year, January through December. Brighter cells mean a better bite that month; dim cells are the slow season. These are general patterns for the Ponce de Leon Inlet region — not a substitute for a current tide chart or fishing report. <b>Many species have closed seasons and size, bag, and gear limits. Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank" style="color:var(--teal);">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
+      <p class="sheet-note">Each species row shows the 12 months of the year, January through December. Brighter cells mean a better bite that month; dim cells are the slow season. These are general patterns for the Ponce de Leon Inlet region — not a substitute for a fishing report. <b>Many species have closed seasons and size, bag, and gear limits. Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank" style="color:var(--teal);">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
       <div id="seasonChart"></div>
       <div class="legend-key">
         <div class="k"><div class="sq" style="background:var(--fog)"></div>Peak</div>
@@ -1476,7 +1483,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Tides (works offline)</div>
-      <p class="sheet-note">Tap <b>Street Map</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed. Stations north of the inlet (Spruce Creek, Rose Bay, Dunlawton) are calibrated; the wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
+      <p class="sheet-note">Tap <b>Street Map</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
+      <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
+      <p class="sheet-note">You can add gauges of your own. Open <b>Calibrate tide lags</b> and use <b>Your own tide stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Calibrate tide lags from station data</button></div>
 
       
@@ -1623,6 +1632,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="addSpotGPS">🎯 My location</button>
     </div>
     <div class="loc-preview" id="addSpotPreview">No location set yet.</div>
+    <input type="text" id="addSpotCoord" placeholder="or type coordinates — 29.0817 -80.9367" style="width:100%; box-sizing:border-box; margin-top:8px;">
+    <p class="sheet-note" style="margin:4px 0 0;">Decimal, degrees-minutes, or full degrees/minutes/seconds all work — paste whatever your plotter or chart gives you.</p>
     <div class="loc-btns" style="margin-top:12px;">
       <button class="mini-btn" id="addSpotSave" style="font-weight:700;">Save spot</button>
     </div>
@@ -1666,6 +1677,33 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="loc-btns" style="margin-top:10px;">
       <button class="mini-btn" id="calResetAll">↺ Clear all measured lags</button>
     </div>
+
+    <div class="subhead" style="margin-top:24px;">Your own tide stations</div>
+    <p class="sheet-note">Add a gauge of your own — a dock, a bridge, anywhere you've timed the tide against the inlet. Saved stations become real calibration points: the forecast interpolates between them and the built-in gauges, so nearby pins get better timing too. Use a negative number for water that turns <i>before</i> the inlet.</p>
+    <label class="field-label">Name</label>
+    <input type="text" id="userTsName" placeholder="e.g. My dock" style="width:100%; box-sizing:border-box;">
+    <label class="field-label">Position</label>
+    <input type="text" id="userTsCoord" placeholder="29.0817 -80.9367" style="width:100%; box-sizing:border-box;">
+    <div class="loc-btns" style="margin-top:8px;">
+      <button class="mini-btn" id="userTsGPS">🎯 My location</button>
+    </div>
+    <div class="loc-preview" id="userTsPreview" style="margin-top:8px;">No position set yet.</div>
+    <div style="display:flex; gap:10px; margin-top:4px;">
+      <div style="flex:1 1 0; min-width:0;">
+        <label class="field-label">High lag (min)</label>
+        <input type="number" id="userTsHigh" inputmode="numeric" placeholder="e.g. 60" style="width:100%; box-sizing:border-box;">
+      </div>
+      <div style="flex:1 1 0; min-width:0;">
+        <label class="field-label">Low lag (min)</label>
+        <input type="number" id="userTsLow" inputmode="numeric" placeholder="same as High" style="width:100%; box-sizing:border-box;">
+      </div>
+    </div>
+    <p class="sheet-note" style="margin:6px 0 0;">Leave Low blank and it copies the High value.</p>
+    <div class="loc-btns" style="margin-top:10px;">
+      <button class="mini-btn" id="userTsSave" style="font-weight:700;">Save tide station</button>
+    </div>
+    <p class="sheet-note" style="margin-top:14px;">Your tide stations: <span id="userTsCount">0</span>.</p>
+    <div id="userTsList"></div>
   </div>
 </div>
 
@@ -1993,6 +2031,68 @@ function dmsPart(v, isLat){
   return `${d}\u00b0${mf.toFixed(3).padStart(6,'0')}'${hemi}`;
 }
 function toDMS(lat,lng){ return dmsPart(lat,true)+' '+dmsPart(lng,false); }
+
+/* Read a coordinate pair the way a person actually writes one. Handles decimal
+   (29.0817 -80.9367), degrees-minutes (29 04.902 N, 80 56.202 W), full DMS
+   (29°04'54"N 80°56'12"W), and hemisphere letters on either side of the number.
+   A W or S letter wins over the sign, so "80.9367 W" and "-80.9367" both work.
+   Returns {lat,lng} or null. */
+function parseLatLngInput(raw){
+  if(!raw) return null;
+  let s = String(raw).trim()
+    .replace(/[\u00b0\u00ba]/g,' ')      // degree signs
+    .replace(/[\u2032\u2019']/g,' ')     // minutes
+    .replace(/[\u2033\u201d"]/g,' ')     // seconds
+    .replace(/[,;]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+  if(!s) return null;
+  // Split into two halves on the hemisphere letter or the second sign, then walk numbers.
+  const tokens = s.split(' ');
+  // Each group keeps its own hemisphere letter, so dropping empties can't misalign them.
+  const groups = [{nums:[], hemi:null}];
+  const cur = ()=> groups[groups.length-1];
+  const closeWith = (hemi)=>{ cur().hemi = hemi; groups.push({nums:[], hemi:null}); };
+  tokens.forEach(tok=>{
+    const letter = tok.match(/^([NSEW])$/i);
+    if(letter){ closeWith(letter[1].toUpperCase()); return; }
+    const trailing = tok.match(/^([+-]?[\d.]+)([NSEW])$/i);
+    if(trailing){ cur().nums.push(parseFloat(trailing[1])); closeWith(trailing[2].toUpperCase()); return; }
+    const leading = tok.match(/^([NSEW])([+-]?[\d.]+)$/i);
+    if(leading){
+      if(cur().nums.length) groups.push({nums:[], hemi:null});
+      cur().hemi = leading[1].toUpperCase();
+      cur().nums.push(parseFloat(leading[2]));
+      return;
+    }
+    const num = parseFloat(tok);
+    if(!isNaN(num)) cur().nums.push(num);
+  });
+  let parts = groups.filter(g=> g.nums.length);
+  // No hemisphere letters: a bare list of numbers splits evenly down the middle.
+  if(parts.length === 1 && !parts[0].hemi){
+    const g = parts[0].nums;
+    const half = n => [{nums:g.slice(0,n), hemi:null},{nums:g.slice(n), hemi:null}];
+    if(g.length === 2) parts = half(1);
+    else if(g.length === 4) parts = half(2);
+    else if(g.length === 6) parts = half(3);
+    else return null;
+  }
+  if(parts.length < 2) return null;
+  const toDeg = (g)=>{
+    if(!g.nums.length) return NaN;
+    const sign = (g.nums[0] < 0 || g.hemi === 'S' || g.hemi === 'W') ? -1 : 1;
+    const d = Math.abs(g.nums[0]), m = g.nums[1] || 0, sec = g.nums[2] || 0;
+    return sign * (d + m/60 + sec/3600);
+  };
+  // Hemisphere letters decide which half is latitude, if they were given.
+  let latG = parts[0], lngG = parts[1];
+  if(latG.hemi === 'E' || latG.hemi === 'W'){ latG = parts[1]; lngG = parts[0]; }
+  const lat = toDeg(latG), lng = toDeg(lngG);
+  if(isNaN(lat) || isNaN(lng)) return null;
+  if(Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+  return { lat, lng };
+}
 let toastTimer = null;
 function showToast(msg, duration=2400){
   const t = document.getElementById('toast');
@@ -2755,6 +2855,9 @@ async function loadAll(){
   await loadCustomSpots();
   await loadTideLags();
   applyTideLags();
+  await loadUserTideStations();
+  renderTideStationPins();
+  if(typeof refreshUserTsList === 'function') refreshUserTsList();
   renderCatchMarkers();
   renderCatchList();
   updateCatchCount();
@@ -3638,11 +3741,31 @@ function closeAddSpot(){
 }
 function updateAddSpotPreview(){
   const el = document.getElementById('addSpotPreview');
+  const box = document.getElementById('addSpotCoord');
   if(!addSpotLoc){ el.textContent = 'No location set yet.'; el.classList.remove('set'); return; }
   el.textContent = toDMS(addSpotLoc.lat, addSpotLoc.lng);
   el.classList.add('set');
+  // Mirror a dropped pin or GPS fix back into the box — unless they're typing in it.
+  if(box && document.activeElement !== box){
+    box.value = addSpotLoc.lat.toFixed(5)+' '+addSpotLoc.lng.toFixed(5);
+  }
 }
-document.getElementById('addSpotBtn').addEventListener('click', ()=>{ addSpotLoc=null; updateAddSpotPreview(); openAddSpot(); });
+document.getElementById('addSpotCoord').addEventListener('input', function(){
+  const el = document.getElementById('addSpotPreview');
+  const raw = this.value.trim();
+  if(!raw){ addSpotLoc = null; clearAddSpotPreview(); el.textContent = 'No location set yet.'; el.classList.remove('set'); return; }
+  const p = parseLatLngInput(raw);
+  if(!p){ el.textContent = "Couldn't read that \u2014 try 29.0817 -80.9367"; el.classList.remove('set'); return; }
+  addSpotLoc = p;
+  showAddSpotPreview(p.lat, p.lng);
+  el.textContent = toDMS(p.lat, p.lng);
+  el.classList.add('set');
+});
+document.getElementById('addSpotBtn').addEventListener('click', ()=>{
+  addSpotLoc=null;
+  const box = document.getElementById('addSpotCoord'); if(box) box.value='';
+  updateAddSpotPreview(); openAddSpot();
+});
 document.getElementById('restoreBuiltinBtn').addEventListener('click', restoreBuiltinSpots);
 document.getElementById('addSpotClose').addEventListener('click', closeAddSpot);
 addSpotScrim.addEventListener('click', closeAddSpot);
@@ -4551,15 +4674,19 @@ searchInput.addEventListener('input', ()=>{
 const TIDE_MODEL = {"speeds":{"M2":28.9841042,"S2":30.0,"N2":28.4397295,"K1":15.0410686,"O1":13.9430356,"K2":30.0821373,"P1":14.9589314,"Q1":13.3986609,"M4":57.9682084,"M6":86.9523127},"amp":{"M2":1.68,"S2":0.27,"N2":0.38,"K1":0.16,"O1":0.13,"K2":0.08,"P1":0.05,"Q1":0.03,"M4":0.06,"M6":0.03},"phases":{"M2":109.50091344118118,"S2":216.0,"N2":354.2186843995005,"K1":108.70715952012688,"O1":0.7937539201229811,"K2":217.4634093604982,"P1":107.29284048080444,"Q1":245.51152488030493,"M4":219.00182688236237,"M6":328.55183063447475},"msl":2.6};
 
 /* ===================== TIDE STATIONS — waterway-aware selection =====================
-   Ten stations supplied by the app author. The offline forecast is built from ONE real
+   Stations supplied by the app author. The offline forecast is built from ONE real
    prediction source: official NOAA hi/low predictions for Ponce Inlet (8721138). Each
    station's local times are produced by shifting those by a High/Low lag (minutes).
 
-   Only Ponce Inlet has a verified lag (0/0 — it IS the reference). The other stations
-   arrived without lag data, so their lag is a 0 PLACEHOLDER (lagKnown:false) and their
-   times currently equal Ponce Inlet's. Enter real High/Low offsets (minutes after Ponce
-   Inlet) below to make each station's timing correct. The Stevens-Connect entries are
-   live sensors (need internet); their station_id is kept for reference only. */
+   TWO zero-lag references, one per arm: 8721138 anchors the NORTH arm (Halifax) and
+   8721147 anchors the SOUTH arm (Indian River North / Mosquito Lagoon). Each arm's knot
+   list only contains stations on that arm, so each is anchored on its own reference.
+
+   NOTE: 8721147 and the Stevens sensor formerly listed as 4774 "Ponce DeLeon Inlet USCG
+   Station" are the SAME gauge, ~30 m apart. They used to appear as two rows, and because
+   knots within 0.2 km of each other get de-duplicated by the lower one, the Stevens row's
+   measured -5/-25 was silently winning and the NOAA reference's 0/0 was being discarded.
+   They are now one row, at 0/0 — reference data carries no lag by definition. */
 const TIDE_LAG_STATIONS = [
   // lagKind: 'reference' = the NOAA source (exact); 'measured' = calibrated from the
   // station's own recorded water level vs the inlet; 'estimated' = extrapolated, not
@@ -4567,11 +4694,11 @@ const TIDE_LAG_STATIONS = [
   // were calibrated by the app author from Stevens-Connect exports. Note: Bulow's negative
   // lag is a cycle-alias of a large positive lag (prints correct clock times either way);
   // Bulow/Scottsmoor are wind-driven lagoon/creek reaches and least reliable.
+  // `branch` ties a station to a tributary centreline instead of the main river.
   { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0,    l:0,   lagKind:'reference', src:'noaa' },
-  { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0,    l:0,   lagKind:'reference', src:'noaa' },
-  { id:'4774',    name:'Ponce DeLeon Inlet USCG Station',lat:29.0633, lng:-80.9155, h:-5,   l:-25, lagKind:'measured',  src:'stevens' },
-  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:95,   l:130, lagKind:'measured',  src:'stevens' },
-  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:60,   l:80,  lagKind:'measured',  src:'stevens' },
+  { id:'8721147', name:'Ponce Inlet USCG',               lat:29.0633, lng:-80.9158, h:0,    l:0,   lagKind:'reference', src:'noaa' },
+  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:95,   l:130, lagKind:'measured',  src:'stevens', branch:'Spruce Creek' },
+  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:60,   l:80,  lagKind:'measured',  src:'stevens', branch:'Rose Bay' },
   { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:90,   l:105, lagKind:'measured',  src:'stevens' },
   { id:'4472',    name:'Bulow Plantation',               lat:29.4350, lng:-81.1366, h:-100, l:-60, lagKind:'measured',  src:'stevens', windDriven:true },
   { id:'5286',    name:'Scottsmoor Turnbull Creek Ramp', lat:28.8985, lng:-80.8516, h:-10,  l:25,  lagKind:'measured',  src:'stevens', windDriven:true },
@@ -4624,16 +4751,80 @@ const WW_SOUTH = [
   [28.800,-80.800],[28.760,-80.766],[28.7273,-80.7669],[28.7059,-80.7203],[28.660,-80.740],
   [28.600,-80.750],[28.540,-80.758],[28.4555,-80.7605]
 ];
+/* Snapshot of the coded values, taken before any saved override is applied. Clearing a
+   measured lag restores from this, so the station goes back to exactly what the table
+   says rather than to a hardcoded list that drifts every time the table is edited. */
+const TIDE_LAG_DEFAULTS = {};
+TIDE_LAG_STATIONS.forEach(st=>{
+  TIDE_LAG_DEFAULTS[st.id] = { h:st.h, l:st.l, lagKind:st.lagKind };
+});
+
+/* ---- Tributary branches. The two main arms follow the ICW; a spot up a side creek is
+   NOT on the ICW, and projecting it straight onto the main centreline understates how far
+   the tide actually travels to reach it. Before these existed, Spruce Creek Park's 95-min
+   lag landed at 5.1 km while Rose Bay's 60-min lag landed at 5.9 km — lag going DOWN as
+   you moved upstream — and Turnbull Bay was split across two different arms, its north end
+   timed off the Halifax and its south end off the Indian River.
+
+   Each branch starts at a junction vertex taken from its parent arm's own path, so
+   distance is continuous across the join: a point on a branch sits at
+   (junction's distance from the inlet) + (distance up the branch).
+
+   These centrelines are hand-drawn approximations from the spot coordinates, the same
+   caveat the main arms carry. Better waypoints drop straight in. ---- */
+const WW_BRANCHES = [
+  { name:'Spruce Creek', arm:'N', path:[
+    [29.093,-80.941],[29.0905,-80.9520],[29.0927,-80.9751],[29.0885,-80.9950],[29.0915,-81.0200]
+  ]},
+  { name:'Rose Bay', arm:'N', path:[
+    [29.103,-80.952],[29.1029,-80.9713],[29.1049,-80.9774]
+  ]},
+  { name:'Turnbull Bay', arm:'S', path:[
+    [29.043,-80.928],[29.0475,-80.9450],[29.0512,-80.9598],[29.0533,-80.9609],[29.0640,-80.9650],[29.0771,-80.9682]
+  ]}
+];
+function armPath(arm){ return arm==='N' ? WW_NORTH : WW_SOUTH; }
+let _branchMeta = null;
+function branchMeta(){
+  if(!_branchMeta){
+    _branchMeta = WW_BRANCHES.map(b=>{
+      const j = alongPathKm(armPath(b.arm), b.path[0][0], b.path[0][1]);
+      return { name:b.name, arm:b.arm, path:b.path, junctionS:j.s };
+    });
+  }
+  return _branchMeta;
+}
 function waterwayPos(lat,lng){
-  const n=alongPathKm(WW_NORTH,lat,lng), s=alongPathKm(WW_SOUTH,lat,lng);
-  return (n.d<=s.d) ? {arm:'N', s:n.s, off:n.d} : {arm:'S', s:s.s, off:s.d};
+  const n = alongPathKm(WW_NORTH,lat,lng), s = alongPathKm(WW_SOUTH,lat,lng);
+  let best = (n.d<=s.d) ? {arm:'N', s:n.s, off:n.d, branch:null}
+                        : {arm:'S', s:s.s, off:s.d, branch:null};
+  // A branch wins only if the point is genuinely closer to the tributary than to the ICW.
+  branchMeta().forEach(b=>{
+    const p = alongPathKm(b.path, lat, lng);
+    if(p.d < best.off){
+      best = { arm:b.arm, s:b.junctionS + p.s, off:p.d, branch:b.name, junctionS:b.junctionS };
+    }
+  });
+  return best;
 }
 let _stationPos=null;
+/* Built-in gauges plus any the user has calibrated themselves. User stations are real
+   calibration knots — they interpolate alongside the built-ins. */
+let userTideStations = [];
+function allLagStations(){
+  return TIDE_LAG_STATIONS.concat(userTideStations.map(u=>({
+    id:u.id, name:u.name, lat:u.lat, lng:u.lng, h:u.h, l:u.l,
+    lagKind:'measured', src:'user', userAdded:true
+  })));
+}
+function invalidateStationCache(){ _stationPos = null; }
 function stationPositions(){
   if(!_stationPos){
-    _stationPos = TIDE_LAG_STATIONS.map(st=>{
+    _stationPos = allLagStations().map(st=>{
       const p = waterwayPos(st.lat, st.lng);
-      return Object.assign({}, st, {arm:p.arm, s:p.s});
+      // A station declares its own branch in the table; trust that over the projection,
+      // which can be ambiguous where a creek mouth runs close to the main channel.
+      return Object.assign({}, st, {arm:p.arm, s:p.s, branch: st.branch || p.branch || null});
     });
   }
   return _stationPos;
@@ -4642,6 +4833,54 @@ function stationPositions(){
 function tideRisingAt(date){
   return tideHeight(new Date(date.getTime()+6*60000)) > tideHeight(date);
 }
+/* ---- Fixed gauge pins. Only stations that actually carry lag data get a pin; the
+   uncalibrated lagoon sensors (Mosquito Lagoon, Williams Point) are left off until they
+   have numbers worth showing. These are read-only — no edit or delete in the popup. ---- */
+const TIDE_STATION_GLYPH =
+  '<svg viewBox="0 0 30 24" width="26" height="21" fill="none" stroke="#f2c200" stroke-width="2.3" stroke-linecap="round">'+
+  '<path d="M2 7c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
+  '<path d="M2 12c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
+  '<path d="M2 17c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path>'+
+  '<path d="M24 3v18M24 3l-2.6 3M24 3l2.6 3M24 21l-2.6-3M24 21l2.6-3"></path>'+
+  '</svg>';
+function tideStationHasData(st){
+  return st.lagKind === 'reference' || st.lagKind === 'measured';
+}
+function tideStationPopup(st){
+  const p = waterwayPos(st.lat, st.lng);
+  const armName = st.arm === 'N' ? 'north — Halifax River' : 'south — Indian River / Mosquito Lagoon';
+  const sign = m => (m > 0 ? '+' : '') + m;
+  const body = (st.lagKind === 'reference')
+    ? `<div class="pop-tip" style="border-left-color:#f2c200; margin-top:9px;">
+         <b>Zero-lag reference</b> for the ${armName}. Every other gauge on this arm is
+         timed as an offset from this one.</div>`
+    : `<div class="pop-meta" style="margin-top:8px;"><span>High <b>${sign(st.h)} min</b></span><span>Low <b>${sign(st.l)} min</b></span></div>
+       <div class="pop-desc">Minutes after Ponce Inlet${st.branch ? ', measured up '+st.branch : ''}.</div>`;
+  return `<div class="pop">
+    <div class="pop-top"><div class="pop-name">${st.name}</div></div>
+    <div class="pop-meta"><span>Tide station${st.userAdded ? ' · mine' : ''}</span><span>${toDMS(st.lat, st.lng)}</span></div>
+    ${body}
+    ${st.windDriven ? '<div class="pop-tip" style="margin-top:8px;">Wind-driven reach — timing here is the least reliable in the app, and this gauge is kept out of the interpolation so it can\'t skew its neighbours.</div>' : ''}
+  </div>`;
+}
+let tideStationMarkers = [];
+function renderTideStationPins(){
+  tideStationMarkers.forEach(m=> map.removeLayer(m));
+  tideStationMarkers = [];
+  stationPositions().filter(tideStationHasData).forEach(st=>{
+    const m = L.marker([st.lat, st.lng], {
+      icon: L.divIcon({
+        className:'',
+        html:`<div class="tide-station-pin">${TIDE_STATION_GLYPH}</div>`,
+        iconSize:[34,29], iconAnchor:[17,14.5], popupAnchor:[0,-15]
+      }),
+      zIndexOffset: -200      // sit under fishing pins so they don't get buried
+    }).addTo(map);
+    m.bindPopup(()=> tideStationPopup(st), {maxWidth:300});
+    tideStationMarkers.push(m);
+  });
+}
+
 function nearestTideLag(lat, lng){
   // Pick the CLOSEST tide station to the pin. Distance is measured along the waterway
   // when the pin and station are on the same arm (so a station across a barrier island
@@ -4699,16 +4938,31 @@ function extrapolateTideLag(lat, lng){
   // measured), placed at their true distance-from-inlet. NOTE: the waterway path's
   // s=0 origin sits seaward of the inlet, so the reference station itself is the real
   // zero-lag anchor at its own s — we do NOT inject a synthetic s=0 knot.
-  const knots = [];
-  sp.forEach(st=>{
-    if(st.arm !== pin.arm) return;
-    if(st.windDriven) return;
-    if(st.lagKind !== 'measured' && st.lagKind !== 'reference') return;
-    knots.push({ s:st.s, h:st.h, l:st.l, name:st.name, kind:st.lagKind });
-  });
-  knots.sort((a,b)=> a.s - b.s);
-  const merged = [];
-  for(const k of knots){ if(merged.length && Math.abs(k.s - merged[merged.length-1].s) < 0.2) continue; merged.push(k); }
+  const usable = st => (st.lagKind === 'measured' || st.lagKind === 'reference') && !st.windDriven;
+  function knotsFrom(list){
+    const k = list.map(st=>({ s:st.s, h:st.h, l:st.l, name:st.name, kind:st.lagKind }));
+    k.sort((a,b)=> a.s - b.s);
+    const merged = [];
+    for(const x of k){ if(merged.length && Math.abs(x.s - merged[merged.length-1].s) < 0.2) continue; merged.push(x); }
+    return merged;
+  }
+  // Main-river knots: same arm, NOT on a tributary. A creek gauge's lag belongs to the
+  // creek, not to the stretch of ICW it happens to sit beside.
+  const mainKnots = knotsFrom(sp.filter(st=> st.arm === pin.arm && !st.branch && usable(st)));
+
+  let merged, branchInfo = null;
+  if(pin.branch){
+    // Walk the main river as far as the creek mouth, then continue up the creek.
+    const atJunction = lagAtDistance(mainKnots, pin.junctionS);
+    const onBranch = sp.filter(st=> st.branch === pin.branch && usable(st));
+    merged = knotsFrom(onBranch.concat([{
+      s:pin.junctionS, h:atJunction.h, l:atJunction.l,
+      name:pin.branch+' mouth', lagKind:'derived'
+    }].map(x=> Object.assign({}, x, {s:x.s}))));
+    branchInfo = { name:pin.branch, junctionS:pin.junctionS, stations:onBranch.length };
+  } else {
+    merged = mainKnots;
+  }
 
   const res = lagAtDistance(merged, pin.s);
   const h = Math.round(Math.max(-360, Math.min(360, res.h))/5)*5;
@@ -4749,6 +5003,9 @@ function extrapolateTideLag(lat, lng){
 
   // Downgrades that don't apply when we're sitting on a station.
   if(!atStation){
+    if(branchInfo && branchInfo.stations === 0){
+      reasons.push(`no gauge in ${branchInfo.name} — timed from the river at its mouth`);
+    }
     if(pin.off >= 4.0){ confidence = 'low'; reasons.push(`the pin sits ${pin.off.toFixed(1)}\u00a0km off the mapped channel`); }
     else if(pin.off >= 2.8 && confidence === 'high'){ confidence = 'medium'; }
   }
@@ -4928,6 +5185,42 @@ function tideForecastHTML(latlng){
    Compute a measured High/Low lag for a station from its recorded water level,
    matched against the inlet's stored NOAA high/low times. All on-device. */
 const TIDE_LAGS_KEY = 'tide-lags';
+const USER_TIDE_STATIONS_KEY = 'user-tide-stations';
+
+async function loadUserTideStations(){
+  try{ const raw = await storeGet(USER_TIDE_STATIONS_KEY); userTideStations = raw ? JSON.parse(raw) : []; }
+  catch(e){ userTideStations = []; }
+  invalidateStationCache();
+}
+async function saveUserTideStations(){
+  try{ await storeSet(USER_TIDE_STATIONS_KEY, JSON.stringify(userTideStations)); }catch(e){}
+  // A new gauge changes the interpolation, so drop the cache, redraw the pins, and
+  // refresh any open forecast so the effect is visible immediately.
+  invalidateStationCache();
+  if(typeof renderTideStationPins === 'function') renderTideStationPins();
+  if(typeof tidePinMarker !== 'undefined' && tidePinMarker){
+    const body = document.getElementById('tidePanelBody');
+    if(body) body.innerHTML = tideForecastHTML(tidePinMarker.getLatLng());
+  }
+}
+function refreshUserTsList(){
+  const el = document.getElementById('userTsList');
+  const cnt = document.getElementById('userTsCount');
+  if(cnt) cnt.textContent = userTideStations.length;
+  if(!el) return;
+  if(!userTideStations.length){ el.innerHTML = '<p class="sheet-note" style="margin-top:4px;">None yet.</p>'; return; }
+  const sign = m => (m > 0 ? '+' : '') + m;
+  el.innerHTML = userTideStations.map(s=>`
+    <div class="catch-card" style="margin-top:8px;">
+      <div class="cc-top">
+        <span class="cc-species" style="background:#f2c200">${escapeHTML(s.name)}</span>
+        <div class="cc-actions">
+          <button class="cc-del" onclick="removeUserTideStation('${s.id}')" title="Delete">\u2715</button>
+        </div>
+      </div>
+      <div class="cc-meta">${toDMS(s.lat, s.lng)}<br>High ${sign(s.h)} min \u00b7 Low ${sign(s.l)} min after Ponce Inlet</div>
+    </div>`).join('');
+}
 let tideLagOverrides = {};
 async function loadTideLags(){
   try{ const raw = await storeGet(TIDE_LAGS_KEY); tideLagOverrides = raw ? JSON.parse(raw) : {}; }
@@ -5134,8 +5427,10 @@ function refreshCalSaved(){
     delete tideLagOverrides[b.dataset.clear]; await saveTideLags();
     // reset that station back to its coded default by reloading page state lazily:
     const st = TIDE_LAG_STATIONS.find(x=>x.id===b.dataset.clear);
-    if(st){ st.lagKind = (st.id==='8721138'||st.id==='8721147'||st.id==='4774')?'reference':(['4794','5397','4955'].includes(st.id)?'estimated':'unset');
-      const defs={'4794':[95,110],'5397':[110,130],'4955':[125,150]}; const d=defs[st.id]||[0,0]; st.h=d[0]; st.l=d[1]; delete st.n; delete st.sd; }
+    const def = TIDE_LAG_DEFAULTS[b.dataset.clear];
+    if(st && def){ st.h = def.h; st.l = def.l; st.lagKind = def.lagKind; delete st.n; delete st.sd; }
+    invalidateStationCache();
+    renderTideStationPins();
     refreshCalSaved(); refreshCalCurrent(); showToast('Measured lag cleared.');
   }));
 }
@@ -5190,6 +5485,7 @@ function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.cla
     if(!calPending) return;
     tideLagOverrides[calPending.id] = { h:calPending.h, l:calPending.l, n:calPending.n, sd:calPending.sd, at:Date.now() };
     await saveTideLags(); applyTideLags();
+    renderTideStationPins();
     // refresh an open tide panel
     if(tidePinMarker){ document.getElementById('tidePanelBody').innerHTML = tideForecastHTML(tidePinMarker.getLatLng()); }
     refreshCalCurrent(); refreshCalSaved();
@@ -5200,6 +5496,60 @@ function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.cla
     tideLagOverrides = {}; await saveTideLags();
     location.reload();
   });
+
+  /* ---- Your own tide stations ---- */
+  let userTsLoc = null;
+  const tsName = document.getElementById('userTsName');
+  const tsCoord = document.getElementById('userTsCoord');
+  const tsPrev = document.getElementById('userTsPreview');
+  function setTsPreview(p, msg){
+    if(msg){ tsPrev.textContent = msg; tsPrev.classList.remove('set'); return; }
+    if(!p){ tsPrev.textContent = 'No position set yet.'; tsPrev.classList.remove('set'); return; }
+    tsPrev.textContent = toDMS(p.lat, p.lng); tsPrev.classList.add('set');
+  }
+  tsCoord.addEventListener('input', ()=>{
+    const raw = tsCoord.value.trim();
+    if(!raw){ userTsLoc = null; setTsPreview(null); return; }
+    const p = parseLatLngInput(raw);
+    if(!p){ setTsPreview(null, "Couldn't read that \u2014 try 29.0817 -80.9367"); userTsLoc = null; return; }
+    userTsLoc = p; setTsPreview(p);
+  });
+  document.getElementById('userTsGPS').addEventListener('click', ()=>{
+    if(!navigator.geolocation){ showToast('This device has no location service.'); return; }
+    navigator.geolocation.getCurrentPosition(pos=>{
+      userTsLoc = {lat:pos.coords.latitude, lng:pos.coords.longitude};
+      tsCoord.value = userTsLoc.lat.toFixed(5)+' '+userTsLoc.lng.toFixed(5);
+      setTsPreview(userTsLoc);
+    }, ()=> showToast("Couldn't get a location fix."), {enableHighAccuracy:true, timeout:10000});
+  });
+  document.getElementById('userTsSave').addEventListener('click', async ()=>{
+    const name = tsName.value.trim();
+    if(!name){ showToast('Give the station a name.'); return; }
+    if(!userTsLoc){ showToast('Set a position for the station.'); return; }
+    const hRaw = document.getElementById('userTsHigh').value.trim();
+    if(hRaw === ''){ showToast('Enter the High lag in minutes.'); return; }
+    const h = parseInt(hRaw, 10);
+    if(isNaN(h)){ showToast('High lag must be a number of minutes.'); return; }
+    const lRaw = document.getElementById('userTsLow').value.trim();
+    const l = lRaw === '' ? h : parseInt(lRaw, 10);
+    if(isNaN(l)){ showToast('Low lag must be a number of minutes.'); return; }
+    if(Math.abs(h) > 360 || Math.abs(l) > 360){ showToast('Lags beyond \u00b16 hours look like a typo.'); return; }
+    userTideStations.push({ id:'uts-'+Date.now(), name, lat:userTsLoc.lat, lng:userTsLoc.lng, h, l });
+    await saveUserTideStations();
+    tsName.value=''; tsCoord.value='';
+    document.getElementById('userTsHigh').value=''; document.getElementById('userTsLow').value='';
+    userTsLoc=null; setTsPreview(null);
+    refreshUserTsList();
+    showToast(`Saved ${name} as a tide station.`);
+  });
+  window.removeUserTideStation = async function(id){
+    const st = userTideStations.find(x=>x.id===id);
+    userTideStations = userTideStations.filter(x=>x.id!==id);
+    await saveUserTideStations();
+    refreshUserTsList();
+    if(st) showToast(`Removed ${st.name}.`);
+  };
+  refreshUserTsList();
 })();
 
 /* ===================== THEME PICKER ===================== */
