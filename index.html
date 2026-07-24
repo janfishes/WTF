@@ -765,8 +765,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     color:var(--teal); pointer-events:none;
   }
   #speciesCol{
-    /* Stops short of the bottom so the zoom buttons can sit underneath it. */
-    position:absolute; left:10px; top:10px; bottom:84px; z-index:1100;
+    /* Stops short of the bottom so the zoom buttons and scale bar can sit underneath it.
+       Raised from 84px to 114px when the zoom moved on top of the scale (~104px block). */
+    position:absolute; left:10px; top:10px; bottom:114px; z-index:1100;
     display:flex; flex-direction:column; gap:3px; overflow-y:auto;
     pointer-events:auto; padding-right:4px; padding-bottom:8px; align-items:flex-start;
     scrollbar-width:none;
@@ -795,13 +796,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .leaflet-control-attribution a{color:var(--teal) !important;}
   .leaflet-control-zoom a{background:var(--navy-900) !important; color:var(--fog) !important; border-color:var(--line) !important;}
-  /* Leaflet gives corner controls clear:both so they stack; a flex row puts the scale
-     beside the zoom buttons instead, both sitting on the same baseline. */
+  /* Leaflet gives corner controls clear:both and appends bottom controls in reverse, so this
+     corner is re-laid-out as a column: zoom on top, miles scale underneath, zoom centred on it.
+     The column is pinned to 100px — the scale control's maxWidth — rather than shrink-wrapping
+     the bar, because the bar's length changes at every zoom level and a centred-on-the-bar
+     button would slide sideways each time it was pressed. */
   /* Above the attribution, which is painted after it and would otherwise cover the buttons. */
-  .leaflet-bottom.leaflet-left{display:flex; align-items:flex-end; z-index:1001;}
-  .leaflet-bottom.leaflet-left .leaflet-control{float:none; clear:none;}
-  .leaflet-bottom.leaflet-left .leaflet-control-zoom{margin-bottom:14px; margin-left:10px;}
-  .leaflet-bottom.leaflet-left .leaflet-control-scale{margin-bottom:14px; margin-left:8px;}
+  .leaflet-bottom.leaflet-left{
+    display:flex; flex-direction:column; align-items:center;
+    width:100px; margin-left:10px; z-index:1001;
+  }
+  .leaflet-bottom.leaflet-left .leaflet-control{float:none; clear:none; margin-left:0; margin-right:0;}
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom{order:0; margin-bottom:8px;}
+  .leaflet-bottom.leaflet-left .leaflet-control-scale{order:1; margin-bottom:14px; align-self:stretch;}
   .leaflet-control-scale-line{
     background:rgba(6,15,24,.8) !important; color:#fff !important; border-color:var(--fog) !important;
     font-family:'JetBrains Mono',monospace !important; font-size:11px !important; font-weight:600 !important;
@@ -861,6 +868,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #catchToggle:not(.active){opacity:1; background:#000 !important; color:var(--teal) !important; border-color:var(--teal) !important;}
   /* Labels: black with white text when off, inverted to white-on-black when on */
   #labelsToggle{font-weight:700; border:1px solid #fff !important; box-shadow:none !important;}
+  /* .chip padding is bottom-heavy (5 top / 8 bottom), which lifts the text ~1.5px above centre.
+     Invisible on the translucent chips, obvious on Labels-ON because it is the one solid white
+     fill. Same total vertical padding, so the pill height and the row layout do not move.
+     Doubled selector: #metaRow .chip (1,1,0) would otherwise outrank a bare #labelsToggle (1,0,0). */
+  #metaRow #labelsToggle{padding:6px 9px 7px;}
   #labelsToggle:not(.active){background:#000 !important; color:#ffffff !important; border-color:#ffffff !important; opacity:1;}
   #speciesCol .chip:not(.active){filter:brightness(1.6) saturate(1.2);}
   /* ON inverts: the species colour fills the button and the text goes black.
@@ -980,11 +992,32 @@ svg.leaflet-image-layer.leaflet-interactive path {
     #metaRow .chip{flex:0 1 auto; min-width:0;}
     .chip-break{display:block; flex-basis:100%; height:0;}
     .chip{padding:4px 8px 7px; font-size:13px;}
+    #metaRow #labelsToggle{padding:5px 8px 6px;}
     #speciesCol{top:8px;}
+  }
+  /* Landscape on a phone leaves too little height for eight stacked buttons: the column used to
+     overflow its max-height and simply clip, burying the last few along with the attribution and
+     the zoom control. Wrapping into a second column to the left keeps every button reachable
+     without introducing a scroll region inside a floating overlay. */
+  /* wrap-reverse, not wrap: with a plain column wrap the cross-axis runs left-to-right, so the
+     overflow column would land to the RIGHT of the first one — off the edge of a stack that is
+     anchored to right:10px. Reversing it puts the first column against the screen edge (so
+     "+ Catch" stays under the thumb) and grows the second one inward. Under wrap-reverse
+     cross-start IS the right edge, which is why align-items/align-content are flex-start here. */
+  @media (orientation:landscape) and (max-height:520px){
+    .fab-col{
+      flex-flow:column wrap-reverse;
+      align-items:flex-start;
+      align-content:flex-start;
+      max-height:calc(100% - 96px);
+      gap:6px 6px;
+      bottom:56px;
+    }
   }
   @media (max-width:400px){
     #filterWrap{left:86px;}
     #metaRow .chip{padding:4px 6px 6px; font-size:12px;}
+    #metaRow #labelsToggle{padding:5px 6px 5px;}
   }
 
   /* ---------- Tabs ---------- */
@@ -1086,7 +1119,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #cropApply{background:var(--catch); color:#fff; border-color:var(--catch);}
   #cropCancel{background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.6);}
   .pop-photo{width:100%; border-radius:8px; margin-bottom:8px; max-height:150px; object-fit:cover; display:block;}
-  .cc-photo{width:100%; border-radius:8px; margin-top:8px; max-height:160px; object-fit:cover; display:block;}
+  /* contain, not cover: cover was cropping the top and bottom off portrait shots. */
+  .cc-photo{width:100%; border-radius:8px; margin-top:8px; max-height:160px; object-fit:contain; display:block;}
 
   /* ---------- Catch list ---------- */
   .empty-note{font-size:12.5px; color:var(--muted); line-height:1.6; padding:18px 4px;}
@@ -1383,7 +1417,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 17–34nm out and are outside the default view; pan/zoom to find them.</p>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Use ✎ to edit an entry or ✕ to delete it. <b>Export backup</b> saves your whole log to a file named <b>wtf-log-backup.json</b>, and <b>Import backup</b> reads that same file back in — on this device, another one, or a fresh copy of the app.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later but that happened earlier drops into place by its own date. Use ✎ to edit an entry or ✕ to delete it. <b>Export backup</b> saves your whole log to a file named <b>wtf-log-backup.json</b>, and <b>Import backup</b> reads that same file back in — on this device, another one, or a fresh copy of the app.</p>
       <div class="loc-btns" style="margin-bottom:12px;">
         <button class="mini-btn" id="exportBtn">⬇ Export backup</button>
         <button class="mini-btn" id="importBtn">⬆ Import backup</button>
@@ -1464,7 +1498,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Warning</div>
-      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. No liability is assumed by the developers and owners of this app. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
+      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
 
       
 
@@ -1755,7 +1789,6 @@ const SPOTS = [
   { id:"rose-bay-bridge", name:"Rose Bay Bridge", zone:"inshore", lat:29.103667, lng:-80.97185, meta:"Bridge", species:[] },
   { id:"ten-mile-creek-sw", name:"Ten Mile Creek SW", zone:"inshore", lat:29.100983, lng:-80.959967, meta:"Creek", species:[] },
   { id:"spruce-creek-nw", name:"Spruce Creek NW", zone:"inshore", lat:29.09145, lng:-81.02005, meta:"Creek", species:[] },
-  { id:"new-smyrna-creek-nw", name:"New Smyrna Creek NW", zone:"inshore", lat:29.0889, lng:-80.96495, meta:"Creek", species:[] },
   { id:"three-bridges-nw", name:"Three Bridges NW", zone:"inshore", lat:29.088617, lng:-80.969867, meta:"Bridge", species:[] },
   { id:"three-bridges-s", name:"Three Bridges S", zone:"inshore", lat:29.08635, lng:-80.968633, meta:"Bridge", species:[] },
   { id:"three-bridges-se", name:"Three Bridges SE", zone:"inshore", lat:29.084033, lng:-80.967117, meta:"Bridge", species:[] },
@@ -2447,8 +2480,16 @@ const resolvedZoneColor = {};
 ['inshore','offshore'].forEach(z=>{ resolvedZoneColor[z] = resolveVar(ZONES[z].color); });
 const launchColor = resolveVar('var(--launch)');
 
+/* Pin diameter. Everything that is not offshore — inshore spots, region waypoints, and the
+   boat ramps / kayak launches — draws at one size. Offshore keeps its three-step scale, where
+   the size still carries meaning (big reef complexes vs single numbers vs region waypoints). */
+function spotPinSize(s){
+  if(s.zone !== 'offshore') return 14;
+  return s.big ? 26 : (s.wp ? 14 : 18);
+}
+
 const markers = SPOTS.map(s=>{
-  const sz = s.big ? 26 : (s.wp ? 14 : 18);
+  const sz = spotPinSize(s);
   let icon;
   if(s.ramp){
     icon = L.divIcon({ className:'', html:`<div class="spot-marker" style="background:var(--launch); width:${sz}px; height:${sz}px;"></div>`, iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], popupAnchor:[0,-Math.round(sz/2)-1] });
@@ -3459,7 +3500,7 @@ async function saveSpotOverrides(){
   try{ await storeSet(SPOT_OVERRIDES_KEY, JSON.stringify(spotOverrides)); }catch(e){}
 }
 function builtinSpotIcon(s){
-  const sz = s.big ? 26 : (s.wp ? 14 : 18);
+  const sz = spotPinSize(s);
   const fill = s.ramp ? resolveVar('var(--launch)') : (resolvedZoneColor[s.zone] || resolveVar('var(--inshore)'));
   return L.divIcon({ className:'', html:`<div class="spot-marker" style="background:${fill}; width:${sz}px; height:${sz}px;"></div>`, iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], popupAnchor:[0,-Math.round(sz/2)-1] });
 }
@@ -3530,7 +3571,7 @@ function customSpotFill(s){
   return resolvedZoneColor[s.zone] || (s.zone==='offshore' ? resolveVar('var(--offshore)') : resolveVar('var(--inshore)'));
 }
 function addCustomSpotMarker(s){
-  const sz = 18;
+  const sz = spotPinSize(s);
   const fill = customSpotFill(s);
   const icon = L.divIcon({ className:'', html:`<div class="spot-marker" style="background:${fill}; width:${sz}px; height:${sz}px; box-shadow:0 0 0 2px rgba(255,255,255,.5);"></div>`, iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], popupAnchor:[0,-Math.round(sz/2)-1] });
   const m = L.marker([s.lat,s.lng], {icon}).addTo(map);
