@@ -1686,7 +1686,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Tides (works offline)</div>
       <p class="sheet-note">Tap <b>Street Map</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
-      <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
+      <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water actually gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
       <p class="sheet-note">You can add gauges of your own. Open <b>Create &amp; Calibrate Tide Stations</b> and use <b>Your own tide stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive — no measurements needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create & Calibrate Tide Stations</button></div>
 
@@ -3432,15 +3432,30 @@ function wirePopup(popup){
   const del = node.querySelector('.del-catch-btn');
   if(del) del.addEventListener('click', ()=> deleteCatch(del.dataset.id));
 
-  // Merged-catch pager: step through the fish logged at one spot.
+  /* Merged-catch pager: step through the fish logged at one spot.
+     The arrows used to call popup.setContent(), which does two unwanted things. It
+     overwrites the bound content FUNCTION with a fixed string, so the popup stops
+     re-reading the marker on later opens and goes stale; and its relayout/auto-pan
+     could tear the popup down mid-click, which is what closed the window instead of
+     advancing it. Redrawing through popup.update() leaves the binding alone, the
+     visible list is re-read on every tap rather than captured once at wiring time,
+     the click is stopped so nothing downstream can act on it, and if the popup does
+     come off the map for any reason it is put straight back. */
   const src = popup._source;
   if(src && src.group){
-    const vis = src.visible || [];
-    const step = d => { src._popIdx = (src._popIdx + d + vis.length) % vis.length; popup.setContent(catchGroupPopupHTML(src)); wirePopup(popup); };
+    const step = (d, ev) => {
+      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+      const vis = src.visible || [];
+      if(vis.length < 2) return;
+      src._popIdx = ((src._popIdx || 0) + d + vis.length) % vis.length;
+      popup.update();                       // redraws from the bound function
+      if(!map.hasLayer(popup)) popup.openOn(map);
+      wirePopup(popup);
+    };
     const prev = node.querySelector('.cg-prev');
     const next = node.querySelector('.cg-next');
-    if(prev) prev.addEventListener('click', ()=> step(-1));
-    if(next) next.addEventListener('click', ()=> step(1));
+    if(prev) prev.addEventListener('click', ev => step(-1, ev));
+    if(next) next.addEventListener('click', ev => step(1, ev));
   }
 
   const edit = node.querySelector('.edit-catch-btn');
@@ -3697,7 +3712,9 @@ function applyFilter(){
     if(m._iconKey !== key){ m.setIcon(catchDivIcon(resolveVar(speciesOf(rep.species).color), vis.length)); m._iconKey = key; }
     if(m._popIdx >= vis.length) m._popIdx = 0;
     if(!map.hasLayer(m)) m.addTo(map);
-    if(m.isPopupOpen && m.isPopupOpen()){ m.setPopupContent(catchGroupPopupHTML(m)); wirePopup(m.getPopup()); }
+    // update() re-runs the bound content function; setPopupContent() would swap it for a
+    // fixed string and the popup would stop tracking the marker on later opens.
+    if(m.isPopupOpen && m.isPopupOpen()){ m.getPopup().update(); wirePopup(m.getPopup()); }
   });
   document.getElementById('map').classList.toggle('launches-only', showLaunches);
   syncEggMarker();
@@ -5254,8 +5271,29 @@ const WW_BRANCHES = [
   { name:'Rose Bay', arm:'N', path:[
     [29.103,-80.952],[29.1029,-80.9713],[29.1049,-80.9774]
   ]},
-  { name:'Turnbull Bay', arm:'S', path:[
-    [29.043,-80.928],[29.0475,-80.9450],[29.0512,-80.9598],[29.0533,-80.9609],[29.0640,-80.9650],[29.0771,-80.9682]
+  /* Turnbull Bay is fed from the NORTH arm, not the Indian River: the tide runs Ponce
+     Inlet -> Halifax -> Spruce Creek -> Three Bridges -> Turnbull Bay -> up the creek to
+     810 Fairway Dr. It was previously hung off the south arm at 29.043/-80.928, which put
+     the far end of the run CLOSER to the inlet than its middle; the resulting slope sent
+     the extrapolation to the +/-360 min clamp, so the Turnbull Bay Bridge printed a flat
+     six-hour shift and read LATER than 810 Fairway, a mile and a half further upstream.
+     Waypoints below are Jan's own on-water track, inlet-ward end first. It shares its
+     junction vertex with the Spruce Creek branch — both leave the ICW at the creek mouth
+     and fork above it, so Spruce Creek Park sits on the Spruce Creek line and is NOT a
+     knot on this one. */
+  { name:'Turnbull Bay', arm:'N', path:[
+    [29.093,-80.941],                                          // ICW junction (shared with Spruce Creek)
+    [29.08751,-80.95056],                                      // Spruce Creek mouth
+    [29.08740,-80.95884],[29.08403,-80.95918],[29.08583,-80.96364],
+    [29.08403,-80.96712],                                      // Three Bridges (uncalibrated)
+    [29.07705,-80.96820],                                      // Turnbull Bay N
+    [29.0640,-80.9650],[29.0533,-80.9609],
+    [29.0512,-80.9598],                                        // Turnbull Bay Bridge
+    [29.04829,-80.95798],[29.04475,-80.95832],[29.04415,-80.95759],
+    [29.04266,-80.95977],[29.04149,-80.95778],[29.04072,-80.95596],
+    [29.03657,-80.95287],[29.03343,-80.95234],[29.03277,-80.94987],
+    [29.03416,-80.94981],[29.03415,-80.94761],
+    [29.03263,-80.94698]                                       // 810 Fairway Dr
   ]}
 ];
 function armPath(arm){ return arm==='N' ? WW_NORTH : WW_SOUTH; }
@@ -5438,10 +5476,15 @@ function extrapolateTideLag(lat, lng){
 
   // Straight-line distance to the nearest trustworthy (non-wind) calibrated station —
   // drives "you're basically sitting on a station" regardless of centreline precision.
+  // It must be a station on the pin's OWN fork: Three Bridges sits 1.2 km from the Spruce
+  // Creek Park gauge but on the Turnbull run, and that gauge's lag is not the one being
+  // applied there, so claiming high confidence off it would be a false badge.
+  const sameFork = st => st.arm === pin.arm && (st.branch || null) === (pin.branch || null);
   let dNearSt = Infinity, nearSt = null;
   sp.forEach(st=>{
     if(st.windDriven) return;
     if(st.lagKind !== 'measured' && st.lagKind !== 'reference') return;
+    if(!sameFork(st)) return;
     const d = segKm(lat, lng, st.lat, st.lng);
     if(d < dNearSt){ dNearSt = d; nearSt = st; }
   });
