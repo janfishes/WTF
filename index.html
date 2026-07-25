@@ -1488,6 +1488,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
     z-index:1300; box-shadow:0 6px 20px rgba(0,0,0,.4);
   }
   #toast.show{opacity:1; transform:translate(-50%,0);}
+  #zoomHint{ position:fixed; left:50%; top:10px; transform:translateX(-50%);
+    display:none; align-items:center; gap:10px; z-index:3500;
+    background:var(--rust,#b5502a); border:1px solid rgba(255,255,255,.35); color:#fff;
+    padding:8px 12px; border-radius:12px; font-size:13px; line-height:1.3; font-weight:600;
+    box-shadow:0 6px 20px rgba(0,0,0,.45); max-width:92vw; }
+  #zoomHint kbd{ font-family:inherit; font-weight:800; background:rgba(255,255,255,.22);
+    border-radius:5px; padding:1px 6px; }
+  #zoomHint button{ background:rgba(255,255,255,.2); border:0; color:#fff; cursor:pointer;
+    width:22px; height:22px; border-radius:50%; font-size:12px; line-height:1; padding:0; flex:0 0 auto; }
   #acceptGate{position:fixed; inset:0; z-index:4000; background:rgba(0,0,0,.55);
     display:flex; align-items:flex-end; justify-content:center; padding:0 0 max(16px,env(safe-area-inset-bottom));}
   #acceptGate.hidden{display:none;}
@@ -1618,6 +1627,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead" style="margin-top:2px;">Map controls</div>
       <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
       <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their total buttons will open the respective data set.</p>
+      <p class="sheet-note"><b>On a computer:</b> if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
 
       
 
@@ -2695,6 +2705,25 @@ function kickMap(){
     if(imageryLayer && imageryLayer.redraw) imageryLayer.redraw();
   }catch(e){}
 }
+function blurActive(){
+  try{ if(document.activeElement && document.activeElement.blur) document.activeElement.blur(); }catch(e){}
+}
+// Chrome/Android can strand the whole page at a shrunk scale after a form control is
+// focused and then hidden — e.g. tapping the known-spot list, then Drop pin closes the
+// sheet. kickMap only fixes iOS panning, not a stuck scale, so this snaps the scale back:
+// momentarily pin min=max=1 (forcing scale to 1), then restore the normal pinch-able meta
+// so accessibility zoom still works. iOS ignores dynamic max-scale, so it's a harmless
+// no-op there. The base string must match the <meta> exactly so it's restored cleanly.
+function resetViewportScale(){
+  try{
+    const vp = document.querySelector('meta[name="viewport"]');
+    if(!vp) return;
+    const base = 'width=device-width, initial-scale=1.0';
+    vp.setAttribute('content', base + ', minimum-scale=1.0, maximum-scale=1.0, user-scalable=0');
+    clearTimeout(resetViewportScale._t);
+    resetViewportScale._t = setTimeout(()=>{ vp.setAttribute('content', base); kickMap(); }, 350);
+  }catch(e){}
+}
 // Fire repeatedly over the first few seconds so we catch whenever iOS finishes laying out
 [0, 100, 300, 600, 1000, 1600, 2500, 4000].forEach(t=> setTimeout(kickMap, t));
 window.addEventListener('load', ()=> setTimeout(kickMap, 200));
@@ -2710,6 +2739,41 @@ if(window.visualViewport){
   window.visualViewport.addEventListener('resize', vvKick);
   window.visualViewport.addEventListener('scroll', vvKick);
 }
+/* Desktop only: browsers can't be un-zoomed from JS, but a stray Ctrl+scroll / trackpad
+   pinch while moving the map can shrink the whole page and leave it stuck (Chrome even
+   remembers it per site). We can't fix it, but we can stop it being a mystery: watch the
+   page zoom relative to where it was at load and, if it drifts far, show a dismissible
+   "press Ctrl+0" banner. Drift-based so it never fires at a HiDPI display's normal state. */
+(function zoomDriftHint(){
+  try{
+    if(window.matchMedia && window.matchMedia('(pointer:coarse)').matches) return; // touch device — skip
+    const baseDpr = window.devicePixelRatio || 1;
+    let el = null, dismissed = false;
+    const zoomPct = ()=> Math.round(((window.devicePixelRatio || 1) / baseDpr) * 100);
+    function build(){
+      el = document.createElement('div');
+      el.id = 'zoomHint';
+      el.innerHTML = '<span></span><kbd>Ctrl</kbd>+<kbd>0</kbd> resets it <button type="button" title="Dismiss" aria-label="Dismiss">\u2715</button>';
+      el.querySelector('button').addEventListener('click', ()=>{ dismissed = true; el.style.display = 'none'; });
+      document.body.appendChild(el);
+    }
+    function check(){
+      const p = zoomPct();
+      if(p <= 80){                       // zoomed out enough to look "tiny"
+        if(dismissed) return;
+        if(!el) build();
+        el.querySelector('span').textContent = 'Page zoomed to ' + p + '\u2009%\u2002— ';
+        el.style.display = 'flex';
+      } else {                           // back to normal (e.g. they hit Ctrl+0)
+        dismissed = false;
+        if(el) el.style.display = 'none';
+      }
+    }
+    // Browser zoom fires resize and changes devicePixelRatio on desktop.
+    window.addEventListener('resize', check);
+    check();
+  }catch(e){}
+})();
 // Leaving a field in a sheet: undo the pan iOS applied to bring it into view.
 document.addEventListener('focusout', (e)=>{
   if(!e.target || !e.target.closest || !e.target.closest('.sheet')) return;
@@ -4068,8 +4132,10 @@ function showAddSpotPreview(lat,lng){
   addSpotPreviewMarker = L.marker([lat,lng], {icon:L.divIcon({className:'', html:`<div class="spot-marker" style="background:${fill}; width:20px; height:20px; box-shadow:0 0 0 3px rgba(255,255,255,.85);"></div>`, iconSize:[20,20], iconAnchor:[10,10]})}).addTo(map);
 }
 document.getElementById('addSpotPin').addEventListener('click', ()=>{
+  blurActive();
   placingSpotPin = true;
   closeAddSpot();
+  resetViewportScale();
   showToast('Tap the map to drop your spot.');
 });
 document.getElementById('addSpotGPS').addEventListener('click', ()=>{
@@ -4088,6 +4154,8 @@ map.on('click', (e)=>{
   addSpotLoc = {lat:e.latlng.lat, lng:e.latlng.lng};
   showAddSpotPreview(addSpotLoc.lat, addSpotLoc.lng);   // visible pin immediately
   updateAddSpotPreview();
+  blurActive();
+  resetViewportScale();
   openAddSpot();
 });
 window.editCustomSpot = function(id){
@@ -4169,11 +4237,13 @@ function updateLocPreview(){
 }
 
 document.getElementById('pinOnMap').addEventListener('click', ()=>{
-  // Blur first: hiding a control while it still has focus is what leaves iOS mid-zoom.
-  if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  // Blur first: hiding a control while it still has focus is what leaves the browser
+  // mid-zoom (iOS pans, Chrome/Android strands the scale). Then reset the scale.
+  blurActive();
   placingPin = true;
   logSheet.classList.remove('open');
   logScrim.classList.remove('open');
+  resetViewportScale();
   showToast('Tap anywhere on the map to place your catch location', 4000);
 });
 document.getElementById('clearLoc').addEventListener('click', ()=>{
@@ -4190,6 +4260,8 @@ map.on('click', (e)=>{
   spotSelect.value = '';
   setPreviewMarker(e.latlng.lat, e.latlng.lng);
   updateLocPreview();
+  blurActive();
+  resetViewportScale();
   closeAllOverlays('logSheet');
   logSheet.classList.add('open');
   logScrim.classList.add('open');
@@ -4266,9 +4338,11 @@ function openLogSheet(editCatch){
   if(body){ body.scrollTop = 0; requestAnimationFrame(()=>{ body.scrollTop = 0; }); }
 }
 function closeLogSheetFn(){
+  blurActive();
   logSheet.classList.remove('open'); logScrim.classList.remove('open');
   placingPin = false; clearPreviewMarker();
   document.getElementById('logCatchFab').classList.remove('pressed');
+  resetViewportScale();
   // Give the keyboard time to finish dismissing, then put the map back to full size.
   setTimeout(kickMap, 60); setTimeout(kickMap, 350);
 }
