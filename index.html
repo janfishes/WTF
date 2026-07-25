@@ -789,10 +789,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #sizeBtn .a-lg{font-size:15px;}
   #sizeBtn .a-sm{font-size:7.5px;}
   .help-btn{
-    flex:0 0 auto; width:29px; height:29px; border-radius:50%;
+    flex:0 0 auto; width:29px; height:29px; border-radius:50%; padding:0;
+    display:inline-flex; align-items:center; justify-content:center;
     background:var(--navy-800); border:1px solid var(--line); color:var(--teal);
     font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; cursor:pointer; line-height:1;
   }
+  #searchBtn{font-size:13px;}
+  #themeBtn{font-size:15px;}
   .help-btn:active{background:var(--navy-700);}
   .credit{
     font-family:'JetBrains Mono',monospace; font-size:17px; font-weight:700; color:var(--teal);
@@ -975,6 +978,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#000; font-weight:800;}
   #labelsToggle.active{background:#ffffff !important; color:#000000 !important; border-color:#ffffff !important;}
   .chip.util.active{border-color:var(--fog); box-shadow:0 0 0 1px var(--fog) inset;}
+  /* ---- Tide pills in the Add/Edit Catch sheet (High/Low/Falling/Rising) ----
+     SELECTED = white fill, black text + icon, black outline (readable).
+     UNSELECTED = black fill, white text + icon, white outline. The <svg> uses
+     stroke:currentColor, so setting color also colours the wave glyph. */
+  #tideRow .chip:not(.active){background:#000 !important; color:#fff !important; border-color:#fff !important; box-shadow:none !important;}
+  #tideRow .chip.active{background:#fff !important; color:#000 !important; border-color:#000 !important; box-shadow:0 0 0 1px #000 inset !important; text-shadow:none !important;}
+  /* ---- Inshore/Offshore (and Launch, in Add-a-spot) pills in the sheets ----
+     Reversed on/off from the top row: SELECTED = hollow (black fill, zone-colour
+     text/outline), UNSELECTED = filled zone colour with white text. The hollow
+     state uses the lightened zone colour so it stays legible on black. */
+  #logZoneRow .chip[data-zone="inshore"].active,
+  #addSpotZoneRow .chip[data-zone="inshore"].active{background:#000 !important; color:#6b8cff !important; border-color:#6b8cff !important; box-shadow:none !important;}
+  #logZoneRow .chip[data-zone="inshore"]:not(.active),
+  #addSpotZoneRow .chip[data-zone="inshore"]:not(.active){background:var(--inshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
+  #logZoneRow .chip[data-zone="offshore"].active,
+  #addSpotZoneRow .chip[data-zone="offshore"].active{background:#000 !important; color:#b478ff !important; border-color:#b478ff !important; box-shadow:none !important;}
+  #logZoneRow .chip[data-zone="offshore"]:not(.active),
+  #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
+  #addSpotZoneRow .chip[data-zone="launch"].active{background:#000 !important; color:#ff6b6b !important; border-color:#ff6b6b !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:var(--launch) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
   /* ON: white, with a shadow to hold it together — the fill is the theme accent, and on the
      light accents (Deep Water cyan, Blue) plain white sits at about 1.7:1 without one.
      OFF: the theme colour, via --accent-lite so it stays legible on the black chip. */
@@ -1061,6 +1084,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     .logo-mini{width:66px;}
     .logo-wtf{font-size:10px; letter-spacing:1.1px;}
     .help-btn{width:24px; height:24px; font-size:12px;}
+    /* Shrink the emoji glyphs too (id beats the class font-size above) so they
+       centre inside the smaller circle instead of overflowing it. */
+    #searchBtn{font-size:11px;}
+    #themeBtn{font-size:12px;}
+    #sizeBtn .a-lg, #sizeBtn .a-sm{height:12px; line-height:12px;}
+    #sizeBtn .a-lg{font-size:12px;}
+    #sizeBtn .a-sm{font-size:6px;}
     .hdr-right{min-width:0;}
     /* Top toggles: 3 on top (Inshore, Offshore, My Catches), 2 underneath (Launches, Labels),
        centered between the species column (left) and the zoom buttons (right) */
@@ -1483,9 +1513,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <div class="hdr-right">
     <div style="display:flex; gap:8px; align-items:center;">
-      <button class="help-btn" id="searchBtn" title="Search" style="font-size:13px;">🔍</button>
+      <button class="help-btn" id="searchBtn" title="Search">🔍</button>
       <button class="help-btn" id="helpBtn" title="Help">?</button>
-      <button class="help-btn" id="themeBtn" title="Theme" style="font-size:15px;">🎨</button>
+      <button class="help-btn" id="themeBtn" title="Theme">🎨</button>
       <button class="help-btn" id="sizeBtn" title="Text size" aria-label="Text size"><span class="a-lg">A</span><span class="a-sm">A</span></button>
     </div>
   </div>
@@ -1587,6 +1617,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:2px;">Map controls</div>
       <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
+      <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their total buttons will open the respective data set.</p>
 
       
 
@@ -1637,8 +1668,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead">Tides (works offline)</div>
       <p class="sheet-note">Tap <b>Street Map</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
       <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
-      <p class="sheet-note">You can add gauges of your own. Open <b>Calibrate tide lags</b> and use <b>Your own tide stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
-      <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Calibrate tide lags from station data</button></div>
+      <p class="sheet-note">You can add gauges of your own. Open <b>Create &amp; Calibrate Tide Stations</b> and use <b>Your own tide stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive — no measurements needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
+      <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create & Calibrate Tide Stations</button></div>
 
       
 
@@ -1802,35 +1833,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div class="sheet" id="tideCalSheet">
   <div class="sheet-handle"></div>
   <div class="sheet-head">
-    <h2>Calibrate tide lags</h2>
+    <h2>Create &amp; Calibrate Tide Stations</h2>
     <button class="close" id="tideCalClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <p class="sheet-note">Turn a station's recorded water level into a real timing offset. The app already stores the inlet's NOAA high/low times, so this works offline once you paste the data. Pick a station, paste (or upload) a Stevens-Connect export, and tap Compute. If it looks solid, Save it — the tide panel will use it right away.</p>
-    <label class="field-label">Station</label>
-    <select id="calStation" style="width:100%; box-sizing:border-box; padding:8px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px;"></select>
-    <div class="loc-preview" id="calCurrent" style="margin-top:8px;">—</div>
-    <label class="field-label" style="margin-top:12px;">Exported data (CSV or pasted rows)</label>
-    <p class="sheet-note" style="margin:2px 0 6px;">Needs a timestamp and a water-level column (extra columns like sigma/temp are fine — it finds the level column). Best export: <b>Normalized interval</b> or <b>Raw readings</b> in CSV at 6–15 min. Avoid hourly/daily aggregates (too coarse to time a high/low). NOAA CO-OPS / Ready formats work too, but are usually UTC — tick the box below. On the dashboard: station → <b>Exports</b> (or Trends) → <b>1w</b> or a custom 1–2 week range. Two weeks gives the most trustworthy result.</p>
-    <textarea id="calData" placeholder="2026-07-20 08:12, 3.41&#10;2026-07-20 08:24, 3.55&#10;..." style="width:100%; box-sizing:border-box; height:110px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:11px; padding:8px;"></textarea>
-    <div class="loc-btns" style="margin-top:8px; align-items:center;">
-      <label class="mini-btn" style="cursor:pointer;">📄 Upload file<input type="file" id="calFile" accept=".csv,.txt,.tsv" style="display:none;"></label>
-      <label style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px;"><input type="checkbox" id="calUtc"> Times are UTC</label>
-    </div>
-    <div class="loc-btns" style="margin-top:12px;">
-      <button class="mini-btn" id="calCompute" style="font-weight:700;">Compute lag</button>
-    </div>
-    <div id="calResult" style="margin-top:12px;"></div>
-    <div class="loc-btns" style="margin-top:12px;">
-      <button class="mini-btn" id="calSave" style="font-weight:700; display:none;">Save lag to station</button>
-    </div>
-    <p class="sheet-note" style="margin-top:16px;">Saved measured lags:</p>
-    <div id="calSavedList" class="loc-preview">None yet.</div>
-    <div class="loc-btns" style="margin-top:10px;">
-      <button class="mini-btn" id="calResetAll">↺ Clear all measured lags</button>
-    </div>
-
-    <div class="subhead" style="margin-top:24px;">Your own tide stations</div>
+    <div class="subhead" style="margin-top:2px;">Your own tide stations</div>
     <p class="sheet-note">Add a gauge of your own — a dock, a bridge, anywhere you've timed the tide against the inlet. Saved stations become real calibration points: the forecast interpolates between them and the built-in gauges, so nearby pins get better timing too. Use a negative number for water that turns <i>before</i> the inlet.</p>
     <label class="field-label">Name</label>
     <input type="text" id="userTsName" placeholder="e.g. My dock" style="width:100%; box-sizing:border-box;">
@@ -1856,6 +1863,43 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <p class="sheet-note" style="margin-top:14px;">Your tide stations: <span id="userTsCount">0</span>.</p>
     <div id="userTsList"></div>
+
+    <div id="calibrateSection" style="display:none;">
+      <p class="sheet-note" style="margin-top:26px; color:#ff6b6b; font-weight:800; letter-spacing:.05em;">FOR ADVANCED USERS ONLY</p>
+      <div class="subhead" style="margin-top:2px;">Calibrate tide lags</div>
+    <p class="sheet-note">Turn a station's recorded water level into a real timing offset. The app already stores the inlet's NOAA high/low times, so this works offline once you paste the data. Pick a station, paste (or upload) a Stevens-Connect export, and tap Compute. If it looks solid, Save it — the tide panel will use it right away.</p>
+    <ol class="sheet-note" style="margin:6px 0 10px; padding-left:20px; line-height:1.55;">
+      <li>Pick a station from the STATION dropdown menu below (e.g., Spruce Creek Park, Rose Bay Bridge, Dunlawton Ave, Bulow Plantation, Scottsmoor Turnbull Creek Ramp, and Mosquito Lagoon Biolab).</li>
+      <li>Tap <b>Upload file</b> to upload a Stevens-Connect export.</li>
+      <li>Tap <b>Compute lag</b>.</li>
+      <li>If the data looks solid (app says is reliable), tap <b>Save it</b> and your tide app will use it right away. If you add the wrong data set to a station, simply follow these steps again to load the correct set to the station.</li>
+    </ol>
+    <label class="field-label">Station</label>
+    <select id="calStation" style="width:100%; box-sizing:border-box; padding:8px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px;"></select>
+    <div class="loc-preview" id="calCurrent" style="margin-top:8px;">—</div>
+    <label class="field-label" style="margin-top:12px;">Exported data (CSV or pasted rows)</label>
+    <p class="sheet-note" style="margin:2px 0 6px;">Needs a timestamp and a water-level column (extra columns like sigma/temp are fine — it finds the level column). Best export: <b>Normalized interval</b> or <b>Raw readings</b> in CSV at 6–15 min. Avoid hourly/daily aggregates (too coarse to time a high/low). NOAA CO-OPS / Ready formats work too, but are usually UTC — tick the box below. On the dashboard: station → <b>Exports</b> (or Trends) → <b>1w</b> or a custom 1–2 week range. Two weeks gives the most trustworthy result.</p>
+    <textarea id="calData" placeholder="2026-07-20 08:12, 3.41&#10;2026-07-20 08:24, 3.55&#10;..." style="width:100%; box-sizing:border-box; height:110px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:11px; padding:8px;"></textarea>
+    <div class="loc-btns" style="margin-top:8px; align-items:center;">
+      <label class="mini-btn" style="cursor:pointer;">📄 Upload file<input type="file" id="calFile" accept=".csv,.txt,.tsv" style="display:none;"></label>
+      <label style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px;"><input type="checkbox" id="calUtc"> Times are UTC</label>
+    </div>
+    <div class="loc-btns" style="margin-top:12px;">
+      <button class="mini-btn" id="calCompute" style="font-weight:700;">Compute lag</button>
+    </div>
+    <div id="calResult" style="margin-top:12px;"></div>
+    <div class="loc-btns" style="margin-top:12px;">
+      <button class="mini-btn" id="calSave" style="font-weight:700; display:none;">Save lag to station</button>
+    </div>
+    <p class="sheet-note" style="margin-top:16px;"><b>Save lag to station</b> stores the computed High/Low offset as this station's measured lag, saved on this device. The 3-Day Tide Forecast and every nearby pin start using it immediately.</p>
+    <p class="sheet-note" style="margin-top:16px;">Saved measured lags:</p>
+    <div id="calSavedList" class="loc-preview">None yet.</div>
+    <p class="sheet-note" style="margin-top:10px;"><b>Saved measured lags</b> lists the built-in stations that currently carry a device-saved lag. The <b>&times;</b> next to a station clears just that one back to the app's coded default.</p>
+    <div class="loc-btns" style="margin-top:10px;">
+      <button class="mini-btn" id="calResetAll">↺ Clear all measured lags</button>
+    </div>
+    <p class="sheet-note" style="margin-top:8px;"><b>Clear all measured lags</b> wipes every device-saved lag at once and restores all built-in stations to their coded defaults, then reloads. It never touches the tide stations you added above.</p>
+    </div>
   </div>
 </div>
 
@@ -2483,10 +2527,10 @@ function offlineManifest(){ try{ return JSON.parse(localStorage.getItem(OFFLINE_
     refreshStatus();
     if(typeof showToast==='function') showToast('Offline map cleared.');
   });
-  function openSheet(){ estimate(); refreshStatus(); sheet.classList.add('open'); scrim.classList.add('open'); }
+  function openSheet(){ estimate(); refreshStatus(); closeAllOverlays('offlineSheet'); sheet.classList.add('open'); scrim.classList.add('open'); }
   function closeSheet(){ sheet.classList.remove('open'); scrim.classList.remove('open'); }
   const trigger = document.getElementById('offlineBtn');
-  if(trigger) trigger.addEventListener('click', ()=>{ try{ infoSheet.classList.remove('open'); infoScrim.classList.remove('open'); }catch(e){} openSheet(); });
+  if(trigger) trigger.addEventListener('click', ()=>{ openSheet(); });
   document.getElementById('offlineClose').addEventListener('click', closeSheet);
   scrim.addEventListener('click', closeSheet);
 })();
@@ -3548,11 +3592,35 @@ const infoTitle = document.getElementById('infoTitle');
 // the My Log button opens the catch log, and the ? Help button opens Help.
 // The .tab elements still drive panel visibility and the sheet title; they're just hidden.
 const INFO_BTNS = ['guideBtn','myLogBtn'];
+/* Only one full-screen overlay may be open at once. Every opener calls this first,
+   passing the id of the sheet it's about to open so that one is spared. The A/A
+   text-size button is deliberately NOT wired to this — text size stays adjustable
+   with any screen open. */
+const OVERLAY_PAIRS = [
+  ['searchSheet','searchScrim'], ['infoSheet','infoScrim'], ['themeSheet','themeScrim'],
+  ['logSheet','logScrim'], ['addSpotSheet','addSpotScrim'],
+  ['tideCalSheet','tideCalScrim'], ['offlineSheet','offlineScrim']
+];
+function closeAllOverlays(exceptId){
+  OVERLAY_PAIRS.forEach(([s,sc])=>{
+    if(s === exceptId) return;
+    const se = document.getElementById(s), scr = document.getElementById(sc);
+    if(se) se.classList.remove('open');
+    if(scr) scr.classList.remove('open');
+  });
+  if(exceptId !== 'tidePanel'){
+    const tp = document.getElementById('tidePanel');
+    if(tp) tp.classList.remove('open');
+  }
+  // A force-closed sheet must not leave its FAB lit.
+  document.querySelectorAll('.fab.pressed').forEach(f=> f.classList.remove('pressed'));
+}
 function setInfoMode(mode){
   const tab = document.querySelector('.tab[data-tab="' + mode + '"]');
   if(tab) tab.click();
 }
 function openInfoSheet(mode, btnId){
+  closeAllOverlays('infoSheet');
   setInfoMode(mode);
   infoSheet.classList.add('open'); infoScrim.classList.add('open');
   INFO_BTNS.forEach(id=>{ const b = document.getElementById(id); if(b) b.classList.toggle('pressed', id === btnId); });
@@ -3582,6 +3650,7 @@ document.querySelectorAll('.tab').forEach(tab=>{
   });
 });
 document.getElementById('helpBtn').addEventListener('click', ()=>{
+  closeAllOverlays('infoSheet');
   setInfoMode('help');
   infoSheet.classList.add('open');
   infoScrim.classList.add('open');
@@ -3765,11 +3834,23 @@ function rebuildSpotSelect(){
 }
 
 if(logZoneRow){
+  // Behaviour: tapping a zone SOLOS the spot list to it; tapping the solo'd zone
+  // again restores both. From a solo of the other zone, it switches the solo over.
+  // Never leaves both off (that would empty the list).
+  function syncLogZoneChips(){
+    logZoneRow.querySelectorAll('.chip[data-zone]').forEach(c=>
+      c.classList.toggle('active', logZones.has(c.dataset.zone)));
+  }
   logZoneRow.querySelectorAll('.chip[data-zone]').forEach(chip=>{
     const zone = chip.dataset.zone;
     chip.addEventListener('click', ()=>{
-      if(logZones.has(zone)){ logZones.delete(zone); chip.classList.remove('active'); }
-      else { logZones.add(zone); chip.classList.add('active'); }
+      const other = zone === 'inshore' ? 'offshore' : 'inshore';
+      const bothOn = logZones.has('inshore') && logZones.has('offshore');
+      if(bothOn){ logZones.delete(other); }                       // solo this zone
+      else if(logZones.has(zone) && !logZones.has(other)){        // already solo'd here
+        logZones.add(other);                                     // → restore both
+      } else { logZones.clear(); logZones.add(zone); }            // solo'd elsewhere → switch
+      syncLogZoneChips();
       rebuildSpotSelect();
     });
   });
@@ -3936,7 +4017,7 @@ let addSpotZone = 'inshore';
 let placingSpotPin = false;
 const addSpotSheet = document.getElementById('addSpotSheet');
 const addSpotScrim = document.getElementById('addSpotScrim');
-function openAddSpot(){ addSpotSheet.classList.add('open'); addSpotScrim.classList.add('open'); document.getElementById('addSpotBtn').classList.add('pressed'); }
+function openAddSpot(){ closeAllOverlays('addSpotSheet'); addSpotSheet.classList.add('open'); addSpotScrim.classList.add('open'); document.getElementById('addSpotBtn').classList.add('pressed'); }
 function closeAddSpot(){
   addSpotSheet.classList.remove('open'); addSpotScrim.classList.remove('open');
   document.getElementById('addSpotBtn').classList.remove('pressed');
@@ -4109,6 +4190,7 @@ map.on('click', (e)=>{
   spotSelect.value = '';
   setPreviewMarker(e.latlng.lat, e.latlng.lng);
   updateLocPreview();
+  closeAllOverlays('logSheet');
   logSheet.classList.add('open');
   logScrim.classList.add('open');
 });
@@ -4175,6 +4257,7 @@ function openLogSheet(editCatch){
       photoStatus.textContent = "The saved photo can\u2019t be displayed by this browser \u2014 tap the box to add it again as a JPEG.";
     }
   }
+  closeAllOverlays('logSheet');
   logSheet.classList.add('open');
   logScrim.classList.add('open');
   document.getElementById('logCatchFab').classList.add('pressed');
@@ -4787,6 +4870,7 @@ const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
 
 document.getElementById('searchBtn').addEventListener('click', ()=>{
+  closeAllOverlays('searchSheet');
   searchSheet.classList.add('open');
   searchScrim.classList.add('open');
   setTimeout(()=> searchInput.focus(), 250);
@@ -5325,6 +5409,7 @@ map.on('click', (e)=>{
   if(tidePinMarker) map.removeLayer(tidePinMarker);
   tidePinMarker = L.marker(e.latlng, {icon:L.divIcon({className:'', html:'<div class="tide-pin"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="#f2c200" stroke-width="2.6"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg></div>', iconSize:[26,26], iconAnchor:[13,13]})}).addTo(map);
   document.getElementById('tidePanelBody').innerHTML = tideForecastHTML(e.latlng);
+  closeAllOverlays('tidePanel');
   document.getElementById('tidePanel').classList.add('open');
 });
 document.getElementById('tidePanelClose').addEventListener('click', ()=>{
@@ -5653,12 +5738,28 @@ function openTideCal(){
   sel.innerHTML = TIDE_LAG_STATIONS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
   document.getElementById('calResult').innerHTML=''; document.getElementById('calSave').style.display='none'; calPending=null;
   refreshCalCurrent(); refreshCalSaved();
+  closeAllOverlays('tideCalSheet');
   tideCalSheet.classList.add('open'); tideCalScrim.classList.add('open');
 }
 function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.classList.remove('open'); }
+/* The Calibrate tide lags tool is developer-only — hidden so ordinary users can't
+   overwrite the built-in tide data. To reveal it on a device, open the app with
+   #calibrate at the end of the address (e.g. index.html#calibrate); it's then
+   remembered on that device. Open with #hide-calibrate to put it away again. */
+(function revealDevCalibrate(){
+  try{
+    const h = (location.hash || '').toLowerCase();
+    if(h.indexOf('hide-calibrate') !== -1) localStorage.removeItem('wtf:calibrate');
+    else if(h.indexOf('calibrate') !== -1) localStorage.setItem('wtf:calibrate','1');
+    if(localStorage.getItem('wtf:calibrate') === '1'){
+      const el = document.getElementById('calibrateSection');
+      if(el) el.style.display = '';
+    }
+  }catch(e){}
+})();
 (function initCal(){
   const btn = document.getElementById('tideCalBtn');
-  if(btn) btn.addEventListener('click', ()=>{ try{ infoSheet.classList.remove('open'); infoScrim.classList.remove('open'); }catch(e){} openTideCal(); });
+  if(btn) btn.addEventListener('click', ()=>{ openTideCal(); });
   document.getElementById('tideCalClose').addEventListener('click', closeTideCal);
   tideCalScrim.addEventListener('click', closeTideCal);
   document.getElementById('calStation').addEventListener('change', refreshCalCurrent);
@@ -5707,6 +5808,7 @@ function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.cla
     showToast(`Saved measured lag for ${calStationName(calPending.id)}.`);
   });
   document.getElementById('calResetAll').addEventListener('click', async ()=>{
+    if(!confirm('Clear ALL measured lags for the built-in stations and restore the app\u2019s coded defaults? This reloads the app. Your own added tide stations are not affected.')) return;
     tideLagOverrides = {}; await saveTideLags();
     location.reload();
   });
@@ -5822,7 +5924,7 @@ document.getElementById('sizeBtn').addEventListener('click', async ()=>{
 
 const themeSheet = document.getElementById('themeSheet');
 const themeScrim = document.getElementById('themeScrim');
-document.getElementById('themeBtn').addEventListener('click', ()=>{ themeSheet.classList.add('open'); themeScrim.classList.add('open'); });
+document.getElementById('themeBtn').addEventListener('click', ()=>{ closeAllOverlays('themeSheet'); themeSheet.classList.add('open'); themeScrim.classList.add('open'); });
 
 // Startup acceptance gate — shown once per device, then remembered
 (function(){
