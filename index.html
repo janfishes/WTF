@@ -1072,7 +1072,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   @media (max-width:600px){
     /* Tide panel: full-height sheet on phones, always within the screen, clear of the FAB stack */
     #tidePanel{ top:auto; bottom:12px; right:8px; left:8px; width:auto;
-                max-height:70dvh; height:auto; border-radius:16px; }
+                height:70dvh; border-radius:16px; }
     /* Header: shrink so title, tagline, name, logo, and all three buttons fit on-screen */
     header{padding:3px 8px 4px; gap:5px;}
     .hdr-left h1{font-size:17px; line-height:19px;}
@@ -1496,7 +1496,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #tidePanel .tp-head button{color:#000 !important; border-color:rgba(0,0,0,.4) !important;}
   #tidePanel .tp-head button{
     background:none; border:1px solid var(--line); color:var(--muted); border-radius:8px;
-    width:26px; height:26px; cursor:pointer; font-size:12px; flex:0 0 auto;
+    width:auto; height:26px; padding:0 9px; cursor:pointer; font-size:11px; font-weight:700;
+    font-family:'JetBrains Mono',monospace; letter-spacing:.02em; flex:0 0 auto; white-space:nowrap;
   }
   #tidePanelBody{overflow-y:auto; flex:1 1 auto; min-height:0; padding:12px 14px 36px;}
   #tidePanelBody .pop-meta{font-family:'JetBrains Mono',monospace; font-size:calc(11.5px * var(--ts)); color:var(--brass); margin-bottom:8px;}
@@ -1552,7 +1553,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25b &middot; STACKED CATCHES</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25c &middot; TIDE PANEL SCROLL FIX</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1564,7 +1565,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div id="tidePanel">
     <div class="tp-head">
       <span>3-Day Tide Forecast</span>
-      <button id="tidePanelClose" title="Close">✕</button>
+      <button id="tidePanelClose" title="Close">CLOSE ✕</button>
     </div>
     <div id="tidePanelBody"></div>
   </div>
@@ -1648,7 +1649,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:2px;">Map controls</div>
-      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees and decimal minutes (e.g. 29\u00b004.902\u2032 N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge \u2014 tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own \u270e and \u2715.</p>
+      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕.</p>
       <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their total buttons will open the respective data set.</p>
       <p class="sheet-note"><b>On a computer:</b> if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
 
