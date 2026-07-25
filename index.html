@@ -1255,6 +1255,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-popup-tip{background:var(--navy-900); border:1px solid var(--line);}
   .leaflet-popup-content{margin:0; width:min(300px, 86vw) !important;}
   .leaflet-popup-close-button{color:var(--muted) !important; padding:8px !important;}
+  /* Catch pop-up (tap a logged catch diamond): widen the default Leaflet corner
+     close button and prepend CLOSE, matching the sheets' CLOSE X pattern, without
+     touching the plain X used by every other popup type in the app. */
+  .catch-popup .leaflet-popup-close-button{
+    width:auto !important; height:22px !important; top:8px !important; right:8px !important;
+    padding:0 8px !important; font:700 11px/22px 'JetBrains Mono',monospace !important;
+    letter-spacing:.02em; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:8px;
+  }
+  .catch-popup .leaflet-popup-close-button::before{content:'CLOSE '; }
   .pop{padding:13px 14px 14px;}
   .pop-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:4px;}
   .pop-name{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(15.5px * var(--ts)); line-height:1.2;}
@@ -1553,7 +1563,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25c &middot; TIDE PANEL SCROLL FIX</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25d &middot; CATCH POPUP CLOSE LABEL</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -3321,7 +3331,7 @@ function renderCatchMarkers(){
     m.group = g;
     m.visible = g.catches.slice();
     m._iconKey = resolveVar(speciesOf(rep.species).color)+'|'+g.catches.length;
-    m.bindPopup(()=> catchGroupPopupHTML(m), {maxWidth:320});
+    m.bindPopup(()=> catchGroupPopupHTML(m), {maxWidth:320, className:'catch-popup'});
     return m;
   });
   applyFilter();
