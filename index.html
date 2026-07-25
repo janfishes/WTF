@@ -1265,6 +1265,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:8px;
   }
   .catch-popup .leaflet-popup-close-button::before{content:'CLOSE '; }
+  /* The title row's zone badge (e.g. "Log") used to sit flush against the same
+     top-right corner as the button above, so it visually collided with CLOSE.
+     Reserving room on that row only pushes the badge clear of it. */
+  .catch-popup .pop-top{padding-right:80px;}
   .pop{padding:13px 14px 14px;}
   .pop-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:4px;}
   .pop-name{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(15.5px * var(--ts)); line-height:1.2;}
@@ -1568,7 +1572,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25e &middot; TIDE PANEL DRAG/SCROLL FIX</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25f &middot; CATCH POPUP LAYOUT FIX</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
