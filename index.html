@@ -1509,7 +1509,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     width:auto; height:26px; padding:0 9px; cursor:pointer; font-size:11px; font-weight:700;
     font-family:'JetBrains Mono',monospace; letter-spacing:.02em; flex:0 0 auto; white-space:nowrap;
   }
-  #tidePanelBody{overflow-y:auto; flex:1 1 auto; min-height:0; padding:12px 14px 36px;}
+  #tidePanelBody{overflow-y:auto; flex:1 1 auto; min-height:0; padding:12px 14px 36px;
+    -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
+    scrollbar-width:thin; scrollbar-color:var(--brass) transparent;}
+  #tidePanelBody::-webkit-scrollbar{width:6px;}
+  #tidePanelBody::-webkit-scrollbar-track{background:transparent;}
+  #tidePanelBody::-webkit-scrollbar-thumb{background:var(--brass); border-radius:3px;}
   #tidePanelBody .pop-meta{font-family:'JetBrains Mono',monospace; font-size:calc(11.5px * var(--ts)); color:var(--brass); margin-bottom:8px;}
   #toast{ position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px);
     background:var(--navy-800); border:1px solid var(--line); color:var(--fog);
@@ -1563,7 +1568,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25d &middot; CATCH POPUP CLOSE LABEL</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25e &middot; TIDE PANEL DRAG/SCROLL FIX</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -3406,7 +3411,11 @@ function sealPopupClicks(popup){
 map.on('popupopen', e => sealPopupClicks(e.popup));
 map.on('popupopen', e => makePopupDraggable(e.popup));
 
-// Tide panel: drag it by ANY part of the window, not just the title bar.
+// Tide panel: drag it by its title bar only. It used to drag from anywhere in the
+// window, but that intercepted touchmove inside #tidePanelBody, so trying to scroll
+// the forecast on a phone dragged the whole panel around the map instead. Restricting
+// the drag handle to .tp-head lets the body scroll normally while the panel can still
+// be moved out of the way by its header, matching the Help text.
 // The panel lives inside #map, so its pointer events would otherwise bubble to
 // Leaflet and pan the map underneath (the Mac "drags the map" bug). We stop that
 // here and also disable Leaflet's own click/scroll propagation on the panel.
@@ -3454,8 +3463,8 @@ map.on('popupopen', e => makePopupDraggable(e.popup));
     document.addEventListener('touchmove', onMove, {passive:false});
     document.addEventListener('touchend', onUp);
   };
-  panel.addEventListener('mousedown', onDown);
-  panel.addEventListener('touchstart', onDown, {passive:true});
+  head.addEventListener('mousedown', onDown);
+  head.addEventListener('touchstart', onDown, {passive:true});
 })();
 
 // iOS Safari raises the keyboard + its accessory toolbar over a bottom-anchored
