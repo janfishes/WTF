@@ -1304,9 +1304,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .catch-count{position:absolute; top:-7px; right:-8px; min-width:15px; height:15px; padding:0 3px;
     background:var(--navy-950); color:var(--fog); border:1px solid var(--line); border-radius:100px;
     font:700 9px/13px 'Inter',sans-serif; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.55);}
-  .catch-pager{display:flex; align-items:center; justify-content:space-between; gap:8px;
-    margin-bottom:8px; font-size:11px; font-weight:700; color:var(--muted);}
-  .catch-pager .mini-btn{padding:2px 10px; font-size:13px; line-height:1;}
+  /* Stacked catches at one diamond: the My Log cards in a scrolling well. Capped by
+     viewport height as well as pixels so a tall stack can't run off a phone screen, and
+     overscroll-behavior keeps a flick at the end of the list from scrolling the page
+     underneath it. */
+  .pop-catch-list{max-height:min(46vh, 320px); overflow-y:auto; margin-top:9px;
+    padding-right:3px; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;}
+  .pop-catch-list .catch-card{margin-bottom:7px;}
+  .pop-catch-list .catch-card:last-child{margin-bottom:0;}
+  .pop-catch-list .cc-photo{max-height:130px;}
   .leaflet-popup-content-wrapper{cursor:grab;}
   .leaflet-popup-content-wrapper:active{cursor:grabbing;}
   .drop-dot{width:9px; height:9px; border-radius:50%; border:1.5px solid #fff; background:var(--rust); box-shadow:0 0 0 1.5px rgba(0,0,0,.55);}
@@ -1634,7 +1640,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:2px;">Map controls</div>
-      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees and decimal minutes (e.g. 29\u00b004.902\u2032 N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge \u2014 tap it and use the \u2039 \u203a arrows to step through each fish logged at that spot.</p>
+      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees and decimal minutes (e.g. 29\u00b004.902\u2032 N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge \u2014 tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own \u270e and \u2715.</p>
       <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their total buttons will open the respective data set.</p>
       <p class="sheet-note"><b>On a computer:</b> if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
 
@@ -1685,6 +1691,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Tides (works offline)</div>
+      <p class="sheet-note" style="opacity:.75;">Build <b>2026-07-25b · stacked catches</b> — if this line is missing or reads differently, the browser is showing you an older saved copy of the file.</p>
       <p class="sheet-note">Tap <b>Street Map</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
       <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water actually gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
       <p class="sheet-note">You can add gauges of your own. Open <b>Create &amp; Calibrate Tide Stations</b> and use <b>Your own tide stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive — no measurements needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
@@ -3278,19 +3285,23 @@ function catchDivIcon(color, count){
     iconSize:[16,16], iconAnchor:[8,8], popupAnchor:[0,-8]
   });
 }
-// Popup for a merged marker: pages through the catches currently visible on it
-// (species filter applies), with prev/next when there's more than one.
+/* Popup for a merged marker. Several fish at one spot are shown as the same cards the
+   My Log sheet uses, in a scrollable stack, newest first — you can read the whole spot's
+   history at once instead of stepping through it one fish at a time. A lone catch keeps
+   the ordinary single popup. The species filter applies: only visible catches are listed. */
 function catchGroupPopupHTML(m){
   const vis = m.visible || [];
   if(!vis.length) return '<div class="pop"></div>';
-  if(m._popIdx >= vis.length) m._popIdx = 0;
-  let pager = '';
-  if(vis.length > 1){
-    pager = `<div class="catch-pager"><button class="mini-btn cg-prev" aria-label="Previous">\u2039</button>`
-          + `<span>${m._popIdx+1} of ${vis.length} at this spot</span>`
-          + `<button class="mini-btn cg-next" aria-label="Next">\u203a</button></div>`;
-  }
-  return `<div class="pop-group">${pager}${catchPopupHTML(vis[m._popIdx])}</div>`;
+  if(vis.length === 1) return catchPopupHTML(vis[0]);
+  const cards = [...vis].sort(byDateCaughtDesc).map(c=> catchCardHTML(c, false)).join('');
+  return `<div class="pop">
+    <div class="pop-top">
+      <div class="pop-name">${vis.length} catches here</div>
+      <div class="pop-zone" style="background:var(--teal); color:#04141e;">Log</div>
+    </div>
+    <div class="pop-meta"><span>${toDMS(m.group.lat, m.group.lng)}</span><span>within 100 ft</span></div>
+    <div class="pop-catch-list">${cards}</div>
+  </div>`;
 }
 function renderCatchMarkers(){
   catchMarkers.forEach(m=>map.removeLayer(m));
@@ -3301,7 +3312,6 @@ function renderCatchMarkers(){
     });
     m.group = g;
     m.visible = g.catches.slice();
-    m._popIdx = 0;
     m._iconKey = resolveVar(speciesOf(rep.species).color)+'|'+g.catches.length;
     m.bindPopup(()=> catchGroupPopupHTML(m), {maxWidth:320});
     return m;
@@ -3346,7 +3356,7 @@ function makePopupDraggable(popup){
   };
   const onDown = ev => {
     const t = ev.target;
-    if(t.closest('button, a, input, textarea, select, .drops-list, .note-area, img')) return;
+    if(t.closest('button, a, input, textarea, select, .drops-list, .pop-catch-list, .note-area, img')) return;
     const p = point(ev);
     sx = p.clientX; sy = p.clientY; moved = false;
     startPt = map.latLngToContainerPoint(popup.getLatLng());
@@ -3358,6 +3368,24 @@ function makePopupDraggable(popup){
   wrap.addEventListener('mousedown', onDown);
   wrap.addEventListener('touchstart', onDown, {passive:true});
 }
+/* A click on a button inside a popup must never reach the map. Leaflet already intends
+   this — it flags the popup container and checks it in _handleDOMEvent — but that check
+   walks up from the event target, so it FAILS whenever a handler re-renders the popup's
+   innerHTML: the button the click came from is destroyed mid-flight, the orphaned node
+   has no parent chain, the map decides you clicked open water, fires preclick, and the
+   popup closes itself. That is what shut the merged-catch pager, and it was set to do the
+   same to the note Save/Cancel buttons.
+
+   The listener below sits on the popup's own element, which survives content re-renders,
+   and the propagation path is fixed when the event is dispatched — so this fires even
+   after the original target is gone, and stops the click before the map ever sees it. */
+function sealPopupClicks(popup){
+  const el = popup.getElement();
+  if(!el || el._clickSealed) return;
+  el._clickSealed = true;
+  el.addEventListener('click', ev => ev.stopPropagation());
+}
+map.on('popupopen', e => sealPopupClicks(e.popup));
 map.on('popupopen', e => makePopupDraggable(e.popup));
 
 // Tide panel: drag it by ANY part of the window, not just the title bar.
@@ -3432,31 +3460,23 @@ function wirePopup(popup){
   const del = node.querySelector('.del-catch-btn');
   if(del) del.addEventListener('click', ()=> deleteCatch(del.dataset.id));
 
-  /* Merged-catch pager: step through the fish logged at one spot.
-     The arrows used to call popup.setContent(), which does two unwanted things. It
-     overwrites the bound content FUNCTION with a fixed string, so the popup stops
-     re-reading the marker on later opens and goes stale; and its relayout/auto-pan
-     could tear the popup down mid-click, which is what closed the window instead of
-     advancing it. Redrawing through popup.update() leaves the binding alone, the
-     visible list is re-read on every tap rather than captured once at wiring time,
-     the click is stopped so nothing downstream can act on it, and if the popup does
-     come off the map for any reason it is put straight back. */
-  const src = popup._source;
-  if(src && src.group){
-    const step = (d, ev) => {
-      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
-      const vis = src.visible || [];
-      if(vis.length < 2) return;
-      src._popIdx = ((src._popIdx || 0) + d + vis.length) % vis.length;
-      popup.update();                       // redraws from the bound function
-      if(!map.hasLayer(popup)) popup.openOn(map);
-      wirePopup(popup);
-    };
-    const prev = node.querySelector('.cg-prev');
-    const next = node.querySelector('.cg-next');
-    if(prev) prev.addEventListener('click', ev => step(-1, ev));
-    if(next) next.addEventListener('click', ev => step(1, ev));
-  }
+  /* Stacked-diamond popup: every card carries its own edit/delete, same as My Log.
+     Each click is stopped before it can travel on — a handler here may tear down and
+     rebuild the popup's contents, which detaches the button mid-flight and (without
+     this) leaves the map treating the click as a tap on open water. sealPopupClicks()
+     guards the same thing at the popup element; this is the belt to that pair of braces. */
+  node.querySelectorAll('.cc-del').forEach(btn=>{
+    btn.addEventListener('click', ev=>{ ev.preventDefault(); ev.stopPropagation(); deleteCatch(btn.dataset.id); });
+  });
+  node.querySelectorAll('.cc-edit').forEach(btn=>{
+    btn.addEventListener('click', ev=>{
+      ev.preventDefault(); ev.stopPropagation();
+      const c = catches.find(x=>x.id===btn.dataset.id);
+      if(!c) return;
+      map.closePopup();
+      openLogSheet(c);
+    });
+  });
 
   const edit = node.querySelector('.edit-catch-btn');
   if(edit) edit.addEventListener('click', ()=>{
@@ -3526,20 +3546,17 @@ function wirePopup(popup){
 
 /* ===================== CATCH LIST ===================== */
 
-function renderCatchList(){
-  const body = document.getElementById('catchListBody');
-  if(catches.length===0){
-    body.innerHTML = `<p class="empty-note">No catches logged yet. Tap <b>+ Catch</b> to add your first one.</p>`;
-    return;
-  }
-  const sorted = [...catches].sort((a,b)=> (b.date+' '+(b.time||'00:00')).localeCompare(a.date+' '+(a.time||'00:00')));
-  body.innerHTML = sorted.map(c=>{
-    const sp = speciesOf(c.species);
-    const sizeBits = [];
-    if(c.length) sizeBits.push(c.length+'"');
-    if(c.weight) sizeBits.push(c.weight+' lb');
-    const tide = catchTideStr(c);
-    return `<div class="catch-card">
+/* One catch card, shared by the My Log sheet and the stacked-diamond popup so the two
+   can never drift apart. showCoords is off in the popup, where every catch in the list
+   is at the same spot and the coordinates are already in the header. */
+function catchCardHTML(c, showCoords){
+  const sp = speciesOf(c.species);
+  const sizeBits = [];
+  if(c.length) sizeBits.push(c.length+'"');
+  if(c.weight) sizeBits.push(c.weight+' lb');
+  const tide = catchTideStr(c);
+  const wave = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>`;
+  return `<div class="catch-card">
       <div class="cc-top">
         <span class="cc-species" style="background:${sp.color}">${sp.label}</span>
         <div class="cc-actions">
@@ -3547,12 +3564,25 @@ function renderCatchList(){
           <button class="cc-del" data-id="${c.id}" title="Delete">\u2715</button>
         </div>
       </div>
-      <div class="cc-meta">${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}${tide? ' \u00b7 '+`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>`+' '+tide:''}<br>${escapeHTML(c.locationLabel)} \u00b7 ${toDMS(c.lat, c.lng)}</div>
+      <div class="cc-meta">${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}${tide? ' \u00b7 '+wave+' '+tide:''}<br>${escapeHTML(c.locationLabel)}${showCoords? ' \u00b7 '+toDMS(c.lat, c.lng):''}</div>
       ${sizeBits.length? `<div class="cc-size">${sizeBits.join(', ')}</div>`:''}
       ${c.notes? `<div class="cc-notes">${escapeHTML(c.notes)}</div>`:''}
       ${c.photo? (photoIsDrawable(c.photo) ? `<img class="cc-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
     </div>`;
-  }).join("");
+}
+/* Newest first by DATE CAUGHT, not by the order entries were added — a fish logged
+   later but caught earlier drops into place by its own date. */
+function byDateCaughtDesc(a,b){
+  return (b.date+' '+(b.time||'00:00')).localeCompare(a.date+' '+(a.time||'00:00'));
+}
+
+function renderCatchList(){
+  const body = document.getElementById('catchListBody');
+  if(catches.length===0){
+    body.innerHTML = `<p class="empty-note">No catches logged yet. Tap <b>+ Catch</b> to add your first one.</p>`;
+    return;
+  }
+  body.innerHTML = [...catches].sort(byDateCaughtDesc).map(c=> catchCardHTML(c, true)).join("");
   body.querySelectorAll('.cc-del').forEach(btn=> btn.addEventListener('click', ()=> deleteCatch(btn.dataset.id)));
   body.querySelectorAll('.cc-edit').forEach(btn=> btn.addEventListener('click', ()=>{
     const c = catches.find(x=>x.id===btn.dataset.id);
@@ -3710,7 +3740,6 @@ function applyFilter(){
     const rep = vis[vis.length-1];
     const key = resolveVar(speciesOf(rep.species).color)+'|'+vis.length;
     if(m._iconKey !== key){ m.setIcon(catchDivIcon(resolveVar(speciesOf(rep.species).color), vis.length)); m._iconKey = key; }
-    if(m._popIdx >= vis.length) m._popIdx = 0;
     if(!map.hasLayer(m)) m.addTo(map);
     // update() re-runs the bound content function; setPopupContent() would swap it for a
     // fixed string and the popup would stop tracking the marker on later opens.
