@@ -688,7 +688,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* Species + zone colors (fixed across themes) */
     --inshore:#1636ff; --offshore:#7a2fd6; --launch:#e02020; --catch:#7a2fd6;
     --brass:#c99a4b; --rust:#b5573a;
-    --blackdrum:#8a7a9b; --bonito:#7c8b96; --flounder:#ffe14d; --grouper:#bb594a;
+    --blackdrum:#8a7a9b; --bonito:#7c8b96; --cobia:#c98a6a; --flounder:#ffe14d; --grouper:#bb594a;
     --jack:#c9c14b; --kingfish:#e8639f; --mackerel:#63b8aa; --mahi:#a8d05a;
     --permit:#8ab0c4; --pompano:#c9a876; --redfish:#ff3b30; --shark:#c1652f; --sheepshead:#467ba1;
     --snapper:#4f9268; --snook:#ff9f1c; --tarpon:#a970d8; --trout:#5fa8c7; --wahoo:#2b8fa8; --whiting:#93a25a;
@@ -853,20 +853,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* `calc(100% - 170px)` was wrong: Leaflet's corner container shrink-wraps to its own
        content, so the percentage was self-referential and collapsed the box to ~38px on a
        phone, clipping the right-hand end instead of wrapping. Clamped against the viewport. */
-    white-space:normal !important; max-width:min(88vw, 560px); text-align:right;
+    white-space:normal !important; max-width:min(72vw, 520px); text-align:right;
     line-height:1.45; padding:3px 6px !important; border-radius:6px 0 0 0;
   }
   .leaflet-control-attribution a{color:#7fd0ff !important;}
   .leaflet-control-zoom a{background:var(--navy-900) !important; color:var(--fog) !important; border-color:var(--line) !important;}
   /* Leaflet gives corner controls clear:both and appends bottom controls in reverse, so this
      corner is re-laid-out as a column: zoom on top, miles scale underneath, zoom centred on it.
-     The column is pinned to 100px — the scale control's maxWidth — rather than shrink-wrapping
+     The column is pinned to 72px — the scale control's maxWidth — rather than shrink-wrapping
      the bar, because the bar's length changes at every zoom level and a centred-on-the-bar
      button would slide sideways each time it was pressed. */
   /* Above the attribution, which is painted after it and would otherwise cover the buttons. */
   .leaflet-bottom.leaflet-left{
     display:flex; flex-direction:column; align-items:center;
-    width:100px; margin-left:10px; z-index:1001;
+    width:72px; margin-left:10px; z-index:1001;
   }
   .leaflet-bottom.leaflet-left .leaflet-control{float:none; clear:none; margin-left:0; margin-right:0;}
   .leaflet-bottom.leaflet-left .leaflet-control-zoom{order:0; margin-bottom:8px;}
@@ -1299,6 +1299,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .ring-launch{--ring:var(--launch);}
   .catch-marker{width:14px; height:14px; border:2px solid #fff; transform:rotate(45deg); box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.5);}
   .catch-marker.dim{opacity:.18;}
+  /* Count badge on a merged catch diamond (several catches within 100 ft). The
+     Leaflet marker icon wrapper is absolutely positioned, so this anchors to it. */
+  .catch-count{position:absolute; top:-7px; right:-8px; min-width:15px; height:15px; padding:0 3px;
+    background:var(--navy-950); color:var(--fog); border:1px solid var(--line); border-radius:100px;
+    font:700 9px/13px 'Inter',sans-serif; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.55);}
+  .catch-pager{display:flex; align-items:center; justify-content:space-between; gap:8px;
+    margin-bottom:8px; font-size:11px; font-weight:700; color:var(--muted);}
+  .catch-pager .mini-btn{padding:2px 10px; font-size:13px; line-height:1;}
   .leaflet-popup-content-wrapper{cursor:grab;}
   .leaflet-popup-content-wrapper:active{cursor:grabbing;}
   .drop-dot{width:9px; height:9px; border-radius:50%; border:1.5px solid #fff; background:var(--rust); box-shadow:0 0 0 1.5px rgba(0,0,0,.55);}
@@ -1604,6 +1612,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div class="k"><div class="sq" style="background:var(--muted)"></div>Good</div>
         <div class="k"><div class="sq" style="background:var(--navy-800); border:1px solid var(--line)"></div>Slower</div>
       </div>
+      <p class="sheet-note"><b>Cobia:</b> March through May marks the lively spring coastal migration, while fall brings another steady wave.</p>
       <div class="subhead">Map zones</div>
       <div class="zone-legend">
         <div class="zk"><div class="dot" style="background:var(--inshore)"></div>Inshore — creeks, rivers, cuts, streams, flats, jetties, docks, ramps</div>
@@ -1625,7 +1634,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:2px;">Map controls</div>
-      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees, minutes, seconds.</p>
+      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees and decimal minutes (e.g. 29\u00b004.902\u2032 N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge \u2014 tap it and use the \u2039 \u203a arrows to step through each fish logged at that spot.</p>
       <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their total buttons will open the respective data set.</p>
       <p class="sheet-note"><b>On a computer:</b> if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
 
@@ -1656,7 +1665,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Reef drops</div>
-      <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs (CR) and for clustered natural reef sites — coordinates in degrees/minutes/seconds, depth, and distance — sorted closest to farthest from the inlet, and plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. If a popup covers the pins, <b>drag it out of the way</b> by its title area.</p>
+      <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs (CR) and for clustered natural reef sites — coordinates in degrees and decimal minutes, depth, and distance — sorted closest to farthest from the inlet, and plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. If a popup covers the pins, <b>drag it out of the way</b> by its title area.</p>
 
       
 
@@ -1885,11 +1894,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <li>If the data looks solid (app says is reliable), tap <b>Save it</b> and your tide app will use it right away. If you add the wrong data set to a station, simply follow these steps again to load the correct set to the station.</li>
     </ol>
     <label class="field-label">Station</label>
-    <select id="calStation" style="width:100%; box-sizing:border-box; padding:8px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px;"></select>
+    <select id="calStation" style="width:100%; box-sizing:border-box;"></select>
     <div class="loc-preview" id="calCurrent" style="margin-top:8px;">—</div>
     <label class="field-label" style="margin-top:12px;">Exported data (CSV or pasted rows)</label>
     <p class="sheet-note" style="margin:2px 0 6px;">Needs a timestamp and a water-level column (extra columns like sigma/temp are fine — it finds the level column). Best export: <b>Normalized interval</b> or <b>Raw readings</b> in CSV at 6–15 min. Avoid hourly/daily aggregates (too coarse to time a high/low). NOAA CO-OPS / Ready formats work too, but are usually UTC — tick the box below. On the dashboard: station → <b>Exports</b> (or Trends) → <b>1w</b> or a custom 1–2 week range. Two weeks gives the most trustworthy result.</p>
-    <textarea id="calData" placeholder="2026-07-20 08:12, 3.41&#10;2026-07-20 08:24, 3.55&#10;..." style="width:100%; box-sizing:border-box; height:110px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:11px; padding:8px;"></textarea>
+    <textarea id="calData" placeholder="2026-07-20 08:12, 3.41&#10;2026-07-20 08:24, 3.55&#10;..." style="width:100%; box-sizing:border-box; height:110px; font-family:'JetBrains Mono',monospace; font-size:11px;"></textarea>
     <div class="loc-btns" style="margin-top:8px; align-items:center;">
       <label class="mini-btn" style="cursor:pointer;">📄 Upload file<input type="file" id="calFile" accept=".csv,.txt,.tsv" style="display:none;"></label>
       <label style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px;"><input type="checkbox" id="calUtc"> Times are UTC</label>
@@ -1937,7 +1946,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-body">
     <p class="sheet-note">Download the satellite map — <b>USGS Imagery Topo</b> over the land and <b>Sentinel-2</b> imagery over the water — for the whole fishing area (Ponce Inlet, the Halifax and Indian Rivers, Mosquito Lagoon, and the offshore reefs). Do this once while you have wifi; afterward the map draws with the signal off. Tiles are stored on this device only.</p>
     <label class="field-label">Detail level</label>
-    <select id="offlineZoom" style="width:100%; box-sizing:border-box; padding:8px; background:#0c1620; color:var(--ink); border:1px solid var(--line); border-radius:8px;">
+    <select id="offlineZoom" style="width:100%; box-sizing:border-box;">
       <option value="13">Overview — zoom 13 (smallest)</option>
       <option value="14" selected>Standard — zoom 14 (recommended)</option>
       <option value="15">Detailed — zoom 15 (large)</option>
@@ -1987,6 +1996,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 const SPECIES = {
   bonito:    { label:"Bonito",     short:"BN", color:"var(--bonito)",    months:[0,0,1,2,2,2,1,1,1,1,0,0] },
   blackdrum: { label:"Drum", short:"BD", color:"var(--blackdrum)", months:[1,2,2,2,1,0,0,0,0,1,1,1] },
+  cobia:     { label:"Cobia",      short:"CB", color:"var(--cobia)",     months:[0,0,2,2,2,0,0,0,1,1,1,0] },
   flounder:  { label:"Flounder",   short:"FL", color:"var(--flounder)",  months:[0,0,1,1,0,0,0,0,2,2,2,1] },
   grouper:   { label:"Grouper",    short:"GR", color:"var(--grouper)",   months:[2,2,2,1,0,0,0,0,1,2,2,2] },
   jack:      { label:"Jack",       short:"JK", color:"var(--jack)",      months:[0,1,1,2,2,2,2,2,2,2,1,0] },
@@ -2272,6 +2282,17 @@ function parseLatLngInput(raw){
       cur().nums.push(parseFloat(leading[2]));
       return;
     }
+    // A number with TWO dots is degrees.minutes.decimal (29.01.958 = 29 deg 01.958 min),
+    // never a decimal degree, which only ever has one dot. Split off the degrees and
+    // keep the rest as decimal minutes so the pin lands where it should.
+    const dotDDM = tok.match(/^([+-]?)(\d+)\.(\d+\.\d+)([NSEW])?$/i);
+    if(dotDDM && tok.replace(/[NSEW]$/i,'').split('.').length === 3){
+      const sgn = dotDDM[1] === '-' ? -1 : 1;
+      cur().nums.push(sgn * parseFloat(dotDDM[2]));   // degrees (sign carried on the degrees)
+      cur().nums.push(parseFloat(dotDDM[3]));         // decimal minutes
+      if(dotDDM[4]) closeWith(dotDDM[4].toUpperCase());
+      return;
+    }
     const num = parseFloat(tok);
     if(!isNaN(num)) cur().nums.push(num);
   });
@@ -2314,7 +2335,7 @@ function showToast(msg, duration=2400){
 const map = L.map('map', { zoomControl:false, attributionControl:true, minZoom:1 }).setView([29.06,-80.87],11);
 L.control.zoom({position:'bottomleft'}).addTo(map);
 const CLUSTER_ZOOM = 9; // at/below this zoom, spots collapse into category count ("totals") pills
-L.control.scale({position:'bottomleft', imperial:true, metric:false}).addTo(map);
+L.control.scale({position:'bottomleft', imperial:true, metric:false, maxWidth:66}).addTo(map);
 
 // Base layers, all free for commercial redistribution:
 //   - Satellite view = a two-layer composite:
@@ -3236,17 +3257,53 @@ function catchPopupHTML(c){
   </div>`;
 }
 
+// Catches within 100 ft (30.48 m) of each other collapse onto one diamond so
+// stacked pins stop hiding one another. GPS drift means two fish off the same
+// dock rarely share identical decimals, hence a radius rather than exact match.
+const CATCH_MERGE_M = 30.48;
+function catchGroups(){
+  const groups = [];
+  catches.forEach(c=>{
+    let g = groups.find(g => map.distance([g.lat,g.lng],[c.lat,c.lng]) <= CATCH_MERGE_M);
+    if(g) g.catches.push(c);
+    else groups.push({ lat:c.lat, lng:c.lng, catches:[c] });
+  });
+  return groups;
+}
+function catchDivIcon(color, count){
+  const badge = count>1 ? `<span class="catch-count">${count}</span>` : '';
+  return L.divIcon({
+    className:'',
+    html:`<div class="catch-marker" style="background:${color}"></div>${badge}`,
+    iconSize:[16,16], iconAnchor:[8,8], popupAnchor:[0,-8]
+  });
+}
+// Popup for a merged marker: pages through the catches currently visible on it
+// (species filter applies), with prev/next when there's more than one.
+function catchGroupPopupHTML(m){
+  const vis = m.visible || [];
+  if(!vis.length) return '<div class="pop"></div>';
+  if(m._popIdx >= vis.length) m._popIdx = 0;
+  let pager = '';
+  if(vis.length > 1){
+    pager = `<div class="catch-pager"><button class="mini-btn cg-prev" aria-label="Previous">\u2039</button>`
+          + `<span>${m._popIdx+1} of ${vis.length} at this spot</span>`
+          + `<button class="mini-btn cg-next" aria-label="Next">\u203a</button></div>`;
+  }
+  return `<div class="pop-group">${pager}${catchPopupHTML(vis[m._popIdx])}</div>`;
+}
 function renderCatchMarkers(){
   catchMarkers.forEach(m=>map.removeLayer(m));
-  catchMarkers = catches.map(c=>{
-    const icon = L.divIcon({
-      className:'',
-      html:`<div class="catch-marker" style="background:${resolveVar(speciesOf(c.species).color)}"></div>`,
-      iconSize:[16,16], iconAnchor:[8,8], popupAnchor:[0,-8]
+  catchMarkers = catchGroups().map(g=>{
+    const rep = g.catches[g.catches.length-1];   // most recent stands for the group
+    const m = L.marker([g.lat, g.lng], {
+      icon: catchDivIcon(resolveVar(speciesOf(rep.species).color), g.catches.length)
     });
-    const m = L.marker([c.lat, c.lng], {icon}).addTo(map);
-    m.bindPopup(()=>catchPopupHTML(c), {maxWidth:320});
-    m.catchRef = c;
+    m.group = g;
+    m.visible = g.catches.slice();
+    m._popIdx = 0;
+    m._iconKey = resolveVar(speciesOf(rep.species).color)+'|'+g.catches.length;
+    m.bindPopup(()=> catchGroupPopupHTML(m), {maxWidth:320});
     return m;
   });
   applyFilter();
@@ -3303,12 +3360,17 @@ function makePopupDraggable(popup){
 }
 map.on('popupopen', e => makePopupDraggable(e.popup));
 
-// Tide panel: drag by its title bar
+// Tide panel: drag it by ANY part of the window, not just the title bar.
+// The panel lives inside #map, so its pointer events would otherwise bubble to
+// Leaflet and pan the map underneath (the Mac "drags the map" bug). We stop that
+// here and also disable Leaflet's own click/scroll propagation on the panel.
 (function(){
   const panel = document.getElementById('tidePanel');
   const head = panel && panel.querySelector('.tp-head');
-  if(!head) return;
+  if(!panel || !head) return;
   head.style.cursor = 'grab';
+  L.DomEvent.disableClickPropagation(panel);
+  L.DomEvent.disableScrollPropagation(panel);
   let sx=0, sy=0, ox=0, oy=0, active=false;
   const point = ev => (ev.touches && ev.touches.length ? ev.touches[0] : ev);
   const onMove = ev => {
@@ -3326,7 +3388,9 @@ map.on('popupopen', e => makePopupDraggable(e.popup));
     document.removeEventListener('touchend', onUp);
   };
   const onDown = ev => {
-    if(ev.target.closest('button')) return;
+    // Leave the controls and text selection alone; drag from anything else.
+    if(ev.target.closest('button, a, input, textarea, select')) return;
+    ev.stopPropagation();
     const p = point(ev);
     const host = panel.offsetParent ? panel.offsetParent.getBoundingClientRect() : {left:0, top:0};
     const r = panel.getBoundingClientRect();
@@ -3344,9 +3408,21 @@ map.on('popupopen', e => makePopupDraggable(e.popup));
     document.addEventListener('touchmove', onMove, {passive:false});
     document.addEventListener('touchend', onUp);
   };
-  head.addEventListener('mousedown', onDown);
-  head.addEventListener('touchstart', onDown, {passive:true});
+  panel.addEventListener('mousedown', onDown);
+  panel.addEventListener('touchstart', onDown, {passive:true});
 })();
+
+// iOS Safari raises the keyboard + its accessory toolbar over a bottom-anchored
+// sheet without reflowing it, which buried the coordinate field. When a field
+// inside a sheet gains focus, scroll it up into the visible area once the
+// keyboard has finished animating in.
+document.addEventListener('focusin', (e)=>{
+  const el = e.target;
+  if(!(el instanceof HTMLElement) || !el.matches('input, textarea, select')) return;
+  if(!el.closest('.sheet-body, .sheet')) return;
+  setTimeout(()=>{ try{ el.scrollIntoView({block:'center', behavior:'smooth'}); }catch(_){ } }, 300);
+});
+
 map.on('popupopen', (e)=>{ wirePopup(e.popup); });
 
 function wirePopup(popup){
@@ -3355,6 +3431,17 @@ function wirePopup(popup){
 
   const del = node.querySelector('.del-catch-btn');
   if(del) del.addEventListener('click', ()=> deleteCatch(del.dataset.id));
+
+  // Merged-catch pager: step through the fish logged at one spot.
+  const src = popup._source;
+  if(src && src.group){
+    const vis = src.visible || [];
+    const step = d => { src._popIdx = (src._popIdx + d + vis.length) % vis.length; popup.setContent(catchGroupPopupHTML(src)); wirePopup(popup); };
+    const prev = node.querySelector('.cg-prev');
+    const next = node.querySelector('.cg-next');
+    if(prev) prev.addEventListener('click', ()=> step(-1));
+    if(next) next.addEventListener('click', ()=> step(1));
+  }
 
   const edit = node.querySelector('.edit-catch-btn');
   if(edit) edit.addEventListener('click', ()=>{
@@ -3596,12 +3683,21 @@ function applyFilter(){
     if(!map.hasLayer(m)) m.addTo(map);
   });
   catchMarkers.forEach(m=>{
-    const c = m.catchRef;
-    const spOk = !speciesActive || activeSpecies.has(c.species);
     // A species pick shows its diamonds even when My Catches is switched off,
-    // otherwise the button looks dead.
-    if((!showCatches && !speciesActive) || !spOk){ if(map.hasLayer(m)) map.removeLayer(m); return; }
+    // otherwise the button looks dead. Each merged marker shows only the catches
+    // that pass the current filter, and its badge/colour track that subset.
+    const vis = m.group.catches.filter(c=>{
+      const spOk = !speciesActive || activeSpecies.has(c.species);
+      return spOk && (showCatches || speciesActive);
+    });
+    m.visible = vis;
+    if(!vis.length){ if(map.hasLayer(m)) map.removeLayer(m); return; }
+    const rep = vis[vis.length-1];
+    const key = resolveVar(speciesOf(rep.species).color)+'|'+vis.length;
+    if(m._iconKey !== key){ m.setIcon(catchDivIcon(resolveVar(speciesOf(rep.species).color), vis.length)); m._iconKey = key; }
+    if(m._popIdx >= vis.length) m._popIdx = 0;
     if(!map.hasLayer(m)) m.addTo(map);
+    if(m.isPopupOpen && m.isPopupOpen()){ m.setPopupContent(catchGroupPopupHTML(m)); wirePopup(m.getPopup()); }
   });
   document.getElementById('map').classList.toggle('launches-only', showLaunches);
   syncEggMarker();
@@ -5365,7 +5461,7 @@ function extrapolateTideLag(lat, lng){
     if(res.gapKm > 14){ confidence = 'low'; reasons.push('a long gap between calibrated stations'); }
   } else if(res.mode === 'extrap'){
     method = 'extrapolated'; confidence = 'low';
-    reasons.push(`extrapolated ${res.beyondKm.toFixed(1)}\u00a0km past the farthest calibrated station`);
+    reasons.push(`extrapolated ${(res.beyondKm*0.621371).toFixed(1)}\u00a0mi past the farthest calibrated station`);
   } else if(res.mode === 'at'){
     method = 'reference'; confidence = 'high';   // at/seaward of the inlet reference — lag ≈ 0
   } else {
@@ -5378,7 +5474,7 @@ function extrapolateTideLag(lat, lng){
     if(branchInfo && branchInfo.stations === 0){
       reasons.push(`no gauge in ${branchInfo.name} — timed from the river at its mouth`);
     }
-    if(pin.off >= 4.0){ confidence = 'low'; reasons.push(`the pin sits ${pin.off.toFixed(1)}\u00a0km off the mapped channel`); }
+    if(pin.off >= 4.0){ confidence = 'low'; reasons.push(`the pin sits ${(pin.off*0.621371).toFixed(1)}\u00a0mi off the mapped channel`); }
     else if(pin.off >= 2.8 && confidence === 'high'){ confidence = 'medium'; }
   }
   if(windDriven){ if(confidence === 'high') confidence = 'medium'; if(!reasons.includes('shallow, wind-driven reach')) reasons.push('shallow, wind-driven reach'); }
@@ -5530,7 +5626,7 @@ function tideForecastHTML(latlng){
     const pct = Math.round((station.frac||0)*100);
     lagNote = `Lag <b>interpolated by distance</b> along the waterway — about ${pct}% of the way from <b>${station.a.name}</b> to <b>${station.b.name}</b> — giving High ${sgn(station.h)} / Low ${sgn(station.l)} min vs Ponce Inlet.`;
   } else if(station.method === 'extrapolated'){
-    lagNote = `Lag <b>extrapolated</b> ${station.beyondKm.toFixed(1)} km past <b>${station.anchorName}</b>, the farthest calibrated station on this arm, following the trend of the last two stations — giving High ${sgn(station.h)} / Low ${sgn(station.l)} min vs Ponce Inlet.`;
+    lagNote = `Lag <b>extrapolated</b> ${(station.beyondKm*0.621371).toFixed(1)} mi past <b>${station.anchorName}</b>, the farthest calibrated station on this arm, following the trend of the last two stations — giving High ${sgn(station.h)} / Low ${sgn(station.l)} min vs Ponce Inlet.`;
   } else {
     lagNote = `No calibrated station on this stretch, so the times shown are <b>Ponce Inlet</b> predictions with no shift applied.`;
   }
