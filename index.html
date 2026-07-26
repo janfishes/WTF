@@ -1360,7 +1360,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #locateBtn.active-locate svg{stroke:#fff !important;}
   #mapModeBtn.street-on{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
   #mapModeBtn.street-on svg{stroke:#fff !important;}
-  .loc-dot{width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:24px; line-height:1; filter:drop-shadow(0 0 5px rgba(77,166,255,.85)) drop-shadow(0 2px 3px rgba(0,0,0,.5));}
+  .loc-dot{width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:21px; line-height:1; filter:drop-shadow(0 0 5px rgba(77,166,255,.85)) drop-shadow(0 2px 3px rgba(0,0,0,.5));}
   .pin-preview{width:17px; height:17px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--brass); border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.5);}
 
   .search-row{
@@ -1588,7 +1588,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25v &middot; BULLSEYE ICON ON LOCATE ME FAB</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25w &middot; LOCATE ME MATCHES TIDE PIN SIZE</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -5172,7 +5172,7 @@ document.getElementById('locateBtn').addEventListener('click', function(){
   const place = pos=>{
     const ll = [pos.coords.latitude, pos.coords.longitude];
     if(locMarker) map.removeLayer(locMarker);
-    locMarker = L.marker(ll, {icon:L.divIcon({className:'', html:'<div class="loc-dot">🎯</div>', iconSize:[30,30], iconAnchor:[15,15]})}).addTo(map);
+    locMarker = L.marker(ll, {icon:L.divIcon({className:'', html:'<div class="loc-dot">🎯</div>', iconSize:[26,26], iconAnchor:[13,13]})}).addTo(map);
     suppressClusterZoom = true;
     setTimeout(()=>{ suppressClusterZoom = false; }, 1200); // safety reset if zoomend doesn't fire
     map.setView(ll, 13);
