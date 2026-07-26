@@ -1273,6 +1273,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
      top-right corner as the button above, so it visually collided with CLOSE.
      Reserving room on that row only pushes the badge clear of it. */
   .catch-popup .pop-top{padding-right:80px;}
+  /* Spot pop-ups (inshore/offshore/custom) can have much longer names than a
+     catch card ever does, so padding-right alone isn't reliable — a long name
+     would still run under the button. Instead, give the top of the popup a
+     taller reserved strip so CLOSE X sits on its own row above the name. */
+  .spot-popup .pop{padding-top:34px;}
   .pop{padding:13px 14px 14px;}
   .pop-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:4px;}
   .pop-name{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(15.5px * var(--ts)); line-height:1.2;}
@@ -1585,7 +1590,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25r &middot; SPOT CLOSE X + CLICK-OFF TIP</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25s &middot; NO CR + CLOSE X FIX + SCROLL TIP</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1713,7 +1718,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Don't need to hunt for a close button: tapping anywhere outside an open popup — elsewhere on the map — closes it, and tapping the dimmed background behind an open sheet (Log a Catch, Search, Bite, and the rest) closes that too.</p>
       <p class="sheet-note"><b>On a computer:</b> if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
       <p class="sheet-note">Tap any pin, then tap <b>＋ Add my note</b> at the bottom of its popup. Type your details — bait, rig, tide, timing — and Save. Notes persist between sessions and can be edited or cleared anytime with <b>✎ Edit my note</b>.</p>
-      <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs (CR) and for clustered natural reef sites — coordinates in degrees and decimal minutes, depth, and distance — sorted closest to farthest from the inlet, and plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. If a popup covers the pins, <b>drag it out of the way</b> by its title area.</p>
+      <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs and for clustered natural reef sites — coordinates in degrees and decimal minutes, depth, distance, and bearing to/from the inlet — sorted closest to farthest from the inlet, and plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. Each row is wider than the popup — <b>swipe or scroll sideways</b> within the list to bring the depth, distance, bearing, and any additional details into view. If a popup covers the pins, <b>drag it out of the way</b> by its title area.</p>
 
       <div class="subhead">Themes</div>
       <p class="sheet-note">Tap <b>🎨</b> to pick a color theme — four dark options, <b>Blue</b>, and <b>Sun Glasses</b>, which is built for reading in bright sun through polarized lenses. Saved on your device.</p>
@@ -2112,55 +2117,55 @@ const SPOTS = [
     desc:"A shallow reef complex off Daytona Beach Shores, built from concrete barriers and culverts.",
     tip:"Close enough for a short run in almost any conditions — solid, reliable snapper and flounder water.",
     species:["snapper","flounder"] },
-  { id:"reef-site5", name:"CR Site 5", zone:"offshore", lat:29.1200, lng:-80.8058, meta:"62–67ft · 6.8nm from Inlet · 11 drops",
+  { id:"reef-site5", name:"Site 5", zone:"offshore", lat:29.1200, lng:-80.8058, meta:"62–67ft · 6.8nm from Inlet · 11 drops",
     desc:"The closest true reef structure to the inlet — bridge rubble, culverts, and steel from the old Port Orange and New Smyrna Beach bridges.",
     tip:"Easiest bottom structure to reach for smaller boats. Cut bait or squid on a double-hook rig near bottom takes snapper and flounder; live bait accounts for the bigger grouper.",
     species:["grouper","snapper","flounder"] },
-  { id:"reef-site1", name:"CR Site 1 — Argoil Barge", zone:"offshore", lat:29.1185, lng:-80.6955, meta:"63–75ft · 12.3nm from Inlet · 12 drops",
+  { id:"reef-site1", name:"Site 1 — Argoil Barge", zone:"offshore", lat:29.1185, lng:-80.6955, meta:"63–75ft · 12.3nm from Inlet · 12 drops",
     desc:"One of the county's original reef sites, permitted since 1979 — culvert piles built up around the intact 195ft steel barge Argoil.",
     tip:"The scattered culverts hold mangrove snapper thick; work the barge itself and its shadow line for bigger gag and red grouper.",
     species:["grouper","snapper"] },
-  { id:"reef-site2", name:"CR Site 2 — Semarca Wreck", zone:"offshore", lat:29.1579, lng:-80.6772, meta:"70–80ft · 13.9nm from Inlet · 19 drops",
+  { id:"reef-site2", name:"Site 2 — Semarca Wreck", zone:"offshore", lat:29.1579, lng:-80.6772, meta:"70–80ft · 13.9nm from Inlet · 19 drops",
     desc:"A large, heavily-built complex near Cracker Ridge and the natural Party Grounds reef — anchored by the 76ft steel ship Semarca.",
     tip:"Amberjack are common bycatch while bottom-fishing for snapper and grouper around the wreck and surrounding culvert piles.",
     species:["grouper","snapper"] },
-  { id:"reef-site3", name:"CR Site 3 — Mindanao & Rio Yuna Wrecks", zone:"offshore", lat:29.1946, lng:-80.7468, meta:"73–85ft · 11.8nm from Inlet · 17 drops",
+  { id:"reef-site3", name:"Site 3 — Mindanao & Rio Yuna Wrecks", zone:"offshore", lat:29.1946, lng:-80.7468, meta:"73–85ft · 11.8nm from Inlet · 17 drops",
     desc:"The county's most storied wreck cluster: the WWII Liberty ship USS Mindanao, the freighter Rio Yuna, two tugs, and the barge Atlas, all within a few hundred yards of each other.",
     tip:"Mangrove snapper stack in the open cargo holds; grouper hold tight to the deepest hull sections.",
     species:["grouper","snapper"] },
-  { id:"reef-site4", name:"CR Site 4 — Antilles Star & Maxine D", zone:"offshore", lat:29.3213, lng:-80.7450, meta:"76–85ft · 17.5nm from Inlet · 14 drops", farOut:true,
+  { id:"reef-site4", name:"Site 4 — Antilles Star & Maxine D", zone:"offshore", lat:29.3213, lng:-80.7450, meta:"76–85ft · 17.5nm from Inlet · 14 drops", farOut:true,
     desc:"Twin 165ft steel ships — Antilles Star and Maxine D — reefed a few years apart, ringed by hundreds of tons of culvert and structure.",
     tip:"A longer run than the other numbered sites, but the paired wrecks hold some of the county's better grouper structure.",
     species:["grouper","snapper"] },
-  { id:"reef-site6", name:"CR Site 6", zone:"offshore", lat:29.0507, lng:-80.7185, meta:"60–75ft · 10.9nm from Inlet · 14 drops",
+  { id:"reef-site6", name:"Site 6", zone:"offshore", lat:29.0507, lng:-80.7185, meta:"60–75ft · 10.9nm from Inlet · 14 drops",
     desc:"A steady mid-range reef built from culverts, structure, and a reefed steel barge, southwest of the main offshore cluster.",
     tip:"Consistent bottom fishing without the longer run out to Sites 1–4 — a good stop on the way out or back.",
     species:["grouper","snapper"] },
-  { id:"reef-site7", name:"CR Site 7", zone:"offshore", lat:29.0200, lng:-80.6834, meta:"53–70ft · 13.1nm from Inlet · 11 drops",
+  { id:"reef-site7", name:"Site 7", zone:"offshore", lat:29.0200, lng:-80.6834, meta:"53–70ft · 13.1nm from Inlet · 11 drops",
     desc:"Culvert and structure deposits spanning a range of depths, giving bottom fish several relief options in one area.",
     tip:"The shallower pockets here fish well for snapper even when the deeper wrecks farther north are slow.",
     species:["grouper","snapper"] },
-  { id:"reef-site8", name:"CR Site 8", zone:"offshore", lat:28.9222, lng:-80.7076, meta:"62–65ft · 14.6nm from Inlet · 5 drops",
+  { id:"reef-site8", name:"Site 8", zone:"offshore", lat:28.9222, lng:-80.7076, meta:"62–65ft · 14.6nm from Inlet · 5 drops",
     desc:"A smaller, less-crowded culvert field south of the main reef corridor, toward the Canaveral National Seashore stretch.",
     tip:"Lighter boat traffic than the numbered sites closer to the inlet — worth the run if you want less competition for the same fish.",
     species:["grouper","snapper"] },
-  { id:"reef-site9", name:"CR Site 9", zone:"offshore", lat:29.3543, lng:-80.3614, meta:"125–135ft · 34.0nm from Inlet · 10 drops", farOut:true,
+  { id:"reef-site9", name:"Site 9", zone:"offshore", lat:29.3543, lng:-80.3614, meta:"125–135ft · 34.0nm from Inlet · 10 drops", farOut:true,
     desc:"The county's deepest and most remote reef site — well offshore in blue water, built from concrete culverts in over 125ft of water.",
     tip:"A serious run reserved for boats equipped for it, but the depth holds bigger, less-pressured grouper than anything closer to shore.",
     species:["grouper"] },
-  { id:"reef-site10", name:"CR Site 10", zone:"offshore", lat:29.3578, lng:-80.8286, meta:"60–68ft · 17.7nm from Inlet · 16 drops", farOut:true,
+  { id:"reef-site10", name:"Site 10", zone:"offshore", lat:29.3578, lng:-80.8286, meta:"60–68ft · 17.7nm from Inlet · 16 drops", farOut:true,
     desc:"The northernmost numbered site, a heavily-built culvert field off Ormond-by-the-Sea.",
     tip:"One of the most consistently productive sites in the county system for bottom fish, per local reports.",
     species:["grouper","snapper"] },
-  { id:"reef-site11", name:"CR Site 11", zone:"offshore", lat:29.2730, lng:-80.6982, meta:"82–89ft · 16.8nm from Inlet · 12 drops", farOut:true,
+  { id:"reef-site11", name:"Site 11", zone:"offshore", lat:29.2730, lng:-80.6982, meta:"82–89ft · 16.8nm from Inlet · 12 drops", farOut:true,
     desc:"A deeper culvert and structure field built up over more than a decade of deployments.",
     tip:"The extra depth here tends to hold better grouper than the shallower sites closer to shore.",
     species:["grouper","snapper"] },
-  { id:"reef-site12", name:"CR Site 12 — Tug Everglades & Lady Philomena", zone:"offshore", lat:29.1962, lng:-80.7731, meta:"70–75ft · 10.8nm from Inlet · 14 drops",
+  { id:"reef-site12", name:"Site 12 — Tug Everglades & Lady Philomena", zone:"offshore", lat:29.1962, lng:-80.7731, meta:"70–75ft · 10.8nm from Inlet · 14 drops",
     desc:"A broad culvert field that also holds two notable wrecks — the 90ft tug Everglades and the 150ft cargo ship Lady Philomena.",
     tip:"The wrecks draw bigger fish than the surrounding culverts; work them first before moving to the open structure.",
     species:["grouper","snapper"] },
-  { id:"reef-site13", name:"CR Site 13", zone:"offshore", lat:29.1696, lng:-80.6892, meta:"76–85ft · 13.6nm from Inlet · 14 drops",
+  { id:"reef-site13", name:"Site 13", zone:"offshore", lat:29.1696, lng:-80.6892, meta:"76–85ft · 13.6nm from Inlet · 14 drops",
     desc:"Adjoins Site 2 on its northwest corner, forming one of the larger connected structure fields in the system.",
     tip:"Worth working as a pair with Site 2 on the same trip since the two sit so close together.",
     species:["grouper","snapper"] },
