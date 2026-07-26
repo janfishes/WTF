@@ -1255,16 +1255,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-popup-tip{background:var(--navy-900); border:1px solid var(--line);}
   .leaflet-popup-content{margin:0; width:min(300px, 86vw) !important;}
   .leaflet-popup-close-button{color:var(--muted) !important; padding:8px !important;}
-  /* Catch pop-up (tap a logged catch diamond): widen the default Leaflet corner
-     close button and prepend CLOSE, matching the sheets' CLOSE X pattern, without
-     touching the plain X used by every other popup type in the app. */
-  .catch-popup .leaflet-popup-close-button{
+  /* Catch pop-up and spot pop-ups (inshore/offshore/custom): widen the default
+     Leaflet corner close button and show CLOSE X, matching the sheets' CLOSE X
+     pattern, instead of the bare Leaflet × used everywhere else in the app. */
+  .catch-popup .leaflet-popup-close-button,
+  .spot-popup .leaflet-popup-close-button{
     width:auto !important; height:22px !important; top:8px !important; right:8px !important;
     padding:0 8px !important; font:700 11px/22px 'JetBrains Mono',monospace !important;
     letter-spacing:.02em; display:flex; align-items:center; justify-content:center;
     background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:8px;
   }
-  .catch-popup .leaflet-popup-close-button::before{content:'CLOSE '; }
+  .catch-popup .leaflet-popup-close-button span,
+  .spot-popup .leaflet-popup-close-button span{display:none;}
+  .catch-popup .leaflet-popup-close-button::before,
+  .spot-popup .leaflet-popup-close-button::before{content:'CLOSE X';}
   /* The title row's zone badge (e.g. "Log") used to sit flush against the same
      top-right corner as the button above, so it visually collided with CLOSE.
      Reserving room on that row only pushes the badge clear of it. */
@@ -1496,17 +1500,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
      now that --brass is theme-driven and goes dark on the light grounds. */
   .td-type.td-low{background:#c99a4b; color:#04141e;}
   .td-row .td-ht{margin-left:auto; color:var(--muted);}
-  .feed-banner{margin:8px 0 10px; padding:9px 11px; border:1px solid var(--line); border-radius:8px; background:var(--navy-800);}
-  .feed-head{display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; align-items:baseline; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(13.5px * var(--ts)); margin-bottom:7px;}
-  .feed-head span{min-width:0;}
-  .feed-head span:first-child{color:var(--teal);}
-  .feed-moon{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:calc(12.5px * var(--ts)); color:var(--brass); text-align:left; overflow-wrap:break-word;}
-  .feed-grid{display:grid; grid-template-columns:1fr 1fr; gap:5px 12px;}
-  .feed-item{display:flex; align-items:center; gap:7px; min-width:0; font-family:'JetBrains Mono',monospace; font-size:calc(13px * var(--ts));}
-  .feed-type{flex:0 0 46px; font-weight:700; padding:2px 5px; border-radius:4px; text-align:center; font-size:11px; color:#04141e;}
-  .feed-type.major{background:var(--teal); color:var(--on-accent);}
-  .feed-type.minor{background:#c99a4b; color:#04141e;}
-  .feed-time{color:var(--fog); font-weight:600; min-width:0; overflow-wrap:break-word;}
+  .feed-card{margin:6px 0 12px; padding:9px 11px; border:1px solid var(--brass); border-radius:10px; background:var(--navy-800);}
+  .feed-head{display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding-bottom:6px; margin-bottom:8px; border-bottom:1px solid var(--line); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(11.5px * var(--ts)); color:var(--teal);}
+  .feed-moon{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:calc(10px * var(--ts)); color:var(--brass); white-space:nowrap;}
+  .feed-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px 14px;}
+  .feed-cell{min-width:0;}
+  .feed-cell:nth-child(2n){border-left:1px solid var(--line); padding-left:12px;}
+  .feed-label{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:9px; letter-spacing:.04em; text-transform:uppercase; color:var(--brass);}
+  .feed-time{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(11.5px * var(--ts)); color:var(--fog); white-space:nowrap; margin-top:1px;}
+  .feed-desc{font-family:'JetBrains Mono',monospace; font-size:calc(9.5px * var(--ts)); color:var(--muted); margin-top:1px;}
   #tidePanel{
     position:fixed; top:56px; right:10px; bottom:16px; width:min(270px, 78vw);
     z-index:1170; background:var(--navy-900); border:1px solid var(--line); border-radius:14px;
@@ -1583,7 +1585,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25o &middot; SOLUNAR FEEDING TIMES + BEARINGS</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25r &middot; SPOT CLOSE X + CLICK-OFF TIP</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1615,6 +1617,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="fab" id="guideBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg>
       Guide
+    </button>
+    <button class="fab" id="biteFab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg>
+      Bite
     </button>
     <button class="fab" id="tidePinBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
@@ -1693,6 +1699,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later but that happened earlier drops into place by its own date.</p>
       <p class="sheet-note"><b>Spot</b> saves your own fishing location to the map. It's stored on this device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location, name it, and choose inshore, offshore, or launch.</p>
       <p class="sheet-note"><b>Guide</b> opens the Season Guide — month-by-month tables for every species (see <b>Reading the Season Month Bars</b> below), plus map-zone and offshore-target reference notes.</p>
+      <p class="sheet-note"><b>Bite</b> opens a 3-day <b>solunar feeding forecast</b> — the moon's phase and % lit at the top, then <b>Major</b> and <b>Minor</b> feeding windows for that day, in the order they occur. Majors center on the moon overhead or underfoot; minors center on moonrise and moonset. Computed fully offline from moon-position astronomy, no internet needed.</p>
       <p class="sheet-note"><b>Tides</b> lets you tap anywhere on the map to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
       <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water actually gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
       <p class="sheet-note">You can add gauges of your own. Open <b>Create &amp; Calibrate Tide Stations</b> and use <b>Your Own Tide Stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive — no measurements needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
@@ -1703,6 +1710,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Help &amp; View Tips</div>
       <p class="sheet-note">Any popup that opens on the map — a spot, a catch, a reef with its drops showing — can be <b>dragged anywhere on screen</b> so it isn't covering the pins underneath. <b>On a phone:</b> press and hold anywhere on the popup that isn't a button, then slide your finger; the popup follows and stays put when you lift off. <b>On a computer:</b> click and hold anywhere on the popup that isn't a button or link, then drag. Buttons, links and the scrolling drops list still work normally, so you can drag from the popup's title or body text. The <b>3-Day Tide Forecast</b> panel moves the same way — drag it by its title bar.</p>
+      <p class="sheet-note">Don't need to hunt for a close button: tapping anywhere outside an open popup — elsewhere on the map — closes it, and tapping the dimmed background behind an open sheet (Log a Catch, Search, Bite, and the rest) closes that too.</p>
       <p class="sheet-note"><b>On a computer:</b> if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
       <p class="sheet-note">Tap any pin, then tap <b>＋ Add my note</b> at the bottom of its popup. Type your details — bait, rig, tide, timing — and Save. Notes persist between sessions and can be edited or cleared anytime with <b>✎ Edit my note</b>.</p>
       <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs (CR) and for clustered natural reef sites — coordinates in degrees and decimal minutes, depth, and distance — sorted closest to farthest from the inlet, and plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. If a popup covers the pins, <b>drag it out of the way</b> by its title area.</p>
@@ -1800,6 +1808,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="save-btn" id="saveCatch">Save catch</button>
     <p class="storage-note" id="storageNote"></p>
   </div>
+</div>
+
+<!-- ===================== BITE SHEET (solunar feeding times) ===================== -->
+<div class="scrim" id="biteScrim"></div>
+<div class="sheet" id="biteSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2>Bite</h2>
+    <button class="close" id="biteClose">CLOSE X</button>
+  </div>
+  <div class="sheet-body" id="biteBody"></div>
 </div>
 
 <!-- ===================== SEARCH SHEET ===================== -->
@@ -2944,10 +2963,10 @@ function popupHTML(s){
   const drops = REEF_DROPS[s.id];
   const dropsBlock = drops ? `<button class="mini-btn drops-btn" style="width:100%; margin-top:9px;">Show ${drops.length} drop${drops.length===1?"":"s"} (closest → farthest)</button><div class="drops-list"></div>` : '';
   const note = userNotes[s.id];
-  const bearingSpan = (s.zone === 'offshore') ? `<span>${bearingPairFromInlet(s.lat, s.lng)} to/from Inlet</span>` : '';
+  const bearingTxt = (s.zone === 'offshore') ? ` &middot; ${bearingPairFromInlet(s.lat, s.lng)} to/from Inlet` : '';
   return `<div class="pop">
     <div class="pop-top"><div class="pop-name">${s.name}</div></div>
-    <div class="pop-meta"><span>${s.meta}</span>${bearingSpan}<span>${toDMS(s.lat, s.lng)}</span></div>
+    <div class="pop-meta"><span>${s.meta}${bearingTxt}</span><span>${toDMS(s.lat, s.lng)}</span></div>
     ${s.desc? `<div class="pop-desc">${s.desc}</div>`:''}
     ${s.tip? `<div class="pop-tip">${s.tip}</div>`:''}
     ${speciesBlock}
@@ -2982,7 +3001,7 @@ const markers = SPOTS.map(s=>{
     icon = L.divIcon({ className:'', html:`<div class="spot-marker" style="background:${fill}; width:${sz}px; height:${sz}px;"></div>`, iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], popupAnchor:[0,-Math.round(sz/2)-1] });
   }
   const m = L.marker([s.lat,s.lng], {icon}).addTo(map);
-  m.bindPopup(()=>popupHTML(s), {maxWidth:320});
+  m.bindPopup(()=>popupHTML(s), {maxWidth:320, className:'spot-popup'});
   m.spotRef = s;
   return m;
 });
@@ -3904,7 +3923,7 @@ const INFO_BTNS = ['guideBtn','myLogBtn'];
    with any screen open. */
 const OVERLAY_PAIRS = [
   ['searchSheet','searchScrim'], ['infoSheet','infoScrim'], ['themeSheet','themeScrim'],
-  ['logSheet','logScrim'], ['addSpotSheet','addSpotScrim'],
+  ['logSheet','logScrim'], ['addSpotSheet','addSpotScrim'], ['biteSheet','biteScrim'],
   ['tideCalSheet','tideCalScrim'], ['offlineSheet','offlineScrim']
 ];
 function closeAllOverlays(exceptId){
@@ -4269,7 +4288,7 @@ function addCustomSpotMarker(s){
   const ring = s.zone === 'launch' ? 'ring-launch' : (s.zone === 'offshore' ? 'ring-offshore' : 'ring-inshore');
   const icon = L.divIcon({ className:'', html:`<div class="mine-ring ${ring}" style="width:${box}px; height:${box}px;"><div class="spot-marker" style="background:${fill}; width:${sz}px; height:${sz}px;"></div></div>`, iconSize:[box,box], iconAnchor:[box/2,box/2], popupAnchor:[0,-Math.round(box/2)-1] });
   const m = L.marker([s.lat,s.lng], {icon}).addTo(map);
-  m.bindPopup(()=>customSpotPopup(s), {maxWidth:300});
+  m.bindPopup(()=>customSpotPopup(s), {maxWidth:300, className:'spot-popup'});
   m.spotRef = s;
   markers.push(m);            // so labels + zoom logic include it
   customSpotMarkers[s.id] = m;
@@ -4279,7 +4298,7 @@ function customSpotTypeLabel(s){ return s.zone==='launch' ? 'Launch' : (s.zone==
 function customSpotPopup(s){
   const note = userNotes[s.id] ? `<div class="pop-note">${userNotes[s.id]}</div>` : '';
   const offshoreInfo = (s.zone === 'offshore')
-    ? `<div class="pop-meta" style="margin-top:2px;"><span>${nmFromInlet(s.lat, s.lng)}nm from Inlet</span><span>${bearingPairFromInlet(s.lat, s.lng)} to/from Inlet</span></div>`
+    ? `<div class="pop-meta" style="margin-top:2px;"><span>${nmFromInlet(s.lat, s.lng)}nm from Inlet &middot; ${bearingPairFromInlet(s.lat, s.lng)} to/from Inlet</span></div>`
     : '';
   return `<div class="pop">
     <div class="pop-top"><div class="pop-name">${s.name}</div></div>
@@ -5219,6 +5238,25 @@ function closeSearch(){ searchSheet.classList.remove('open'); searchScrim.classL
 document.getElementById('searchClose').addEventListener('click', closeSearch);
 searchScrim.addEventListener('click', closeSearch);
 
+/* ===================== BITE (solunar feeding times) ===================== */
+
+const biteSheet = document.getElementById('biteSheet');
+const biteScrim = document.getElementById('biteScrim');
+document.getElementById('biteFab').addEventListener('click', ()=>{
+  closeAllOverlays('biteSheet');
+  document.getElementById('biteBody').innerHTML = biteSheetHTML();
+  biteSheet.classList.add('open');
+  biteScrim.classList.add('open');
+  document.getElementById('biteFab').classList.add('pressed');
+});
+function closeBite(){
+  biteSheet.classList.remove('open');
+  biteScrim.classList.remove('open');
+  document.getElementById('biteFab').classList.remove('pressed');
+}
+document.getElementById('biteClose').addEventListener('click', closeBite);
+biteScrim.addEventListener('click', closeBite);
+
 function ensureSpotVisible(s){
   if(s.ramp && !showLaunches){ showLaunches = true; document.getElementById('launchToggle').classList.add('active'); }
   if(!s.ramp && !activeZones.has(s.zone)){
@@ -5905,26 +5943,38 @@ function feedingTimesHTML(dayDate, lat, lng){
   const tr = moonTransits(dayDate, lat, lng);
   const ill = moonIllumination(dayDate);
   const events = [];
-  if(tr.transit) events.push({ type:'Major', t:tr.transit });
-  if(tr.antitransit) events.push({ type:'Major', t:tr.antitransit });
-  if(rs.rise) events.push({ type:'Minor', t:rs.rise });
-  if(rs.set) events.push({ type:'Minor', t:rs.set });
+  if(tr.transit) events.push({ type:'Major', t:tr.transit, desc:'moon overhead' });
+  if(tr.antitransit) events.push({ type:'Major', t:tr.antitransit, desc:'moon underfoot' });
+  if(rs.rise) events.push({ type:'Minor', t:rs.rise, desc:'moonrise' });
+  if(rs.set) events.push({ type:'Minor', t:rs.set, desc:'moonset' });
   events.sort((a,b)=> a.t - b.t);
   if(!events.length) return '';
   const HALF = { Major:60, Minor:30 }; // minutes either side of the event
+  const fmt = d => d.toLocaleString('en-US',{hour:'numeric', minute:'2-digit'}).replace(' ','').toLowerCase();
   const items = events.map(ev=>{
     const half = HALF[ev.type];
     const start = new Date(ev.t.getTime() - half*60000);
     const end = new Date(ev.t.getTime() + half*60000);
-    const fmt = d => d.toLocaleString('en-US',{hour:'numeric', minute:'2-digit'});
-    return `<div class="feed-item"><span class="feed-type ${ev.type.toLowerCase()}">${ev.type}</span><span class="feed-time">${fmt(start)}&ndash;${fmt(end)}</span></div>`;
+    return `<div class="feed-cell"><div class="feed-label">${ev.type}</div><div class="feed-time">${fmt(start)}-${fmt(end)}</div><div class="feed-desc">${ev.desc}</div></div>`;
   }).join('');
   const pct = Math.round(ill.fraction * 100);
-  const phaseName = moonPhaseName(ill.phase);
-  return `<div class="feed-banner">
+  const phaseName = moonPhaseName(ill.phase).toLowerCase();
+  return `<div class="feed-card">
     <div class="feed-head"><span>Active Feeding Times</span><span class="feed-moon">${phaseName} &middot; ${pct}% lit</span></div>
     <div class="feed-grid">${items}</div>
   </div>`;
+}
+// Builds the full Bite sheet body: 3 days of feeding-times cards. Solunar events
+// barely shift across this small a fishing area, so a single fixed reference
+// point (Ponce Inlet) is used rather than requiring a dropped pin like Tides does.
+function biteSheetHTML(){
+  let html = '';
+  for(let i=0; i<3; i++){
+    const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()+i);
+    const label = d.toLocaleDateString('en-US',{weekday:'long', month:'short', day:'numeric'});
+    html += `<div class="td-day">${label}</div>` + feedingTimesHTML(d, PONCE_INLET.lat, PONCE_INLET.lng);
+  }
+  return html;
 }
 
 function tideForecastHTML(latlng){
@@ -5941,8 +5991,6 @@ function tideForecastHTML(latlng){
   let rows = '';
   Object.entries(byDay).slice(0,3).forEach(([day, list])=>{
     rows += `<div class="td-day">${day}</div>`;
-    const dayDate = new Date(list[0].t); dayDate.setHours(0,0,0,0);
-    rows += feedingTimesHTML(dayDate, latlng.lat, latlng.lng);
     list.forEach(x=>{
       const past = x.t < now;
       rows += `<div class="td-row${past?' past':''}"><span class="td-type td-${x.type.toLowerCase()}">${x.type}</span><span>${fmtTideTime(x.t)}</span><span class="td-ht">${x.h.toFixed(1)} ft</span></div>`;
