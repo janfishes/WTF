@@ -1496,6 +1496,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
      now that --brass is theme-driven and goes dark on the light grounds. */
   .td-type.td-low{background:#c99a4b; color:#04141e;}
   .td-row .td-ht{margin-left:auto; color:var(--muted);}
+  .feed-banner{margin:8px 0 10px; padding:9px 11px; border:1px solid var(--line); border-radius:8px; background:var(--navy-800);}
+  .feed-head{display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; align-items:baseline; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(13.5px * var(--ts)); margin-bottom:7px;}
+  .feed-head span{min-width:0;}
+  .feed-head span:first-child{color:var(--teal);}
+  .feed-moon{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:calc(12.5px * var(--ts)); color:var(--brass); text-align:left; overflow-wrap:break-word;}
+  .feed-grid{display:grid; grid-template-columns:1fr 1fr; gap:5px 12px;}
+  .feed-item{display:flex; align-items:center; gap:7px; min-width:0; font-family:'JetBrains Mono',monospace; font-size:calc(13px * var(--ts));}
+  .feed-type{flex:0 0 46px; font-weight:700; padding:2px 5px; border-radius:4px; text-align:center; font-size:11px; color:#04141e;}
+  .feed-type.major{background:var(--teal); color:var(--on-accent);}
+  .feed-type.minor{background:#c99a4b; color:#04141e;}
+  .feed-time{color:var(--fog); font-weight:600; min-width:0; overflow-wrap:break-word;}
   #tidePanel{
     position:fixed; top:56px; right:10px; bottom:16px; width:min(270px, 78vw);
     z-index:1170; background:var(--navy-900); border:1px solid var(--line); border-radius:14px;
@@ -1572,7 +1583,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25n &middot; ZONES TEXT SIZE INCREASED</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25o &middot; SOLUNAR FEEDING TIMES + BEARINGS</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -2070,7 +2081,7 @@ const SPOTS = [
   { id:"brickhouse-cove", name:"Brickhouse Cove", zone:"inshore", lat:28.923217, lng:-80.860917, meta:"Cove", species:[] },
   { id:"bissitte-bay", name:"Bissitte Bay", zone:"inshore", lat:28.897717, lng:-80.846133, meta:"Bay", species:[] },
   { id:"haulover-canal", name:"Haulover Canal", zone:"inshore", lat:28.712183, lng:-80.778183, meta:"Canal", species:[] },
-  { id:"reef-flagler", name:"Flagler Reef", zone:"offshore", lat:29.0428, lng:-80.8819, meta:"37–40ft · 3.0nm from Inlet · 12 drops",
+  { id:"reef-flagler", name:"Flagler Reef", zone:"offshore", lat:29.0428, lng:-80.8819, meta:"37–40ft · 3.7nm from Inlet · 12 drops",
     desc:"A shallow culvert-and-barrier complex just south of the Flagler County line — the shallowest permitted structure in the county system.",
     tip:"An easy, quick run for snapper and flounder without having to run all the way out to the numbered offshore sites.",
     species:["snapper","flounder"] },
@@ -2933,9 +2944,10 @@ function popupHTML(s){
   const drops = REEF_DROPS[s.id];
   const dropsBlock = drops ? `<button class="mini-btn drops-btn" style="width:100%; margin-top:9px;">Show ${drops.length} drop${drops.length===1?"":"s"} (closest → farthest)</button><div class="drops-list"></div>` : '';
   const note = userNotes[s.id];
+  const bearingSpan = (s.zone === 'offshore') ? `<span>${bearingPairFromInlet(s.lat, s.lng)} to/from Inlet</span>` : '';
   return `<div class="pop">
     <div class="pop-top"><div class="pop-name">${s.name}</div></div>
-    <div class="pop-meta"><span>${s.meta}</span><span>${toDMS(s.lat, s.lng)}</span></div>
+    <div class="pop-meta"><span>${s.meta}</span>${bearingSpan}<span>${toDMS(s.lat, s.lng)}</span></div>
     ${s.desc? `<div class="pop-desc">${s.desc}</div>`:''}
     ${s.tip? `<div class="pop-tip">${s.tip}</div>`:''}
     ${speciesBlock}
@@ -3592,7 +3604,7 @@ function wirePopup(popup){
         const maxLng = Math.max(...drops.map(d=>d.lng));
         popup.setLatLng([s.lat, Math.max(s.lng, maxLng) + 0.028]);
         list.innerHTML = drops.map((d,i)=>
-          `<div class="drop-row">${String(i+1).padStart(2,' ')}. ${d.dms}<span class="dd">${d.depth? ' \u00b7 '+d.depth+'ft':''} \u00b7 ${d.nm}nm</span>${d.label? ` <span class="wn">${escapeHTML(d.label)}</span>`:''}</div>`
+          `<div class="drop-row">${String(i+1).padStart(2,' ')}. ${d.dms}<span class="dd">${d.depth? ' \u00b7 '+d.depth+'ft':''} \u00b7 ${d.nm}nm \u00b7 ${bearingPairFromInlet(d.lat, d.lng)}</span>${d.label? ` <span class="wn">${escapeHTML(d.label)}</span>`:''}</div>`
         ).join('');
         list.style.display = 'block';
         dropsBtn.textContent = 'Hide drops';
@@ -4266,9 +4278,13 @@ function addCustomSpotMarker(s){
 function customSpotTypeLabel(s){ return s.zone==='launch' ? 'Launch' : (s.zone==='offshore'?'Offshore':'Inshore'); }
 function customSpotPopup(s){
   const note = userNotes[s.id] ? `<div class="pop-note">${userNotes[s.id]}</div>` : '';
+  const offshoreInfo = (s.zone === 'offshore')
+    ? `<div class="pop-meta" style="margin-top:2px;"><span>${nmFromInlet(s.lat, s.lng)}nm from Inlet</span><span>${bearingPairFromInlet(s.lat, s.lng)} to/from Inlet</span></div>`
+    : '';
   return `<div class="pop">
     <div class="pop-top"><div class="pop-name">${s.name}</div></div>
     <div class="pop-meta"><span>${customSpotTypeLabel(s)} · My spot</span><span>${toDMS(s.lat, s.lng)}</span></div>
+    ${offshoreInfo}
     ${note}
     <div class="loc-btns" style="margin-top:9px;">
       <button class="mini-btn" onclick="editCustomSpot('${s.id}')">✎ Edit</button>
@@ -4990,6 +5006,26 @@ buoyMarker.bindPopup(`<div class="pop">
 function degToCompass(d){
   const dirs=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
   return dirs[Math.round(d/22.5)%16];
+}
+// Bearing to/from Ponce Inlet, used on offshore sites and their individual drops
+// (and on any offshore spot the user adds themselves, computed live from
+// whatever position it was saved with — GPS, dropped pin, or typed coordinates).
+const PONCE_INLET = { lat: 29.0817, lng: -80.9367 };
+function bearingDeg(lat1,lng1,lat2,lng2){
+  const toRad = x=>x*Math.PI/180, toDeg = x=>x*180/Math.PI;
+  const phi1=toRad(lat1), phi2=toRad(lat2), dLambda=toRad(lng2-lng1);
+  const y = Math.sin(dLambda)*Math.cos(phi2);
+  const x = Math.cos(phi1)*Math.sin(phi2) - Math.sin(phi1)*Math.cos(phi2)*Math.cos(dLambda);
+  return (toDeg(Math.atan2(y,x))+360)%360;
+}
+function bearingPairFromInlet(lat,lng){
+  const out = bearingDeg(PONCE_INLET.lat, PONCE_INLET.lng, lat, lng);
+  const back = (out+180)%360;
+  const pad = v => String(Math.round(v)).padStart(3,'0');
+  return `${pad(out)}\u00b0/${pad(back)}\u00b0`;
+}
+function nmFromInlet(lat,lng){
+  return (map.distance([PONCE_INLET.lat,PONCE_INLET.lng],[lat,lng])/1852).toFixed(1);
 }
 let buoyCache = null, buoyCacheTime = 0;
 function buoyRowsHTML(f, obsTime){
@@ -5746,6 +5782,151 @@ document.getElementById('tidePanelClose').addEventListener('click', ()=>{
   document.getElementById('tidePanel').classList.remove('open');
   if(tidePinMarker){ map.removeLayer(tidePinMarker); tidePinMarker = null; }
 });
+/* ===================== SOLUNAR (moon feeding times) =====================
+   Standard low-precision lunar position formulas (public-domain astronomy,
+   the same family used by widely-reproduced open tools like SunCalc). All
+   computed locally, no API — same offline-first approach as the tide model.
+   Major periods = moon transit (overhead) and antitransit (underfoot), each
+   an hour either side. Minor periods = moonrise and moonset, each half an
+   hour either side. */
+const SLR_RAD = Math.PI / 180;
+const SLR_DAY_MS = 1000 * 60 * 60 * 24;
+const SLR_J1970 = 2440588, SLR_J2000 = 2451545;
+const SLR_OBLIQ = SLR_RAD * 23.4397;
+function slrToDays(date){ return date.valueOf() / SLR_DAY_MS - 0.5 + SLR_J1970 - SLR_J2000; }
+function slrDeclination(l, b){ return Math.asin(Math.sin(b) * Math.cos(SLR_OBLIQ) + Math.cos(b) * Math.sin(SLR_OBLIQ) * Math.sin(l)); }
+function slrRightAscension(l, b){ return Math.atan2(Math.sin(l) * Math.cos(SLR_OBLIQ) - Math.tan(b) * Math.sin(SLR_OBLIQ), Math.cos(l)); }
+function slrSunCoords(d){
+  const M = SLR_RAD * (357.5291 + 0.98560028 * d);
+  const C = SLR_RAD * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M));
+  const L = M + C + SLR_RAD * 102.9372 + Math.PI;
+  return { dec: slrDeclination(L, 0), ra: slrRightAscension(L, 0) };
+}
+function slrMoonCoords(d){
+  const L = SLR_RAD * (218.316 + 13.176396 * d);
+  const M = SLR_RAD * (134.963 + 13.064993 * d);
+  const F = SLR_RAD * (93.272 + 13.22935 * d);
+  const l = L + SLR_RAD * 6.289 * Math.sin(M);
+  const b = SLR_RAD * 5.128 * Math.sin(F);
+  const dist = 385001 - 20905 * Math.cos(M);
+  return { ra: slrRightAscension(l, b), dec: slrDeclination(l, b), dist };
+}
+function moonIllumination(date){
+  const d = slrToDays(date);
+  const s = slrSunCoords(d), m = slrMoonCoords(d);
+  const sdist = 149598000;
+  const phi = Math.acos(Math.sin(s.dec) * Math.sin(m.dec) + Math.cos(s.dec) * Math.cos(m.dec) * Math.cos(s.ra - m.ra));
+  const inc = Math.atan2(sdist * Math.sin(phi), m.dist - sdist * Math.cos(phi));
+  const angle = Math.atan2(Math.cos(s.dec) * Math.sin(s.ra - m.ra), Math.sin(s.dec) * Math.cos(m.dec) - Math.cos(s.dec) * Math.sin(m.dec) * Math.cos(s.ra - m.ra));
+  return { fraction: (1 + Math.cos(inc)) / 2, phase: 0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI };
+}
+function moonPhaseName(phase){
+  if(phase < 0.03 || phase > 0.97) return 'New Moon';
+  if(phase < 0.22) return 'Waxing Crescent';
+  if(phase < 0.28) return 'First Quarter';
+  if(phase < 0.47) return 'Waxing Gibbous';
+  if(phase < 0.53) return 'Full Moon';
+  if(phase < 0.72) return 'Waning Gibbous';
+  if(phase < 0.78) return 'Last Quarter';
+  return 'Waning Crescent';
+}
+function slrSiderealTime(d, lw){ return SLR_RAD * (280.16 + 360.9856235 * d) - lw; }
+function slrHoursLater(date, h){ return new Date(date.valueOf() + h * 60 * 60000); }
+function slrNorm(a){ while(a <= -Math.PI) a += 2 * Math.PI; while(a > Math.PI) a -= 2 * Math.PI; return a; }
+function slrHourAngle(date, lng){
+  const lw = SLR_RAD * -lng;
+  const d = slrToDays(date);
+  const c = slrMoonCoords(d);
+  return { H: slrSiderealTime(d, lw) - c.ra, dec: c.dec };
+}
+function slrAltitude(date, lat, lng){
+  const phi = SLR_RAD * lat;
+  const { H, dec } = slrHourAngle(date, lng);
+  return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H));
+}
+// Moonrise/moonset via a 2-hour-chunk parabola fit — same technique used by
+// several open-source moon calculators, adapted here for local use.
+function moonRiseSet(date, lat, lng){
+  const t = new Date(date); t.setHours(0,0,0,0);
+  const hc = 0.133 * SLR_RAD;
+  let h0 = slrAltitude(t, lat, lng) - hc, h1, h2, rise, set, a, b, xe, ye, d, roots, x1, x2, dx;
+  for(let i=1; i<=24; i+=2){
+    h1 = slrAltitude(slrHoursLater(t, i), lat, lng) - hc;
+    h2 = slrAltitude(slrHoursLater(t, i+1), lat, lng) - hc;
+    a = (h0 + h2) / 2 - h1;
+    b = (h2 - h0) / 2;
+    xe = -b / (2 * a);
+    ye = (a * xe + b) * xe + h1;
+    d = b * b - 4 * a * h1;
+    roots = 0;
+    if(d >= 0){
+      dx = Math.sqrt(d) / (Math.abs(a) * 2);
+      x1 = xe - dx; x2 = xe + dx;
+      if(Math.abs(x1) <= 1) roots++;
+      if(Math.abs(x2) <= 1) roots++;
+      if(x1 < -1) x1 = x2;
+    }
+    if(roots === 1){ if(h0 < 0) rise = i + x1; else set = i + x1; }
+    else if(roots === 2){ rise = i + (ye < 0 ? x2 : x1); set = i + (ye < 0 ? x1 : x2); }
+    if(rise !== undefined && set !== undefined) break;
+    h0 = h2;
+  }
+  const result = {};
+  if(rise !== undefined) result.rise = slrHoursLater(t, rise);
+  if(set !== undefined) result.set = slrHoursLater(t, set);
+  return result;
+}
+// Moon transit (overhead) and antitransit (underfoot) via hour-angle zero crossings.
+function moonTransits(date, lat, lng){
+  const t = new Date(date); t.setHours(0,0,0,0);
+  let prevH = slrNorm(slrHourAngle(t, lng).H);
+  let prevA = slrNorm(prevH - Math.PI);
+  const out = {};
+  for(let i=1; i<=50; i++){
+    const hrs = i * 0.5;
+    const H = slrHourAngle(slrHoursLater(t, hrs), lng).H;
+    const curH = slrNorm(H);
+    const curA = slrNorm(H - Math.PI);
+    if(out.transit === undefined && prevH < 0 && curH >= 0 && Math.abs(prevH - curH) < Math.PI){
+      const frac = -prevH / (curH - prevH);
+      out.transit = slrHoursLater(t, (i - 1) * 0.5 + frac * 0.5);
+    }
+    if(out.antitransit === undefined && prevA < 0 && curA >= 0 && Math.abs(prevA - curA) < Math.PI){
+      const frac = -prevA / (curA - prevA);
+      out.antitransit = slrHoursLater(t, (i - 1) * 0.5 + frac * 0.5);
+    }
+    prevH = curH; prevA = curA;
+  }
+  return out;
+}
+// Builds the "Active Feeding Times" banner HTML for one calendar day at a given position.
+function feedingTimesHTML(dayDate, lat, lng){
+  const rs = moonRiseSet(dayDate, lat, lng);
+  const tr = moonTransits(dayDate, lat, lng);
+  const ill = moonIllumination(dayDate);
+  const events = [];
+  if(tr.transit) events.push({ type:'Major', t:tr.transit });
+  if(tr.antitransit) events.push({ type:'Major', t:tr.antitransit });
+  if(rs.rise) events.push({ type:'Minor', t:rs.rise });
+  if(rs.set) events.push({ type:'Minor', t:rs.set });
+  events.sort((a,b)=> a.t - b.t);
+  if(!events.length) return '';
+  const HALF = { Major:60, Minor:30 }; // minutes either side of the event
+  const items = events.map(ev=>{
+    const half = HALF[ev.type];
+    const start = new Date(ev.t.getTime() - half*60000);
+    const end = new Date(ev.t.getTime() + half*60000);
+    const fmt = d => d.toLocaleString('en-US',{hour:'numeric', minute:'2-digit'});
+    return `<div class="feed-item"><span class="feed-type ${ev.type.toLowerCase()}">${ev.type}</span><span class="feed-time">${fmt(start)}&ndash;${fmt(end)}</span></div>`;
+  }).join('');
+  const pct = Math.round(ill.fraction * 100);
+  const phaseName = moonPhaseName(ill.phase);
+  return `<div class="feed-banner">
+    <div class="feed-head"><span>Active Feeding Times</span><span class="feed-moon">${phaseName} &middot; ${pct}% lit</span></div>
+    <div class="feed-grid">${items}</div>
+  </div>`;
+}
+
 function tideForecastHTML(latlng){
   const start = new Date();
   start.setHours(0,0,0,0);
@@ -5760,6 +5941,8 @@ function tideForecastHTML(latlng){
   let rows = '';
   Object.entries(byDay).slice(0,3).forEach(([day, list])=>{
     rows += `<div class="td-day">${day}</div>`;
+    const dayDate = new Date(list[0].t); dayDate.setHours(0,0,0,0);
+    rows += feedingTimesHTML(dayDate, latlng.lat, latlng.lng);
     list.forEach(x=>{
       const past = x.t < now;
       rows += `<div class="td-row${past?' past':''}"><span class="td-type td-${x.type.toLowerCase()}">${x.type}</span><span>${fmtTideTime(x.t)}</span><span class="td-ht">${x.h.toFixed(1)} ft</span></div>`;
