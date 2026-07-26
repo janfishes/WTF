@@ -1572,7 +1572,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25j &middot; MAP TOGGLE LABEL FIX</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25k &middot; HELP REORG + TITLE CASE</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1647,14 +1647,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div class="k"><div class="sq" style="background:var(--navy-800); border:1px solid var(--line)"></div>Slower</div>
       </div>
       <p class="sheet-note"><b>Cobia:</b> March through May marks the lively spring coastal migration, while fall brings another steady wave.</p>
-      <div class="subhead">Map zones</div>
+      <div class="subhead">Map Zones</div>
       <div class="zone-legend">
         <div class="zk"><div class="dot" style="background:var(--inshore)"></div>Inshore — creeks, rivers, cuts, streams, flats, jetties, docks, ramps</div>
         <div class="zk"><div class="dot" style="background:var(--offshore)"></div>Offshore — natural reefs, artificial sites &amp; wrecks 3–34nm out</div>
       </div>
-      <div class="subhead">Offshore targets</div>
+      <div class="subhead">Offshore Targets</div>
       <p class="sheet-note">Primary bottom fishing targets: <b>flounder, grouper, snapper, snook, sheepshead</b>. Primary trolling / topwater targets: <b>kingfish, mackerel, jack, tarpon, mahi</b>.</p>
-      <div class="subhead">Offshore sites</div>
+      <div class="subhead">Offshore Sites</div>
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 17–34nm out and are outside the default view; pan/zoom to find them.</p>
     </div>
     <div id="panel-catches" style="display:none;">
@@ -1667,85 +1667,60 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="catchListBody"></div>
     </div>
     <div id="panel-help" style="display:none;">
-      <div class="subhead" style="margin-top:2px;">Map controls</div>
-      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so. <b>Locate Me</b> drops your GPS position (tap again to remove it). All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕.</p>
+      <div class="subhead" style="margin-top:2px;">Map Controls (pills &amp; chips)</div>
+      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕.</p>
+      <p class="sheet-note">As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
       <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their total buttons will open the respective data set.</p>
-      <p class="sheet-note"><b>On a computer:</b> if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
 
-      
+      <div class="subhead">Species Switches (pill buttons)</div>
+      <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so.</p>
 
-      <div class="subhead">Moving a popup or panel out of the way</div>
+      <div class="subhead">Fishing Functions (white pills)</div>
+      <p class="sheet-note">The white pill buttons along the map's edge are shortcuts to the app's main actions.</p>
+      <p class="sheet-note"><b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; needs internet), and set the location three ways: choose a known spot from the alphabetical list, <b>Drop pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Length, weight, and notes are optional. In the <b>+ Catch</b> sheet, the <b>Location</b> list holds every known fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, since they're put-in points rather than places you fish; use <b>Drop pin</b> or <b>My location</b> if you did catch something at one. The <b>Inshore</b> and <b>Offshore</b> switches just above the list narrow it down when you're only fishing one of them.</p>
+      <p class="sheet-note"><b>Photos:</b> tap the photo box to attach a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), just set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
+      <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
+      <p class="sheet-note"><b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later but that happened earlier drops into place by its own date.</p>
+      <p class="sheet-note"><b>Spot</b> saves your own fishing location to the map. It's stored on this device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location, name it, and choose inshore, offshore, or launch.</p>
+      <p class="sheet-note"><b>Guide</b> opens the Season Guide — month-by-month tables for every species (see <b>Reading the Season Month Bars</b> below), plus map-zone and offshore-target reference notes.</p>
+      <p class="sheet-note"><b>Tides</b> lets you tap anywhere on the map to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
+      <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water actually gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
+      <p class="sheet-note">You can add gauges of your own. Open <b>Create &amp; Calibrate Tide Stations</b> and use <b>Your Own Tide Stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive — no measurements needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
+      <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create &amp; Calibrate Tide Stations</button></div>
+      <p class="sheet-note" style="margin-top:10px;"><b>Waves</b> flies to NDBC Buoy 41070 off Ponce Inlet and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled straight from NOAA's National Data Buoy Center, each with its observation time. Needs internet — it always shows whatever NDBC last reported.</p>
+      <p class="sheet-note"><b>Locate Me</b> drops your GPS position on the map (tap again to remove it).</p>
+      <p class="sheet-note"><b>Topo Satellite</b> / <b>Street Map</b> (bottom-right — the label shows whichever view is currently active) switches between the satellite and street-map view.</p>
+
+      <div class="subhead">Help &amp; View Tips</div>
       <p class="sheet-note">Any popup that opens on the map — a spot, a catch, a reef with its drops showing — can be <b>dragged anywhere on screen</b> so it isn't covering the pins underneath. <b>On a phone:</b> press and hold anywhere on the popup that isn't a button, then slide your finger; the popup follows and stays put when you lift off. <b>On a computer:</b> click and hold anywhere on the popup that isn't a button or link, then drag. Buttons, links and the scrolling drops list still work normally, so you can drag from the popup's title or body text. The <b>3-Day Tide Forecast</b> panel moves the same way — drag it by its title bar.</p>
-
-      <div class="subhead">Log a catch</div>
-      <p class="sheet-note">Tap <b>+ Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; needs internet), and set the location three ways: choose a known spot from the alphabetical list, <b>Drop pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Length, weight, and notes are optional.</p>
-
-      
-
-      <div class="subhead">Photos</div>
-      <p class="sheet-note">Tap the photo box to attach a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), just set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
-
-      
-
-      <div class="subhead">Edit or delete a catch</div>
-      <p class="sheet-note">In the <b>+ Catch</b> sheet, the <b>Location</b> list holds every known fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, since they're put-in points rather than places you fish; use <b>Drop pin</b> or <b>My location</b> if you did catch something at one. The <b>Inshore</b> and <b>Offshore</b> switches just above the list narrow it down when you're only fishing one of them.</p>
-      <p class="sheet-note">Tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
-
-      
-
-      <div class="subhead">Add your own detail to a pin</div>
+      <p class="sheet-note"><b>On a computer:</b> if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
       <p class="sheet-note">Tap any pin, then tap <b>＋ Add my note</b> at the bottom of its popup. Type your details — bait, rig, tide, timing — and Save. Notes persist between sessions and can be edited or cleared anytime with <b>✎ Edit my note</b>.</p>
-
-      
-
-      <div class="subhead">Reef drops</div>
       <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs (CR) and for clustered natural reef sites — coordinates in degrees and decimal minutes, depth, and distance — sorted closest to farthest from the inlet, and plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. If a popup covers the pins, <b>drag it out of the way</b> by its title area.</p>
 
-      
-
       <div class="subhead">Themes</div>
-      <p class="sheet-note">Tap <b>🎨</b> to pick a color theme — four dark options, <b>Blue</b>, and <b>Sun Glasses</b>, which is built for reading in bright sun through polarized lenses. Tap <b>A</b> to set the reading text size (100%, 115% or 130%) for the panels and popups. Both are saved on your device. As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
+      <p class="sheet-note">Tap <b>🎨</b> to pick a color theme — four dark options, <b>Blue</b>, and <b>Sun Glasses</b>, which is built for reading in bright sun through polarized lenses. Saved on your device.</p>
 
-      
+      <div class="subhead">Text Size</div>
+      <p class="sheet-note">Tap <b>A</b> to set the reading text size (100%, 115% or 130%) for the panels and popups. Saved on your device.</p>
 
       <div class="subhead">Search</div>
       <p class="sheet-note">Tap the 🔍 button next to Help (top right) and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched back on automatically.</p>
 
-      
-
-      <div class="subhead" style="margin-top:2px;">Reading the month bars</div>
+      <div class="subhead" style="margin-top:2px;">Reading the Season Month Bars</div>
       <p class="sheet-note">Every colored bar row you see — in a pin's popup or the Season Guide — is a calendar: 12 cells, January on the left through December on the right. Brighter cells = better months for that species at that spot. In popups, the letters above the bars mark the months.</p>
 
-      
-
-      <div class="subhead">Tides (works offline)</div>
-      <p class="sheet-note">Tap <b>Topo Satellite</b> / <b>Street Map</b> (map, bottom-right — the label shows whichever view is currently active) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
-      <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water actually gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
-      <p class="sheet-note">You can add gauges of your own. Open <b>Create &amp; Calibrate Tide Stations</b> and use <b>Your own tide stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive — no measurements needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
-      <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create & Calibrate Tide Stations</button></div>
-
-      
-
-      <div class="subhead">Using it offline</div>
+      <div class="subhead">Using the App Offline</div>
       <p class="sheet-note">The app itself — all your spots, launches, reefs, catch log, notes, tide forecasts, search, and themes — works with <b>no internet</b>. The <b>map imagery</b> normally streams from map servers, but you can now <b>download it for your fishing area</b> so even the satellite view works with the signal off — do it once on wifi and the tiles are stored on your device. Add the app to your home screen for the most reliable offline launch.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="offlineBtn">⤓ Download map for offline use</button></div>
-
-      
 
       <div class="subhead">Tips</div>
       <p class="sheet-note">On a phone, use <b>Add to Home Screen</b> to launch it like an app. Each person's catches and notes stay private on their own device. Use <b>Export backup</b> in the My Log sheet to save your log as a file, and <b>Import backup</b> to bring it into a new copy or another device.</p>
 
-      
-
       <div class="subhead">Disclaimer</div>
       <p class="sheet-note">No liability is assumed by the developer or owners of this app for any use of this app.</p>
 
-      
-
       <div class="subhead">Warning</div>
       <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
-
-      
 
       <div class="subhead">Copyright</div>
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
@@ -1849,7 +1824,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div class="sheet" id="addSpotSheet">
   <div class="sheet-handle"></div>
   <div class="sheet-head">
-    <h2>Add a spot</h2>
+    <h2>Add a Spot</h2>
     <button class="close" id="addSpotClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
@@ -1890,7 +1865,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="tideCalClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <div class="subhead" style="margin-top:2px;">Your own tide stations</div>
+    <div class="subhead" style="margin-top:2px;">Your Own Tide Stations</div>
     <p class="sheet-note">Add a gauge of your own — a dock, a bridge, anywhere you've timed the tide against the inlet. Saved stations become real calibration points: the forecast interpolates between them and the built-in gauges, so nearby pins get better timing too. Use a negative number for water that turns <i>before</i> the inlet.</p>
     <label class="field-label">Name</label>
     <input type="text" id="userTsName" placeholder="e.g. My dock" style="width:100%; box-sizing:border-box;">
@@ -1919,7 +1894,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     <div id="calibrateSection" style="display:none;">
       <p class="sheet-note" style="margin-top:26px; color:#ff6b6b; font-weight:800; letter-spacing:.05em;">FOR ADVANCED USERS ONLY</p>
-      <div class="subhead" style="margin-top:2px;">Calibrate tide lags</div>
+      <div class="subhead" style="margin-top:2px;">Calibrate Tide Lags</div>
     <p class="sheet-note">Turn a station's recorded water level into a real timing offset. The app already stores the inlet's NOAA high/low times, so this works offline once you paste the data. Pick a station, paste (or upload) a Stevens-Connect export, and tap Compute. If it looks solid, Save it — the tide panel will use it right away.</p>
     <ol class="sheet-note" style="margin:6px 0 10px; padding-left:20px; line-height:1.55;">
       <li>Pick a station from the STATION dropdown menu below (e.g., Spruce Creek Park, Rose Bay Bridge, Dunlawton Ave, Bulow Plantation, Scottsmoor Turnbull Creek Ramp, and Mosquito Lagoon Biolab).</li>
@@ -1974,7 +1949,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div class="sheet" id="offlineSheet">
   <div class="sheet-handle"></div>
   <div class="sheet-head">
-    <h2>Offline map</h2>
+    <h2>Offline Map</h2>
     <button class="close" id="offlineClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
