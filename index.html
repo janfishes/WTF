@@ -1572,7 +1572,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25i &middot; TOPO SATELLITE LABEL</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25j &middot; MAP TOGGLE LABEL FIX</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1619,7 +1619,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </button>
     <button class="fab" id="mapModeBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
-      Street Map
+      Topo Satellite
     </button>
   </div>
 </div>
@@ -1719,7 +1719,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       
 
       <div class="subhead">Tides (works offline)</div>
-      <p class="sheet-note">Tap <b>Street Map</b> (map, bottom-right) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
+      <p class="sheet-note">Tap <b>Topo Satellite</b> / <b>Street Map</b> (map, bottom-right — the label shows whichever view is currently active) to switch between the satellite and street-map view. Tap <b>Tides</b>, then tap anywhere to drop a Tide pin — you get a <b>3-day high/low forecast</b>, built from <b>official NOAA predictions</b> for Ponce Inlet stored on your device (through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and <b>interpolates the tide lag by distance</b> between the calibrated stations on that arm — or <b>extrapolates</b> past the last one when you're farther upstream. Each forecast carries a <b>confidence badge</b>: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. No internet needed.</p>
       <p class="sheet-note">The gauges show on the map as gold <b>tide station</b> pins — three waves with an up/down arrow beside them. Tap one to read its offset. There are <b>two zero-lag references</b>, one per waterway: <b>Ponce Inlet</b> anchors everything north up the Halifax, and <b>Ponce Inlet USCG</b> anchors the Indian River North and the lagoon to the south. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water actually gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The wind-driven lagoon reaches to the south have no firm calibration yet, so those spots show low-confidence Ponce Inlet timing.</p>
       <p class="sheet-note">You can add gauges of your own. Open <b>Create &amp; Calibrate Tide Stations</b> and use <b>Your own tide stations</b> to enter a name, a position, and how many minutes after the inlet the high and low arrive — no measurements needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create & Calibrate Tide Stations</button></div>
@@ -2822,12 +2822,12 @@ document.getElementById('mapModeBtn').addEventListener('click', function(){
   if(satMode){
     providerIdx = SAT_IDX;
     mountBaseLayer(SAT_IDX);
-    label.textContent = ' Street Map';
+    label.textContent = ' Topo Satellite';
     this.classList.remove('street-on');
   } else {
     providerIdx = OFM_IDX;
     mountBaseLayer(OFM_IDX);
-    label.textContent = ' Topo Satellite';
+    label.textContent = ' Street Map';
     this.classList.add('street-on');
   }
 });
