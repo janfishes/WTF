@@ -1572,7 +1572,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25g &middot; NAIP HIGH-RES IMAGERY</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25i &middot; TOPO SATELLITE LABEL</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1978,7 +1978,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="offlineClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <p class="sheet-note">Download the satellite map — <b>USGS NAIP</b> high-resolution imagery over the land and <b>Sentinel-2</b> imagery over the water — for the whole fishing area (Ponce Inlet, the Halifax and Indian Rivers, Mosquito Lagoon, and the offshore reefs). Do this once while you have wifi; afterward the map draws with the signal off. Tiles are stored on this device only.</p>
+    <p class="sheet-note">Download the satellite map — <b>USGS Imagery Topo</b> over the land and <b>Sentinel-2</b> imagery over the water — for the whole fishing area (Ponce Inlet, the Halifax and Indian Rivers, Mosquito Lagoon, and the offshore reefs). Do this once while you have wifi; afterward the map draws with the signal off. Tiles are stored on this device only.</p>
     <label class="field-label">Detail level</label>
     <select id="offlineZoom" style="width:100%; box-sizing:border-box;">
       <option value="13">Overview — zoom 13 (smallest)</option>
@@ -2394,29 +2394,35 @@ L.control.scale({position:'bottomleft', imperial:true, metric:false, maxWidth:66
 //  government use only, so that's out too even though it's free to view.)
 const TILE_PROVIDERS = [
   { name:'OpenFreeMap (street map)', type:'vector', style:'https://tiles.openfreemap.org/styles/bright', attribution:'&copy; <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer">OpenFreeMap</a> &copy; OpenMapTiles Data from OpenStreetMap' },
-  { name:'USGS NAIP (high-res) + Sentinel-2 ocean', type:'composite',
-    attribution:'Land &copy; <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map" target="_blank" rel="noopener noreferrer">USGS NAIP Imagery</a> (USDA FSA) &nbsp;|&nbsp; Ocean: <a href="https://s2maps.eu" target="_blank" rel="noopener noreferrer">Sentinel-2 cloudless 2016</a> by <a href="https://eox.at" target="_blank" rel="noopener noreferrer">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016) &mdash; CC BY 4.0',
-    layers:[
-      // Bottom: global ocean/land fill; shows through wherever NAIP has no tile.
-      { url:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg', nativeZoom:16, zIndex:1 },
-      // Top: ~0.6m/pixel aerial imagery, WMS (no fused tile cache on USGS's end).
-      { type:'wms', url:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', wmsLayer:'0', nativeZoom:18, zIndex:2 }
-    ]
-  },
   { name:'USGS Imagery Topo + Sentinel-2 ocean', type:'composite',
     attribution:'Land &copy; <a href="https://www.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS The National Map</a> &nbsp;|&nbsp; Ocean: <a href="https://s2maps.eu" target="_blank" rel="noopener noreferrer">Sentinel-2 cloudless 2016</a> by <a href="https://eox.at" target="_blank" rel="noopener noreferrer">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016) &mdash; CC BY 4.0',
     layers:[
       // Bottom: global ocean/land fill; shows through wherever USGS has no tile.
       { url:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg', nativeZoom:16, zIndex:1 },
-      // Top: US land — aerial photo with topographic labels/lines overlaid.
+      // Top: US land — aerial photo with topographic labels/lines overlaid. This
+      // "best available imagery" composite often blends in higher-res local/partner
+      // imagery beyond plain NAIP, which is why it's back as the default — see
+      // the NAIP entry below for why that one turned out to be a downgrade here.
       { url:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', nativeZoom:16, zIndex:2 }
+    ]
+  },
+  { name:'USGS NAIP (0.6m, uniform coverage) + Sentinel-2 ocean', type:'composite',
+    attribution:'Land &copy; <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map" target="_blank" rel="noopener noreferrer">USGS NAIP Imagery</a> (USDA FSA) &nbsp;|&nbsp; Ocean: <a href="https://s2maps.eu" target="_blank" rel="noopener noreferrer">Sentinel-2 cloudless 2016</a> by <a href="https://eox.at" target="_blank" rel="noopener noreferrer">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016) &mdash; CC BY 4.0',
+    layers:[
+      // Bottom: global ocean/land fill; shows through wherever NAIP has no tile.
+      { url:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg', nativeZoom:16, zIndex:1 },
+      // Top: flat 0.6m/pixel nationwide baseline — turned out LOWER resolution than
+      // Imagery Topo above in this area (that composite blends in better local
+      // imagery NAIP alone doesn't have), so this is kept only as a secondary
+      // option, not the default, until/unless a genuinely higher-res source turns up.
+      { type:'wms', url:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', wmsLayer:'0', nativeZoom:18, zIndex:2 }
     ]
   },
   { name:'OpenStreetMap (street map)', url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attribution:'&copy; OpenStreetMap contributors', nativeZoom:19 }
 ];
 const OFM_IDX = 0;      // OpenFreeMap vector street map (on-demand)
-const SAT_IDX = 1;      // Satellite view: USGS NAIP (land, high-res) over Sentinel-2 ocean
-const SAT_FALLBACK_IDX = 2; // Previous satellite view: USGS Imagery Topo, kept as a fallback
+const SAT_IDX = 1;      // Satellite view: USGS Imagery Topo (land, best-available) over Sentinel-2 ocean
+const SAT_NAIP_IDX = 2; // Secondary satellite option: plain USGS NAIP — lower-res here, kept for reference
 const OSM_IDX = 3;      // raster street map (fallback when vector is unavailable)
 
 /* ===================== OFFLINE MAP TILES =====================
@@ -2428,14 +2434,13 @@ const TILE_CACHE_NAME = 'wtf-tiles-v1';
 const OFFLINE_MANIFEST_KEY = 'wtf:offline-map';
 // Fishing area: Bulow (N) → Williams Point (S), inshore to the west, offshore reefs to the east.
 const OFFLINE_BBOX = { s:28.40, n:29.48, w:-81.20, e:-80.30 };
-// The satellite sublayers actually mounted on the map now (Sentinel-2 ocean fill +
-// NAIP land). Each entry describes how to build that layer's URL for a given tile;
-// 'xyz' substitutes directly into a {z}/{x}/{y} template, 'wms' builds a GetMap
-// request via wmsTileUrl() — the same function the live NAIP layer itself uses, so
-// tiles fetched here are actually reused instead of being fetched twice.
+// The satellite sublayers actually mounted on the map by default (Sentinel-2 ocean
+// fill + USGS Imagery Topo land). 'xyz' substitutes directly into a {z}/{x}/{y}
+// template. (The secondary NAIP layer uses 'wms' via wmsTileUrl() below when
+// selected manually, but isn't part of the default offline pre-cache set.)
 const OFFLINE_TILE_TEMPLATES = [
   { type:'xyz', tpl:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg' },
-  { type:'wms', base:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', layer:'0' }
+  { type:'xyz', tpl:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}' }
 ];
 
 let _tileCachePromise = null;
@@ -2805,7 +2810,7 @@ providerIdx = SAT_IDX;
 mountBaseLayer(SAT_IDX);
 
 /* ---------- Satellite / Street Map toggle ---------- */
-// Default view is the satellite composite (USGS NAIP high-res land imagery over the
+// Default view is the satellite composite (USGS Imagery Topo land over the
 // Sentinel-2 ocean fill); the button swaps in the OpenFreeMap street map.
 let satMode = true;
 let manualMode = false;
@@ -2822,7 +2827,7 @@ document.getElementById('mapModeBtn').addEventListener('click', function(){
   } else {
     providerIdx = OFM_IDX;
     mountBaseLayer(OFM_IDX);
-    label.textContent = ' Satellite';
+    label.textContent = ' Topo Satellite';
     this.classList.add('street-on');
   }
 });
