@@ -1156,8 +1156,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .legend-key .k{display:flex; align-items:center; gap:5px;}
   .legend-key .sq{width:10px; height:10px; border-radius:2px;}
   .zone-legend{display:flex; gap:16px; margin-top:6px; flex-wrap:wrap;}
-  .zone-legend .zk{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--fog);}
-  .zone-legend .dot{width:11px; height:11px; border-radius:50%; border:2px solid rgba(255,255,255,.35);}
+  .zone-legend .zk{display:flex; align-items:center; gap:6px; font-size:calc(14.5px * var(--ts)); color:var(--fog);}
+  .zone-legend .dot{width:13px; height:13px; border-radius:50%; border:2px solid rgba(255,255,255,.35); flex:0 0 auto;}
   .subhead{font-family:'Space Grotesk',sans-serif; font-size:calc(14px * var(--ts)); margin:18px 0 4px; font-weight:700;}
 
   /* ---------- Form fields ---------- */
@@ -1572,7 +1572,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25k &middot; HELP REORG + TITLE CASE</div>
+  <div class="build-stamp" id="buildStamp">BUILD 2026-07-25n &middot; ZONES TEXT SIZE INCREASED</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1652,8 +1652,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div class="zk"><div class="dot" style="background:var(--inshore)"></div>Inshore — creeks, rivers, cuts, streams, flats, jetties, docks, ramps</div>
         <div class="zk"><div class="dot" style="background:var(--offshore)"></div>Offshore — natural reefs, artificial sites &amp; wrecks 3–34nm out</div>
       </div>
-      <div class="subhead">Offshore Targets</div>
-      <p class="sheet-note">Primary bottom fishing targets: <b>flounder, grouper, snapper, snook, sheepshead</b>. Primary trolling / topwater targets: <b>kingfish, mackerel, jack, tarpon, mahi</b>.</p>
       <div class="subhead">Offshore Sites</div>
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 17–34nm out and are outside the default view; pan/zoom to find them.</p>
     </div>
@@ -1667,10 +1665,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="catchListBody"></div>
     </div>
     <div id="panel-help" style="display:none;">
+      <p class="sheet-note">A quick shape guide used throughout this Help: <b>cookies</b> (round, top-right of the header) are Search, Help, Themes, and Text Size. <b>Pills</b> (hot-dog shaped) are the filter row, species switches, and the action stack along the map's edge. <b>Cluster chips</b> (small oval badges) show totals when the map is zoomed out.</p>
       <div class="subhead" style="margin-top:2px;">Map Controls (pills &amp; chips)</div>
       <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕.</p>
-      <p class="sheet-note">As you zoom out, pins collapse into count pills that sit just below the top buttons — one under each matching button — showing totals for spots, sites, launches, and catches. Tap a pill or zoom back in to expand them.</p>
-      <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their total buttons will open the respective data set.</p>
+      <p class="sheet-note">As you zoom out, pins collapse into cluster chips that sit just below the top row — one under each matching chip — showing totals for spots, sites, launches, and catches. Tap a cluster chip or zoom back in to expand them.</p>
+      <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their cluster chips will open the respective data set.</p>
 
       <div class="subhead">Species Switches (pill buttons)</div>
       <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so.</p>
