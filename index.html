@@ -5152,7 +5152,7 @@ function decodeImageFile(file){
           URL.revokeObjectURL(url); reject(new Error('decode failed')); return;
         }
         resolve({ src:img, w:img.naturalWidth, h:img.naturalHeight,
-                  stepped:true, needsOrientation:false, release:()=> URL.revokeObjectURL(url) });
+                  stepped:true, needsOrientation:true, release:()=> URL.revokeObjectURL(url) });
       };
       img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('decode failed')); };
       img.src = url;
@@ -5214,14 +5214,20 @@ function canvasLooksBlank(canvas){
 // correction below double-rotate the photo instead of fixing it. Detecting
 // this directly avoids guessing at browser behavior.
 const EXIF_ORIENT_TEST_JPEG = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAAAAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAABAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD4H8Q/8h/Uv+vmX/0M0UUV/ptkP/Ipwn/XuH/pKPAzr/kZ4r/r5P8A9KZ//9k=';
+function base64JpegToBlob(dataUrl){
+  const b64 = dataUrl.split(',')[1];
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0; i<bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], {type:'image/jpeg'});
+}
 let _autoOrientCheck = null;
 function browserAutoOrients(){
   if(_autoOrientCheck) return _autoOrientCheck;
   _autoOrientCheck = (async ()=>{
     try{
       if(typeof createImageBitmap !== 'function') return false;
-      const resp = await fetch(EXIF_ORIENT_TEST_JPEG);
-      const blob = await resp.blob();
+      const blob = base64JpegToBlob(EXIF_ORIENT_TEST_JPEG);
       const bm = await createImageBitmap(blob, {imageOrientation:'none'});
       const rotated = (bm.width === 1 && bm.height === 2);
       try{ bm.close(); }catch(e){}
@@ -5231,6 +5237,26 @@ function browserAutoOrients(){
   return _autoOrientCheck;
 }
 browserAutoOrients(); // kick off early so it's usually already resolved by the time a photo is picked
+
+// Separate check for the <img>-element decode path, used when createImageBitmap
+// isn't available or fails — a different browser code path than
+// createImageBitmap, so its EXIF-rotation behavior can't be assumed to match.
+// Previously assumed <img> always auto-rotates; on some Android browsers it
+// may not, which left camera photos rotated with no correction ever applied.
+let _imgAutoOrientCheck = null;
+function imgAutoOrients(){
+  if(_imgAutoOrientCheck) return _imgAutoOrientCheck;
+  _imgAutoOrientCheck = new Promise(resolve=>{
+    try{
+      const img = new Image();
+      img.onload = ()=> resolve(img.naturalWidth === 1 && img.naturalHeight === 2);
+      img.onerror = ()=> resolve(false);
+      img.src = EXIF_ORIENT_TEST_JPEG;
+    }catch(e){ resolve(false); }
+  });
+  return _imgAutoOrientCheck;
+}
+imgAutoOrients();
 
 // Standard EXIF-orientation-to-canvas-transform mapping. w,h are the drawn
 // image's PRE-rotation dimensions; orientations 5-8 swap width/height on the
@@ -5267,8 +5293,17 @@ async function resizeToDataURL(file, maxDim, quality, orientation){
       }
     }
 
-    const autoOrients = dec.needsOrientation ? await browserAutoOrients() : false;
+    const autoOrients = dec.needsOrientation ? await (dec.stepped ? imgAutoOrients() : browserAutoOrients()) : false;
     const o = (dec.needsOrientation && !autoOrients) ? (orientation || 1) : 1;
+    // Temporary diagnostic — shown on the photo status line so this can be checked
+    // without needing phone dev tools, since blind guessing hasn't nailed this bug.
+    window._lastPhotoOrientDebug = {
+      decodePath: dec.stepped ? 'img-fallback' : 'createImageBitmap',
+      needsOrientation: dec.needsOrientation,
+      autoOrients: autoOrients,
+      exifOrientationTag: orientation,
+      correctionApplied: o
+    };
     const swapped = o >= 5 && o <= 8;
     const c = document.createElement('canvas');
     c.width = swapped ? th : tw;
@@ -5358,6 +5393,10 @@ photoInput.addEventListener('change', async ()=>{
     statusBits.push('No timestamp — set the date & time below');
   }
   photoStatus.textContent = statusBits.join(' \u00b7 ');
+  if(window._lastPhotoOrientDebug){
+    const d = window._lastPhotoOrientDebug;
+    photoStatus.textContent += ` [DEBUG path:${d.decodePath} autoOrients:${d.autoOrients} exifTag:${d.exifOrientationTag} applied:${d.correctionApplied}]`;
+  }
   if(gotLoc && gotTime) autoTide(true);
 });
 
