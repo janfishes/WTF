@@ -1262,6 +1262,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #cropApply{background:var(--catch); color:#fff; border-color:var(--catch);}
   #cropCancel{background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.6);}
   .pop-photo{width:100%; border-radius:8px; margin-bottom:8px; height:auto; max-height:none; object-fit:contain; display:block;}
+  /* The photo sits as the very first thing in a single-catch popup, right
+     under CLOSE X — give it a little top clearance so the button reads
+     against the dark backdrop instead of sitting directly on the image. */
+  .catch-popup .pop-photo{margin-top:22px;}
   /* contain, not cover: cover was cropping the top and bottom off portrait shots. */
   .cc-photo{width:100%; border-radius:8px; margin-top:8px; height:auto; max-height:none; object-fit:contain; display:block;}
 
@@ -1320,11 +1324,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
      and spot pop-ups — so a species pin (or any other pin) always has an
      obvious, consistently-styled close control at the top. */
   .leaflet-popup-close-button{
-    width:auto !important; height:22px !important; top:8px !important; right:8px !important;
-    padding:0 8px !important; font:700 11px/22px 'JetBrains Mono',monospace !important;
+    width:auto !important; height:26px !important; top:8px !important; right:8px !important;
+    padding:0 10px !important; font:700 11px/26px 'JetBrains Mono',monospace !important;
     letter-spacing:.02em; display:flex; align-items:center; justify-content:center;
-    background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:8px;
-    color:var(--muted) !important;
+    background:rgba(6,15,24,.88) !important; border:1px solid rgba(255,255,255,.35); border-radius:8px;
+    box-shadow:0 1px 4px rgba(0,0,0,.5);
+    color:#fff !important;
   }
   .leaflet-popup-close-button span{display:none;}
   .leaflet-popup-close-button::before{content:'CLOSE X';}
@@ -5097,6 +5102,7 @@ function parseTiff(view, tiffStart){
     const ex = readIFD(tiffStart + tagValue(ifd0[0x8769]));
     if(ex[0x9003]) out.dateTime = tagValue(ex[0x9003]);
   }
+  if(ifd0[0x0112]) out.orientation = tagValue(ifd0[0x0112]);
   return out;
 }
 
@@ -5129,29 +5135,33 @@ function decodeImageFile(file){
           URL.revokeObjectURL(url); reject(new Error('decode failed')); return;
         }
         resolve({ src:img, w:img.naturalWidth, h:img.naturalHeight,
-                  stepped:true, release:()=> URL.revokeObjectURL(url) });
+                  stepped:true, needsOrientation:false, release:()=> URL.revokeObjectURL(url) });
       };
       img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('decode failed')); };
       img.src = url;
     };
     if(typeof createImageBitmap === 'function'){
       let p;
-      try{ p = createImageBitmap(file, { imageOrientation:'from-image' }); }
+      try{ p = createImageBitmap(file, { imageOrientation:'none' }); }
       catch(e){ p = null; }
       if(!p || typeof p.then !== 'function'){ viaImg(); return; }
       p.then(bm=>{
         if(!bm || !bm.width || !bm.height){ viaImg(); return; }
+        // stepped:false, needsOrientation:true — pixels are exactly as stored in the
+        // file, so the EXIF Orientation tag (parsed separately) still needs applying.
         resolve({ src:bm, w:bm.width, h:bm.height,
-                  stepped:false, release:()=>{ try{ bm.close(); }catch(e){} } });
+                  stepped:false, needsOrientation:true, release:()=>{ try{ bm.close(); }catch(e){} } });
       }).catch(()=>{
-        // Older Safari rejects the options bag — retry bare before giving up.
+        // Older Safari rejects the options bag — retry bare before giving up. The spec
+        // default for imageOrientation is 'none' either way, so this still needs the
+        // same manual orientation pass.
         let p2;
         try{ p2 = createImageBitmap(file); }catch(e){ viaImg(); return; }
         if(!p2 || typeof p2.then !== 'function'){ viaImg(); return; }
         p2.then(bm=>{
           if(!bm || !bm.width || !bm.height){ viaImg(); return; }
           resolve({ src:bm, w:bm.width, h:bm.height,
-                    stepped:false, release:()=>{ try{ bm.close(); }catch(e){} } });
+                    stepped:false, needsOrientation:true, release:()=>{ try{ bm.close(); }catch(e){} } });
         }).catch(()=> viaImg());
       });
     } else viaImg();
@@ -5179,39 +5189,84 @@ function canvasLooksBlank(canvas){
   }catch(e){ return false; }
 }
 
-function resizeToDataURL(file, maxDim, quality){
-  return decodeImageFile(file).then(dec=>{
+// Byte-verified tiny test photo: 2x1 raw pixels with EXIF Orientation=6 (a
+// correctly-oriented viewer shows it as 1x2). Used once, at load, to check
+// whether THIS browser actually honors `imageOrientation:'none'` on
+// createImageBitmap — some Android/Chrome builds silently auto-rotate
+// regardless of what's requested, which would make our own manual
+// correction below double-rotate the photo instead of fixing it. Detecting
+// this directly avoids guessing at browser behavior.
+const EXIF_ORIENT_TEST_JPEG = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAAAAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAABAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD4H8Q/8h/Uv+vmX/0M0UUV/ptkP/Ipwn/XuH/pKPAzr/kZ4r/r5P8A9KZ//9k=';
+let _autoOrientCheck = null;
+function browserAutoOrients(){
+  if(_autoOrientCheck) return _autoOrientCheck;
+  _autoOrientCheck = (async ()=>{
     try{
-      const scale = Math.min(1, maxDim / Math.max(dec.w, dec.h));
-      const tw = Math.max(1, Math.round(dec.w * scale));
-      const th = Math.max(1, Math.round(dec.h * scale));
+      if(typeof createImageBitmap !== 'function') return false;
+      const resp = await fetch(EXIF_ORIENT_TEST_JPEG);
+      const blob = await resp.blob();
+      const bm = await createImageBitmap(blob, {imageOrientation:'none'});
+      const rotated = (bm.width === 1 && bm.height === 2);
+      try{ bm.close(); }catch(e){}
+      return rotated; // true = this browser ignored 'none' and auto-rotated anyway
+    }catch(e){ return false; }
+  })();
+  return _autoOrientCheck;
+}
+browserAutoOrients(); // kick off early so it's usually already resolved by the time a photo is picked
 
-      let from = dec.src, fw = dec.w, fh = dec.h;
-      if(dec.stepped){
-        // Halve repeatedly so no single drawImage asks for a huge reduction.
-        while(fw > tw * 2 && fh > th * 2){
-          const nw = Math.max(tw, Math.round(fw/2));
-          const nh = Math.max(th, Math.round(fh/2));
-          const step = document.createElement('canvas');
-          step.width = nw; step.height = nh;
-          step.getContext('2d').drawImage(from, 0, 0, fw, fh, 0, 0, nw, nh);
-          from = step; fw = nw; fh = nh;
-        }
+// Standard EXIF-orientation-to-canvas-transform mapping. w,h are the drawn
+// image's PRE-rotation dimensions; orientations 5-8 swap width/height on the
+// output canvas, so the caller sizes the canvas before calling this.
+function applyExifOrientation(ctx, orientation, w, h){
+  switch(orientation){
+    case 2: ctx.transform(-1, 0, 0, 1, w, 0); break;
+    case 3: ctx.transform(-1, 0, 0, -1, w, h); break;
+    case 4: ctx.transform(1, 0, 0, -1, 0, h); break;
+    case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
+    case 6: ctx.transform(0, 1, -1, 0, h, 0); break;
+    case 7: ctx.transform(0, -1, -1, 0, h, w); break;
+    case 8: ctx.transform(0, -1, 1, 0, 0, w); break;
+    default: break; // 1 or unknown: no transform needed
+  }
+}
+async function resizeToDataURL(file, maxDim, quality, orientation){
+  const dec = await decodeImageFile(file);
+  try{
+    const scale = Math.min(1, maxDim / Math.max(dec.w, dec.h));
+    const tw = Math.max(1, Math.round(dec.w * scale));
+    const th = Math.max(1, Math.round(dec.h * scale));
+
+    let from = dec.src, fw = dec.w, fh = dec.h;
+    if(dec.stepped){
+      // Halve repeatedly so no single drawImage asks for a huge reduction.
+      while(fw > tw * 2 && fh > th * 2){
+        const nw = Math.max(tw, Math.round(fw/2));
+        const nh = Math.max(th, Math.round(fh/2));
+        const step = document.createElement('canvas');
+        step.width = nw; step.height = nh;
+        step.getContext('2d').drawImage(from, 0, 0, fw, fh, 0, 0, nw, nh);
+        from = step; fw = nw; fh = nh;
       }
-
-      const c = document.createElement('canvas');
-      c.width = tw; c.height = th;
-      const ctx = c.getContext('2d');
-      ctx.drawImage(from, 0, 0, fw, fh, 0, 0, tw, th);
-      if(canvasLooksBlank(c)) throw new Error('blank output');
-      const out = c.toDataURL('image/jpeg', quality);
-      dec.release();
-      return out;
-    }catch(err){
-      dec.release();
-      throw err;
     }
-  });
+
+    const autoOrients = dec.needsOrientation ? await browserAutoOrients() : false;
+    const o = (dec.needsOrientation && !autoOrients) ? (orientation || 1) : 1;
+    const swapped = o >= 5 && o <= 8;
+    const c = document.createElement('canvas');
+    c.width = swapped ? th : tw;
+    c.height = swapped ? tw : th;
+    const ctx = c.getContext('2d');
+    applyExifOrientation(ctx, o, tw, th);
+    ctx.drawImage(from, 0, 0, fw, fh, 0, 0, tw, th);
+    if(canvasLooksBlank(c)) throw new Error('blank output');
+    const out = c.toDataURL('image/jpeg', quality);
+    dec.release();
+    return out;
+  }catch(err){
+    dec.release();
+    throw err;
+  }
 }
 
 photoInput.addEventListener('change', async ()=>{
@@ -5225,8 +5280,14 @@ photoInput.addEventListener('change', async ()=>{
   const hiRes = (storageMode === 'idb');
   const maxDim = hiRes ? 2000 : 900;
   const jpegQ  = hiRes ? 0.9 : 0.8;
+  // Read EXIF up front (once) so the Orientation tag is available before the photo
+  // is resized — some Android/Chrome builds don't reliably auto-rotate on decode,
+  // which was saving portrait photos sideways. The buffer is reused below for the
+  // existing GPS/timestamp reading rather than reading the file twice.
+  let exifBuf = null, exif = null;
+  try{ exifBuf = await file.arrayBuffer(); exif = readExif(exifBuf); }catch(e){}
   try{
-    previewUrl = await resizeToDataURL(file, maxDim, jpegQ);
+    previewUrl = await resizeToDataURL(file, maxDim, jpegQ, exif && exif.orientation);
     pendingPhotoThumb = previewUrl;   // one high-quality asset; display size is CSS-limited
     originalPhotoThumb = previewUrl;
   }catch(e){
@@ -5248,8 +5309,6 @@ photoInput.addEventListener('change', async ()=>{
   const statusBits = [];
   let gotLoc = false, gotTime = false;
   try{
-    const buf = await file.arrayBuffer();
-    const exif = readExif(buf);
     if(exif && exif.lat != null && exif.lng != null){
       // A pin, a picked spot or a GPS fix was a deliberate choice — the photo doesn't
       // get to overwrite it. Say so rather than dropping the coordinates silently.
