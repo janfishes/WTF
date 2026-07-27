@@ -5336,8 +5336,14 @@ photoInput.addEventListener('change', async ()=>{
   // is resized — some Android/Chrome builds don't reliably auto-rotate on decode,
   // which was saving portrait photos sideways. The buffer is reused below for the
   // existing GPS/timestamp reading rather than reading the file twice.
-  let exifBuf = null, exif = null;
-  try{ exifBuf = await file.arrayBuffer(); exif = readExif(exifBuf); }catch(e){}
+  let exifBuf = null, exif = null, exifParseErr = null;
+  try{ exifBuf = await file.arrayBuffer(); exif = readExif(exifBuf); }catch(e){ exifParseErr = e && e.message; }
+  window._lastPhotoExifDebug = {
+    fileSize: file.size,
+    exifFound: !!exif,
+    exifKeys: exif ? Object.keys(exif).join(',') : null,
+    parseError: exifParseErr
+  };
   try{
     previewUrl = await resizeToDataURL(file, maxDim, jpegQ, exif && exif.orientation);
     pendingPhotoThumb = previewUrl;   // one high-quality asset; display size is CSS-limited
@@ -5396,6 +5402,10 @@ photoInput.addEventListener('change', async ()=>{
   if(window._lastPhotoOrientDebug){
     const d = window._lastPhotoOrientDebug;
     photoStatus.textContent += ` [DEBUG path:${d.decodePath} autoOrients:${d.autoOrients} exifTag:${d.exifOrientationTag} applied:${d.correctionApplied}]`;
+  }
+  if(window._lastPhotoExifDebug){
+    const e2 = window._lastPhotoExifDebug;
+    photoStatus.textContent += ` [EXIF found:${e2.exifFound} keys:${e2.exifKeys} size:${e2.fileSize} err:${e2.parseError}]`;
   }
   if(gotLoc && gotTime) autoTide(true);
 });
