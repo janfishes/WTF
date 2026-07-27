@@ -832,7 +832,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #speciesCol::-webkit-scrollbar{ display:none; }
   #speciesCol .chip{padding:4px 8px; font-size:12px; font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
-  #speciesCol .chip .dot{width:6px; height:6px;}
+  #speciesCol .chip .dot{width:6px; height:6px; border-radius:1px; transform:rotate(45deg);}
 
   /* ---------- Map ---------- */
   #map{flex:1 1 auto; position:relative; background:var(--map-bg); min-height:200px;}
@@ -948,11 +948,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #speciesCol .chip.active .dot{background:#000 !important;}
   .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:700; border:1px solid var(--inshore) !important; box-shadow:none !important;}
   .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important;}
-  /* Shadow on the zone chips while OFF, and on Labels while ON — the two states whose text
-     sits on the weakest ground (saturated colour on black, and black on solid white). */
-  #metaRow .chip[data-zone]:not(.active),
-  #metaRow #launchToggle:not(.active),
-  #metaRow #labelsToggle.active{text-shadow:0 1px 2px rgba(0,0,0,.65), 0 0 3px rgba(0,0,0,.4);}
+  /* Shadow on the zone/launch chip text (both states) — the states whose text
+     sits on the weakest ground (saturated colour on black, or filled colour). */
+  #metaRow .chip[data-zone],
+  #metaRow #launchToggle{text-shadow:0 2px 3px rgba(0,0,0,.55) !important;}
   #metaRow #labelsToggle.active{text-shadow:0 1px 1px rgba(255,255,255,.9), 0 0 2px rgba(255,255,255,.7);}
   .chip[data-zone="inshore"]:not(.active){opacity:1; color:#6b8cff !important; border-color:#6b8cff !important;}
   .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:700; border:1px solid var(--offshore) !important; box-shadow:none !important;}
@@ -969,7 +968,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     border:1px solid rgba(255,255,255,.25); opacity:1 !important;
     filter:brightness(1.6) saturate(1.2); transition:transform .1s ease, filter .1s ease;
   }
-  #logSpeciesRow .chip.sp .dot{width:7px; height:7px;}
+  #logSpeciesRow .chip.sp .dot{width:7px; height:7px; border-radius:1px; transform:rotate(45deg);}
   #logSpeciesRow .chip.sp.active{
     background:var(--spc,#fff) !important; color:#000 !important;
     border-color:#fff !important; box-shadow:0 0 8px rgba(255,255,255,.45);
@@ -1429,10 +1428,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #waveBtn svg{fill:var(--teal) !important; stroke:none !important;}
   #waveBtn.pressed svg{fill:#fff !important;}
   #locateBtn.active-locate{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
-  #locateBtn.active-locate svg{stroke:#fff !important;}
+  #locateBtn svg{color:var(--accent-lite);}
+  #locateBtn.active-locate svg{color:#fff;}
   #mapModeBtn.street-on{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
   #mapModeBtn.street-on svg{stroke:#fff !important;}
-  .loc-dot{width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:21px; line-height:1; filter:drop-shadow(0 0 5px rgba(77,166,255,.85)) drop-shadow(0 2px 3px rgba(0,0,0,.5));}
+  .loc-dot{width:26px; height:26px; display:flex; align-items:center; justify-content:center; color:var(--accent-lite); filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));}
   .pin-preview{width:17px; height:17px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--brass); border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.5);}
 
   .search-row{
@@ -1465,7 +1465,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      purpose — it should be legible when looked for and invisible when not. */
   .build-stamp{position:absolute; left:6px; bottom:26px; z-index:1000; pointer-events:none;
     font:600 9px/1.2 'JetBrains Mono',monospace; letter-spacing:.03em; color:var(--fog);
-    opacity:.5; text-shadow:0 1px 2px rgba(0,0,0,.85), 0 0 3px rgba(0,0,0,.6);}
+    opacity:.5;}
   #pillLayer{position:absolute; inset:0; z-index:1090; pointer-events:none;}
   #pillLayer .cluster-pill{pointer-events:auto; cursor:pointer;}
   .cluster-pill{
@@ -1636,7 +1636,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="waveArt" viewBox="0 0 24 24"><g transform="translate(-5.839,-10.968) scale(0.064516)"><path d="M447.296,410.25c0,8.33,0,16.67,0,25c-14.39,1.86-27.67-9-42-9c-17.63,0-28.13,11.46-51,9c-11.23-1.21-22.55-8.79-34-9    c-16.85-0.31-28.34,11.52-51,9c-11.72-1.3-23.49-9.05-35-9c-18.54,0.08-33.43,12.87-56,8c-9.81-2.12-18.7-8-29-8    c-14.54,0-26.46,10.81-42,9c0-12.34,0-22.87,0-34c0-10.43-2.9-23.57,0-33c2.3-7.48,14.66-12.72,20-18    c45.67-45.19,73.34-134.06,167-125c44.03,4.26,79.84,36.32,90,77c3.13,12.54,2.16,19-4,20c-8.59,1.4-9.32-12.1-13-19    c-8-15-32.42-30-56-19c-14.79,6.9-26.32,26.11-27,48c-1.21,38.89,40.48,80.54,81,78c12.92-0.81,24.84-8.69,38-9    C420.606,400.85,430.977,409.1,447.296,410.25z"/><path d="M447.296,462.25c0,8.33,0,16.67,0,25c-14.54,0.5-28.51-10.32-43-10c-14.37,0.32-28.24,10-42,10    c-14.32,0-28.68-10.06-43-10c-13.95,0.06-28.08,10.04-42,10c-14.4-0.04-28.77-10.2-43-10c-13.66,0.19-27.95,9.91-42,10    c-14.44,0.09-29-10.3-44-10c-13.92,0.28-27.07,10.84-41,10c-2.22-6.45-0.42-16.92-1-25c13.39-1.37,25.75-9.21,39-10    c17.26-1.03,33.24,11.09,51,9c13.78-1.62,24.91-8.92,37-9c15.12-0.1,26.94,9.74,43,10c14.16,0.23,28.37-9.9,43-10    c13.63-0.09,27.41,9.66,42,10c14.05,0.33,27.39-9.89,43-10C420.676,452.14,430.696,459.85,447.296,462.25z"/></g></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="waveArt" viewBox="0 0 24 24"><g transform="translate(-5.839,-10.968) scale(0.064516)"><path d="M447.296,410.25c0,8.33,0,16.67,0,25c-14.39,1.86-27.67-9-42-9c-17.63,0-28.13,11.46-51,9c-11.23-1.21-22.55-8.79-34-9    c-16.85-0.31-28.34,11.52-51,9c-11.72-1.3-23.49-9.05-35-9c-18.54,0.08-33.43,12.87-56,8c-9.81-2.12-18.7-8-29-8    c-14.54,0-26.46,10.81-42,9c0-12.34,0-22.87,0-34c0-10.43-2.9-23.57,0-33c2.3-7.48,14.66-12.72,20-18    c45.67-45.19,73.34-134.06,167-125c44.03,4.26,79.84,36.32,90,77c3.13,12.54,2.16,19-4,20c-8.59,1.4-9.32-12.1-13-19    c-8-15-32.42-30-56-19c-14.79,6.9-26.32,26.11-27,48c-1.21,38.89,40.48,80.54,81,78c12.92-0.81,24.84-8.69,38-9    C420.606,400.85,430.977,409.1,447.296,410.25z"/><path d="M447.296,462.25c0,8.33,0,16.67,0,25c-14.54,0.5-28.51-10.32-43-10c-14.37,0.32-28.24,10-42,10    c-14.32,0-28.68-10.06-43-10c-13.95,0.06-28.08,10.04-42,10c-14.4-0.04-28.77-10.2-43-10c-13.66,0.19-27.95,9.91-42,10    c-14.44,0.09-29-10.3-44-10c-13.92,0.28-27.07,10.84-41,10c-2.22-6.45-0.42-16.92-1-25c13.39-1.37,25.75-9.21,39-10    c17.26-1.03,33.24,11.09,51,9c13.78-1.62,24.91-8.92,37-9c15.12-0.1,26.94,9.74,43,10c14.16,0.23,28.37-9.9,43-10    c13.63-0.09,27.41,9.66,42,10c14.05,0.33,27.39-9.89,43-10C420.676,452.14,430.696,459.85,447.296,462.25z"/></g></symbol>
+<!-- Locate-me pin: teardrop map pin with a crosshair/target glyph inside, filled with
+     currentColor so each usage can set the theme accent via CSS. -->
+<symbol id="locatePin" viewBox="0 0 24 28">
+  <path d="M12 2C7.03 2 3 6.03 3 11c0 6.75 9 15 9 15s9-8.25 9-15c0-4.97-4.03-9-9-9z" fill="currentColor" stroke="#fff" stroke-width="1"></path>
+  <g stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round">
+    <circle cx="12" cy="11" r="3.6"></circle>
+    <line x1="12" y1="5.8" x2="12" y2="7.8"></line>
+    <line x1="12" y1="14.2" x2="12" y2="16.2"></line>
+    <line x1="6.8" y1="11" x2="8.8" y2="11"></line>
+    <line x1="15.2" y1="11" x2="17.2" y2="11"></line>
+  </g>
+</symbol>
+</svg>
 
 <header>
   <div class="hdr-left">
@@ -1660,7 +1673,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V63</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V64</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1706,7 +1719,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       Waves
     </button>
     <button class="fab" id="locateBtn">
-      <span style="font-size:14px; line-height:1;">🎯</span>
+      <svg viewBox="0 0 24 28" width="15" height="17" style="vertical-align:-3px;"><use href="#locatePin"></use></svg>
       Locate Me
     </button>
     <button class="fab" id="mapModeBtn">
@@ -1818,7 +1831,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v63 · Removed the outdated Cobia spring-migration note from the Season Guide. All nautical-mile distances throughout the guide (reef/spot listings, drop lists, and popups) now also show statute miles alongside nm, e.g. 14.8 nm/17.0 sm.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v64 · Removed the outdated Cobia spring-migration note from the Season Guide. All nautical-mile distances throughout the guide (reef/spot listings, drop lists, and popups) now also show statute miles alongside nm, e.g. 14.8 nm/17.0 sm.</p>
     </div>
   </div>
 </div>
@@ -1867,7 +1880,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <select id="logSpotSelect"><option value="">— choose a known spot —</option></select>
     <div class="loc-btns">
       <button class="mini-btn" id="pinOnMap">📍 Drop pin</button>
-      <button class="mini-btn" id="useMyLoc">🎯 My location</button>
+      <button class="mini-btn" id="useMyLoc"><svg viewBox="0 0 24 28" width="13" height="15" style="color:var(--accent-lite); vertical-align:-3px;"><use href="#locatePin"></use></svg> My location</button>
       <button class="mini-btn" id="clearLoc">✕ Clear</button>
     </div>
     <div class="loc-preview" id="locPreview">No location set yet.</div>
@@ -1945,7 +1958,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <label class="field-label">Location</label>
     <div class="loc-btns">
       <button class="mini-btn" id="addSpotPin">📍 Drop pin</button>
-      <button class="mini-btn" id="addSpotGPS">🎯 My location</button>
+      <button class="mini-btn" id="addSpotGPS"><svg viewBox="0 0 24 28" width="13" height="15" style="color:var(--accent-lite); vertical-align:-3px;"><use href="#locatePin"></use></svg> My location</button>
     </div>
     <div class="loc-preview" id="addSpotPreview">No location set yet.</div>
     <input type="text" id="addSpotCoord" placeholder="or type coordinates — 29 04.902 N, 80 56.202 W" style="width:100%; box-sizing:border-box; margin-top:8px;">
@@ -1977,7 +1990,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <label class="field-label">Position</label>
     <input type="text" id="userTsCoord" placeholder="29.0817 -80.9367" style="width:100%; box-sizing:border-box;">
     <div class="loc-btns" style="margin-top:8px;">
-      <button class="mini-btn" id="userTsGPS">🎯 My location</button>
+      <button class="mini-btn" id="userTsGPS"><svg viewBox="0 0 24 28" width="13" height="15" style="color:var(--accent-lite); vertical-align:-3px;"><use href="#locatePin"></use></svg> My location</button>
     </div>
     <div class="loc-preview" id="userTsPreview" style="margin-top:8px;">No position set yet.</div>
     <div style="display:flex; gap:10px; margin-top:4px;">
@@ -4024,7 +4037,7 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   chip.dataset.species = key;
   chip.style.color = sp.color;
   chip.style.setProperty('--spc', sp.color);
-  chip.innerHTML = `<span class="dot" style="background:${sp.color}"></span>${sp.label}`;
+  chip.innerHTML = `<span class="dot" style="background:${sp.color}"></span><span class="lbl">${sp.label}</span>`;
   chip.addEventListener('click', ()=>{
     if(activeSpecies.has(key)){ activeSpecies.delete(key); chip.classList.remove('active'); }
     else { activeSpecies.add(key); chip.classList.add('active'); }
@@ -5595,7 +5608,7 @@ document.getElementById('locateBtn').addEventListener('click', function(){
   const place = pos=>{
     const ll = [pos.coords.latitude, pos.coords.longitude];
     if(locMarker) map.removeLayer(locMarker);
-    locMarker = L.marker(ll, {icon:L.divIcon({className:'', html:'<div class="loc-dot">🎯</div>', iconSize:[26,26], iconAnchor:[13,13]})}).addTo(map);
+    locMarker = L.marker(ll, {icon:L.divIcon({className:'', html:'<div class="loc-dot"><svg viewBox="0 0 24 28" width="22" height="26"><use href="#locatePin"></use></svg></div>', iconSize:[26,26], iconAnchor:[13,13]})}).addTo(map);
     suppressClusterZoom = true;
     setTimeout(()=>{ suppressClusterZoom = false; }, 1200); // safety reset if zoomend doesn't fire
     map.setView(ll, 13);
