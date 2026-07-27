@@ -1056,6 +1056,21 @@ svg.leaflet-image-layer.leaflet-interactive path {
   body[data-theme="sunglasses"] .drop-row .wn,
   body[data-theme="sunglasses"] .sheet-note a{font-weight:800;}
   .sheet-body{overflow-y:auto; padding:12px 18px 22px;}
+  /* Dark themes ship a dark scrollbar track by default in most browsers, so a
+     plain system scrollbar all but disappears against it. Give every
+     scrollable panel a visible thumb/track pairing instead. */
+  .sheet-body, .drops-list, #biteBody{
+    scrollbar-width:thin; scrollbar-color:var(--brass) var(--navy-800);
+  }
+  .sheet-body::-webkit-scrollbar, .drops-list::-webkit-scrollbar, #biteBody::-webkit-scrollbar{
+    width:8px;
+  }
+  .sheet-body::-webkit-scrollbar-track, .drops-list::-webkit-scrollbar-track, #biteBody::-webkit-scrollbar-track{
+    background:var(--navy-800);
+  }
+  .sheet-body::-webkit-scrollbar-thumb, .drops-list::-webkit-scrollbar-thumb, #biteBody::-webkit-scrollbar-thumb{
+    background:var(--brass); border-radius:4px; border:2px solid var(--navy-800);
+  }
   /* Body copy was 11.5px --muted. The ratio passed on the dark themes but small low-chroma
      grey still reads faint, so it now takes --fog at a larger size. Bold takes --emph, which
      is theme-driven; links take --link, deliberately blue so a link never reads as just
@@ -1195,13 +1210,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .save-btn:active{filter:brightness(.86);}
   .storage-note{font-size:10.5px; color:var(--muted); text-align:center; margin:10px 0 0; line-height:1.5;}
   .photo-box{
-    position:relative; border:1px dashed var(--line); border-radius:10px; min-height:62px;
+    position:relative; border:1px dashed var(--line); border-radius:10px; min-height:120px;
     display:flex; align-items:center; justify-content:center; padding:12px; cursor:pointer;
     color:var(--muted); font-size:12px; text-align:center; overflow:hidden; line-height:1.5;
   }
   .photo-box.has{border-style:solid; border-color:var(--teal); padding:0;}
   .photo-box.has #photoPlaceholderText{display:none;}
-  #photoPreview{width:100%; max-height:260px; object-fit:contain; display:block; background:var(--navy-950);}
+  #photoPreview{width:100%; max-height:340px; object-fit:contain; display:block; background:var(--navy-950);}
   .photo-remove{
     position:absolute; top:7px; right:7px; background:rgba(6,15,24,.92); border:1.5px solid rgba(255,255,255,.85);
     color:#fff; border-radius:50%; width:29px; height:29px; cursor:pointer; font-size:13px; font-weight:700; line-height:1;
@@ -1220,6 +1235,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     display:none; flex-direction:column; align-items:center; justify-content:center; padding:18px; gap:14px;
   }
   #cropModal.open{display:flex;}
+  #cropClose{
+    position:absolute; top:14px; right:14px; z-index:2001;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:#fff; font-weight:700;
+    background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.8); border-radius:8px;
+    padding:7px 12px; cursor:pointer;
+  }
+  #cropClose:active{background:rgba(255,255,255,.25);}
   #cropStage{position:relative; max-width:100%; max-height:70vh; max-height:70dvh; touch-action:none; user-select:none; line-height:0;}
   #cropStage img{max-width:100%; max-height:70vh; max-height:70dvh; display:block; border-radius:8px;}
   #cropRect{position:absolute; border:2px solid #fff; box-shadow:0 0 0 9999px rgba(0,0,0,.5); cursor:move;}
@@ -1251,23 +1273,35 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Popup ---------- */
   .leaflet-popup-content-wrapper{background:var(--navy-900); color:var(--fog); border:1px solid var(--line); border-radius:12px; padding:0;}
+  /* Logged-catch popups (a single catch, or the scrolling list when several
+     catches share a spot) can run long — notes, a photo, several cards. Let
+     the window itself be resized by dragging its bottom-right corner, the
+     same way a native resizable text box works, instead of being stuck at a
+     fixed size. Leaflet re-sets an inline width on .leaflet-popup-content
+     each time it opens, so the resize handle goes on the wrapper instead,
+     which Leaflet doesn't touch. */
+  .catch-popup .leaflet-popup-content-wrapper,
+  .spot-popup .leaflet-popup-content-wrapper{
+    resize:both; overflow:auto; min-width:220px; min-height:120px;
+    max-width:90vw; max-height:80vh;
+  }
+  .catch-popup .leaflet-popup-content,
+  .spot-popup .leaflet-popup-content{width:100% !important; max-width:none !important;}
   .leaflet-popup-tip{background:var(--navy-900); border:1px solid var(--line);}
   .leaflet-popup-content{margin:0; width:min(300px, 86vw) !important;}
-  .leaflet-popup-close-button{color:var(--muted) !important; padding:8px !important;}
-  /* Catch pop-up and spot pop-ups (inshore/offshore/custom): widen the default
-     Leaflet corner close button and show CLOSE X, matching the sheets' CLOSE X
-     pattern, instead of the bare Leaflet × used everywhere else in the app. */
-  .catch-popup .leaflet-popup-close-button,
-  .spot-popup .leaflet-popup-close-button{
+  /* Widen the default Leaflet corner close button and show CLOSE X, matching
+     the sheets' CLOSE X pattern, on every popup in the app — not just catch
+     and spot pop-ups — so a species pin (or any other pin) always has an
+     obvious, consistently-styled close control at the top. */
+  .leaflet-popup-close-button{
     width:auto !important; height:22px !important; top:8px !important; right:8px !important;
     padding:0 8px !important; font:700 11px/22px 'JetBrains Mono',monospace !important;
     letter-spacing:.02em; display:flex; align-items:center; justify-content:center;
     background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:8px;
+    color:var(--muted) !important;
   }
-  .catch-popup .leaflet-popup-close-button span,
-  .spot-popup .leaflet-popup-close-button span{display:none;}
-  .catch-popup .leaflet-popup-close-button::before,
-  .spot-popup .leaflet-popup-close-button::before{content:'CLOSE X';}
+  .leaflet-popup-close-button span{display:none;}
+  .leaflet-popup-close-button::before{content:'CLOSE X';}
   /* The title row's zone badge (e.g. "Log") used to sit flush against the same
      top-right corner as the button above, so it visually collided with CLOSE.
      Reserving room on that row only pushes the badge clear of it. */
@@ -1275,7 +1309,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Spot pop-ups (inshore/offshore/custom) can have much longer names than a
      catch card ever does, so padding-right alone isn't reliable — a long name
      would still run under the button. Instead, give the top of the popup a
-     taller reserved strip so CLOSE X sits on its own row above the name. */
+     taller reserved strip so CLOSE X sits on its own row above the name. This
+     also covers single-species spot pins, which use the same .pop markup. */
   .spot-popup .pop{padding-top:34px;}
   .pop{padding:13px 14px 14px;}
   .pop-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:4px;}
@@ -1965,6 +2000,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </div>
 
 <div id="cropModal">
+  <button id="cropClose" type="button" title="Close">CLOSE ✕</button>
   <div id="cropStage">
     <img id="cropImg" alt="">
     <div id="cropRect"><div class="h br"></div></div>
@@ -2885,6 +2921,43 @@ if(window.visualViewport){
   window.visualViewport.addEventListener('resize', vvKick);
   window.visualViewport.addEventListener('scroll', vvKick);
 }
+/* scrollIntoView (see the focusin handler below) only moves content INSIDE the sheet —
+   it does nothing if the sheet's own box still extends underneath the keyboard, which is
+   what was actually burying fields near the bottom of the form. Keep every open .sheet
+   sized to the visible (visual) viewport, not the full layout viewport, so its bottom
+   edge — and everything in it — stays above the keyboard. */
+function applyKeyboardInset(){
+  const vv = window.visualViewport;
+  const openSheets = document.querySelectorAll('.sheet.open');
+  if(!vv || !openSheets.length) return;
+  const hidden = Math.max(0, (window.innerHeight - vv.height - vv.offsetTop));
+  openSheets.forEach(sheet=>{
+    if(hidden > 40){
+      sheet.style.bottom = hidden + 'px';
+      sheet.style.maxHeight = (vv.height - 16) + 'px';
+    } else {
+      sheet.style.bottom = '';
+      sheet.style.maxHeight = '';
+    }
+  });
+}
+if(window.visualViewport){
+  let kbTimer = null;
+  const kbKick = ()=>{ clearTimeout(kbTimer); kbTimer = setTimeout(applyKeyboardInset, 60); };
+  window.visualViewport.addEventListener('resize', kbKick);
+  window.visualViewport.addEventListener('scroll', kbKick);
+}
+// Whichever function closes a sheet, this catches the class change and drops any
+// leftover inline bottom/maxHeight from applyKeyboardInset so the sheet isn't left
+// pinned to a stale keyboard height next time it opens.
+new MutationObserver(muts=>{
+  muts.forEach(m=>{
+    const sheet = m.target;
+    if(sheet.classList && sheet.classList.contains('sheet') && !sheet.classList.contains('open')){
+      sheet.style.bottom = ''; sheet.style.maxHeight = '';
+    }
+  });
+}).observe(document.body, {attributes:true, attributeFilter:['class'], subtree:true});
 /* Desktop only: browsers can't be un-zoomed from JS, but a stray Ctrl+scroll / trackpad
    pinch while moving the map can shrink the whole page and leave it stuck (Chrome even
    remembers it per site). We can't fix it, but we can stop it being a mystery: watch the
@@ -3284,39 +3357,54 @@ async function loadAll(){
 }
 
 async function persistCatches(){
-  if(storageMode === 'memory') return;
+  if(storageMode === 'memory') return true;
   const ok = await storeSet(STORAGE_KEY, JSON.stringify(catches));
   if(!ok) showToast("Couldn't save — storage may be full. Your catch is kept for this session.");
+  return ok;
 }
 
 function newId(){ return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
-function addCatch(entry){
+// addCatch/updateCatch/deleteCatch used to fire persistCatches() without waiting on it.
+// On Mac Safari especially, a tab can be backgrounded or the sheet can be torn down
+// again right after Save, and an in-flight (but not yet committed) IndexedDB write can
+// be lost — which looked like "my edits didn't save". These are now async and awaited
+// by every caller so the sheet only closes once the write has actually completed.
+async function addCatch(entry){
   entry.id = newId();
   entry.createdAt = Date.now();
   catches.push(entry);
-  persistCatches();
+  await persistCatches();
   renderCatchMarkers();
   renderCatchList();
   updateCatchCount();
 }
-function updateCatch(id, fields){
+async function updateCatch(id, fields){
   const c = catches.find(x=>x.id===id);
   if(!c) return;
   Object.assign(c, fields);
-  persistCatches();
+  await persistCatches();
   renderCatchMarkers();
   renderCatchList();
   updateCatchCount();
 }
-function deleteCatch(id){
+async function deleteCatch(id){
   catches = catches.filter(c=>c.id!==id);
-  persistCatches();
+  await persistCatches();
   renderCatchMarkers();
   renderCatchList();
   updateCatchCount();
   map.closePopup();
 }
+// Last-resort safety net: if the tab is being hidden/closed with a write still
+// pending (e.g. Save tapped, then the app switched away immediately after), make one
+// more synchronous-as-possible attempt so the edit isn't silently dropped.
+['pagehide','visibilitychange'].forEach(ev=>{
+  window.addEventListener(ev, ()=>{
+    if(ev === 'visibilitychange' && !document.hidden) return;
+    try{ persistCatches(); }catch(e){}
+  });
+});
 function updateStorageNote(){
   const notes = {
     idb:    "Saved on this device with room for full-quality photos — your catches will be here next time.",
@@ -4621,7 +4709,7 @@ document.getElementById('logCatchFab').addEventListener('click', ()=> openLogShe
 document.getElementById('logClose').addEventListener('click', closeLogSheetFn);
 logScrim.addEventListener('click', closeLogSheetFn);
 
-document.getElementById('saveCatch').addEventListener('click', ()=>{
+document.getElementById('saveCatch').addEventListener('click', async ()=>{
   if(!activeLogSpecies){ showToast('Pick a species first.'); return; }
   if(!pendingLoc){ showToast('Set a location — choose a spot, drop a pin, or use your location.'); return; }
   const fields = {
@@ -4636,12 +4724,22 @@ document.getElementById('saveCatch').addEventListener('click', ()=>{
     notes: document.getElementById('logNotes').value.trim() || '',
     photo: pendingPhotoThumb || null
   };
-  if(editingCatchId){
-    updateCatch(editingCatchId, fields);
-    showToast('Catch updated \u2713');
-  } else {
-    addCatch(fields);
-    showToast('Catch logged \u2713');
+  // Grab this before anything below resets it (closing/reopening the sheet clears
+  // editingCatchId), and disable the button so a second tap can't fire a duplicate
+  // save while the first is still writing.
+  const wasEditing = editingCatchId;
+  const saveBtn = document.getElementById('saveCatch');
+  saveBtn.disabled = true;
+  try{
+    if(wasEditing){
+      await updateCatch(wasEditing, fields);
+      showToast('Catch updated \u2713');
+    } else {
+      await addCatch(fields);
+      showToast('Catch logged \u2713');
+    }
+  } finally {
+    saveBtn.disabled = false;
   }
   clearPreviewMarker();
   closeLogSheetFn();
@@ -4669,8 +4767,12 @@ let cropState = null;
 photoCrop.addEventListener('click', (e)=>{
   e.stopPropagation();
   if(!pendingPhotoThumb) return;
-  cropImg.src = pendingPhotoThumb;
-  cropModal.classList.add('open');
+  // The onload handler MUST be attached before src is set. If the image is already
+  // cached (which it usually is here — it's the same photo just previewed), setting
+  // .src can fire 'load' synchronously, before an onload assigned afterward ever
+  // gets attached. That left cropState null, so "Use this crop" had nothing to
+  // apply and silently kept the uncropped original — this is why the crop never
+  // seemed to save.
   cropImg.onload = ()=>{
     const w = cropImg.clientWidth, h = cropImg.clientHeight;
     // start with an inset rectangle
@@ -4679,6 +4781,13 @@ photoCrop.addEventListener('click', (e)=>{
     cropState = {x:rx, y:ry, w:rw, h:rh, cw:w, ch:h};
     drawCropRect();
   };
+  cropImg.src = pendingPhotoThumb;
+  cropModal.classList.add('open');
+  // Safety net: if the image was already loaded/cached and onload still doesn't fire
+  // for some reason, initialize from whatever's on screen after layout settles.
+  requestAnimationFrame(()=>{
+    if(!cropState && cropImg.clientWidth && cropImg.clientHeight) cropImg.onload();
+  });
 });
 function drawCropRect(){
   cropRect.style.left = cropState.x+'px';
@@ -4709,6 +4818,7 @@ cropRect.addEventListener('pointerup', ()=>{ cropDrag = null; });
 function closeCropModal(){ cropModal.classList.remove('open'); cropDrag = null; }
 ['click','touchend'].forEach(ev=>{
   document.getElementById('cropCancel').addEventListener(ev, (e)=>{ e.preventDefault(); closeCropModal(); }, {passive:false});
+  document.getElementById('cropClose').addEventListener(ev, (e)=>{ e.preventDefault(); closeCropModal(); }, {passive:false});
 });
 function doCropApply(){
   if(!cropState || !pendingPhotoThumb){ closeCropModal(); return; }
