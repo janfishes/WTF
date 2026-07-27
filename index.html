@@ -1230,6 +1230,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .photo-crop:active{filter:brightness(1.15);}
   body[data-theme="sunglasses"] .photo-crop{background:var(--teal); border-color:#fff;}
+  .photo-revert{
+    position:absolute; bottom:7px; left:7px; background:rgba(6,15,24,.92); border:1.5px solid rgba(255,255,255,.85);
+    color:#fff; border-radius:100px; height:29px; padding:0 13px; cursor:pointer; font-size:11.5px; font-weight:700;
+    font-family:'Space Grotesk',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,.5);
+  }
+  .photo-revert:active{background:rgba(255,255,255,.2);}
+  body[data-theme="sunglasses"] .photo-revert{background:rgba(6,15,24,.92); border-color:#fff;}
   #cropModal{
     position:fixed; inset:0; z-index:2000; background:rgba(3,9,15,.9);
     display:none; flex-direction:column; align-items:center; justify-content:center; padding:18px; gap:14px;
@@ -1275,16 +1282,35 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-popup-content-wrapper{background:var(--navy-900); color:var(--fog); border:1px solid var(--line); border-radius:12px; padding:0;}
   /* Logged-catch popups (a single catch, or the scrolling list when several
      catches share a spot) can run long — notes, a photo, several cards. Let
-     the window itself be resized by dragging its bottom-right corner, the
-     same way a native resizable text box works, instead of being stuck at a
-     fixed size. Leaflet re-sets an inline width on .leaflet-popup-content
-     each time it opens, so the resize handle goes on the wrapper instead,
-     which Leaflet doesn't touch. */
+     the window itself be resized instead of being stuck at a fixed size.
+     Native CSS `resize` only offers a single bottom-right handle and some
+     browsers paint its grip as a dark, hard-edged triangle that read as "the
+     bottom of the window turned black" — so this is fully custom instead:
+     two real drag handles (bottom-left and bottom-right, see
+     makePopupResizable below) with their own visible arrows and hover
+     cursors, and no native resize UI at all. */
   .catch-popup .leaflet-popup-content-wrapper,
   .spot-popup .leaflet-popup-content-wrapper{
-    resize:both; overflow:auto; min-width:220px; min-height:120px;
+    position:relative; overflow:auto; min-width:220px; min-height:120px;
     max-width:90vw; max-height:80vh;
+    scrollbar-width:thin; scrollbar-color:var(--brass) var(--navy-800);
   }
+  .catch-popup .leaflet-popup-content-wrapper::-webkit-scrollbar,
+  .spot-popup .leaflet-popup-content-wrapper::-webkit-scrollbar{width:8px;}
+  .catch-popup .leaflet-popup-content-wrapper::-webkit-scrollbar-track,
+  .spot-popup .leaflet-popup-content-wrapper::-webkit-scrollbar-track{background:var(--navy-800);}
+  .catch-popup .leaflet-popup-content-wrapper::-webkit-scrollbar-thumb,
+  .spot-popup .leaflet-popup-content-wrapper::-webkit-scrollbar-thumb{background:var(--brass); border-radius:4px; border:2px solid var(--navy-800);}
+  .popup-resize-handle{
+    position:absolute; bottom:0; width:26px; height:26px; z-index:5;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; line-height:1; color:var(--brass); opacity:.9;
+    background:linear-gradient(135deg, transparent 50%, rgba(255,255,255,.06) 50%);
+    user-select:none; -webkit-user-select:none; touch-action:none;
+  }
+  .popup-resize-handle:active{opacity:1;}
+  .popup-resize-handle.br{right:0; cursor:nwse-resize;}
+  .popup-resize-handle.bl{left:0; cursor:nesw-resize; background:linear-gradient(225deg, transparent 50%, rgba(255,255,255,.06) 50%);}
   .catch-popup .leaflet-popup-content,
   .spot-popup .leaflet-popup-content{width:100% !important; max-width:none !important;}
   .leaflet-popup-tip{background:var(--navy-900); border:1px solid var(--line);}
@@ -1802,6 +1828,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <img id="photoPreview" style="display:none;">
       <button class="photo-remove" id="photoRemove" style="display:none;" title="Remove photo">✕</button>
       <button class="photo-crop" id="photoCrop" style="display:none;" title="Crop photo">⛶ Crop</button>
+      <button class="photo-revert" id="photoRevert" style="display:none;" title="Revert to original photo">↺ Revert</button>
       <span id="photoPlaceholderText">📷 Add a photo — if it has GPS &amp; a timestamp I'll fill in the location, date &amp; time</span>
     </div>
     <p class="storage-note" id="photoStatus"></p>
@@ -3563,7 +3590,7 @@ function makePopupDraggable(popup){
   };
   const onDown = ev => {
     const t = ev.target;
-    if(t.closest('button, a, input, textarea, select, .drops-list, .pop-catch-list, .note-area, img')) return;
+    if(t.closest('button, a, input, textarea, select, .drops-list, .pop-catch-list, .note-area, img, .popup-resize-handle')) return;
     const p = point(ev);
     sx = p.clientX; sy = p.clientY; moved = false;
     startPt = map.latLngToContainerPoint(popup.getLatLng());
@@ -3575,6 +3602,80 @@ function makePopupDraggable(popup){
   wrap.addEventListener('mousedown', onDown);
   wrap.addEventListener('touchstart', onDown, {passive:true});
 }
+/* Custom drag-to-resize for catch/spot popups: two handles, bottom-left and
+   bottom-right, so the window can be resized from either corner — not just
+   the single corner a native CSS `resize` handle would offer. Dragging the
+   right handle grows/shrinks normally (left edge anchored); dragging the
+   left handle keeps the RIGHT edge anchored instead, by shifting the
+   wrapper left with a compensating negative margin as width changes, so it
+   feels like pulling the left edge outward rather than the box just
+   growing further to the right. */
+function makePopupResizable(popup){
+  const el = popup.getElement();
+  if(!el || el._resizeWired) return;
+  const wrap = el.querySelector('.leaflet-popup-content-wrapper');
+  const isResizable = el.classList.contains('catch-popup') || el.classList.contains('spot-popup');
+  if(!isResizable || !wrap) return;
+  el._resizeWired = true;
+  const point = ev => (ev.touches && ev.touches.length ? ev.touches[0] : ev);
+  function addHandle(side){
+    const h = document.createElement('div');
+    h.className = 'popup-resize-handle ' + side;
+    h.textContent = side === 'br' ? '⤡' : '⤢';
+    wrap.appendChild(h);
+    let start = null;
+    const onMove = ev => {
+      if(!start) return;
+      ev.preventDefault();
+      const p = point(ev);
+      const dx = p.clientX - start.x, dy = p.clientY - start.y;
+      const minW = 220, minH = 120, maxW = Math.round(window.innerWidth*0.9), maxH = Math.round(window.innerHeight*0.8);
+      const newH = Math.max(minH, Math.min(maxH, start.h + dy));
+      wrap.style.height = newH + 'px';
+      if(side === 'br'){
+        const newW = Math.max(minW, Math.min(maxW, start.w + dx));
+        wrap.style.width = newW + 'px';
+      } else {
+        const newW = Math.max(minW, Math.min(maxW, start.w - dx));
+        wrap.style.width = newW + 'px';
+        wrap.style.marginLeft = (start.ml - (newW - start.w)) + 'px';
+      }
+      popup.options.autoPan = false;
+    };
+    const onUp = () => {
+      start = null;
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onUp);
+    };
+    const onDown = ev => {
+      ev.preventDefault(); ev.stopPropagation();
+      const p = point(ev);
+      const r = wrap.getBoundingClientRect();
+      const ml = parseFloat(getComputedStyle(wrap).marginLeft) || 0;
+      start = {x:p.clientX, y:p.clientY, w:r.width, h:r.height, ml};
+      document.addEventListener('mousemove', onMove, {passive:false});
+      document.addEventListener('mouseup', onUp);
+      document.addEventListener('touchmove', onMove, {passive:false});
+      document.addEventListener('touchend', onUp);
+      // Dragging a corner usually ends with the pointer somewhere out over the
+      // map, not over the popup — so the click the browser fires right after
+      // mouseup lands on the map itself, and Leaflet's default "close on map
+      // click" behavior closed the popup out from under the resize. Catch
+      // that one click in the capture phase, before it can reach the map,
+      // and swallow it.
+      const eatNextClick = ce => { ce.stopPropagation(); ce.preventDefault(); };
+      document.addEventListener('click', eatNextClick, {capture:true, once:true});
+      setTimeout(()=> document.removeEventListener('click', eatNextClick, true), 400);
+    };
+    h.addEventListener('mousedown', onDown);
+    h.addEventListener('touchstart', onDown, {passive:false});
+  }
+  addHandle('br');
+  addHandle('bl');
+}
+map.on('popupopen', e => makePopupResizable(e.popup));
 /* A click on a button inside a popup must never reach the map. Leaflet already intends
    this — it flags the popup container and checks it in _handleDOMEvent — but that check
    walks up from the event target, so it FAILS whenever a handler re-renders the popup's
@@ -4677,10 +4778,12 @@ function openLogSheet(editCatch){
     updateLocPreview();
     if(editCatch.photo && photoIsDrawable(editCatch.photo)){
       pendingPhotoThumb = editCatch.photo;
+      originalPhotoThumb = editCatch.photo;
       photoPreview.src = editCatch.photo;
       photoPreview.style.display = 'block';
       photoRemove.style.display = 'block';
       photoCrop.style.display = 'block';
+      photoRevert.style.display = 'none';
       photoBox.classList.add('has');
     } else if(editCatch.photo){
       // Undrawable leftover — drop it so the box is tappable and a JPEG can replace it.
@@ -4748,11 +4851,28 @@ document.getElementById('saveCatch').addEventListener('click', async ()=>{
 /* ===================== PHOTO: EXIF ===================== */
 
 let pendingPhotoThumb = null;
+// The as-uploaded (or as-saved, when editing) photo, kept untouched through any
+// number of crops so "Revert" always gets back to the real original — not just
+// undoes the last crop.
+let originalPhotoThumb = null;
 const photoInput = document.getElementById('logPhoto');
 const photoBox = document.getElementById('photoBox');
 const photoPreview = document.getElementById('photoPreview');
 const photoRemove = document.getElementById('photoRemove');
 const photoCrop = document.getElementById('photoCrop');
+const photoRevert = document.getElementById('photoRevert');
+function updatePhotoRevertVisibility(){
+  photoRevert.style.display = (originalPhotoThumb && pendingPhotoThumb !== originalPhotoThumb) ? 'block' : 'none';
+}
+photoRevert.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  if(!originalPhotoThumb) return;
+  pendingPhotoThumb = originalPhotoThumb;
+  photoPreview.src = originalPhotoThumb;
+  photoPreview.style.display = 'block';
+  updatePhotoRevertVisibility();
+  showToast('Reverted to original photo \u2713');
+});
 const photoStatus = document.getElementById('photoStatus');
 
 photoBox.addEventListener('click', ()=>{ if(!pendingPhotoThumb) photoInput.click(); });
@@ -4839,6 +4959,7 @@ function doCropApply(){
       pendingPhotoThumb = dataURL;
       photoPreview.src = dataURL;
       photoPreview.style.display = 'block';
+      updatePhotoRevertVisibility();
     }catch(err){
       showToast("Couldn't crop that photo — keeping the original.");
     }
@@ -4856,11 +4977,13 @@ function doCropApply(){
 
 function clearPhoto(){
   pendingPhotoThumb = null;
+  originalPhotoThumb = null;
   photoInput.value = '';
   photoPreview.src = '';
   photoPreview.style.display = 'none';
   photoRemove.style.display = 'none';
   photoCrop.style.display = 'none';
+  photoRevert.style.display = 'none';
   photoBox.classList.remove('has');
   photoStatus.textContent = '';
 }
@@ -5057,6 +5180,7 @@ photoInput.addEventListener('change', async ()=>{
   try{
     previewUrl = await resizeToDataURL(file, maxDim, jpegQ);
     pendingPhotoThumb = previewUrl;   // one high-quality asset; display size is CSS-limited
+    originalPhotoThumb = previewUrl;
   }catch(e){
     // Nothing is stored unless it decoded — saving the raw bytes of a format this
     // browser can't draw is what produced the black photos in older logs.
@@ -5070,6 +5194,7 @@ photoInput.addEventListener('change', async ()=>{
   photoPreview.style.display = 'block';
   photoRemove.style.display = 'block';
   photoCrop.style.display = 'block';
+  photoRevert.style.display = 'none';
   photoBox.classList.add('has');
 
   const statusBits = [];
