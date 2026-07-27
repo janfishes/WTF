@@ -1261,7 +1261,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #cropApply{background:var(--catch); color:#fff; border-color:var(--catch);}
   #cropCancel{background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.6);}
-  .pop-photo{width:100%; border-radius:8px; margin-bottom:8px; max-height:240px; object-fit:cover; object-position:top; display:block;}
+  .pop-photo{width:100%; border-radius:8px; margin-bottom:8px; height:auto; max-height:none; object-fit:contain; display:block;}
   /* contain, not cover: cover was cropping the top and bottom off portrait shots. */
   .cc-photo{width:100%; border-radius:8px; margin-top:8px; height:auto; max-height:none; object-fit:contain; display:block;}
 
@@ -1302,14 +1302,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .catch-popup .leaflet-popup-content-wrapper::-webkit-scrollbar-thumb,
   .spot-popup .leaflet-popup-content-wrapper::-webkit-scrollbar-thumb{background:var(--brass); border-radius:4px; border:2px solid var(--navy-800);}
   .popup-resize-handle{
-    position:absolute; width:34px; height:34px; z-index:20;
+    position:absolute; width:32px; height:32px; z-index:20;
     display:flex; align-items:center; justify-content:center;
-    background:var(--navy-800); border:2px solid var(--brass); border-radius:50%;
-    box-shadow:0 2px 6px rgba(0,0,0,.5);
-    user-select:none; -webkit-user-select:none; touch-action:none;
+    color:var(--brass); user-select:none; -webkit-user-select:none; touch-action:none;
   }
-  .popup-resize-handle svg{width:20px; height:20px; display:block; pointer-events:none;}
-  .popup-resize-handle:active{background:var(--navy-700, #16324a);}
+  .popup-resize-handle svg{width:26px; height:26px; display:block; pointer-events:none;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.8));}
+  .popup-resize-handle:active{color:#fff;}
   .popup-resize-handle.br{cursor:nwse-resize;}
   .popup-resize-handle.bl{cursor:nesw-resize;}
   .catch-popup .leaflet-popup-content,
@@ -1394,6 +1393,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
      underneath it. */
   .pop-catch-list{max-height:min(46vh, 320px); overflow-y:auto; margin-top:9px;
     padding-right:3px; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;}
+  /* Inside a resizable catch-popup window, the outer wrapper is already the
+     scroll boundary — a second, independently-capped scroll box in here just
+     trapped photos at a small fixed size no matter how big the window was
+     dragged. Let this list grow with its content instead. */
+  .catch-popup .pop-catch-list{max-height:none; overflow-y:visible;}
   .pop-catch-list .catch-card{margin-bottom:7px;}
   .pop-catch-list .catch-card:last-child{margin-bottom:0;}
   .pop-catch-list .cc-photo{max-height:none;}
@@ -3620,32 +3624,32 @@ function makePopupResizable(popup){
   if(!isResizable || !wrap) return;
   el._resizeWired = true;
   const point = ev => (ev.touches && ev.touches.length ? ev.touches[0] : ev);
-  // Something about ending a corner-drag (the pointer usually ends up out over
-  // the map, not back over the popup) was triggering Leaflet's normal
-  // close-on-map-click behavior right as the drag finished, closing the
-  // window out from under the resize. Rather than guess at the exact event
-  // and try to intercept it, watch for the popup actually closing while a
-  // resize is in progress (or just after) and reopen it immediately —
-  // Leaflet only destroys the popup's DOM element after a short fade delay,
-  // so reopening inside that window reuses the same element, handles, and
-  // whatever size was just dragged to.
-  let resizing = false, resizingUntil = 0;
-  map.on('popupclose', e => {
-    if(e.popup !== popup) return;
-    if(!resizing && Date.now() > resizingUntil) return;
-    map.openPopup(popup);
-  });
+  // Ending a corner-drag usually leaves the pointer out over the map, not
+  // back over the popup, and the click that follows was triggering
+  // Leaflet's normal close-on-map-click behavior right as the drag
+  // finished — closing the window out from under the resize. Leaflet wires
+  // that behavior as a single direct listener (map 'preclick' -> this
+  // popup's close()) the first time the popup opens, so reassigning
+  // popup.close later doesn't intercept it. Instead, unbind that exact
+  // listener for the duration of the drag (plus a short grace period after
+  // release) and rebind it afterward.
+  let resizing = false, resumeTimer = null;
+  const originalClose = popup.close; // shared prototype method; identity matters for off()/on() matching
+  function suspendClose(){ clearTimeout(resumeTimer); map.off('preclick', originalClose, popup); }
+  function resumeClose(){ map.on('preclick', originalClose, popup); }
   function addHandle(side){
     const h = document.createElement('div');
     h.className = 'popup-resize-handle ' + side;
     // Inline SVG instead of a Unicode arrow glyph — some mobile browsers
     // (this showed up on iPhone) have no font coverage for the diagonal
     // arrow characters and render nothing at all, which looked like the
-    // handle itself was missing rather than just its icon.
-    h.innerHTML = '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">'
+    // handle itself was missing rather than just its icon. Drawn as a
+    // thick double-headed diagonal arrow with real arrowheads, not a thin
+    // double-line — much easier to read as "drag to resize" at a glance.
+    h.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'
       + (side === 'br'
-          ? '<path d="M4 12 L12 4 M7 4 H12 V9 M8 12 L16 4"/><path d="M4 16 L16 4"/>'
-          : '<path d="M16 12 L8 4 M8 9 V4 H13 M12 12 L4 4"/><path d="M16 16 L4 4"/>')
+          ? '<path d="M6 6 L18 18"/><path d="M18 11 L18 18 L11 18"/><path d="M6 10 L6 6 L10 6"/>'
+          : '<path d="M18 6 L6 18"/><path d="M6 11 L6 18 L13 18"/><path d="M18 10 L18 6 L14 6"/>')
       + '</svg>';
     // Appended to the outer, unclipped popup element rather than the
     // scrollable/overflow:auto wrapper — position:absolute children of an
@@ -3687,7 +3691,8 @@ function makePopupResizable(popup){
     const onUp = () => {
       start = null;
       resizing = false;
-      resizingUntil = Date.now() + 500; // still catch a close that lands just after release
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(resumeClose, 500); // grace period for a close that lands just after release
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
       document.removeEventListener('touchmove', onMove);
@@ -3696,6 +3701,7 @@ function makePopupResizable(popup){
     const onDown = ev => {
       ev.preventDefault(); ev.stopPropagation();
       resizing = true;
+      suspendClose();
       const p = point(ev);
       const r = wrap.getBoundingClientRect();
       const ml = parseFloat(getComputedStyle(wrap).marginLeft) || 0;
