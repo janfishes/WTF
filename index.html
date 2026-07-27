@@ -3727,6 +3727,23 @@ function makePopupResizable(popup){
   // Keep both handles glued to the wrapper's corners across map zoom/pan too,
   // not just during an active drag.
   map.on('zoom move', ()=> repositionFns.forEach(fn => fn()));
+  // The catch photo loads asynchronously, well after the popup first opens and
+  // Leaflet does its one-time "pan the map so the popup is fully visible" check.
+  // An uncapped, full-size photo can make the box much taller once it finishes
+  // loading, which otherwise left the handles glued to where the (shorter,
+  // pre-photo) bottom edge used to be — off the bottom of the screen. 'load'
+  // doesn't bubble, so this listens in the capture phase.
+  el.addEventListener('load', ()=>{
+    repositionFns.forEach(fn => fn());
+    try{ popup._adjustPan && popup._adjustPan(); }catch(e){}
+  }, true);
+  // Belt-and-suspenders: photos are stored as data URLs, which can finish
+  // decoding almost instantly — sometimes before the 'load' listener above
+  // even gets attached. A couple of staggered rechecks catch that case too.
+  [0, 60, 200].forEach(t => setTimeout(()=>{
+    repositionFns.forEach(fn => fn());
+    try{ popup._adjustPan && popup._adjustPan(); }catch(e){}
+  }, t));
 }
 map.on('popupopen', e => makePopupResizable(e.popup));
 /* A click on a button inside a popup must never reach the map. Leaflet already intends
