@@ -1677,7 +1677,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V65</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V66</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1835,7 +1835,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v65 · Fixed cluster count chips not rendering when zoomed out on older Android devices (pillLayer positioning now has an explicit fallback alongside the inset shorthand).</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v66 · Fixed spots/catches/launches and cluster totals not appearing at launch on some Android devices until filter pills were toggled — kickMap() (the routine that recovers from late/incorrect container sizing) now also recomputes cluster pills and marker visibility, not just the map's own size.</p>
     </div>
   </div>
 </div>
@@ -2939,6 +2939,11 @@ function kickMap(){
     document.documentElement.scrollTop = 0;
     map.invalidateSize(true);
     if(imageryLayer && imageryLayer.redraw) imageryLayer.redraw();
+    // On some Android devices the container still reports zero/incorrect size on the
+    // very first layout pass, so whatever buildClusters()/applyFilter() ran at that
+    // point computed pill positions and marker visibility from bad geometry — and
+    // nothing else re-triggers them. Recompute here now that layout has settled.
+    if(typeof updateClustering === 'function') updateClustering();
   }catch(e){}
 }
 function blurActive(){
