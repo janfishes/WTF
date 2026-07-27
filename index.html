@@ -925,9 +925,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     box-shadow:0 3px 8px rgba(0,0,0,.35);
   }
   .chip .dot{width:8px; height:8px; border-radius:50%; flex:0 0 auto; margin-right:5px;}
+  /* The 4 map filter pills with a live total (Catches, Inshore, Offshore, Launches) show
+     the number right after the name on the same line. Labels has no total. */
+  .chip.filter-count .chip-total{
+    display:inline; margin-left:6px; font-size:12.5px; font-weight:700; letter-spacing:0;
+  }
   .chip.active:not(.sp){color:var(--fog); background:rgba(20,42,61,.95);}
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
-  /* My Catches matches the other switches: black when off (accent text/border),
+  /* Catches matches the other switches: black when off (accent text/border),
      filled with the current theme accent when on. */
   #catchToggle{background:#000 !important; color:var(--accent-lite) !important; font-weight:700; border:1px solid var(--accent-lite) !important; box-shadow:none !important;}
   #catchToggle:not(.active){opacity:1; background:#000 !important; color:var(--accent-lite) !important; border-color:var(--accent-lite) !important;}
@@ -1110,13 +1115,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     #sizeBtn .a-lg{font-size:12px;}
     #sizeBtn .a-sm{font-size:6px;}
     .hdr-right{min-width:0;}
-    /* Top toggles: 3 on top (Inshore, Offshore, My Catches), 2 underneath (Launches, Labels),
+    /* Top toggles: pills for Catches, Inshore, Offshore, Launches, Labels —
        centered between the species column (left) and the zoom buttons (right) */
-    /* The row runs the full width so Inshore+Offshore+My Catches keep one line; the row
+    /* The row runs the full width so the filter pills keep one line where possible; the row
        itself is pointer-events:none so only the chips take taps. */
     #filterWrap{left:92px; right:8px; top:8px; gap:4px; max-width:none;}
     #filterWrap .chiprow{justify-content:center; flex-wrap:wrap;}
-    /* Let the top three shrink a little rather than wrap out of order */
+    /* Let the top pills shrink a little rather than wrap out of order */
     #metaRow .chip{flex:0 1 auto; min-width:0;}
     .chip-break{display:block; flex-basis:100%; height:0;}
     .chip{padding:4px 8px 7px; font-size:13px;}
@@ -1470,25 +1475,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .build-stamp{position:absolute; left:6px; bottom:26px; z-index:1000; pointer-events:none;
     font:600 9px/1.2 'JetBrains Mono',monospace; letter-spacing:.03em; color:var(--fog);
     opacity:.5;}
-  #pillLayer{position:absolute; top:0; left:0; right:0; bottom:0; inset:0; z-index:1105; pointer-events:none;}
-  #pillLayer .cluster-pill{pointer-events:auto; cursor:pointer;}
-  .cluster-pill{
-    width:70px; height:70px; border-radius:50%; border:1px solid #fff;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1; box-sizing:border-box;
-    /* Heavier bottom padding lifts the count and label into the upper half of the circle. */
-    padding:2px 3px 8px;
-  }
-  .cluster-pill .cn{font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:800;}
-  /* Shadow on every circle's text. It matters most on the catches circle, whose fill is the
-     theme accent and left white text at ~1.7:1 on the light accents, but the zone colours are
-     bright enough to want the same edge. */
-  .cluster-pill .cn,
-  .cluster-pill .cl{text-shadow:0 1px 2px rgba(0,0,0,.75), 0 0 3px rgba(0,0,0,.5);}
-  .cluster-pill .cl{font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.02em; margin-top:2px; text-align:center;
-    /* letter-spacing adds a trailing gap after the last letter, which drags centred
-       text off to the left; the negative margin cancels it. */
-    margin-right:-.02em; line-height:1; white-space:nowrap;}
   #themeGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
   .theme-opt{
     display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:11px;
@@ -1677,7 +1663,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V67</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V75</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1773,14 +1759,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="catchListBody"></div>
     </div>
     <div id="panel-help" style="display:none;">
-      <p class="sheet-note">A quick shape guide used throughout this Help: <b>cookies</b> (round, top-right of the header) are Search, Help, Themes, and Text Size. <b>Pills</b> (hot-dog shaped) are the filter row, species switches, and the action stack along the map's edge. <b>Cluster chips</b> (small oval badges) show totals when the map is zoomed out.</p>
+      <p class="sheet-note">A quick shape guide used throughout this Help: <b>cookies</b> (round, top-right of the header) are Search, Help, Themes, and Text Size. <b>Pills</b> (hot-dog shaped) are the map filter row, species switches, and the action stack along the map's edge. The 5 map filter pills (Catches, Inshore, Offshore, Launches, Labels) — the 4 with a total show the count right after the name.</p>
       <div class="subhead" style="margin-top:2px;">Map Controls (pills &amp; chips)</div>
-      <p class="sheet-note"><b>My Catches</b> (first in the row) shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕.</p>
-      <p class="sheet-note">As you zoom out, pins collapse into cluster chips that sit just below the top row — one under each matching chip — showing totals for spots, sites, launches, and catches. Tap a cluster chip or zoom back in to expand them.</p>
-      <p class="sheet-note">Tapping the Inshore, Offshore, or Launches pills or their cluster chips will open the respective data set.</p>
+      <p class="sheet-note"><b>Catches</b> (first in the row) shows/hides your catch diamonds, with your current catch total shown below the name. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins and labels — turn one off to hide that zone entirely; each shows its total. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else, with its own total. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. Totals reflect every built-in and user-added spot, at any zoom level. All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕.</p>
 
       <div class="subhead">Species Switches (pill buttons)</div>
-      <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>My Catches</b> is off. If you've never logged that fish, you'll get a note saying so.</p>
+      <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>Catches</b> is off. If you've never logged that fish, you'll get a note saying so.</p>
 
       <div class="subhead">Fishing Functions (white pills)</div>
       <p class="sheet-note">The white pill buttons along the map's edge are shortcuts to the app's main actions.</p>
@@ -1835,7 +1819,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v67 · Fixed cluster total chips being hidden behind the filter button row when zoomed out — #pillLayer's z-index (1090) was actually lower than #filterWrap's (1100), so on narrow screens where the filter chips wrap onto extra lines, those opaque chips covered the pills. Pill layer now renders above the filter row (z-index 1105).</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v75 · Cleaned up remaining Help/comment references to the old filter circles now that they're single-line pills.</p>
     </div>
   </div>
 </div>
@@ -2466,7 +2450,7 @@ function showToast(msg, duration=2400){
 
 const map = L.map('map', { zoomControl:false, attributionControl:true, minZoom:1 }).setView([29.06,-80.87],11);
 L.control.zoom({position:'bottomleft'}).addTo(map);
-const CLUSTER_ZOOM = 9; // at/below this zoom, spots collapse into category count ("totals") pills
+const DEFAULT_ZOOM = 9; // initial map zoom level on load
 L.control.scale({position:'bottomleft', imperial:true, metric:false, maxWidth:66}).addTo(map);
 
 // Base layers, all free for commercial redistribution:
@@ -2940,9 +2924,8 @@ function kickMap(){
     map.invalidateSize(true);
     if(imageryLayer && imageryLayer.redraw) imageryLayer.redraw();
     // On some Android devices the container still reports zero/incorrect size on the
-    // very first layout pass, so whatever buildClusters()/applyFilter() ran at that
-    // point computed pill positions and marker visibility from bad geometry — and
-    // nothing else re-triggers them. Recompute here now that layout has settled.
+    // very first layout pass, so whatever applyFilter() ran at that point computed
+    // marker visibility from bad geometry. Recompute here now that layout has settled.
     if(typeof updateClustering === 'function') updateClustering();
   }catch(e){}
 }
@@ -3072,10 +3055,10 @@ map.getPane('tooltipPane').style.zIndex = 650;
 map.getPane('popupPane').style.zIndex = 900;
 
 const bounds = L.latLngBounds(SPOTS.filter(s=>!s.farOut).map(s=>[s.lat,s.lng]));
-// Launch zoomed out into the "totals" (cluster pill) view instead of zooming in to fit
-// every individual pin. Zooming in, or tapping a top filter button, reveals them — see
-// the CLUSTERING section below.
-map.setView(bounds.getCenter(), CLUSTER_ZOOM);
+// Launch zoomed out to a wide default view rather than zooming in to fit every
+// individual pin — all pins show at this zoom regardless, with per-category totals
+// shown on the filter chips above (see updateFilterCounts()).
+map.setView(bounds.getCenter(), DEFAULT_ZOOM);
 
 // Our own inlet label, placed between the outside and inside north jetty pins
 L.marker([29.078252, -80.910331], {
@@ -3155,136 +3138,15 @@ function applySpotLabels(){
   });
 }
 
-/* ===================== CLUSTERING (count pills when zoomed out) =====================
-   When zoomed out, individual pins are replaced by count pills. The pills are DOM
-   overlays anchored directly UNDER their matching top button (Inshore, Offshore,
-   My Catches, Launches) instead of floating over the map, so they never cover the
-   PONCE DELEON INLET label or any other map content. Tapping a pill flies to that
-   group's centroid. */
+/* ===================== (Clustering / count-pill overlay removed) =====================
+   Individual pins for inshore spots, offshore sites, and launches now always show at
+   every zoom level, on every device. Category totals are shown instead as a second line
+   of text inside each filter chip (see updateFilterCounts() near the chip definitions). */
 
-let clustered = false;
-const pillLayer = document.createElement('div');
-pillLayer.id = 'pillLayer';
-document.getElementById('map').appendChild(pillLayer);
-
-function clearClusters(){ pillLayer.innerHTML = ''; clustered = false; }
-
-function pillAnchorEl(key){
-  if(key === 'inshore')  return document.querySelector('#metaRow .chip[data-zone="inshore"]');
-  if(key === 'offshore') return document.querySelector('#metaRow .chip[data-zone="offshore"]');
-  if(key === 'launch')   return document.getElementById('launchToggle');
-  if(key === 'catch')    return document.getElementById('catchToggle');
-  return null;
-}
-
-function buildClusters(){
-  clearClusters();   // clears the flag; set back on at the end of this function
-  const groups = {
-    inshore:  { pts:[], color:'var(--inshore)', label:'spots', show:activeZones.has('inshore') },
-    offshore: { pts:[], color:'var(--offshore)', label:'sites', show:activeZones.has('offshore') },
-    catch:    { pts:[], color:'var(--teal)', label:'catches', show:showCatches },
-    launch:   { pts:[], color:'var(--launch)', label:'launches', show:showLaunches }
-  };
-  SPOTS.forEach(s=>{
-    if(s.ramp){ if(showLaunches) groups.launch.pts.push([s.lat,s.lng]); return; }
-    if(!activeZones.has(s.zone)) return;
-    (s.zone==='offshore'?groups.offshore:groups.inshore).pts.push([s.lat,s.lng]);
-  });
-  const speciesActive = activeSpecies.size > 0;
-  catches.forEach(c=>{
-    if(showCatches && (!speciesActive || activeSpecies.has(c.species))) groups.catch.pts.push([c.lat,c.lng]);
-  });
-  const active = Object.entries(groups).filter(([key,g])=> g.show && (g.pts.length || key==='catch'));
-  const all = active.flatMap(([,g])=>g.pts);
-  const base = all.length ? centroid(all) : [map.getCenter().lat, map.getCenter().lng];
-
-  const mapRect = document.getElementById('map').getBoundingClientRect();
-  const wrapRect = document.getElementById('filterWrap').getBoundingClientRect();
-  const rowTop = wrapRect.bottom - mapRect.top + 8;   // just below the whole button block
-
-  // Build pill specs centered under each button
-  const specs = [];
-  active.forEach(([key,g])=>{
-    const anchor = pillAnchorEl(key);
-    if(!anchor) return;
-    const count = g.pts.length;
-    const D = 70; // all pills the same size, with room for the longest label + padding
-    const a = anchor.getBoundingClientRect();
-    specs.push({ key, g, count, D,
-      cx: a.left + a.width/2 - mapRect.left });
-  });
-
-  // Resolve horizontal overlap so no pill obscures another
-  specs.sort((p,q)=>p.cx-q.cx);
-  for(let i=1;i<specs.length;i++){
-    const minGap = (specs[i-1].D + specs[i].D)/2 + 6;
-    if(specs[i].cx - specs[i-1].cx < minGap) specs[i].cx = specs[i-1].cx + minGap;
-  }
-  // Clamp inside the map
-  specs.forEach(p=>{
-    p.cx = Math.max(p.D/2 + 4, Math.min(mapRect.width - p.D/2 - 4, p.cx));
-  });
-  for(let i=specs.length-2;i>=0;i--){
-    const minGap = (specs[i].D + specs[i+1].D)/2 + 6;
-    if(specs[i+1].cx - specs[i].cx < minGap) specs[i].cx = specs[i+1].cx - minGap;
-  }
-
-  specs.forEach(p=>{
-    const el = document.createElement('div');
-    el.className = 'cluster-pill' + (p.key === 'catch' ? ' cl-catch' : '');
-    el.style.cssText = `background:${resolveVar(p.g.color)}; width:${p.D}px; height:${p.D}px; position:absolute; left:${Math.round(p.cx - p.D/2)}px; top:${Math.round(rowTop)}px;`;
-    el.innerHTML = `<span class="cn">${p.count}</span><span class="cl">${p.g.label}</span>`;
-    const target = p.g.pts.length ? centroid(p.g.pts) : base;
-    el.addEventListener('click', ()=>{ soloCategory(p.key); map.flyTo(target, CLUSTER_ZOOM + 2); });
-    pillLayer.appendChild(el);
-  });
-  clustered = true;
-  syncEggMarker();
-}
-
-// Tapping a count pill expands ONLY that category: switch the top buttons so
-// just the tapped one is on. The user can tap the other top buttons to bring
-// their pins back.
-function soloCategory(key){
-  activeZones.clear();
-  if(key === 'inshore' || key === 'offshore') activeZones.add(key);
-  showLaunches = (key === 'launch');
-  showCatches  = (key === 'catch');
-  document.querySelectorAll('#metaRow .chip[data-zone]').forEach(ch=>
-    ch.classList.toggle('active', activeZones.has(ch.dataset.zone)));
-  const lt = document.getElementById('launchToggle');
-  if(lt) lt.classList.toggle('active', showLaunches);
-  const ct = document.getElementById('catchToggle');
-  if(ct) ct.classList.toggle('active', showCatches);
-}
-function centroid(pts){
-  const la = pts.reduce((s,p)=>s+p[0],0)/pts.length;
-  const ln = pts.reduce((s,p)=>s+p[1],0)/pts.length;
-  return [la, ln];
-}
-
-// Set to true right before a "white button" (FAB) programmatically moves/zooms the map
-// (e.g. Waves, Locate Me) so that zoom doesn't silently break out of the totals view.
-// Genuine user zooming (scroll/pinch/+-) and top-button taps are unaffected.
-let suppressClusterZoom = false;
-function updateClustering(){
-  // A live species pick keeps the diamonds on screen at any zoom.
-  const shouldCluster = map.getZoom() <= CLUSTER_ZOOM && activeSpecies.size === 0;
-  if(shouldCluster){
-    // hide all individual markers, show cluster pills under the buttons
-    markers.forEach(m=>{ if(map.hasLayer(m)) map.removeLayer(m); });
-    catchMarkers.forEach(m=>{ if(map.hasLayer(m)) map.removeLayer(m); });
-    buildClusters();
-  } else {
-    clearClusters();
-    applyFilter();
-  }
-}
-map.on('zoomend', ()=>{
-  if(suppressClusterZoom){ suppressClusterZoom = false; return; }
-  updateClustering();
-});
-window.addEventListener('resize', ()=>{ if(clustered) buildClusters(); });
+// Kept as thin wrappers so existing call sites (filter toggles, storage load, kickMap,
+// programmatic zoom handlers, etc.) don't all need to be rewired individually.
+function clearClusters(){}
+function updateClustering(){ applyFilter(); }
 
 applySpotLabels();
 
@@ -3472,7 +3334,7 @@ function updateStorageNote(){
   };
   document.getElementById('storageNote').textContent = notes[storageMode];
 }
-/* The number on the My Catches button tracks whatever the species filter is
+/* The number on the Catches pill tracks whatever the species filter is
    showing: the total for the picked species (summed if several are on), or the
    whole log when none is picked. Same figure the catches count pill shows. */
 function catchFilterCount(){
@@ -3481,6 +3343,26 @@ function catchFilterCount(){
     : catches.length;
 }
 function updateCatchCount(){ document.getElementById('catchCount').textContent = catchFilterCount(); }
+
+/* Live totals for the Inshore / Offshore / Launches filter pills.
+   Counts every spot marker currently known to the app — built-in SPOTS plus any
+   user-added custom spots, since both get pushed into the shared `markers` array.
+   A spot counts as a launch if it carries the built-in `ramp` flag or (for
+   custom spots) has zone === 'launch'; everything else buckets by its zone. */
+function updateFilterCounts(){
+  let inshore = 0, offshore = 0, launch = 0;
+  markers.forEach(m=>{
+    const s = m.spotRef;
+    if(!s || s._deleted) return;
+    if(s.ramp || s.zone === 'launch') launch++;
+    else if(s.zone === 'offshore') offshore++;
+    else if(s.zone === 'inshore') inshore++;
+  });
+  const ic = document.getElementById('inshoreCount'); if(ic) ic.textContent = inshore;
+  const oc = document.getElementById('offshoreCount'); if(oc) oc.textContent = offshore;
+  const lc = document.getElementById('launchCount');   if(lc) lc.textContent = launch;
+  updateCatchCount();
+}
 
 /* ===================== CATCH MARKERS ===================== */
 
@@ -4002,23 +3884,27 @@ const speciesCol = document.getElementById('speciesCol');
 let activeZones = new Set(['inshore','offshore']);
 let activeSpecies = new Set();
 
-// Row order: My Catches, Inshore, Offshore | Launches, Labels
+// Row order: Catches, Inshore, Offshore | Launches, Labels
+// Each filter pill (except Labels) is two lines: the name on top, its live total
+// beneath it — the same totals the old cluster-pill overlay used to show when
+// zoomed out, now always visible instead of only appearing at low zoom.
+const FILTER_ZONE_LABELS = { inshore: 'Inshore', offshore: 'Offshore' };
+
 const catchToggle = document.createElement('div');
-catchToggle.className = 'chip util active';
+catchToggle.className = 'chip util active filter-count';
 catchToggle.id = 'catchToggle';
-catchToggle.innerHTML = 'My Catches (<span id="catchCount">0</span>)';
+catchToggle.innerHTML = 'Catches<span class="chip-total" id="catchCount">0</span>';
 metaRow.appendChild(catchToggle);
 
 Object.entries(ZONES).forEach(([key,z])=>{
   const chip = document.createElement('div');
-  chip.className = 'chip active';
+  chip.className = 'chip active filter-count';
   chip.dataset.zone = key;
   chip.style.color = z.color;
-  chip.textContent = z.label;
+  chip.innerHTML = `${FILTER_ZONE_LABELS[key] || z.label}<span class="chip-total" id="${key}Count">0</span>`;
   chip.addEventListener('click', ()=>{
     if(activeZones.has(key)){ activeZones.delete(key); chip.classList.remove('active'); }
     else { activeZones.add(key); chip.classList.add('active'); }
-    clearClusters();
     applyFilter();
   });
   metaRow.appendChild(chip);
@@ -4029,13 +3915,13 @@ chipBreak.className = 'chip-break';
 metaRow.appendChild(chipBreak);
 
 const launchToggle = document.createElement('div');
-launchToggle.className = 'chip util active';
+launchToggle.className = 'chip util active filter-count';
 launchToggle.id = 'launchToggle';
-launchToggle.textContent = 'Launches';
+launchToggle.innerHTML = 'Launches<span class="chip-total" id="launchCount">0</span>';
 metaRow.appendChild(launchToggle);
 
 const labelsToggle = document.createElement('div');
-labelsToggle.className = 'chip util active';
+labelsToggle.className = 'chip util active filter-count';
 labelsToggle.id = 'labelsToggle';
 labelsToggle.textContent = 'Labels';
 metaRow.appendChild(labelsToggle);
@@ -4052,13 +3938,8 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
     else { activeSpecies.add(key); chip.classList.add('active'); }
     updateCatchCount();
     if(activeSpecies.size === 0){
-      // Last species switched off — go back to the normal view for this zoom,
-      // which means the totals pills again if we're zoomed out.
-      updateClustering();
+      applyFilter();
     } else {
-      // The app opens at CLUSTER_ZOOM, so it starts in the totals view; drop out
-      // of it so the diamonds actually have somewhere to appear.
-      clearClusters();
       applyFilter();
       if(!catches.some(c=> activeSpecies.has(c.species))){
         showToast('No ' + sp.label.toLowerCase() + ' in your log yet');
@@ -4082,15 +3963,13 @@ speciesCol.addEventListener('wheel', (e)=>{
 }, {passive:false});
 
 /* The single rule for whether a spot pin belongs on screen. applyFilter() and the easter egg
-   both read it, so the two cannot drift. Callers reach the per-marker branch only after
-   clearClusters(), which is why `clustered` is not consulted here — offshorePinsVisible()
-   adds that check for callers that can run while the totals view is up. */
+   both read it, so the two cannot drift. */
 function pinVisible(s){
   if(activeSpecies.size > 0) return false;   // a species pick stands the spot pins down
   return s.ramp ? showLaunches : activeZones.has(s.zone);
 }
 function offshorePinsVisible(){
-  return !clustered && pinVisible({ zone:'offshore', ramp:false });
+  return pinVisible({ zone:'offshore', ramp:false });
 }
 
 /* ---------- Easter egg ----------
@@ -4120,8 +3999,6 @@ function syncEggMarker(){
 
 function applyFilter(){
   const speciesActive = activeSpecies.size > 0;
-  if(clustered && !speciesActive){ updateClustering(); return; }
-  clearClusters();   // individual pins and totals pills must never be on screen together
   markers.forEach(m=>{
     const s = m.spotRef;
     // Picking a species means "show me those catches" — the fishing-spot pins
@@ -4131,7 +4008,7 @@ function applyFilter(){
     if(!map.hasLayer(m)) m.addTo(map);
   });
   catchMarkers.forEach(m=>{
-    // A species pick shows its diamonds even when My Catches is switched off,
+    // A species pick shows its diamonds even when Catches is switched off,
     // otherwise the button looks dead. Each merged marker shows only the catches
     // that pass the current filter, and its badge/colour track that subset.
     const vis = m.group.catches.filter(c=>{
@@ -4151,18 +4028,17 @@ function applyFilter(){
   document.getElementById('map').classList.toggle('launches-only', showLaunches);
   syncEggMarker();
   applySpotLabels();
+  updateFilterCounts();
 }
 
 document.getElementById('launchToggle').addEventListener('click', function(){
   showLaunches = !showLaunches;
   this.classList.toggle('active', showLaunches);
-  clearClusters();
   applyFilter();
 });
 document.getElementById('catchToggle').addEventListener('click', function(){
   showCatches = !showCatches;
   this.classList.toggle('active', showCatches);
-  clearClusters();
   applyFilter();
 });
 document.getElementById('labelsToggle').addEventListener('click', function(){
@@ -5576,8 +5452,6 @@ buoyMarker.on('popupopen', loadBuoyData);
 buoyMarker.on('popupopen',  ()=>{ const b = document.getElementById('waveBtn'); if(b) b.classList.add('pressed'); });
 buoyMarker.on('popupclose', ()=>{ const b = document.getElementById('waveBtn'); if(b) b.classList.remove('pressed'); });
 document.getElementById('waveBtn').addEventListener('click', ()=>{
-  suppressClusterZoom = true;
-  setTimeout(()=>{ suppressClusterZoom = false; }, 1200); // safety reset if zoomend doesn't fire
   map.flyTo([BUOY_41070.lat, BUOY_41070.lng], Math.max(map.getZoom(), 10));
   setTimeout(()=> buoyMarker.openPopup(), 650);
 });
@@ -5618,8 +5492,6 @@ document.getElementById('locateBtn').addEventListener('click', function(){
     const ll = [pos.coords.latitude, pos.coords.longitude];
     if(locMarker) map.removeLayer(locMarker);
     locMarker = L.marker(ll, {icon:L.divIcon({className:'', html:'<div class="loc-dot"><svg viewBox="0 0 24 28" width="22" height="26"><use href="#locatePin"></use></svg></div>', iconSize:[26,26], iconAnchor:[13,13]})}).addTo(map);
-    suppressClusterZoom = true;
-    setTimeout(()=>{ suppressClusterZoom = false; }, 1200); // safety reset if zoomend doesn't fire
     map.setView(ll, 13);
     btn.classList.add('active-locate');
   };
@@ -6894,10 +6766,10 @@ function applyTheme(id){
   if(id === 'deepwater') document.body.removeAttribute('data-theme');
   else document.body.setAttribute('data-theme', id);
   document.querySelectorAll('.theme-opt').forEach(o=> o.classList.toggle('sel', o.dataset.theme === id));
-  // Repaint markers/labels/clusters that cache resolved colors
+  // Repaint markers/labels that cache resolved colors
   colorCache.__clear = 0; for(const k in colorCache) delete colorCache[k];
   applySpotLabels();
-  if(clustered) updateClustering();
+  applyFilter();
 }
 const themeGrid = document.getElementById('themeGrid');
 THEMES.forEach(t=>{
