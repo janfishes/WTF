@@ -3618,6 +3618,21 @@ function makePopupResizable(popup){
   if(!isResizable || !wrap) return;
   el._resizeWired = true;
   const point = ev => (ev.touches && ev.touches.length ? ev.touches[0] : ev);
+  // Something about ending a corner-drag (the pointer usually ends up out over
+  // the map, not back over the popup) was triggering Leaflet's normal
+  // close-on-map-click behavior right as the drag finished, closing the
+  // window out from under the resize. Rather than guess at the exact event
+  // and try to intercept it, watch for the popup actually closing while a
+  // resize is in progress (or just after) and reopen it immediately —
+  // Leaflet only destroys the popup's DOM element after a short fade delay,
+  // so reopening inside that window reuses the same element, handles, and
+  // whatever size was just dragged to.
+  let resizing = false, resizingUntil = 0;
+  map.on('popupclose', e => {
+    if(e.popup !== popup) return;
+    if(!resizing && Date.now() > resizingUntil) return;
+    map.openPopup(popup);
+  });
   function addHandle(side){
     const h = document.createElement('div');
     h.className = 'popup-resize-handle ' + side;
@@ -3644,6 +3659,8 @@ function makePopupResizable(popup){
     };
     const onUp = () => {
       start = null;
+      resizing = false;
+      resizingUntil = Date.now() + 500; // still catch a close that lands just after release
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
       document.removeEventListener('touchmove', onMove);
@@ -3651,6 +3668,7 @@ function makePopupResizable(popup){
     };
     const onDown = ev => {
       ev.preventDefault(); ev.stopPropagation();
+      resizing = true;
       const p = point(ev);
       const r = wrap.getBoundingClientRect();
       const ml = parseFloat(getComputedStyle(wrap).marginLeft) || 0;
@@ -3659,15 +3677,6 @@ function makePopupResizable(popup){
       document.addEventListener('mouseup', onUp);
       document.addEventListener('touchmove', onMove, {passive:false});
       document.addEventListener('touchend', onUp);
-      // Dragging a corner usually ends with the pointer somewhere out over the
-      // map, not over the popup — so the click the browser fires right after
-      // mouseup lands on the map itself, and Leaflet's default "close on map
-      // click" behavior closed the popup out from under the resize. Catch
-      // that one click in the capture phase, before it can reach the map,
-      // and swallow it.
-      const eatNextClick = ce => { ce.stopPropagation(); ce.preventDefault(); };
-      document.addEventListener('click', eatNextClick, {capture:true, once:true});
-      setTimeout(()=> document.removeEventListener('click', eatNextClick, true), 400);
     };
     h.addEventListener('mousedown', onDown);
     h.addEventListener('touchstart', onDown, {passive:false});
