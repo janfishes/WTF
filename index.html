@@ -909,20 +909,22 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #filterWrap .chiprow{justify-content:flex-end; pointer-events:none;}
   #filterWrap .chiprow > *{pointer-events:auto;}
   .chiprow{
-    display:flex; gap:6px; overflow-x:auto; padding-bottom:2px;
+    display:flex; overflow-x:auto; padding-bottom:2px;
     pointer-events:auto; scrollbar-width:none;
   }
   .chiprow::-webkit-scrollbar{display:none;}
   .chiprow.wrap{flex-wrap:wrap; overflow-x:visible;}
+  .chiprow > .chip, .chiprow > .chip-break{margin-right:6px; margin-bottom:6px;}
+  .chiprow > .chip:last-child{margin-right:0;}
   .chip{
-    flex:0 0 auto; display:flex; align-items:center; gap:5px; padding:5px 9px 8px;
+    flex:0 0 auto; display:flex; align-items:center; padding:5px 9px 8px;
     border-radius:100px; background:rgba(11,28,43,.88); border:1px solid var(--line);
     color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600;
     cursor:pointer; backdrop-filter:blur(6px); user-select:none; white-space:nowrap;
     transition:border-color .15s, color .15s, background .15s; line-height:1;
     box-shadow:0 3px 8px rgba(0,0,0,.35);
   }
-  .chip .dot{width:8px; height:8px; border-radius:50%; flex:0 0 auto;}
+  .chip .dot{width:8px; height:8px; border-radius:50%; flex:0 0 auto; margin-right:5px;}
   .chip.active:not(.sp){color:var(--fog); background:rgba(20,42,61,.95);}
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
   /* My Catches matches the other switches: black when off (accent text/border),
@@ -1013,15 +1015,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .fab-col{
     /* bottom:72px keeps the stack clear of the attribution, which now wraps to 2–3 lines. */
     position:absolute; right:10px; bottom:72px; z-index:1100;
-    display:flex; flex-direction:column; gap:7px; align-items:flex-end;
+    display:flex; flex-direction:column; align-items:flex-end;
     max-height:calc(100% - 170px); 
   }
   .fab{
-    display:flex; align-items:center; gap:5px; padding:2px 8px; border-radius:100px;
+    display:flex; align-items:center; padding:2px 8px; border-radius:100px;
     background:rgba(11,28,43,.92); border:1px solid var(--line); color:var(--fog);
     font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:600;
     cursor:pointer; backdrop-filter:blur(6px); box-shadow:0 4px 14px rgba(0,0,0,.35);
+    margin-bottom:7px;
   }
+  .fab-col > .fab:last-child{margin-bottom:0;}
+  .fab svg{margin-right:5px;}
   .fab svg{width:13px; height:13px; flex:0 0 auto;}
   .fab.primary{background:#fff; border-color:#fff; color:#000;}
   .fab svg{width:13px; height:13px; flex:0 0 auto;}
@@ -1111,7 +1116,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
        itself is pointer-events:none so only the chips take taps. */
     #filterWrap{left:92px; right:8px; top:8px; gap:4px; max-width:none;}
     #filterWrap .chiprow{justify-content:center; flex-wrap:wrap;}
-    #metaRow{row-gap:5px;}
     /* Let the top three shrink a little rather than wrap out of order */
     #metaRow .chip{flex:0 1 auto; min-width:0;}
     .chip-break{display:block; flex-basis:100%; height:0;}
@@ -1469,7 +1473,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #pillLayer{position:absolute; inset:0; z-index:1090; pointer-events:none;}
   #pillLayer .cluster-pill{pointer-events:auto; cursor:pointer;}
   .cluster-pill{
-    width:70px; height:70px; border-radius:50%; border:2.5px solid #fff;
+    width:70px; height:70px; border-radius:50%; border:1px solid #fff;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1; box-sizing:border-box;
     /* Heavier bottom padding lifts the count and label into the upper half of the circle. */
