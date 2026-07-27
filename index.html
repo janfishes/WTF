@@ -1470,7 +1470,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .build-stamp{position:absolute; left:6px; bottom:26px; z-index:1000; pointer-events:none;
     font:600 9px/1.2 'JetBrains Mono',monospace; letter-spacing:.03em; color:var(--fog);
     opacity:.5;}
-  #pillLayer{position:absolute; inset:0; z-index:1090; pointer-events:none;}
+  #pillLayer{position:absolute; top:0; left:0; right:0; bottom:0; inset:0; z-index:1090; pointer-events:none;}
   #pillLayer .cluster-pill{pointer-events:auto; cursor:pointer;}
   .cluster-pill{
     width:70px; height:70px; border-radius:50%; border:1px solid #fff;
@@ -1677,7 +1677,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V64</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V65</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1835,7 +1835,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v64 · Removed the outdated Cobia spring-migration note from the Season Guide. All nautical-mile distances throughout the guide (reef/spot listings, drop lists, and popups) now also show statute miles alongside nm, e.g. 14.8 nm/17.0 sm.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v65 · Fixed cluster count chips not rendering when zoomed out on older Android devices (pillLayer positioning now has an explicit fallback alongside the inset shorthand).</p>
     </div>
   </div>
 </div>
