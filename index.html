@@ -1673,7 +1673,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-28 V100</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-28 V102</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1792,7 +1792,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> <b>Bite</b> opens a 3-day solunar feeding forecast — the moon phase and % lit at the top, then Major and Minor feeding windows for that day, in the order they occur. Majors center on the moon overhead or underfoot; minors center on moonrise and moonset. Computed fully offline from moon-position astronomy, no internet is needed.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> <b>Tides</b> let you tap anywhere on the map to drop a Tide pin — you get a 3-day high/low forecast, built from official NOAA predictions for Ponce Inlet stored on your device (currently through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and interpolates the tide lag by distance between the calibrated stations on that arm — or extrapolates past the last one when you're farther upstream. Each forecast carries a confidence badge: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. Again, no internet is needed.</p>
       <div class="subhead"><svg viewBox="0 0 30 24" width="16" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" style="vertical-align:-2px;"><path d="M2 7c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path><path d="M2 12c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path><path d="M2 17c1.7-1.8 3.4-1.8 5.1 0s3.4 1.8 5.1 0 3.4-1.8 5.1 0"></path><path d="M24 3v18M24 3l-2.6 3M24 3l2.6 3M24 21l-2.6-3M24 21l2.6-3"></path></svg> Tide Gauges</div>
-      <p class="sheet-note">The tide gauges show on the map as black and gold pins with three wavey lines and an up/down arrow beside them. Tap one to read its offset (lag times). Each waterway has its own zero-lag reference, and the app carries a full year of official NOAA predictions for both. <b>Ponce Inlet</b> anchors everything north up the Halifax; <b>Ponce De Leon Inlet South</b>, just inside the inlet, anchors the Indian River North and the lagoon. Every other gauge is timed as an offset from whichever of those two its waterway belongs to. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The Indian River North is now measured the whole way down — <b>New Smyrna Beach</b>, <b>Packwood Place</b> and <b>Turtle Mound</b> are all real gauges, so spots between the inlet and Turtle Mound are timed by interpolation rather than guesswork. South of Turtle Mound there is nothing to measure against for a long way, so once you get more than about five miles past it the app stops guessing: it shows raw Ponce Inlet times, tells you it has done so, and flags the forecast low confidence. Down there the water really does run hours behind the inlet and the wind moves it further, so read the conditions rather than the clock.</p>
+      <p class="sheet-note">The tide gauges show on the map as black and gold pins with three wavey lines and an up/down arrow beside them. Tap one to read its offset (lag times). Heights are scaled as well as times: the tide swings about 2.7 ft at Ponce Inlet but only half a foot at Ormond and five inches at Turtle Mound, so the app shrinks the inlet's heights to match the water you're actually on. Each waterway has its own zero-lag reference, and the app carries a full year of official NOAA predictions for both. <b>Ponce Inlet</b> anchors everything north up the Halifax; <b>Ponce De Leon Inlet South</b>, just inside the inlet, anchors the Indian River North and the lagoon. Every other gauge is timed as an offset from whichever of those two its waterway belongs to. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The Indian River North is now measured the whole way down — <b>New Smyrna Beach</b>, <b>Packwood Place</b> and <b>Turtle Mound</b> are all real gauges, so spots between the inlet and Turtle Mound are timed by interpolation rather than guesswork. South of Turtle Mound there is nothing to measure against for a long way, so once you get more than about five miles past it the app stops guessing: it shows raw Ponce Inlet times, tells you it has done so, and flags the forecast low confidence. Down there the water really does run hours behind the inlet and the wind moves it further, so read the conditions rather than the clock.</p>
       <p class="sheet-note">You can add gauges of your own. Open <b>⚙ Create &amp; Calibrate Tide Stations</b> in Help and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create &amp; Calibrate Tide Stations</button></div>
       <p class="sheet-note" style="margin-top:10px;"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to the National Data Buoy Center (NDBC) Buoy 41070 pin located off Ponce Inlet and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled straight from NOAA's National Data Buoy Center, each with its observation time. Needs internet — it always shows whatever NDBC last reported.</p>
@@ -1835,7 +1835,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-28 · v100 · The Indian River North and Mosquito Lagoon now run off their own year of official NOAA predictions for Ponce De Leon Inlet South, instead of borrowing the Halifax inlet's and shifting them. Southern tide times are noticeably tighter and the heights are right for that water.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-28 · v102 · Tide heights are now scaled to each spot instead of showing the inlet's everywhere — the app used to claim a 2.7 ft swing at Ormond and Turtle Mound, where the water really moves half a foot and five inches. Spruce Creek Park's timing was also found to be about two hours early and has been corrected against a year of gauge records.</p>
     </div>
   </div>
 </div>
@@ -5759,15 +5759,15 @@ const TIDE_LAG_STATIONS = [
   // M2 cycle repairs them), just untrustworthy. They were `windDriven` so they never
   // anchored anything; deleting them changed no timing at all.
   // `branch` ties a station to a tributary centreline instead of the main river.
-  { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0,    l:0,   lagKind:'reference', src:'noaa' },
-  { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0,    l:0,   lagKind:'reference', src:'noaa' },
-  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:95,   l:130, lagKind:'measured',  src:'stevens', branch:'Spruce Creek' },
-  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:60,   l:80,  lagKind:'measured',  src:'stevens', branch:'Rose Bay' },
-  { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:90,   l:105, lagKind:'measured',  src:'stevens' },
-  { id:'8720954', name:'Ormond Beach',                   lat:29.2850, lng:-81.0533, h:204,  l:259, lagKind:'measured',  src:'noaa', n:60, sd:10 },
-  { id:'8721164', name:'New Smyrna Beach',               lat:29.0233, lng:-80.9183, h:29,   l:44,  lagKind:'measured',  src:'noaa', n:58, sd:5 },
-  { id:'8721222', name:'Packwood Place',                 lat:28.9400, lng:-80.8700, h:102,  l:124, lagKind:'measured',  src:'noaa', n:58, sd:8 },
-  { id:'8721223', name:'Turtle Mound',                   lat:28.9267, lng:-80.8250, h:188,  l:220, lagKind:'measured',  src:'noaa', n:58, sd:15 },
+  { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0,    l:0,   lagKind:'reference', src:'noaa', hs:1, ho:0, ls:1, lo:0 },
+  { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0,    l:0,   lagKind:'reference', src:'noaa', hs:1, ho:0, ls:1, lo:0 },
+  { id:'4794',    name:'Spruce Creek Park',              lat:29.0927, lng:-80.9751, h:213,  l:247, lagKind:'measured',  src:'stevens', n:59, sd:17, branch:'Spruce Creek', hs:0.645, ho:-0.191, ls:0.645, lo:-0.191 },
+  { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:60,   l:80,  lagKind:'measured',  src:'stevens', n:60, sd:17, branch:'Rose Bay', hs:0.780, ho:-0.311, ls:0.780, lo:-0.311 },
+  { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:90,   l:105, lagKind:'measured',  src:'stevens', n:60, sd:20, hs:0.536, ho:-0.280, ls:0.536, lo:-0.280 },
+  { id:'8720954', name:'Ormond Beach',                   lat:29.2850, lng:-81.0533, h:204,  l:259, lagKind:'measured',  src:'noaa', n:705, sd:9,  hs:0.166, ho:0.193, ls:0.707, lo:0.031 },
+  { id:'8721164', name:'New Smyrna Beach',               lat:29.0233, lng:-80.9183, h:29,   l:44,  lagKind:'measured',  src:'noaa', n:58, sd:5,  hs:0.795, ho:0.323, ls:0.765, lo:0.254 },
+  { id:'8721222', name:'Packwood Place',                 lat:28.9400, lng:-80.8700, h:102,  l:124, lagKind:'measured',  src:'noaa', n:58, sd:8,  hs:0.341, ho:0.129, ls:0.268, lo:0.077 },
+  { id:'8721223', name:'Turtle Mound',                   lat:28.9267, lng:-80.8250, h:188,  l:220, lagKind:'measured',  src:'noaa', n:58, sd:15, hs:0.135, ho:0.028, ls:0.057, lo:-0.012 },
   { id:'5068',    name:'Williams Point',                 lat:28.4555, lng:-80.7605, h:0,    l:0,   lagKind:'unset',     src:'stevens', windDriven:true }
 ];
 
@@ -6019,6 +6019,54 @@ function lagAtDistance(knots, s){
   return { h:last.h, l:last.l, mode:'at', anchor:last };
 }
 
+/* ---- Tide HEIGHT scaling -------------------------------------------------
+   The lag fixes WHEN the tide turns; it does nothing to HOW FAR the water moves.
+   Before round 40 every spot was shown the reference gauge's own heights, so the
+   app claimed a 2.7 ft swing at Ormond (really 0.5 ft) and 2.8 ft at Turtle Mound
+   (really 0.4 ft) -- out by four to six times in exactly the shallow water where
+   knowing whether a flat will have water on it matters most.
+
+   Model, fitted per station against its reference table:
+       shown_high = hs * ref_high + ho        shown_low = ls * ref_low + lo
+   High and low are fitted SEPARATELY on purpose. A single pooled fit looks tidy
+   but fails badly at Ormond (max error 0.60 ft on a 0.52 ft range) because NOAA
+   damps its highs and lows by different factors; separate fits cut that to 0.26.
+   A pure multiplicative ratio -- NOAA's own published HeightOffset form -- cannot
+   be used here at all: every station's lows sit near its OWN MLLW datum, so the
+   ratio is a small number over another small number and comes out as nonsense
+   (New Smyrna measured -2.94). The additive term is what absorbs the datum shift.
+
+   Only stations with a fitted hs participate as knots, so a station with no height
+   data (the Stevens gauges) is SKIPPED rather than being treated as unscaled 1.0 --
+   pretending an uncalibrated gauge has full inlet range is the bug we are fixing.
+   Beyond the outermost scaled knot the nearest one is held flat: extrapolating a
+   damping curve can run it negative, which would print an inverted tide.
+
+   Two fitting methods, because there are two kinds of source. NOAA-prediction stations
+   (Ormond, New Smyrna, Packwood, Turtle Mound) get an independent least-squares fit for
+   highs and for lows -- clean data, so the extra freedom is earned. The Stevens gauges
+   (Spruce Creek, Rose Bay, Dunlawton) are OBSERVED water, which carries wind and river
+   flow, so a free per-type regression is badly conditioned; those get one shared scale
+   taken from the ratio of mean tidal ranges, with offsets set so mean high and mean low
+   land exactly right. Their zero point is each gauge's own MLLW, computed as the mean of
+   the daily lower lows across a full year of record -- the raw sensor datum is arbitrary
+   (Dunlawton sits about -0.72 ft at its own MLLW). ---- */
+function scaleAtDistance(knots, s){
+  const n = knots.length;
+  if(n === 0) return { hs:1, ho:0, ls:1, lo:0, known:false };
+  if(n === 1 || s <= knots[0].s) return Object.assign({}, knots[0], { known:true });
+  if(s >= knots[n-1].s) return Object.assign({}, knots[n-1], { known:true });
+  let i = 0;
+  while(i < n-2 && knots[i+1].s < s) i++;
+  const a = knots[i], b = knots[i+1];
+  const f = (s - a.s) / ((b.s - a.s) || 1);
+  const mix = (x,y)=> x + (y - x)*f;
+  // Linear in distance, matching how the lag itself is interpolated. Tidal damping is
+  // really closer to exponential, so mid-reach values here run a little generous; a
+  // gauge in the Dunlawton-to-Ormond gap would settle it.
+  return { hs:mix(a.hs,b.hs), ho:mix(a.ho,b.ho), ls:mix(a.ls,b.ls), lo:mix(a.lo,b.lo), known:true };
+}
+
 /* Full estimate for a pin: interpolated/extrapolated lag + a confidence grade.
    Returns a station-shaped object (has .h/.l in minutes) so it drops straight
    into tideExtremes(), plus metadata used to build the note + warning. */
@@ -6132,9 +6180,25 @@ function extrapolateTideLag(lat, lng){
   }
   if(windDriven){ if(confidence === 'high') confidence = 'medium'; if(!reasons.includes('shallow, wind-driven reach')) reasons.push('shallow, wind-driven reach'); }
 
+  // Height scaling runs on its own knot list — only stations with a fitted scale.
+  // Height scaling runs on its own knot list — only stations with a fitted scale — and on
+  // the same fork the lag used, so a creek gauge's damping stays in its creek. If the pin
+  // is up a branch that has its own scaled gauge, that gauge wins; otherwise fall back to
+  // the main river, which is what the lag does too.
+  const scaled = st => usable(st) && typeof st.hs === 'number';
+  let scaleSrc = sp.filter(st=> st.arm === pin.arm && !st.branch && scaled(st));
+  if(pin.branch){
+    const onBranch = sp.filter(st=> st.branch === pin.branch && scaled(st));
+    if(onBranch.length) scaleSrc = onBranch;
+  }
+  const scaleKnots = scaleSrc.map(st=>({ s:st.s, hs:st.hs, ho:st.ho, ls:st.ls, lo:st.lo }))
+                             .sort((a,b)=> a.s - b.s);
+  const sc = scaleAtDistance(scaleKnots, pin.s);
+
   const nearName = (nearSt || nearest).name;
   return Object.assign({}, nearest, {
     h, l, arm:pin.arm, s:pin.s, off:pin.off,
+    hs:sc.hs, ho:sc.ho, ls:sc.ls, lo:sc.lo, scaled:sc.known,
     method, confidence, reasons, windDriven, nearName,
     a: res.a, b: res.b, frac: res.frac, beyondKm: res.beyondKm,
     anchorName: res.anchor && res.anchor.name
@@ -6187,6 +6251,11 @@ function getNoaaEvents(arm){
 }
 // Display name of whichever gauge a given arm's times are referenced to.
 const refNameFor = arm => arm === 'S' ? 'Ponce De Leon Inlet South' : 'Ponce Inlet';
+// Apply a station's fitted height model to one reference-gauge height.
+function scaleHeight(h, type, lag){
+  if(!lag || typeof lag.hs !== 'number') return h;
+  return type === 'High' ? lag.hs*h + lag.ho : lag.ls*h + lag.lo;
+}
 function tideExtremes(startDate, days, lag){
   lag = lag || {h:0, l:0};
   const winStart = startDate.getTime(), winEnd = startDate.getTime() + days*24*60*60000;
@@ -6200,7 +6269,7 @@ function tideExtremes(startDate, days, lag){
       if(t0 < winStart - pad || t0 > winEnd + pad) continue;
       const shifted = new Date(t0 + (ev.type==="High" ? lag.h : lag.l)*60000);
       if(shifted.getTime() >= winStart && shifted.getTime() <= winEnd)
-        out.push({type: ev.type, t: shifted, h: ev.h});
+        out.push({type: ev.type, t: shifted, h: scaleHeight(ev.h, ev.type, lag)});
     }
     if(out.length) return out;
   }
@@ -6219,8 +6288,8 @@ function tideExtremesHarmonic(startDate, days, lag){
   const ext = [];
   for(let i=1;i<pts.length-1;i++){
     const a=pts[i-1][1], b=pts[i][1], cc=pts[i+1][1];
-    if(b>a && b>=cc) ext.push({type:'High', t:new Date(pts[i][0].getTime() + lag.h*60000), h:b});
-    else if(b<a && b<=cc) ext.push({type:'Low', t:new Date(pts[i][0].getTime() + lag.l*60000), h:b});
+    if(b>a && b>=cc) ext.push({type:'High', t:new Date(pts[i][0].getTime() + lag.h*60000), h:scaleHeight(b,'High',lag)});
+    else if(b<a && b<=cc) ext.push({type:'Low', t:new Date(pts[i][0].getTime() + lag.l*60000), h:scaleHeight(b,'Low',lag)});
   }
   // keep only extremes inside the requested window
   const winStart = startDate.getTime(), winEnd = startDate.getTime() + days*24*60*60000;
@@ -6501,7 +6570,7 @@ function tideForecastHTML(latlng){
   const winEnd = start.getTime() + 3*24*60*60000;
   const usedNoaa = start.getTime() >= NOAA_BASE.getTime() && winEnd <= NOAA_END.getTime();
   const srcNote = usedNoaa
-    ? `Times are <b>official NOAA predictions</b> for ${station.arm === 'S' ? 'Ponce De Leon Inlet South (station 8721147)' : 'Ponce Inlet (station 8721138)'}, stored on your device — no internet needed. Heights relative to mean lower low water.`
+    ? `Times are <b>official NOAA predictions</b> for ${station.arm === 'S' ? 'Ponce De Leon Inlet South (station 8721147)' : 'Ponce Inlet (station 8721138)'}, stored on your device — no internet needed. Heights relative to mean lower low water${(station.hs !== 1 || station.ho !== 0) ? `, and <b>scaled to this spot's own tidal range</b> — the water moves a good deal less than it does at the inlet up here` : ''}.`
     : `Computed offline from NOAA harmonic constituents for the Ponce Inlet area; heights are relative to mean lower low water and timing is a close approximation. Works with no internet.`;
 
   const warnNote = (station.confidence === 'low')
