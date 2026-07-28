@@ -1401,6 +1401,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .catch-count{position:absolute; top:-7px; right:-8px; min-width:15px; height:15px; padding:0 3px;
     background:var(--navy-950); color:var(--fog); border:1px solid var(--line); border-radius:100px;
     font:700 9px/13px 'Inter',sans-serif; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.55);}
+  /* Count badge on an offshore pin showing how many individual drops/marks are
+     recorded at that reef or ground — same treatment as .catch-count. */
+  .spot-count{position:absolute; top:-7px; right:-8px; min-width:15px; height:15px; padding:0 3px;
+    background:var(--navy-950); color:var(--fog); border:1px solid var(--line); border-radius:100px;
+    font:700 9px/13px 'Inter',sans-serif; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.55);}
   /* Stacked catches at one diamond: the My Log cards in a scrolling well. Capped by
      viewport height as well as pixels so a tall stack can't run off a phone screen, and
      overscroll-behavior keeps a flick at the end of the list from scrolling the page
@@ -1665,7 +1670,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V86</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V89</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1827,7 +1832,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v86 · Re-added the tide-gauge glyph next to the Tide Gauges heading; named the backup file (gold-accented) in the Tips paragraph and matched it in the My Log panel.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v89 · Offshore pins show a drop-count badge like catch pins do. Every glyph in Help (Actions' +, My Log, Spot, Guide, Bite, Tides, Waves, Locate Me, Topo Satellite/Streets) now inherits its paragraph's text color, matching the plain +Catch under Photos.</p>
     </div>
   </div>
 </div>
@@ -3125,7 +3130,9 @@ const markers = SPOTS.map(s=>{
     icon = L.divIcon({ className:'', html:`<div class="spot-marker" style="background:var(--launch); width:${sz}px; height:${sz}px;"></div>`, iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], popupAnchor:[0,-Math.round(sz/2)-1] });
   } else {
     const fill = resolvedZoneColor[s.zone];
-    icon = L.divIcon({ className:'', html:`<div class="spot-marker" style="background:${fill}; width:${sz}px; height:${sz}px;"></div>`, iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], popupAnchor:[0,-Math.round(sz/2)-1] });
+    const drops = REEF_DROPS[s.id];
+    const badge = drops && drops.length ? `<span class="spot-count">${drops.length}</span>` : '';
+    icon = L.divIcon({ className:'', html:`<div class="spot-marker" style="background:${fill}; width:${sz}px; height:${sz}px;"></div>${badge}`, iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], popupAnchor:[0,-Math.round(sz/2)-1] });
   }
   const m = L.marker([s.lat,s.lng], {icon}).addTo(map);
   m.bindPopup(()=>popupHTML(s), {maxWidth:320, className:'spot-popup'});
