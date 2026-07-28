@@ -1673,7 +1673,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V95</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V97</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1835,7 +1835,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v95 · Added the New Smyrna Beach NOAA tide gauge (8721164) — the first calibrated station on the Indian River North / Mosquito Lagoon arm, so southern spots are now timed by distance instead of using inlet times.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v97 · The built-in tide-station lags are locked, and any lag saved on this device before the lock is now cleared out for good.</p>
     </div>
   </div>
 </div>
@@ -2038,17 +2038,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="calCompute" style="font-weight:700;">Compute lag</button>
     </div>
     <div id="calResult" style="margin-top:12px;"></div>
-    <div class="loc-btns" style="margin-top:12px;">
-      <button class="mini-btn" id="calSave" style="font-weight:700; display:none;">Save lag to station</button>
-    </div>
-    <p class="sheet-note" style="margin-top:16px;"><b>Save lag to station</b> stores the computed High/Low offset as this station's measured lag, saved on this device. The 3-Day Tide Forecast and every nearby pin start using it immediately.</p>
-    <p class="sheet-note" style="margin-top:16px;">Saved measured lags:</p>
-    <div id="calSavedList" class="loc-preview">None yet.</div>
-    <p class="sheet-note" style="margin-top:10px;"><b>Saved measured lags</b> lists the built-in stations that currently carry a device-saved lag. The <b>&times;</b> next to a station clears just that one back to the app's coded default.</p>
-    <div class="loc-btns" style="margin-top:10px;">
-      <button class="mini-btn" id="calResetAll">↺ Clear all measured lags</button>
-    </div>
-    <p class="sheet-note" style="margin-top:8px;"><b>Clear all measured lags</b> wipes every device-saved lag at once and restores all built-in stations to their coded defaults, then reloads. It never touches the tide stations you added above.</p>
+    <p class="sheet-note" style="margin-top:16px;">The built-in station lags are <b>locked</b>. This tool measures and reports — it cannot write to them, on this device or any other. To change a built-in lag, edit <b>TIDE_LAG_STATIONS</b> in the source and redeploy, so every device gets the same number. The tide stations you added above are yours and stay fully editable.</p>
     </div>
   </div>
 </div>
@@ -3208,6 +3198,17 @@ function idbGet(key){
     }catch(e){ resolve(null); }
   });
 }
+function idbDel(key){
+  return new Promise((resolve)=>{
+    try{
+      const tx = idb.transaction('kv','readwrite');
+      tx.objectStore('kv').delete(key);
+      tx.oncomplete = ()=> resolve(true);
+      tx.onerror = ()=> resolve(false);
+      tx.onabort = ()=> resolve(false);
+    }catch(e){ resolve(false); }
+  });
+}
 function idbSet(key, val){
   return new Promise((resolve)=>{
     try{
@@ -3264,6 +3265,14 @@ async function storeSet(key, val){
   return false;
 }
 
+async function storeDel(key){
+  if(storageMode === 'idb') return idbDel(key);
+  if(storageMode === 'local'){
+    try{ localStorage.removeItem('pifc:'+key); return true; }catch(e){ return false; }
+  }
+  return false;
+}
+
 async function loadAll(){
   storageMode = await detectStorage();
   await migrateToIDB();
@@ -3280,10 +3289,13 @@ async function loadAll(){
     const ts = await storeGet(TEXT_SCALE_KEY);
     applyTextScale(ts == null ? 0 : (parseInt(ts, 10) || 0));
   }catch(e){ applyTextScale(0); }
+  /* Round 32 locked the built-in lag table; round 33 clears the storage behind it. Any
+     device-saved override written before the lock is deleted here, once, so a future read
+     path can never resurrect a stale lag. Built-in lags now live ONLY in TIDE_LAG_STATIONS. */
+  try{ await storeDel(TIDE_LAGS_KEY); }catch(e){}   // safe: loadAll() is invoked at the very bottom of the script, after TIDE_LAGS_KEY is evaluated
   await loadSpotOverrides();
   applySpotOverrides();
   await loadCustomSpots();
-  await loadTideLags();
   applyTideLags();
   await loadUserTideStations();
   renderTideStationPins();
@@ -5786,6 +5798,14 @@ const WW_SOUTH = [
 /* Snapshot of the coded values, taken before any saved override is applied. Clearing a
    measured lag restores from this, so the station goes back to exactly what the table
    says rather than to a hardcoded list that drifts every time the table is edited. */
+/* The built-in lag table is LOCKED. Every entry is frozen at load, nothing in the app
+   writes to it, and the calibrate tool can only measure and report. A lag is changed by
+   editing TIDE_LAG_STATIONS in this file and redeploying — that path is unaffected by the
+   freeze, and it keeps every device on the same number instead of one browser's guess.
+   The legacy 'tide-lags' store key is deleted at startup (see storeDel in loadAll), so no
+   stale override survives anywhere. Do not re-wire a read path without reading round 32. */
+TIDE_LAG_STATIONS.forEach(Object.freeze);
+Object.freeze(TIDE_LAG_STATIONS);
 const TIDE_LAG_DEFAULTS = {};
 TIDE_LAG_STATIONS.forEach(st=>{
   TIDE_LAG_DEFAULTS[st.id] = { h:st.h, l:st.l, lagKind:st.lagKind };
@@ -6462,22 +6482,11 @@ function refreshUserTsList(){
       <div class="cc-meta">${toDMS(s.lat, s.lng)}<br>High ${sign(s.h)} min \u00b7 Low ${sign(s.l)} min after Ponce Inlet</div>
     </div>`).join('');
 }
-let tideLagOverrides = {};
-async function loadTideLags(){
-  try{ const raw = await storeGet(TIDE_LAGS_KEY); tideLagOverrides = raw ? JSON.parse(raw) : {}; }
-  catch(e){ tideLagOverrides = {}; }
-}
-async function saveTideLags(){
-  try{ await storeSet(TIDE_LAGS_KEY, JSON.stringify(tideLagOverrides)); }catch(e){}
-}
+/* Was: overwrite built-in lags from a device-saved override. The built-ins are frozen now,
+   so this only drops the cached station positions. Kept as a function because the tide
+   station pin renderer calls it after user stations change. */
 function applyTideLags(){
-  TIDE_LAG_STATIONS.forEach(st=>{
-    const ov = tideLagOverrides[st.id];
-    if(ov && typeof ov.h === 'number' && typeof ov.l === 'number'){
-      st.h = ov.h; st.l = ov.l; st.lagKind = 'measured'; st.n = ov.n; st.sd = ov.sd;
-    }
-  });
-  _stationPos = null; // recompute cached positions if needed
+  _stationPos = null;
 }
 
 // --- tolerant datetime + CSV parsing ---
@@ -6642,7 +6651,6 @@ function computeLagFromExtrema(extrema){
 }
 
 // --- UI wiring ---
-let calPending = null;
 function lagSgn(v){ return (v>=0?'+':'\u2212')+Math.abs(v); }
 const tideCalSheet  = document.getElementById('tideCalSheet');
 const tideCalScrim  = document.getElementById('tideCalScrim');
@@ -6657,29 +6665,11 @@ function refreshCalCurrent(){
              : st.lagKind==='reference' ? 'reference — no lag' : 'not set';
   el.innerHTML = `Current lag for <b>${st.name}</b>: High ${lagSgn(st.h)} / Low ${lagSgn(st.l)} min — <i>${kind}</i>.`;
 }
-function refreshCalSaved(){
-  const el = document.getElementById('calSavedList');
-  const ids = Object.keys(tideLagOverrides);
-  if(!ids.length){ el.textContent='None yet.'; return; }
-  el.innerHTML = ids.map(id=>{ const o=tideLagOverrides[id];
-    return `<div style="display:flex; justify-content:space-between; gap:8px; padding:3px 0;"><span>${calStationName(id)}</span><span class="td-ht">High ${lagSgn(o.h)} / Low ${lagSgn(o.l)} <button class="mini-btn" data-clear="${id}" style="padding:1px 7px; margin-left:6px;">✕</button></span></div>`;
-  }).join('');
-  el.querySelectorAll('[data-clear]').forEach(b=> b.addEventListener('click', async ()=>{
-    delete tideLagOverrides[b.dataset.clear]; await saveTideLags();
-    // reset that station back to its coded default by reloading page state lazily:
-    const st = TIDE_LAG_STATIONS.find(x=>x.id===b.dataset.clear);
-    const def = TIDE_LAG_DEFAULTS[b.dataset.clear];
-    if(st && def){ st.h = def.h; st.l = def.l; st.lagKind = def.lagKind; delete st.n; delete st.sd; }
-    invalidateStationCache();
-    renderTideStationPins();
-    refreshCalSaved(); refreshCalCurrent(); showToast('Measured lag cleared.');
-  }));
-}
 function openTideCal(){
   const sel = document.getElementById('calStation');
   sel.innerHTML = TIDE_LAG_STATIONS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
-  document.getElementById('calResult').innerHTML=''; document.getElementById('calSave').style.display='none'; calPending=null;
-  refreshCalCurrent(); refreshCalSaved();
+  document.getElementById('calResult').innerHTML='';
+  refreshCalCurrent();
   closeAllOverlays('tideCalSheet');
   tideCalSheet.classList.add('open'); tideCalScrim.classList.add('open');
 }
@@ -6714,8 +6704,6 @@ function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.cla
     const utc = document.getElementById('calUtc').checked;
     const text = document.getElementById('calData').value;
     const res = document.getElementById('calResult');
-    const saveBtn = document.getElementById('calSave');
-    saveBtn.style.display='none'; calPending=null;
     const series = parseSeries(text, utc);
     if(series.length < 12){ res.innerHTML = `<span style="color:var(--brass);">Couldn't read enough rows. I need a timestamp column and a water-level column, at least a day or two of data.</span>`; return; }
     const ext = findExtrema(series);
@@ -6736,25 +6724,7 @@ function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.cla
         <div>Low lag: <b>${L!==null?('+'+L+' min'):'—'}</b> ${lag.l.n?`(${lag.l.n} matched, ±${Math.round(lag.l.sd)} min)`:''}</div>
         <div style="color:${color}; margin-top:6px;">${verdict}</div>${tzWarn}${approxWarn}
       </div>`;
-    if(H!==null && L!==null){ calPending = {id, h:H, l:L, n, sd:Math.round(sd)}; saveBtn.style.display=''; }
   });
-  document.getElementById('calSave').addEventListener('click', async ()=>{
-    if(!calPending) return;
-    tideLagOverrides[calPending.id] = { h:calPending.h, l:calPending.l, n:calPending.n, sd:calPending.sd, at:Date.now() };
-    await saveTideLags(); applyTideLags();
-    renderTideStationPins();
-    // refresh an open tide panel
-    if(tidePinMarker){ document.getElementById('tidePanelBody').innerHTML = tideForecastHTML(tidePinMarker.getLatLng()); }
-    refreshCalCurrent(); refreshCalSaved();
-    document.getElementById('calSave').style.display='none';
-    showToast(`Saved measured lag for ${calStationName(calPending.id)}.`);
-  });
-  document.getElementById('calResetAll').addEventListener('click', async ()=>{
-    if(!confirm('Clear ALL measured lags for the built-in stations and restore the app\u2019s coded defaults? This reloads the app. Your own added tide stations are not affected.')) return;
-    tideLagOverrides = {}; await saveTideLags();
-    location.reload();
-  });
-
   /* ---- Your own tide stations ---- */
   let userTsLoc = null;
   const tsName = document.getElementById('userTsName');
