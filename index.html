@@ -1673,7 +1673,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V94</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V95</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1835,7 +1835,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v94 · Added the Ormond Beach NOAA tide gauge (8720954) to the Halifax River — the northernmost calibrated station on that arm.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v95 · Added the New Smyrna Beach NOAA tide gauge (8721164) — the first calibrated station on the Indian River North / Mosquito Lagoon arm, so southern spots are now timed by distance instead of using inlet times.</p>
     </div>
   </div>
 </div>
@@ -5716,8 +5716,12 @@ const TIDE_LAG_STATIONS = [
   // measured; 'unset' = no reliable value (shows Ponce Inlet times). Measured values marked
   // src:'stevens' were calibrated by the app author from Stevens-Connect exports against
   // observed water levels. src:'noaa' + n/sd (Ormond Beach) is derived instead by differencing
-  // a month of NOAA high/low PREDICTIONS against Ponce Inlet's; the sd there is the spring-neap
-  // beat between the two stations' NOAA reference gauges, not observed-water error. Note: Bulow's negative
+  // a month of NOAA high/low PREDICTIONS against Ponce Inlet's. For Ormond that sd is only the
+  // spring-neap beat between the two stations' NOAA reference gauges, not observed-water error;
+  // New Smyrna Beach is a HARMONIC station (its own constants, no reference), so its sd is a real
+  // physical spread. NSB is also the only calibrated station on the south arm, so it alone decides
+  // whether everything down to Mosquito Lagoon is extrapolated or falls back to uncalibrated 0/0.
+  // Note: Bulow's negative
   // lag is a cycle-alias of a large positive lag (prints correct clock times either way);
   // Bulow/Scottsmoor are wind-driven lagoon/creek reaches and least reliable.
   // `branch` ties a station to a tributary centreline instead of the main river.
@@ -5727,6 +5731,7 @@ const TIDE_LAG_STATIONS = [
   { id:'5397',    name:'Rose Bay Bridge',                lat:29.1029, lng:-80.9713, h:60,   l:80,  lagKind:'measured',  src:'stevens', branch:'Rose Bay' },
   { id:'4955',    name:'Dunlawton Ave',                  lat:29.1491, lng:-80.9745, h:90,   l:105, lagKind:'measured',  src:'stevens' },
   { id:'8720954', name:'Ormond Beach',                   lat:29.2850, lng:-81.0533, h:204,  l:259, lagKind:'measured',  src:'noaa', n:60, sd:10 },
+  { id:'8721164', name:'New Smyrna Beach',              lat:29.0233, lng:-80.9183, h:9,    l:10,  lagKind:'measured',  src:'noaa', n:60, sd:12 },
   { id:'4472',    name:'Bulow Plantation',               lat:29.4350, lng:-81.1366, h:-100, l:-60, lagKind:'measured',  src:'stevens', windDriven:true },
   { id:'5286',    name:'Scottsmoor Turnbull Creek Ramp', lat:28.8985, lng:-80.8516, h:-10,  l:25,  lagKind:'measured',  src:'stevens', windDriven:true },
   { id:'5287',    name:'Mosquito Lagoon Biolab',         lat:28.7059, lng:-80.7203, h:0,    l:0,   lagKind:'unset',     src:'stevens', windDriven:true },
