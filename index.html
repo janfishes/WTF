@@ -1568,7 +1568,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .feed-card{margin:6px 0 12px; padding:9px 11px; border:1px solid var(--brass); border-radius:10px; background:var(--navy-800);}
   .feed-head{display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding-bottom:6px; margin-bottom:8px; border-bottom:1px solid var(--line); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(11.5px * var(--ts)); color:var(--teal);}
   .feed-moon{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:calc(10px * var(--ts)); color:var(--brass); white-space:nowrap;}
-  .feed-moon svg{vertical-align:-2px; margin-right:3px;}
   .feed-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px 14px;}
   .feed-cell{min-width:0;}
   .feed-cell:nth-child(2n){border-left:1px solid var(--line); padding-left:12px;}
@@ -1664,7 +1663,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V81</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-27 V76</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1821,7 +1820,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v81 · Added a source footer to the bottom of the Bite sheet crediting the on-device lunar-position astronomy behind the bite times and moon phase.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-27 · v76 · Rewrote the Guide/Help text from the shape guide, added icons next to the Actions pills, and renamed the themes (Kingfisher, Sea Star, Morey Eel, Clownfish, Blue Whale, Flounder).</p>
     </div>
   </div>
 </div>
@@ -6191,29 +6190,6 @@ function moonPhaseName(phase){
   if(phase < 0.78) return 'Last Quarter';
   return 'Waning Crescent';
 }
-// Small line-art moon glyph matching the phase bucket used by moonPhaseName().
-// Built from a circle outline plus one filled lit-region path (a single formula
-// covers crescent/quarter/gibbous/full/new by varying the terminator ellipse's
-// horizontal radius and the two arc sweep flags — no special-casing needed).
-function moonPhaseParams(phase){
-  if(phase < 0.03 || phase > 0.97) return { rx:9, o:1, i:0 }; // New
-  if(phase < 0.22) return { rx:6, o:1, i:0 }; // Waxing Crescent
-  if(phase < 0.28) return { rx:0, o:1, i:1 }; // First Quarter
-  if(phase < 0.47) return { rx:6, o:1, i:1 }; // Waxing Gibbous
-  if(phase < 0.53) return { rx:9, o:1, i:1 }; // Full
-  if(phase < 0.72) return { rx:6, o:0, i:0 }; // Waning Gibbous
-  if(phase < 0.78) return { rx:0, o:0, i:0 }; // Last Quarter
-  return { rx:6, o:0, i:1 }; // Waning Crescent
-}
-function moonPhaseGlyph(phase){
-  const p = moonPhaseParams(phase);
-  const d = `M12,3 A9,9 0 0,${p.o} 12,21 A${p.rx},9 0 0,${p.i} 12,3`;
-  // Two-tone: black disc is the shadowed hemisphere (base layer, always full-circle),
-  // the lit hemisphere is painted on top in the theme's accent color (e.g. purple in
-  // Sea Star) — so a full moon renders as a solid accent-colored disc and a new moon
-  // renders as solid black.
-  return `<svg viewBox="0 0 24 24" width="13" height="13"><circle cx="12" cy="12" r="9" fill="#0b1420" stroke="var(--teal)" stroke-width="1.1"></circle><path d="${d}" fill="var(--teal)"></path></svg>`;
-}
 function slrSiderealTime(d, lw){ return SLR_RAD * (280.16 + 360.9856235 * d) - lw; }
 function slrHoursLater(date, h){ return new Date(date.valueOf() + h * 60 * 60000); }
 function slrNorm(a){ while(a <= -Math.PI) a += 2 * Math.PI; while(a > Math.PI) a -= 2 * Math.PI; return a; }
@@ -6301,13 +6277,12 @@ function feedingTimesHTML(dayDate, lat, lng){
     const half = HALF[ev.type];
     const start = new Date(ev.t.getTime() - half*60000);
     const end = new Date(ev.t.getTime() + half*60000);
-    return `<div class="feed-cell"><div class="feed-label">${ev.type}</div><div class="feed-time">${fmt(start)} - ${fmt(end)}</div><div class="feed-desc">${ev.desc}</div></div>`;
+    return `<div class="feed-cell"><div class="feed-label">${ev.type}</div><div class="feed-time">${fmt(start)}-${fmt(end)}</div><div class="feed-desc">${ev.desc}</div></div>`;
   }).join('');
   const pct = Math.round(ill.fraction * 100);
   const phaseName = moonPhaseName(ill.phase).toLowerCase();
-  const glyph = moonPhaseGlyph(ill.phase);
   return `<div class="feed-card">
-    <div class="feed-head"><span>Major &amp; Minor Bite Times</span><span class="feed-moon">${glyph}${phaseName} &middot; ${pct}% lit</span></div>
+    <div class="feed-head"><span>Active Feeding Times</span><span class="feed-moon">${phaseName} &middot; ${pct}% lit</span></div>
     <div class="feed-grid">${items}</div>
   </div>`;
 }
@@ -6321,7 +6296,6 @@ function biteSheetHTML(){
     const label = d.toLocaleDateString('en-US',{weekday:'long', month:'short', day:'numeric'});
     html += `<div class="td-day">${label}</div>` + feedingTimesHTML(d, PONCE_INLET.lat, PONCE_INLET.lng);
   }
-  html += `<p class="storage-note" style="margin-top:10px;">Source: Major/minor bite times and moon phase are computed on-device from lunar-position astronomy (the same public-domain formulas used by widely-reproduced tools like SunCalc) — no external service, no internet needed.</p>`;
   return html;
 }
 
