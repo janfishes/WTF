@@ -688,10 +688,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* Species + zone colors (fixed across themes) */
     --inshore:#1636ff; --offshore:#7a2fd6; --launch:#e02020; --catch:#7a2fd6;
     --brass:#c99a4b; --rust:#b5573a;
-    /* Ink for the compass rose, its bearing lines and its labels. Its own variable rather
-       than --brass because the rose is drawn straight onto the map imagery, not onto a
-       themed surface: the light themes need a lighter ink than their body text does. */
-    --rose:var(--brass);
+    /* Ink for the compass rose, its bearing lines and its labels. Its own variable because
+       the rose is drawn straight onto the map imagery rather than onto a themed surface, so
+       it needs to be bright regardless of what the body text is doing. It follows the theme
+       accent, which is a bright colour in every theme but Brown Sugar - see the two
+       overrides in the theme blocks below. */
+    /* Halo behind the rose, its lines and its labels. Every theme's rose ink is a bright
+       colour, so a single dark halo works for all six: it holds the overlay together over
+       pale sand and surf without dulling it over dark water. Raise the alpha for a harder
+       edge, drop it to nothing to switch the halo off. */
+    --rose-halo:rgba(0,0,0,.85);
     --amberjack:#e8a33a; --triggerfish:#7d8cff;
     --blackdrum:#8a7a9b; --bonito:#7c8b96; --cobia:#c98a6a; --flounder:#ffe14d; --grouper:#bb594a;
     --jack:#c9c14b; --kingfish:#e8639f; --mackerel:#63b8aa; --mahi:#a8d05a;
@@ -738,10 +744,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --line:#5e9ec9; --fog:#ffffff; --muted:#bcd7ec; --teal:#4ecbff; --map-bg:#1d5688;
     --on-accent:#04141e;
       --brass:#f0cf8a; --emph:#ffd98f; --link:#b3e2ff; --accent-lite:#4ecbff;
-    /* Not a legibility fix - this theme's brass reads fine on dark water. The rose takes the
-       theme accent so it matches the rest of the blue palette rather than sitting straw
-       against it. Drop this line and it goes back to brass. */
-    --rose:var(--accent-lite);
+    /* Light blue, stated outright rather than inherited: this is the swatch blue the picker
+       shows for the theme, a shade paler than the --teal accent, which carries better over
+       dark water than the accent does. */
+    --rose:#7fd4ff;
   }
   /* Brown Sugar — built for direct sunlight through polarized (usually amber or copper)
      lenses. Near-white ground so ambient glare adds to a signal that is already bright,
@@ -753,11 +759,22 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --line:#8a8378; --fog:#1a1714; --muted:#56504a; --teal:#8a4b0f; --map-bg:#e9e2d4;
     --on-accent:#ffffff;
       --brass:#6b4a0c; --emph:#7a4308; --link:#0a56c4; --accent-lite:#e09a4a;
-    /* Brown Sugar's --brass is a deep chocolate that reads well as text on the theme's cream
-       surfaces but disappears against dark water on the satellite map. The rose takes the
-       theme's light accent instead. */
-    --rose:var(--accent-lite);
+    /* White. Brown Sugar's accent is a dark chocolate - the one theme accent that cannot be
+       used on the map, since it vanishes against deep water. White is Jan's call and is right
+       for the water, which is where the rose sits; be aware it can wash out if the rose is
+       ever panned over bright sand or surf, as the rose carries no outline or halo. */
+    --rose:#ffffff;
   }
+  /* ---- Compass rose ink. MUST be declared on body, not on :root. ----
+     A custom property whose value is a var() is resolved on the element that DECLARES it, and
+     the result is then inherited as a plain value. Declared on :root, --rose:var(--teal) was
+     resolved against the ROOT --teal (Parrot Head's #19cec0) and every theme inherited that
+     teal no matter what it set --teal to further down - which is exactly what Tequila Sunrise
+     was showing. The themes override --teal on BODY, so --rose has to be resolved on body too.
+     Blue Suede Shoes and Brown Sugar set --rose outright inside their own blocks; those are
+     body[data-theme=...] selectors, more specific than this one, so they still win. */
+  body{--rose:var(--teal);}
+
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{height:100%; margin:0; overflow:hidden; overscroll-behavior:none;}
   body{
@@ -963,12 +980,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
     position:absolute; color:var(--rose); font-family:'Space Grotesk',sans-serif;
     font-size:12px; font-weight:800; white-space:nowrap; pointer-events:none;
     letter-spacing:.02em; opacity:1;
+    /* Text can't take a drop-shadow filter without also haloing the element box, so the
+       labels use text-shadow - same two-layer idea, same variable. */
+    text-shadow:0 0 2px var(--rose-halo), 0 1px 3px var(--rose-halo);
   }
   /* Narrow fallback used when the one-line form can't clear the rose: the two halves ride
      above and below the line, which runs between them (so no gap is carved there). */
   .compass-label-stack{display:flex; flex-direction:column; align-items:center; line-height:1;}
   .compass-label-stack span{display:block;}
-  .compass-rose-wrap{pointer-events:none;}
+  /* The halo is a pair of drop-shadows at zero offset rather than a second copy of the rose
+     drawn wider underneath: one filter covers all 67 strokes, fills and letters at once, and
+     it cannot drift out of register the way a stacked duplicate would. The tight shadow does
+     the work on a busy background; the soft one lifts it off pale sand. */
+  .compass-rose-wrap{
+    pointer-events:none;
+    filter:drop-shadow(0 0 1.5px var(--rose-halo)) drop-shadow(0 0 4px var(--rose-halo));
+  }
+  /* Same treatment for the dashed bearing line, which lives in Leaflet's overlay pane and so
+     sits outside the rose wrapper. One tight shadow only - the dashes are thin, and a soft
+     halo on top of them reads as a smudge. */
+  .compass-line{filter:drop-shadow(0 0 1.5px var(--rose-halo));}
   .launches-only .spot-label.lbl-launch{max-width:240px;}
   .place-label{
     background:transparent !important; border:none !important; box-shadow:none !important;
@@ -1804,7 +1835,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <!-- Build stamp: bottom-left, directly under the scale bar. Short form on purpose —
        date then build number — because it shares that row with nothing but map. Its whole
        job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">07/29/26 Build 121</div>
+  <div class="build-stamp" id="buildStamp">07/29/26 Build 128</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1821,17 +1852,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="tidePanelBody"></div>
   </div>
   <div class="fab-col">
-    <button class="fab" id="biteFab">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg>
-      Bite
+    <button class="fab primary" id="logCatchFab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+      Catch
     </button>
     <button class="fab" id="addSpotBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
       Spot
     </button>
-    <button class="fab primary" id="logCatchFab">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
-      Catch
+    <button class="fab" id="biteFab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg>
+      Bite
     </button>
     <button class="fab" id="tidePinBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
@@ -1841,13 +1872,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="currentColor"><use href="#waveArt"></use></svg>
       Waves
     </button>
-    <button class="fab" id="guideBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg>
-      Guide
-    </button>
     <button class="fab" id="myLogBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 21 12 12 21 3 12Z"></path></svg>
       My Log
+    </button>
+    <button class="fab" id="guideBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg>
+      Seasons
     </button>
     <button class="fab" id="compassFab" title="Bearings from Ponce Inlet to the offshore sites">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg>
@@ -1927,7 +1958,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead" style="margin-top:0;">Shape Guide</div>
       <p class="sheet-note"><b>Cookies</b> (round buttons, top-right of the header) are Search <span style="vertical-align:-2px;">🔍</span>, Help <b>?</b>, Themes <span style="vertical-align:-2px;">🎨</span>, and Text Size <b>A</b>.</p>
       <p class="sheet-note"><b>Chips</b> (larger round shapes on the map) are the tide stations <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> and the USCG wave buoy 41070 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg>.</p>
-      <p class="sheet-note"><b>Pills</b> (hot-dog shapes) are the row of filter switches along the top of the map below the header (Catches, Inshore, Offshore, Launches) and the Labels pill that toggles these switches' labels on/off — the number next to Catches, Inshore, Offshore, and Launches is a total count. <b>Species filter switches</b> (23) are down the left edge of the map, denoted by colored diamonds. The pills along the lower right of the map's edge are the action stack: <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> Bite, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Spot, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Catch, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tides, <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> Waves, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Guide, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> My Log, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> Compass, <svg viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> Locate Me, and <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite/Streets. Small colored pins on the map show the locations of your catches, inshore spots, offshore sites, and launch areas. Catch pins with numbers show how many catches you've logged at that location. Offshore pins with numbers show how many sites are at a named artificial or natural reef. Tap a numbered pin to see the catches or coordinates at that location, along with other details.</p>
+      <p class="sheet-note"><b>Pills</b> (hot-dog shapes) are the row of filter switches along the top of the map below the header (Catches, Inshore, Offshore, Launches) and the Labels pill that toggles these switches' labels on/off — the number next to Catches, Inshore, Offshore, and Launches is a total count. <b>Species filter switches</b> (23) are down the left edge of the map, denoted by colored diamonds. The pills along the lower right of the map's edge are the action stack: <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Catch, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Spot, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> Bite, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tides, <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> Waves, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> My Log, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> Compass, <svg viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> Locate Me, and <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite/Streets. Small colored pins on the map show the locations of your catches, inshore spots, offshore sites, and launch areas. Catch pins with numbers show how many catches you've logged at that location. Offshore pins with numbers show how many sites are at a named artificial or natural reef. Tap a numbered pin to see the catches or coordinates at that location, along with other details.</p>
 
       <div class="subhead" style="margin-top:2px;">Map Controls</div>
       <p class="sheet-note">Tapping <b>Catches</b> shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins — turn one off to hide that zone entirely; each shows its total. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else, with its own total. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. Totals reflect every built-in and user-added spot, at any zoom level. All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕ button.</p>
@@ -2004,7 +2035,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-29 · v121 · <b>Button stack reordered, compass rose colour now follows the theme, theme ids renamed.</b> The action stack down the right of the map now runs <b>Bite, Spot, Catch, Tides, Waves, Guide, My Log, Compass, Locate Me, Topo Satellite/Streets</b> — sorted shortest pill to longest so the column reads as a staircase instead of a ragged edge, with <b>Catch</b> lifted above Tides and <b>Guide</b> dropped below Waves. Every button keeps its own glyph and its own label; <b>My Log</b> is unchanged. One thing to know about the last pill: <b>Topo Satellite</b> becomes <b>Streets</b> in satellite mode, which is a good deal shorter, so it steps out of the staircase while that mode is on. <b>Compass rose colour.</b> The rose, its bearing lines and its To/From labels were all drawn in <i>--brass</i>. In <b>Brown Sugar</b> that is a deep chocolate which reads well as text on the theme’s cream surfaces but vanished against dark water on the satellite map. The rose now has a colour variable of its own, <i>--rose</i>, which defaults to brass everywhere else and takes Brown Sugar’s light accent instead — nothing else that uses brass changed. <b>Blue Suede Shoes</b> also takes a <i>--rose</i>, though not for the same reason: that theme’s brass is a bright straw that shows up fine on dark water, so this one is a styling choice rather than a fix, and its rose is now the theme’s cyan accent so it sits with the rest of the blue palette. The four dark themes are untouched. <b>Theme ids renamed to match their names.</b> Internally the six themes still carried the working titles they were built under — <i>deepwater, midnight, forest, sunset, light, sunglasses</i> — which no longer matched anything on the picker and made the stylesheet hard to read against it. They are now <i>parrothead, purplehaze, greeneyedlady, tequilasunrise, bluesuedeshoes, brownsugar</i>, and the comments through the stylesheet use the picker names too. Nothing changes on screen and no theme was recoloured. If you already had a theme chosen, the id saved on your device is translated to the new name the first time you open this build and written back, so your choice is kept and the translation only runs once — the retired <i>beige</i> theme is still handled the same way. Also fixed: three tips in the <b>+ Spot</b> sheet were printing a stray <i>\u2014</i> as literal text instead of an em dash; that is gone and the lines read without it. Previously in v120: <b>Add-a-Spot type now sets itself.</b> Two fixes to the <b>+ Spot</b> controls. First, the <b>Inshore / Offshore / Launch</b> pills: opening the sheet used to clear all three while quietly leaving the last-used type in force, so nothing looked selected but something was. Now exactly one pill is ever lit — solid zone colour with a white ring — the other two sit black and dimmed, and the line under them always matches what will be saved. Second, the type is <b>chosen from the position</b>. Drop the pin and the app decides: within a couple of hundred yards of a spot already on the map it takes that spot’s type, so a pin on a ramp reads Launch and a pin on a reef reads Offshore; otherwise, east of the beach line it reads <b>Offshore</b>; otherwise, on one of the waterways the app already follows for tide timing — Halifax, Indian River and lagoon, Spruce Creek, Rose Bay, Turnbull Bay — it reads <b>Inshore</b>; anything left is inland but off the water, which is what a ramp looks like, so it reads <b>Launch</b>. The line under the pills names which test decided it. <b>Verify before saving.</b> The app carries a coarse beach line and channel centrelines rather than a real shoreline, so the water’s edge is where it errs — a ramp at the waterline can read Inshore, a spot up a narrow creek can read Launch. Tapping a pill overrules the guess permanently for that spot, and your own saved spots feed the first test, so corrections stick and improve later guesses. Checked against all 115 built-in spots: every one classifies correctly. The compass rose stays where it was, at 29°04.653&#8242;N 80°54.385&#8242;W, and the v118 Help text on the three reference points is unchanged. Previously in v118: <b>Compass reference points spelled out.</b> The Help and Warning sections now state plainly that a county reef Site's nm and bearing are <b>FWC's own published figures</b>, measured from 29°04.500&#8242;N 80°55.500&#8242;W out in the inlet mouth channel — not from this app's reference inside the end of the north jetty, and not from the compass rose. Three different origins, which is why the closest sites' numbers disagree. FWC's origin was recovered by fitting all 191 county drop coordinates against their stated distances; every one fits within 0.05&nbsp;nm. Previously in v117: <b>Tide timing corrections.</b> Two fixes, both affecting when the app says the water turns. First, a daylight-saving fault: the stored NOAA tables hold local clock readings, but the app was adding them as elapsed time. The two only agree while the clocks hold still, so from the November change to the March one every tide was reported <b>one hour early</b>. That is now decoded on the local calendar and is correct on both sides of every switch. It went unnoticed because the original check was run in July, when the two readings are identical. Second, <b>Aqua Ct</b> is now a calibrated tide gauge (+144 High / +170 Low). Turnbull Bay previously had no gauge of its own, so everything from the creek mouth to the head of the bay carried one flat borrowed figure and was flagged low confidence. The run now times by distance: Three Bridges +50/+60, Turnbull Bay N +60/+75, Turnbull Bay Bridge +100/+120. Those middle figures are interpolated, not measured, and read <i>medium</i> confidence. Heights up the bay are still taken from the Halifax and likely run generous. Previously in v116: New <b>Compass</b> button in the map button stack. It draws a chart-style compass rose out past the inlet mouth; hover an offshore pin on a computer or tap one on a phone and a single dashed line runs from the rose to that pin, labelled <b>To</b> (heading out) and <b>From</b> (heading home). One line at a time. The label slides itself clear of the rose, the pin, and any other site’s name tag, and splits into two stacked lines where the run is short. It applies to <b>offshore marks only</b> — reef Sites, wrecks and ledges, offshore sites you add yourself, and your own offshore catches; inshore spots, launches and inshore catches are untouched. While the compass is on, tapping an offshore pin shows its bearing rather than opening its details; switch it off and pins behave normally. Off by default. See the Guide for the full explanation, and the Warning section for why the rose’s bearings can differ from a site popup’s figures for the three closest sites. Also in this build: <b>Croaker Hole</b> removed — its coordinates were Little Lake George, an inland freshwater spring, mistagged as offshore. The <b>Ponce DeLeon Inlet</b> map label now hides while the compass is up — the rose is anchored within a couple hundred feet of it and printed straight through the name.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-29 · <b>v128</b> · <b>New:</b> Seasons button (was App Guide), moved above Compass. New FAB order. Help updated. Build notes condensed to keywords. v127 · FAB order: App Guide above Locate Me. v126 · Guide renamed App Guide; moved below Locate Me. v125 · FAB order: Guide below Waves. v124 · <b>Bug fix:</b> compass rose ignored theme accent — <i>--rose</i> was declared on <i>:root</i>, now on <i>body</i>. v123 · <b>New:</b> compass rose halo (<i>--rose-halo</i>), on rose, lines and labels. v122 · <b>New:</b> compass rose follows theme accent — light blue for Blue Suede Shoes, white for Brown Sugar. New FAB order. v121 · <b>New:</b> <i>--rose</i> variable. Theme ids renamed to match picker names, with migration for saved ids. FAB order. <b>Bug fix:</b> stray escape in + Spot tips. v120 · <b>Bug fix:</b> + Spot type pills — one pill lit, rest black and dimmed. <b>New:</b> spot type set automatically from position (Inshore / Offshore / Launch), with a verify note. Checked against all 115 built-in spots. v118 · Compass reference points documented — county reef figures are FWC’s, from 29°04.500&#8242;N 80°55.500&#8242;W; this app’s own from 29°04.902&#8242;N 80°56.202&#8242;W; rose at 29°04.653&#8242;N 80°54.385&#8242;W. v117 · <b>Bug fix:</b> tide times ran an hour early through daylight saving. <b>New:</b> Aqua Ct calibrated gauge (+144 High / +170 Low); Turnbull Bay timed by distance — Three Bridges +50/+60, Turnbull Bay N +60/+75, Turnbull Bay Bridge +100/+120 (interpolated, medium confidence). v116 · <b>New:</b> Compass rose overlay — offshore marks only, one bearing line at a time, off by default. Croaker Hole removed (coordinates were inland freshwater).</p>
     </div>
   </div>
 </div>
@@ -6164,7 +6195,7 @@ function redrawCompass(){
       segs.forEach(([t0,t1])=>{
         if(t1 - t0 < 0.002) return;
         L.polyline([map.containerPointToLatLng(at(t0)), map.containerPointToLatLng(at(t1))],
-          { color:'var(--rose)', weight:2.4, opacity:1, dashArray:'4,5', interactive:false }
+          { color:'var(--rose)', weight:2.4, opacity:1, dashArray:'4,5', interactive:false, className:'compass-line' }
         ).addTo(compassLayer);
       });
     }
