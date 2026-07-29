@@ -1068,12 +1068,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #logZoneRow .chip[data-zone="offshore"]:not(.active){background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
   /* Add-a-Spot pills: black/unselected until tapped, then a distinct color per zone
      (blue/purple/red) so it's obvious which type is currently chosen. */
-  #addSpotZoneRow .chip[data-zone="inshore"]:not(.active){background:#000 !important; color:#6b8cff !important; border-color:#6b8cff !important; box-shadow:none !important;}
+  /* SELECTED = solid zone colour, white text, white ring. UNSELECTED = black and dimmed,
+     so at a glance exactly one pill reads as lit. The dimming is what tells you the app has
+     not yet decided a type; as soon as a location is set, one pill lights up. */
+  #addSpotZoneRow .chip{opacity:.55 !important; transition:opacity .15s, background .15s, color .15s;}
+  #addSpotZoneRow .chip[data-zone="inshore"]:not(.active){background:#000 !important; color:#6b8cff !important; border-color:#37497f !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
-  #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:#b478ff !important; border-color:#b478ff !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:#b478ff !important; border-color:#5c3d80 !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
-  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#ff6b6b !important; border-color:#ff6b6b !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#ff6b6b !important; border-color:#7d3a3a !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
+  /* The line under the Type pills that says how the type was chosen. */
+  #addSpotZoneNote{font-size:11px; line-height:1.35; margin:6px 0 0; color:var(--muted);}
+  #addSpotZoneNote.auto{color:var(--brass);}
+  #addSpotZoneNote b{color:var(--fog);}
   /* ON: white, with a shadow to hold it together — the fill is the theme accent, and on the
      light accents (Deep Water cyan, Blue) plain white sits at about 1.7:1 without one.
      OFF: the theme colour, via --accent-lite so it stays legible on the black chip. */
@@ -1784,7 +1792,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <!-- Build stamp: bottom-left, directly under the scale bar. Short form on purpose —
        date then build number — because it shares that row with nothing but map. Its whole
        job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">07/29/26 Build 119</div>
+  <div class="build-stamp" id="buildStamp">07/29/26 Build 120</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1922,7 +1930,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and CLOSE ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later, but that happened earlier, drops into place by its own date.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Spot</b> saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location, name it, and choose inshore, offshore, or launch. You can <b>add and delete</b> both fishing spots and launches, and the same goes for the ones that came with the app: tap any pin and use <b>✎ Edit</b> to rename or move it, or <b>Delete</b> to take it off the map. The Inshore, Offshore and Launches totals in the pills at the top update the moment you add or delete one, either way. Deleting a built-in spot only hides it on this device — <b>↺ Restore built-in spots</b> in the Add-a-spot sheet brings every one of them back. Your own spots, your edits to built-in ones, and your drop labels all travel in either backup file.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Spot</b> saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. You can <b>add and delete</b> both fishing spots and launches, and the same goes for the ones that came with the app: tap any pin and use <b>✎ Edit</b> to rename or move it, or <b>Delete</b> to take it off the map. The Inshore, Offshore and Launches totals in the pills at the top update the moment you add or delete one, either way. Deleting a built-in spot only hides it on this device — <b>↺ Restore built-in spots</b> in the Add-a-spot sheet brings every one of them back. Your own spots, your edits to built-in ones, and your drop labels all travel in either backup file.</p>
+      <p class="sheet-note"><b>The type sets itself.</b> You no longer have to pick inshore, offshore or launch before you save — drop the pin and the app reads the position and lights the matching pill. It works in three steps. If the pin lands within a couple of hundred yards of a spot that is already on the map, it takes that spot's type, so a pin at a known ramp comes up <b>Launch</b> and a pin on a known reef comes up <b>Offshore</b>. Failing that, if the pin is east of the beach it is <b>Offshore</b>. Failing that, if it sits on one of the waterways the app already follows for tide timing — the Halifax, the Indian River and the lagoon, Spruce Creek, Rose Bay, Turnbull Bay — it is <b>Inshore</b>. Anything left over is inland but off the water, which is what a ramp or a bank access looks like, so it comes up <b>Launch</b>. The line under the pills always says which of those decided it.</p>
+      <p class="sheet-note"><b>Check it before you save.</b> The app carries a coarse beach line and channel centrelines, not a real shoreline, so the water's edge is the one place the guess goes wrong: a ramp right at the water can read Inshore, and a spot a few hundred yards up a narrow creek can read Launch. Every guess is only a suggestion — tap the right pill and your choice is what gets saved. Your own corrections also feed the first step above, so a ramp you save yourself will be recognised the next time you drop a pin near it. Exactly one pill is ever lit; the other two sit black and dimmed.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Guide</b> opens the Season Guide — month-by-month tables for every species (see <b>Reading the Season Month Bars</b> below), plus map-zone and offshore notes.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> <b>Bite</b> opens a 3-day solunar feeding forecast — the moon phase and % lit at the top, then Major and Minor feeding windows for that day, in the order they occur. Majors center on the moon overhead or underfoot; minors center on moonrise and moonset. Computed fully offline from moon-position astronomy, no internet is needed.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> <b>Tides</b> let you tap anywhere on the map to drop a Tide pin — you get a 3-day high/low forecast, built from official NOAA predictions for Ponce Inlet stored on your device (currently through July 2027). Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and interpolates the tide lag by distance between the calibrated stations on that arm — or extrapolates past the last one when you're farther upstream. Each forecast carries a confidence badge: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. Again, no internet is needed.</p>
@@ -1937,11 +1947,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">You can add gauges of your own. Open <b>⚙ Create &amp; Calibrate Tide Stations</b> in Help and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create &amp; Calibrate Tide Stations</button></div>
       <p class="sheet-note" style="margin-top:10px;"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to the National Data Buoy Center (NDBC) Buoy 41070 pin located off Ponce Inlet and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled straight from NOAA's National Data Buoy Center, each with its observation time. Needs internet — it always shows whatever NDBC last reported.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> <b>Compass</b> puts a chart-style compass rose on the water at the inlet, inside the end of the north jetty, and gives you the run out to any offshore mark. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose out to that pin, labelled with the heading both ways — <b>To</b> is the heading out from the inlet, <b>From</b> is the reciprocal for the run home. One line at a time, so nothing piles up on the map. On a phone the line stays put once tapped; tap the same pin again, or tap open water, to clear it. The label slides itself along the line to wherever it won't be covered by the rose, the pin, or any other site's name tag, and where the line is short it splits into two lines with <b>To</b> above and <b>From</b> below.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> <b>Compass</b> puts a chart-style compass rose on the water just off the inlet mouth and gives you the run out to any offshore mark. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose out to that pin, labelled with the heading both ways — <b>To</b> is the heading out from the inlet, <b>From</b> is the reciprocal for the run home. One line at a time, so nothing piles up on the map. On a phone the line stays put once tapped; tap the same pin again, or tap open water, to clear it. The label slides itself along the line to wherever it won't be covered by the rose, the pin, or any other site's name tag, and where the line is short it splits into two lines with <b>To</b> above and <b>From</b> below.</p>
       <p class="sheet-note">It works on <b>offshore sites only</b> — the county reef Sites, the wrecks and ledges, any offshore site you've added yourself, and your own logged catches out there. Inshore spots, launches, and inshore catches are left alone, since a bearing from the inlet is no use for a creek or a bridge. While the compass is switched on, <b>tapping an offshore pin shows its bearing instead of opening its details</b> — the popup would sit right on top of the line you asked for. Switch the compass off and pins open normally again.</p>
-      <p class="sheet-note">The rose is anchored on <b>the same point the app measures its own offshore nm-and-bearing figures from</b> — 29°04.902&#8242;N 80°56.202&#8242;W, inside the end of the north jetty. So a heading read off the rose and a heading printed in a site's popup are the same number. Bear in mind it is a bearing from the jetty, not from wherever you happen to be sitting: it's a planning aid for getting the lay of the grounds in your head, <b>not a substitute for your chartplotter</b>.</p>
-      <p class="sheet-note">There is a second reference point in play, and it matters most for the county reefs. The <b>nm and bearing printed in a county reef Site's own popup are FWC's published figures</b>, carried straight across from the Artificial Reef Program's deployment records rather than calculated by this app — and FWC measures them from <b>29°04.500&#8242;N 80°55.500&#8242;W</b> (29.0750, −80.9250), a point out in the inlet mouth channel, about 0.7&nbsp;nm southeast of this app's origin. Two origins, so two slightly different numbers for the same run: the closest sites can disagree by 15–30°, the distant ones by a degree or two.</p>
-      <p class="sheet-note">FWC's origin was not published with the records — it was recovered by fitting all <b>191 county drop coordinates</b> against their stated distances. Every one of the 191 lands within 0.05&nbsp;nm of that point, which is the rounding tolerance on a figure given to one decimal, so the fit is as exact as the source data allows. Your own natural-reef sites are a separate case again: their distances were measured from a point out past the inlet mouth, not from either of these.</p>
+      <p class="sheet-note">One caution worth knowing: the rose sits where a boater would actually pick up a heading, out past the inlet mouth, which is not the same point the app measures each site's nm-and-bearing figures from in its popup. For the three closest sites those two numbers can differ by 15–30°; further out they agree within a few degrees. It's a planning aid for getting the lay of the grounds in your head, <b>not a substitute for your chartplotter</b>.</p>
+      <p class="sheet-note">There is a third reference point in play, and it matters most for the county reefs. The <b>nm and bearing printed in a county reef Site's own popup are FWC's published figures</b>, carried straight across from the Artificial Reef Program's deployment records rather than calculated by this app — and FWC measures them from <b>29°04.500&#8242;N 80°55.500&#8242;W</b> (29.0750, −80.9250), a point out in the inlet mouth channel. That is <i>not</i> the point this app uses for everything else. Its own offshore nm/bearing figures run from 29°04.902&#8242;N 80°56.202&#8242;W — inside the end of the north jetty, about 0.7&nbsp;nm northwest of FWC's origin. The compass rose is further seaward again, at 29°04.653&#8242;N 80°54.385&#8242;W. Three origins strung along a mile of water, so three slightly different numbers for the same run, and that spread is most of why the closest sites disagree while the distant ones don't.</p>
+      <p class="sheet-note">FWC's origin was not published with the records — it was recovered by fitting all <b>191 county drop coordinates</b> against their stated distances. Every one of the 191 lands within 0.05&nbsp;nm of that point, which is the rounding tolerance on a figure given to one decimal, so the fit is as exact as the source data allows. Your own natural-reef sites are a separate case: their distances were measured from close to the rose position, not from either inlet point.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> drops your GPS position on the map (tap again to remove it).</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> <b>Topo Satellite / Street Map</b> (the label shows whichever view is currently active) switches between the satellite and street-map views.</p>
 
@@ -1976,13 +1986,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Warning</div>
       <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
-      <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. The rose is now anchored on this app's own bearing origin — 29°04.902&#8242;N 80°56.202&#8242;W, inside the end of the north jetty — so its headings match the nm/bearing figures the app prints in an offshore site's popup. What it does not match is a bearing taken from your boat: a heading is read once clear of the inlet, and by the time you are out there the number will have moved. The county reef Sites are a further exception — <b>Lighthouse Point Reef</b>, <b>Site 14 Flagler Ave Reef</b>, <b>Site 15 Sunglow Reef</b> and the numbered Sites all print <b>FWC's</b> published figures, measured from 29°04.500&#8242;N 80°55.500&#8242;W out in the inlet mouth channel rather than calculated here. Close in, that choice of origin can swing the bearing 15–30°; farther out the two agree within a degree or two.</p>
+      <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. A boater reads a bearing once clear of the inlet, not before, so the rose is anchored just offshore of the inlet mouth rather than at the same point each site's popup measures its nm/bearing figures from. For the closest sites — <b>Lighthouse Point Reef</b>, <b>Site 14 Flagler Ave Reef</b>, and <b>Site 15 Sunglow Reef</b> — that difference in reference point can swing the rose's bearing 15–30° from the number shown in the site's own popup; farther-out sites agree within a few degrees. Bear in mind those three popups are quoting <b>FWC's</b> figures, taken from 29°04.500&#8242;N 80°55.500&#8242;W in the inlet mouth channel — not this app's own reference inside the end of the north jetty, and not the rose. Close in, that choice of origin moves the bearing more than the run itself does.</p>
 
       <div class="subhead">Copyright</div>
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-29 · v119 · <b>Compass rose moved onto the app's own bearing origin.</b> The rose now sits at <b>29°04.902&#8242;N 80°56.202&#8242;W</b>, inside the end of the north jetty — the same point the app measures its offshore nm and bearing figures from. A heading read off the rose and the heading printed in an offshore site's popup are now the same number. Previously the rose sat about 1.6&nbsp;nm seaward at 29°04.653&#8242;N 80°54.385&#8242;W, which put those two readings 15–30° apart on the closest sites. County reef Sites remain the one exception: their popups quote <b>FWC's</b> published figures, measured from 29°04.500&#8242;N 80°55.500&#8242;W out in the inlet mouth channel, so close in they can still differ by 15–30° from the rose. Guide and Warning sections rewritten to match — two origins now, not three. Previously in v118: <b>Compass reference points spelled out.</b> The Help and Warning sections state plainly that a county reef Site's nm and bearing are FWC's own published figures rather than this app's. FWC's origin was recovered by fitting all 191 county drop coordinates against their stated distances; every one fits within 0.05&nbsp;nm. Previously in v117: <b>Tide timing corrections.</b> Two fixes, both affecting when the app says the water turns. First, a daylight-saving fault: the stored NOAA tables hold local clock readings, but the app was adding them as elapsed time. The two only agree while the clocks hold still, so from the November change to the March one every tide was reported <b>one hour early</b>. That is now decoded on the local calendar and is correct on both sides of every switch. It went unnoticed because the original check was run in July, when the two readings are identical. Second, <b>Aqua Ct</b> is now a calibrated tide gauge (+144 High / +170 Low). Turnbull Bay previously had no gauge of its own, so everything from the creek mouth to the head of the bay carried one flat borrowed figure and was flagged low confidence. The run now times by distance: Three Bridges +50/+60, Turnbull Bay N +60/+75, Turnbull Bay Bridge +100/+120. Those middle figures are interpolated, not measured, and read <i>medium</i> confidence. Heights up the bay are still taken from the Halifax and likely run generous. Previously in v116: New <b>Compass</b> button in the map button stack. It draws a chart-style compass rose out past the inlet mouth; hover an offshore pin on a computer or tap one on a phone and a single dashed line runs from the rose to that pin, labelled <b>To</b> (heading out) and <b>From</b> (heading home). One line at a time. The label slides itself clear of the rose, the pin, and any other site’s name tag, and splits into two stacked lines where the run is short. It applies to <b>offshore marks only</b> — reef Sites, wrecks and ledges, offshore sites you add yourself, and your own offshore catches; inshore spots, launches and inshore catches are untouched. While the compass is on, tapping an offshore pin shows its bearing rather than opening its details; switch it off and pins behave normally. Off by default. See the Guide for the full explanation, and the Warning section for why the rose’s bearings can differ from a site popup’s figures for the three closest sites. Also in this build: <b>Croaker Hole</b> removed — its coordinates were Little Lake George, an inland freshwater spring, mistagged as offshore. The <b>Ponce DeLeon Inlet</b> map label now hides while the compass is up — the rose is anchored within a couple hundred feet of it and printed straight through the name.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-29 · v120 · <b>Add-a-Spot type now sets itself.</b> Two fixes to the <b>+ Spot</b> controls. First, the <b>Inshore / Offshore / Launch</b> pills: opening the sheet used to clear all three while quietly leaving the last-used type in force, so nothing looked selected but something was. Now exactly one pill is ever lit — solid zone colour with a white ring — and the other two sit black and dimmed, and the state under the pills always matches what will be saved. Second, the type is <b>chosen from the position</b>. Drop the pin and the app decides: within a couple of hundred yards of a spot already on the map it takes that spot's type (a pin on a ramp reads Launch, a pin on a reef reads Offshore); otherwise, east of the beach line it reads <b>Offshore</b>; otherwise, on one of the waterways the app already follows for tide timing — Halifax, Indian River and lagoon, Spruce Creek, Rose Bay, Turnbull Bay — it reads <b>Inshore</b>; anything left is inland but off the water, which is what a ramp looks like, so it reads <b>Launch</b>. The line under the pills names which test decided it. <b>Verify before saving.</b> The app carries a coarse beach line and channel centrelines rather than a real shoreline, so the water's edge is where it errs — a ramp at the waterline can read Inshore, a spot up a narrow creek can read Launch. Tapping a pill overrules the guess permanently for that spot, and your own saved spots feed the first test, so corrections stick and improve later guesses. Checked against all 115 built-in spots: every one classifies correctly. Also in this build: the compass rose stays where it was, at 29°04.653&#8242;N 80°54.385&#8242;W, and the v118 Help text on the three reference points is unchanged. Previously in v118: <b>Compass reference points spelled out.</b> The Help and Warning sections now state plainly that a county reef Site's nm and bearing are <b>FWC's own published figures</b>, measured from 29°04.500&#8242;N 80°55.500&#8242;W out in the inlet mouth channel — not from this app's reference inside the end of the north jetty, and not from the compass rose. Three different origins, which is why the closest sites' numbers disagree. FWC's origin was recovered by fitting all 191 county drop coordinates against their stated distances; every one fits within 0.05&nbsp;nm. Previously in v117: <b>Tide timing corrections.</b> Two fixes, both affecting when the app says the water turns. First, a daylight-saving fault: the stored NOAA tables hold local clock readings, but the app was adding them as elapsed time. The two only agree while the clocks hold still, so from the November change to the March one every tide was reported <b>one hour early</b>. That is now decoded on the local calendar and is correct on both sides of every switch. It went unnoticed because the original check was run in July, when the two readings are identical. Second, <b>Aqua Ct</b> is now a calibrated tide gauge (+144 High / +170 Low). Turnbull Bay previously had no gauge of its own, so everything from the creek mouth to the head of the bay carried one flat borrowed figure and was flagged low confidence. The run now times by distance: Three Bridges +50/+60, Turnbull Bay N +60/+75, Turnbull Bay Bridge +100/+120. Those middle figures are interpolated, not measured, and read <i>medium</i> confidence. Heights up the bay are still taken from the Halifax and likely run generous. Previously in v116: New <b>Compass</b> button in the map button stack. It draws a chart-style compass rose out past the inlet mouth; hover an offshore pin on a computer or tap one on a phone and a single dashed line runs from the rose to that pin, labelled <b>To</b> (heading out) and <b>From</b> (heading home). One line at a time. The label slides itself clear of the rose, the pin, and any other site’s name tag, and splits into two stacked lines where the run is short. It applies to <b>offshore marks only</b> — reef Sites, wrecks and ledges, offshore sites you add yourself, and your own offshore catches; inshore spots, launches and inshore catches are untouched. While the compass is on, tapping an offshore pin shows its bearing rather than opening its details; switch it off and pins behave normally. Off by default. See the Guide for the full explanation, and the Warning section for why the rose’s bearings can differ from a site popup’s figures for the three closest sites. Also in this build: <b>Croaker Hole</b> removed — its coordinates were Little Lake George, an inland freshwater spring, mistagged as offshore. The <b>Ponce DeLeon Inlet</b> map label now hides while the compass is up — the rose is anchored within a couple hundred feet of it and printed straight through the name.</p>
     </div>
   </div>
 </div>
@@ -2097,7 +2107,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="addSpotClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <p class="sheet-note">Save your own fishing spot to the map. It's stored on this device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location, name it, and choose inshore or offshore.</p>
+    <p class="sheet-note">Save your own fishing spot to the map. It's stored on this device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it \u2014 the app sets the type from where the pin landed, and you can override it.</p>
     <label class="field-label">Name</label>
     <input type="text" id="addSpotName" placeholder="e.g. My honey hole" style="width:100%; box-sizing:border-box;">
     <label class="field-label">Type</label>
@@ -2106,6 +2116,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="chip util" data-zone="offshore">Offshore</div>
       <div class="chip util" data-zone="launch">Launch</div>
     </div>
+    <p id="addSpotZoneNote">Set a location and the app picks the type for you \u2014 or tap a pill to choose it yourself.</p>
     <label class="field-label">Location</label>
     <div class="loc-btns">
       <button class="mini-btn" id="addSpotPin">📍 Drop pin</button>
@@ -2117,6 +2128,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="loc-btns" style="margin-top:12px;">
       <button class="mini-btn" id="addSpotSave" style="font-weight:700;">Save spot</button>
     </div>
+    <p class="sheet-note" style="margin-top:8px;"><b>Check the type before you save.</b> The app guesses it from the coordinates, and the guess is only as good as the coastline and channel lines it carries \u2014 close to a bank, a jetty, or a ramp it can land on the wrong side. If the lit pill is wrong, tap the right one; your choice sticks and is what gets saved.</p>
     <p class="sheet-note" style="margin-top:14px;">Your saved spots: <span id="customSpotCount">0</span>.</p>
     <div id="customSpotList"></div>
     <div class="loc-btns" style="margin-top:14px;">
@@ -4713,9 +4725,10 @@ window.editBuiltinSpot = function(id){
   const s = SPOTS.find(x=>x.id===id); if(!s) return;
   editingBuiltinId = id; editingSpotId = null;
   addSpotZone = s.ramp ? 'launch' : s.zone;
+  addSpotZoneManual = true;   // editing an existing spot: keep the type it already has
   addSpotLoc = {lat:s.lat, lng:s.lng};
   document.getElementById('addSpotName').value = s.name;
-  document.querySelectorAll('#addSpotZoneRow .chip').forEach(c=>c.classList.toggle('active', c.dataset.zone===addSpotZone));
+  paintSpotZone('Existing type \u2014 <b>'+customSpotTypeLabel({zone:addSpotZone})+'</b>. Tap a pill to change it.');
   showAddSpotPreview(s.lat, s.lng);
   updateAddSpotPreview();
   document.getElementById('addSpotSave').textContent = 'Update spot';
@@ -4828,7 +4841,12 @@ function updateCustomSpotList(){
 
 /* ---- Add-spot modal flow ---- */
 let addSpotLoc = null;
-let addSpotZone = 'inshore';
+/* null means "not decided yet" - no pill is lit. It is filled in either by the user tapping
+   a pill (which sets addSpotZoneManual and locks the choice) or by autoSpotZone() the moment
+   a location is set. Previously this defaulted to 'inshore' while the pills were cleared on
+   open, so nothing looked selected but a type was silently in force. */
+let addSpotZone = null;
+let addSpotZoneManual = false;
 let placingSpotPin = false;
 const addSpotSheet = document.getElementById('addSpotSheet');
 const addSpotScrim = document.getElementById('addSpotScrim');
@@ -4838,6 +4856,24 @@ function closeAddSpot(){
   document.getElementById('addSpotBtn').classList.remove('pressed');
   if(typeof clearAddSpotPreview === 'function') clearAddSpotPreview();
   if(!placingSpotPin){ editingSpotId = null; editingBuiltinId = null; const sv = document.getElementById('addSpotSave'); if(sv) sv.textContent = 'Save spot'; }
+}
+/* One place that lights the pills and writes the explanation line, so the two can never
+   disagree. Passing null lights nothing. */
+function paintSpotZone(note){
+  document.querySelectorAll('#addSpotZoneRow .chip').forEach(c=>{
+    c.classList.toggle('active', !!addSpotZone && c.dataset.zone===addSpotZone);
+  });
+  const el = document.getElementById('addSpotZoneNote');
+  if(!el) return;
+  el.classList.toggle('auto', !!note && !addSpotZoneManual);
+  el.innerHTML = note || 'Set a location and the app picks the type for you \u2014 or tap a pill to choose it yourself.';
+}
+/* Called whenever a location arrives. Leaves a manual choice alone. */
+function autoSetSpotZone(){
+  if(addSpotZoneManual || !addSpotLoc){ paintSpotZone(addSpotZoneManual ? 'Type set by you \u2014 <b>'+customSpotTypeLabel({zone:addSpotZone})+'</b>.' : null); return; }
+  const g = autoSpotZone(addSpotLoc.lat, addSpotLoc.lng);
+  addSpotZone = g.zone;
+  paintSpotZone('Type picked automatically \u2014 <b>'+customSpotTypeLabel({zone:g.zone})+'</b> ('+g.why+'). Tap a pill if that is wrong.');
 }
 function updateAddSpotPreview(){
   const el = document.getElementById('addSpotPreview');
@@ -4857,14 +4893,15 @@ document.getElementById('addSpotCoord').addEventListener('input', function(){
   const p = parseLatLngInput(raw);
   if(!p){ el.textContent = "Couldn't read that \u2014 try 29 04.902 N, 80 56.202 W"; el.classList.remove('set'); return; }
   addSpotLoc = p;
+  autoSetSpotZone();
   showAddSpotPreview(p.lat, p.lng);
   el.textContent = toDMS(p.lat, p.lng);
   el.classList.add('set');
 });
 document.getElementById('addSpotBtn').addEventListener('click', ()=>{
-  addSpotLoc=null;
+  addSpotLoc=null; addSpotZone=null; addSpotZoneManual=false;
   const box = document.getElementById('addSpotCoord'); if(box) box.value='';
-  document.querySelectorAll('#addSpotZoneRow .chip').forEach(c=>c.classList.remove('active'));
+  paintSpotZone(null);
   updateAddSpotPreview(); openAddSpot();
 });
 document.getElementById('restoreBuiltinBtn').addEventListener('click', restoreBuiltinSpots);
@@ -4873,14 +4910,16 @@ addSpotScrim.addEventListener('click', closeAddSpot);
 document.getElementById('addSpotZoneRow').addEventListener('click', (e)=>{
   const chip = e.target.closest('.chip'); if(!chip) return;
   addSpotZone = chip.dataset.zone;
-  document.querySelectorAll('#addSpotZoneRow .chip').forEach(c=>c.classList.toggle('active', c===chip));
+  addSpotZoneManual = true;               // a tap wins over the automatic guess, permanently
+  paintSpotZone('Type set by you \u2014 <b>'+customSpotTypeLabel({zone:addSpotZone})+'</b>.');
+  if(addSpotLoc) showAddSpotPreview(addSpotLoc.lat, addSpotLoc.lng);  // recolour the pin
 });
 let editingSpotId = null;
 let addSpotPreviewMarker = null;
 function clearAddSpotPreview(){ if(addSpotPreviewMarker){ map.removeLayer(addSpotPreviewMarker); addSpotPreviewMarker = null; } }
 function showAddSpotPreview(lat,lng){
   clearAddSpotPreview();
-  const fill = customSpotFill({zone:addSpotZone});
+  const fill = addSpotZone ? customSpotFill({zone:addSpotZone}) : '#8a97a8';
   addSpotPreviewMarker = L.marker([lat,lng], {icon:L.divIcon({className:'', html:`<div class="spot-marker" style="background:${fill}; width:20px; height:20px; box-shadow:0 0 0 3px rgba(255,255,255,.85);"></div>`, iconSize:[20,20], iconAnchor:[10,10]})}).addTo(map);
 }
 document.getElementById('addSpotPin').addEventListener('click', ()=>{
@@ -4895,6 +4934,7 @@ document.getElementById('addSpotGPS').addEventListener('click', ()=>{
   showToast('Finding your location\u2026', 8000);
   getFixOnce(pos=>{
     addSpotLoc = {lat:pos.coords.latitude, lng:pos.coords.longitude};
+    autoSetSpotZone();
     showAddSpotPreview(addSpotLoc.lat, addSpotLoc.lng);
     updateAddSpotPreview();
     showToast('Location set.');
@@ -4904,6 +4944,7 @@ map.on('click', (e)=>{
   if(!placingSpotPin) return;
   placingSpotPin = false;
   addSpotLoc = {lat:e.latlng.lat, lng:e.latlng.lng};
+  autoSetSpotZone();                                    // type first, so the pin draws in its colour
   showAddSpotPreview(addSpotLoc.lat, addSpotLoc.lng);   // visible pin immediately
   updateAddSpotPreview();
   blurActive();
@@ -4914,9 +4955,10 @@ window.editCustomSpot = function(id){
   const s = customSpots.find(x=>x.id===id); if(!s) return;
   editingSpotId = id;
   addSpotZone = s.zone;
+  addSpotZoneManual = true;   // editing an existing spot: keep the type it already has
   addSpotLoc = {lat:s.lat, lng:s.lng};
   document.getElementById('addSpotName').value = s.name;
-  document.querySelectorAll('#addSpotZoneRow .chip').forEach(c=>c.classList.toggle('active', c.dataset.zone===s.zone));
+  paintSpotZone('Existing type \u2014 <b>'+customSpotTypeLabel({zone:addSpotZone})+'</b>. Tap a pill to change it.');
   showAddSpotPreview(s.lat, s.lng);
   updateAddSpotPreview();
   document.getElementById('addSpotSave').textContent = 'Update spot';
@@ -4927,6 +4969,7 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
   const name = (document.getElementById('addSpotName').value || '').trim();
   if(!name){ showToast('Give your spot a name first.'); return; }
   if(!addSpotLoc){ showToast('Set a location — drop a pin or use My location.'); return; }
+  if(!addSpotZone) addSpotZone = autoSpotZone(addSpotLoc.lat, addSpotLoc.lng).zone;
   const meta = customSpotTypeLabel({zone:addSpotZone})+' · My spot';
   if(editingBuiltinId){
     const s = SPOTS.find(x=>x.id===editingBuiltinId);
@@ -5704,11 +5747,11 @@ function nmFromInlet(lat,lng){
 }
 
 /* ===================== COMPASS ROSE — bearings-from-Ponce-Inlet overlay =====================
-   Toggle-able map overlay (Compass FAB). The rose is anchored on the PONCE_INLET constant —
-   the same origin the app uses for the nm/bearing figures in offshore popups — so the two
-   agree to the degree everywhere. Bearings are still computed fresh from COMPASS_ROSE_POS
-   rather than reusing bearingPairFromInlet, so the rose can be moved again independently if
-   ever needed; keep the two constants tied together as long as they're meant to match.
+   Toggle-able map overlay (Compass FAB). The rose is anchored at a charted point Jan gave
+   (29°04.653'N 80°54.385'W) rather than the PONCE_INLET constant used elsewhere for the
+   nm/bearing figures in popups — the two sit about 1.6 nm apart, so bearings here are
+   computed fresh from THIS anchor rather than reusing bearingPairFromInlet. The Warning
+   section in the guide spells out where the two disagree.
 
    Interaction model: nothing but the rose is drawn until you hover (desktop) or tap (touch)
    an offshore pin, at which point a single line runs rose→pin carrying one To/From label.
@@ -5723,12 +5766,7 @@ function nmFromInlet(lat,lng){
    segments with a gap where the text sits, so the line appears to run behind the text and
    through the middle of the heading numbers. Placement is recomputed on zoom/move because
    the gap is measured in screen pixels against text width, not in geography. */
-/* Deliberately the SAME origin as PONCE_INLET (29°04.902'N 80°56.202'W), inside the end of
-   the north jetty, so the rose's To/From headings match the nm/bearing figures printed in
-   every offshore popup exactly. Derived from the constant rather than retyped so the two can
-   never drift apart. (It formerly sat seaward at 29°04.653'N 80°54.385'W, which put the two
-   sets of numbers 15–30° apart on the closest sites.) */
-const COMPASS_ROSE_POS = { lat: PONCE_INLET.lat, lng: PONCE_INLET.lng }; // 29°04.902'N 80°56.202'W
+const COMPASS_ROSE_POS = { lat: 29.07755, lng: -80.906417 }; // 29°04.653'N 80°54.385'W
 /* The rose graphic is 200px anchored on its centre; its outermost ink is the "N" label,
    whose cap height reaches about 104px out. Both constants below sit clear of that. */
 const COMPASS_ROSE_RADIUS_PX = 108; // lines start outside the rose ring AND its cardinal letters
@@ -6911,6 +6949,103 @@ function waterwayPos(lat,lng){
   });
   return best;
 }
+/* ===================== AUTOMATIC SPOT TYPE =====================
+   When a pin is dropped in Add-a-Spot without a type chosen, the app picks one from the
+   coordinates. Two tests, in this order:
+
+   1. Is it on a mapped inland waterway? waterwayPos() already projects any point onto the
+      ICW arms and the creek branches for tide timing; its `off` value is the point's
+      distance from that centreline in km. If that distance is inside the water's half-width
+      the point is on the water  ->  INSHORE. Done first on purpose, so the inlet throat
+      between the jetties reads inshore rather than ocean.
+   2. Is it seaward of the beach?  BEACH_LINE below is the surf line from Flagler Beach down
+      to Playalinda, north to south. Interpolate its longitude at the pin's latitude; if the
+      pin sits east of that  ->  OFFSHORE.
+   Neither  ->  inland but off the water  ->  LAUNCH.
+
+   LIMITS, and they matter. The half-widths are single figures per water body, not a real
+   shoreline, and the beach line is a coarse polyline. Near a bank, a jetty, or the barrier
+   island the call can land on the wrong side by a few hundred yards - which is exactly
+   where boat ramps live, so a ramp right at the water's edge will often read inshore. That
+   is why the guess only ever LIGHTS a pill: the user can always overrule it, and the sheet
+   says so. Tune the numbers below rather than adding shoreline polygons.                   */
+const BEACH_LINE = [
+  [29.900,-81.265],[29.700,-81.200],[29.550,-81.150],[29.440,-81.113],[29.380,-81.082],
+  [29.320,-81.048],[29.280,-81.030],[29.240,-81.010],[29.200,-80.995],[29.160,-80.972],
+  [29.120,-80.948],[29.090,-80.928],[29.070,-80.918],[29.030,-80.8985],[28.990,-80.8850],
+  [28.960,-80.8700],[28.930,-80.8420],[28.900,-80.8000],[28.860,-80.7680],[28.820,-80.7450],
+  [28.760,-80.7200],[28.700,-80.7000],[28.600,-80.6600],[28.450,-80.5900],[28.300,-80.5600]
+];
+/* ~50 m of slack, so a spot logged right at the waterline on the river side of a narrow
+   barrier (New Smyrna, Bethune Beach) is not tipped into the ocean by rounding. */
+const OCEAN_MARGIN_DEG = 0.0005;
+/* How close a pin has to be to an already-labelled spot before it simply inherits that
+   label. Tight on purpose: at the coordinates of a ramp you get Launch, but water a couple
+   hundred yards off that ramp is judged on its own. */
+const KNOWN_SPOT_KM = 0.30;
+/* A ramp gets a much tighter radius than a water spot. A ramp and the water in front of it
+   are only a couple of hundred yards apart and look identical to any geometric test, so a
+   wide ramp radius would drag nearby fishing water into Launch. Land on the ramp itself and
+   you still get Launch; a cast's length off it and the point is judged on its own. */
+const KNOWN_RAMP_KM = 0.12;
+/* Half-width of each water body, km, from its centreline. Generous - these are sized to
+   cover the water, which means they also reach some way over the banks. */
+const WATER_HALFWIDTH_KM = {
+  branch: 0.80,   // Spruce Creek, Rose Bay, Turnbull Bay
+  north:  1.20,   // Halifax River and its creeks
+  south:  1.40,   // Indian River North, inlet down to about Bethune Beach
+  lagoon: 4.20    // Mosquito Lagoon, where the ICW hugs the east side of open water
+};
+const LAGOON_FROM_KM = 14; // distance down the south arm at which the lagoon opens up
+
+/* Beach longitude at a latitude. Beyond the ends of the line the nearest end is used, so a
+   wreck well north or south of the charted coast still reads as being in the ocean. */
+function beachLngAt(lat){
+  const B = BEACH_LINE;
+  if(lat >= B[0][0]) return B[0][1];
+  if(lat <= B[B.length-1][0]) return B[B.length-1][1];
+  for(let i=0;i<B.length-1;i++){
+    const la=B[i][0], lo=B[i][1], lb=B[i+1][0], lo2=B[i+1][1];
+    if(lat <= la && lat >= lb){
+      const t = (la === lb) ? 0 : (la - lat)/(la - lb);
+      return lo + t*(lo2 - lo);
+    }
+  }
+  return B[B.length-1][1];
+}
+function isSeawardOfBeach(lat,lng){ return lng > beachLngAt(lat) + OCEAN_MARGIN_DEG; }
+function waterHalfWidthKm(w){
+  if(w.branch) return WATER_HALFWIDTH_KM.branch;
+  if(w.arm === 'N') return WATER_HALFWIDTH_KM.north;
+  return (w.s > LAGOON_FROM_KM) ? WATER_HALFWIDTH_KM.lagoon : WATER_HALFWIDTH_KM.south;
+}
+/* Nearest already-labelled spot - the built-in table plus anything the user has added. The
+   user's own spots count, so every correction they make quietly improves later guesses. */
+function nearestLabelledSpot(lat,lng){
+  let best = null;
+  const consider = (sp)=>{
+    if(!sp || sp._deleted || sp.lat==null || sp.lng==null) return;
+    const d = segKm(lat,lng,sp.lat,sp.lng);
+    const zone = sp.ramp ? 'launch' : sp.zone;
+    if(d > (zone==='launch' ? KNOWN_RAMP_KM : KNOWN_SPOT_KM)) return;
+    if(!best || d < best.d) best = { d, name:sp.name, zone };
+  };
+  if(typeof SPOTS !== 'undefined') SPOTS.forEach(consider);
+  if(typeof customSpots !== 'undefined' && Array.isArray(customSpots)) customSpots.forEach(consider);
+  return best;
+}
+/* Returns {zone, why} - `why` is printed under the Type pills so the choice is never silent. */
+function autoSpotZone(lat,lng){
+  const near = nearestLabelledSpot(lat,lng);
+  if(near) return { zone:near.zone, why:'same as '+near.name };
+  if(isSeawardOfBeach(lat,lng)) return { zone:'offshore', why:'seaward of the beach' };
+  const w = waterwayPos(lat,lng);
+  if(w.off <= waterHalfWidthKm(w)){
+    return { zone:'inshore', why: w.branch ? ('on '+w.branch) : (w.arm==='N' ? 'on the Halifax' : 'on the Indian River / lagoon') };
+  }
+  return { zone:'launch', why:'inland, off the water' };
+}
+
 let _stationPos=null;
 /* Built-in gauges plus any the user has calibrated themselves. User stations are real
    calibration knots — they interpolate alongside the built-ins. */
