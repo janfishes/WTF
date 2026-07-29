@@ -943,11 +943,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
      its heading, offset a few px to the side so it doesn't sit on top of the dashes) —
      plain linework text like the rose itself, no pill, no glow, darkened for legibility
      since there's no background chip behind it. */
+  /* Compass rose overlay: bearing text runs inline along each line (rotated to its heading,
+     nudged to one side, with a gap carved in the line beneath it). Sized and weighted to
+     match the species pills — 12px/800, full intensity, no glow — and the same brass as the
+     rose and its lines. */
   .compass-label{
     position:absolute; color:var(--brass); font-family:'Space Grotesk',sans-serif;
-    font-size:18px; font-weight:800; white-space:nowrap; pointer-events:none;
-    letter-spacing:.02em;
+    font-size:12px; font-weight:800; white-space:nowrap; pointer-events:none;
+    letter-spacing:.02em; opacity:1;
   }
+  /* Narrow fallback used when the one-line form can't clear the rose: the two halves ride
+     above and below the line, which runs between them (so no gap is carved there). */
+  .compass-label-stack{display:flex; flex-direction:column; align-items:center; line-height:1;}
+  .compass-label-stack span{display:block;}
   .compass-rose-wrap{pointer-events:none;}
   .launches-only .spot-label.lbl-launch{max-width:240px;}
   .place-label{
@@ -1776,7 +1784,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <!-- Build stamp: bottom-left, directly under the scale bar. Short form on purpose —
        date then build number — because it shares that row with nothing but map. Its whole
        job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">07/29/26 Build 113</div>
+  <div class="build-stamp" id="buildStamp">07/29/26 Build 116</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1899,7 +1907,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead" style="margin-top:0;">Shape Guide</div>
       <p class="sheet-note"><b>Cookies</b> (round buttons, top-right of the header) are Search <span style="vertical-align:-2px;">🔍</span>, Help <b>?</b>, Themes <span style="vertical-align:-2px;">🎨</span>, and Text Size <b>A</b>.</p>
       <p class="sheet-note"><b>Chips</b> (larger round shapes on the map) are the tide stations <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> and the USCG wave buoy 41070 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg>.</p>
-      <p class="sheet-note"><b>Pills</b> (hot-dog shapes) are the row of filter switches along the top of the map below the header (Catches, Inshore, Offshore, Launches) and the Labels pill that toggles these switches' labels on/off — the number next to Catches, Inshore, Offshore, and Launches is a total count. <b>Species filter switches</b> (23) are down the left edge of the map, denoted by colored diamonds. The pills along the lower right of the map's edge are the action stack: <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Catch, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> My Catch, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Spot, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Guide, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> Bite, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tides, <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> Waves, <svg viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> Locate Me, and <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite/Streets. Small colored pins on the map show the locations of your catches, inshore spots, offshore sites, and launch areas. Catch pins with numbers show how many catches you've logged at that location. Offshore pins with numbers show how many sites are at a named artificial or natural reef. Tap a numbered pin to see the catches or coordinates at that location, along with other details.</p>
+      <p class="sheet-note"><b>Pills</b> (hot-dog shapes) are the row of filter switches along the top of the map below the header (Catches, Inshore, Offshore, Launches) and the Labels pill that toggles these switches' labels on/off — the number next to Catches, Inshore, Offshore, and Launches is a total count. <b>Species filter switches</b> (23) are down the left edge of the map, denoted by colored diamonds. The pills along the lower right of the map's edge are the action stack: <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Catch, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> My Catch, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Spot, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Guide, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> Bite, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tides, <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> Waves, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> Compass, <svg viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> Locate Me, and <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite/Streets. Small colored pins on the map show the locations of your catches, inshore spots, offshore sites, and launch areas. Catch pins with numbers show how many catches you've logged at that location. Offshore pins with numbers show how many sites are at a named artificial or natural reef. Tap a numbered pin to see the catches or coordinates at that location, along with other details.</p>
 
       <div class="subhead" style="margin-top:2px;">Map Controls</div>
       <p class="sheet-note">Tapping <b>Catches</b> shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins — turn one off to hide that zone entirely; each shows its total. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else, with its own total. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. Totals reflect every built-in and user-added spot, at any zoom level. All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕ button.</p>
@@ -1929,6 +1937,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">You can add gauges of your own. Open <b>⚙ Create &amp; Calibrate Tide Stations</b> in Help and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create &amp; Calibrate Tide Stations</button></div>
       <p class="sheet-note" style="margin-top:10px;"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to the National Data Buoy Center (NDBC) Buoy 41070 pin located off Ponce Inlet and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled straight from NOAA's National Data Buoy Center, each with its observation time. Needs internet — it always shows whatever NDBC last reported.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> <b>Compass</b> puts a chart-style compass rose on the water just off the inlet mouth and gives you the run out to any offshore mark. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose out to that pin, labelled with the heading both ways — <b>To</b> is the heading out from the inlet, <b>From</b> is the reciprocal for the run home. One line at a time, so nothing piles up on the map. On a phone the line stays put once tapped; tap the same pin again, or tap open water, to clear it. The label slides itself along the line to wherever it won't be covered by the rose, the pin, or any other site's name tag, and where the line is short it splits into two lines with <b>To</b> above and <b>From</b> below.</p>
+      <p class="sheet-note">It works on <b>offshore sites only</b> — the county reef Sites, the wrecks and ledges, any offshore site you've added yourself, and your own logged catches out there. Inshore spots, launches, and inshore catches are left alone, since a bearing from the inlet is no use for a creek or a bridge. While the compass is switched on, <b>tapping an offshore pin shows its bearing instead of opening its details</b> — the popup would sit right on top of the line you asked for. Switch the compass off and pins open normally again.</p>
+      <p class="sheet-note">One caution worth knowing: the rose sits where a boater would actually pick up a heading, out past the inlet mouth, which is not the same point the app measures each site's nm-and-bearing figures from in its popup. For the three closest sites those two numbers can differ by 15–30°; further out they agree within a few degrees. It's a planning aid for getting the lay of the grounds in your head, <b>not a substitute for your chartplotter</b>.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> drops your GPS position on the map (tap again to remove it).</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> <b>Topo Satellite / Street Map</b> (the label shows whichever view is currently active) switches between the satellite and street-map views.</p>
 
@@ -1963,13 +1974,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Warning</div>
       <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
-      <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. A boater reads a bearing once clear of the inlet, not before, so the rose is anchored just offshore of the inlet mouth rather than at the same point each site's popup measures its nm/bearing figures from. For sites right off the rose — <b>Lighthouse Point Reef</b>, <b>Site 14 Flagler Ave Reef</b>, and <b>Site 15 Sunglow Reef</b> — that difference in reference point can swing the rose's bearing 15–30° from the number shown in the site's own popup; farther-out sites agree within a few degrees.</p>
+      <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. A boater reads a bearing once clear of the inlet, not before, so the rose is anchored just offshore of the inlet mouth rather than at the same point each site's popup measures its nm/bearing figures from. For the closest sites — <b>Lighthouse Point Reef</b>, <b>Site 14 Flagler Ave Reef</b>, and <b>Site 15 Sunglow Reef</b> — that difference in reference point can swing the rose's bearing 15–30° from the number shown in the site's own popup; farther-out sites agree within a few degrees.</p>
 
       <div class="subhead">Copyright</div>
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-29 · v113 · <b>Compass</b> bearing labels now match the rose's own brass color, larger and bolder, and sit on a wider shared arc — 1/4 mile out from the rose instead of 1/2 nm — for clear separation between labels. Bigger change: the app now <b>opens with every filter pill off</b> — Catches, Inshore, Offshore, Launches, and Labels all start unchecked, so the map opens clean instead of showing everything at once. Tap any pill to bring its pins back.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-29 · v116 · New <b>Compass</b> button in the map button stack. It draws a chart-style compass rose out past the inlet mouth; hover an offshore pin on a computer or tap one on a phone and a single dashed line runs from the rose to that pin, labelled <b>To</b> (heading out) and <b>From</b> (heading home). One line at a time. The label slides itself clear of the rose, the pin, and any other site’s name tag, and splits into two stacked lines where the run is short. It applies to <b>offshore marks only</b> — reef Sites, wrecks and ledges, offshore sites you add yourself, and your own offshore catches; inshore spots, launches and inshore catches are untouched. While the compass is on, tapping an offshore pin shows its bearing rather than opening its details; switch it off and pins behave normally. Off by default. See the Guide for the full explanation, and the Warning section for why the rose’s bearings can differ from a site popup’s figures for the three closest sites. Also in this build: <b>Croaker Hole</b> removed — its coordinates were Little Lake George, an inland freshwater spring, mistagged as offshore. The <b>Ponce DeLeon Inlet</b> map label now hides while the compass is up — the rose is anchored within a couple hundred feet of it and printed straight through the name.</p>
     </div>
   </div>
 </div>
@@ -2436,7 +2447,6 @@ const SPOTS = [
   { id:"jan-28fwreck", name:"28 F Wreck", zone:"offshore", lat:28.980417, lng:-80.188100, meta:"Offshore · 38.4 nm/44.2 sm from Inlet", desc:"158 ft, 2/3 of hull is upside down, broken in two pieces, with the stern and screws pointing up. 30 ld red snapper, 100 lb jacks, 35 lb gags", species:["grouper", "jack", "snapper"], farOut:true },
   { id:"jan-barge", name:"Barge", zone:"offshore", lat:29.021500, lng:-80.683167, meta:"Offshore · 12.4 nm/14.3 sm from Inlet", desc:"Wreck", species:[], farOut:true },
   { id:"jan-clorinebarge", name:"Clorine Barge", zone:"offshore", lat:29.589683, lng:-80.570700, meta:"Offshore · 35.5 nm/40.9 sm from Inlet", desc:"Lots of gags inside the long barge, very high sides", species:["grouper"], farOut:true },
-  { id:"jan-croakerhole", name:"Croaker Hole", zone:"offshore", lat:29.440247, lng:-81.694260, meta:"Little Lake George", desc:"Spring, entrance small cave. Converted from Loran-C.", species:[], farOut:true },
   { id:"jan-easteleven", name:"East Eleven", zone:"offshore", lat:29.164500, lng:-80.488033, meta:"Offshore · 3 spots · 22.7 nm/26.1 sm from Inlet", desc:"3 marks at this ground — tap Show drops for each one with its coordinates and details.", species:["grouper", "snapper"], big:true, farOut:true },
   { id:"jan-eastridge", name:"East Ridge", zone:"offshore", lat:29.192695, lng:-80.550267, meta:"Offshore · 11 spots · 20.1 nm/23.1 sm from Inlet", desc:"11 marks at this ground — tap Show drops for each one with its coordinates and details.", species:[], big:true, farOut:true },
   { id:"jan-flaglersteamship", name:"Flagler Steamship", zone:"offshore", lat:29.755937, lng:-80.371791, meta:"Offshore · 49.5 nm/57.0 sm from Inlet", desc:"152 ft deep, enormous red snapper! Converted from Loran-C.", species:["snapper"], farOut:true },
@@ -3211,8 +3221,10 @@ const bounds = L.latLngBounds(SPOTS.filter(s=>!s.farOut).map(s=>[s.lat,s.lng]));
 // shown on the filter chips above (see updateFilterCounts()).
 map.setView(bounds.getCenter(), DEFAULT_ZOOM);
 
-// Our own inlet label, placed between the outside and inside north jetty pins
-L.marker([29.078252, -80.910331], {
+// Our own inlet label, placed between the outside and inside north jetty pins. Held in a
+// variable because the compass rose is anchored within a couple hundred feet of it and would
+// otherwise print straight through the name — the Compass toggle pulls this off the map.
+const inletLabelMarker = L.marker([29.078252, -80.910331], {
   icon: L.divIcon({className:'', html:'', iconSize:[0,0]}),
   interactive:false, keyboard:false
 }).addTo(map).bindTooltip('Ponce DeLeon Inlet', {permanent:true, direction:'center', className:'place-label', opacity:1});
@@ -3734,6 +3746,12 @@ function renderCatchMarkers(){
     return m;
   });
   applyFilter();
+  // Catch markers are destroyed and rebuilt here, taking their compass wiring and stashed
+  // popups with them, so both are re-applied when the overlay is live.
+  if(typeof compassOn !== 'undefined' && compassOn){
+    setCompassPopupSuppression(true);
+    wireCompassMarkers();
+  }
 }
 
 /* ===================== POPUP WIRING ===================== */
@@ -4383,8 +4401,10 @@ function closeAllOverlays(exceptId){
     const tp = document.getElementById('tidePanel');
     if(tp) tp.classList.remove('open');
   }
-  // A force-closed sheet must not leave its FAB lit.
-  document.querySelectorAll('.fab.pressed').forEach(f=> f.classList.remove('pressed'));
+  // A force-closed sheet must not leave its FAB lit. The compass FAB is exempt: it toggles a
+  // map overlay rather than opening a sheet, so blanking it here would darken the button
+  // while the overlay stayed on and offshore popups stayed suppressed.
+  document.querySelectorAll('.fab.pressed:not(#compassFab)').forEach(f=> f.classList.remove('pressed'));
 }
 function setInfoMode(mode){
   const tab = document.querySelector('.tab[data-tab="' + mode + '"]');
@@ -5682,160 +5702,438 @@ function nmFromInlet(lat,lng){
 }
 
 /* ===================== COMPASS ROSE — bearings-from-Ponce-Inlet overlay =====================
-   Toggle-able map overlay (Compass FAB). Rose is anchored at a specific charted point Jan
-   gave (29°04.653'N 80°54.385'W) rather than the PONCE_INLET constant used elsewhere for
-   nm/bearing figures in popups — the two points sit about 1.8 nm apart, so bearing lines are
-   computed fresh from THIS anchor (roseBearingDeg/roseBearingPair below) rather than reusing
-   bearingPairFromInlet, otherwise a line's on-screen angle wouldn't match its own label.
-   Site selection: Croaker Hole excluded (its "offshore" coordinates are actually Little Lake
-   George, a freshwater spring inland — not a real offshore mark, so no line should point
-   there). Of what's left, every county reef Site plus every natural/personal mark are pooled
-   together, farthest-from-the-rose first, and a site is only kept if its bearing lands more
-   than COMPASS_BEARING_DEDUPE_DEG away from every line already kept — reef vs. reef, natural
-   vs. natural, and reef vs. natural all compete on equal footing, so near-duplicate spokes
-   (e.g. Lighthouse Point Reef and Site 11, both ~047°) collapse to whichever reaches farther
-   out, so the line always runs to the farthest thing on that heading rather than stopping at
-   the first one. Bearing labels sit on a shared arc a fixed distance out from the rose
-   (COMPASS_LABEL_ARC_M), not spread along each line's own very different length. Off
-   by default. */
+   Toggle-able map overlay (Compass FAB). The rose is anchored at a charted point Jan gave
+   (29°04.653'N 80°54.385'W) rather than the PONCE_INLET constant used elsewhere for the
+   nm/bearing figures in popups — the two sit about 1.6 nm apart, so bearings here are
+   computed fresh from THIS anchor rather than reusing bearingPairFromInlet. The Warning
+   section in the guide spells out where the two disagree.
+
+   Interaction model: nothing but the rose is drawn until you hover (desktop) or tap (touch)
+   an offshore pin, at which point a single line runs rose→pin carrying one To/From label.
+   Only ever one at a time, so the fan of overlapping lines and labels is gone entirely, and
+   with it the whole problem of bearings colliding with the rose when zoomed out.
+
+   While the compass is on, offshore pins do NOT open their popups — the popup would cover
+   the very line you asked to see. Their popups are stashed and unbound on toggle-on, then
+   rebound on toggle-off, so the popup content functions survive untouched.
+
+   Labels are centred ON the line (not offset beside it) and the line is drawn as two
+   segments with a gap where the text sits, so the line appears to run behind the text and
+   through the middle of the heading numbers. Placement is recomputed on zoom/move because
+   the gap is measured in screen pixels against text width, not in geography. */
 const COMPASS_ROSE_POS = { lat: 29.07755, lng: -80.906417 }; // 29°04.653'N 80°54.385'W
-const COMPASS_EXCLUDE_IDS = new Set(['jan-croakerhole']); // Little Lake George — not actually offshore
-const COMPASS_BEARING_DEDUPE_DEG = 8;
-function angleDiffDeg(a,b){ const d = Math.abs(a-b) % 360; return Math.min(d, 360-d); }
+/* The rose graphic is 200px anchored on its centre; its outermost ink is the "N" label,
+   whose cap height reaches about 104px out. Both constants below sit clear of that. */
+const COMPASS_ROSE_RADIUS_PX = 108; // lines start outside the rose ring AND its cardinal letters
+const COMPASS_ROSE_CLEAR_PX = 120;  // no part of a bearing label may come inside this radius
+const COMPASS_STACK_OFFSET_PX = 9;  // how far above/below the line the stacked halves sit
+const COMPASS_PIN_R_PX = 12;        // the 14px spot pin, plus a little
+const COMPASS_TOOLTIP_OFFSET_PX = 10; // spot name tooltips are pinned 10px right of the pin
+const COMPASS_GAP_PAD_PX = 10;      // extra gap carved either side of the label text
+const COMPASS_LINE_LABEL_T = 0.45;  // where along the visible run of the line the label sits
+
 function roseBearingDeg(lat,lng){ return bearingDeg(COMPASS_ROSE_POS.lat, COMPASS_ROSE_POS.lng, lat, lng); }
-function roseBearingPair(lat,lng){
-  const out = roseBearingDeg(lat,lng);
-  const back = (out+180)%360;
+
+/* The northward-pointing member of the pair is printed first and the rotation is normalised
+   into (-90°, 90°] so nothing prints upside-down — together that means the label always reads
+   from the same head orientation whichever way the line happens to run. */
+function compassLabelGeometry(brg){
+  const back = (brg + 180) % 360;
+  const northFirst = Math.cos(brg * Math.PI/180) >= 0;
+  let theta = (northFirst ? brg : back) - 90;
+  theta = ((theta + 180) % 360 + 360) % 360 - 180;
+  if(theta > 90) theta -= 180; else if(theta <= -90) theta += 180;
   const pad = v => String(Math.round(v)).padStart(3,'0');
-  return `${pad(out)}\u00b0/${pad(back)}\u00b0`;
+  const toText = `To ${pad(brg)}\u00b0`, fromText = `From ${pad(back)}\u00b0`;
+  return { theta, text: `${toText} / ${fromText}`, toText, fromText };
 }
-function buildCompassSites(){
-  // Farthest-first: when two sites share a bearing sector, the line should reach the
-  // farthest one out, not stop at the nearest — so sort descending by distance before
-  // the greedy de-dupe claims each bearing sector.
-  const pool = SPOTS.filter(s=> s.zone==='offshore' && !COMPASS_EXCLUDE_IDS.has(s.id))
-    .sort((a,b)=> map.distance([COMPASS_ROSE_POS.lat,COMPASS_ROSE_POS.lng],[b.lat,b.lng])
-                - map.distance([COMPASS_ROSE_POS.lat,COMPASS_ROSE_POS.lng],[a.lat,a.lng]));
-  const bearings = [];
-  const kept = [];
-  pool.forEach(s=>{
-    const b = roseBearingDeg(s.lat,s.lng);
-    if(!bearings.some(known => angleDiffDeg(b,known) < COMPASS_BEARING_DEDUPE_DEG)){
-      bearings.push(b);
-      kept.push(s);
+
+/* Measured, not guessed — the gap carved in the line has to match the text actually drawn. */
+const _compassMeasure = document.createElement('canvas').getContext('2d');
+function compassTextWidth(txt){
+  _compassMeasure.font = "800 12px 'Space Grotesk', system-ui, sans-serif";
+  return _compassMeasure.measureText(txt).width;
+}
+/* The spot name tooltip is drawn in a different font from the bearing labels (see .spot-label),
+   so it needs its own measurement; the constant covers its 9px side padding and 1.25px border. */
+function compassSpotLabelWidth(name){
+  _compassMeasure.font = "700 8.5px Inter, system-ui, sans-serif";
+  return _compassMeasure.measureText(name || '').width + 21;
+}
+
+/* Clip a ray (in container pixels) to the visible map rectangle, so the label can be parked
+   on the stretch of line the user can actually see — the rose is often off screen when you
+   are out at the site looking at its pin. Returns [t0,t1] or null. */
+function clipRayToViewport(a, b, size, margin){
+  const dx = b.x - a.x, dy = b.y - a.y;
+  let t0 = 0, t1 = 1;
+  const edges = [[-dx, a.x - margin], [dx, size.x - margin - a.x], [-dy, a.y - margin], [dy, size.y - margin - a.y]];
+  for(const [p, q] of edges){
+    if(Math.abs(p) < 1e-9){ if(q < 0) return null; continue; }
+    const r = q / p;
+    if(p < 0){ if(r > t1) return null; if(r > t0) t0 = r; }
+    else { if(r < t0) return null; if(r < t1) t1 = r; }
+  }
+  return [t0, t1];
+}
+
+/* Half-heights of the two label forms, used to decide whether a pin or name tag is far enough
+   off to one side of the line to be irrelevant. The stacked form is much taller than the
+   one-liner because its two halves sit above and below the line. */
+const COMPASS_LABEL_HALF_H_WIDE = 9;
+const COMPASS_LABEL_HALF_H_STACK = 17;
+
+/* Every other visible spot on the map, as an axis-aligned box in container pixels, so the
+   bearing label can be slid along its line to a stretch where nothing is in the way. When the
+   Labels pill is on, a spot's box is widened to swallow its name tag, which hangs off to the
+   right of the pin and is far wider than the pin itself. The active spot is excluded — its own
+   pin is handled separately by pinClear, which stops the label short of the end of the line. */
+function compassObstacles(activeSpot){
+  const boxes = [];
+  const half = COMPASS_PIN_R_PX;
+  markers.forEach(m=>{
+    const s = m.spotRef;
+    if(!s || (activeSpot && s.id === activeSpot.id)) return;
+    if(!map.hasLayer(m)) return;
+    const p = map.latLngToContainerPoint([s.lat, s.lng]);
+    let x0 = p.x - half, x1 = p.x + half, y0 = p.y - half, y1 = p.y + half;
+    if(labelsOn && m.getTooltip && m.getTooltip()){
+      x1 = Math.max(x1, p.x + COMPASS_TOOLTIP_OFFSET_PX + compassSpotLabelWidth((s.name || '').replace(/^CR /, '')));
+      y0 = Math.min(y0, p.y - 10); y1 = Math.max(y1, p.y + 10);
+    }
+    boxes.push([x0, y0, x1, y1]);
+  });
+  return boxes;
+}
+
+/* Which stretches of the line the label may NOT be centred on, given its size. Each obstacle
+   is projected onto the line's own two axes; if it clears the line sideways it can be ignored,
+   otherwise it blocks a run of positions widened by the label's half-length at each end.
+   Projecting onto only the line's axes (rather than the boxes' axes too) can call a near miss
+   a hit — which errs toward extra clearance, the safe direction. */
+function compassBlockedRuns(boxes, roseP, ux, uy, halfLen, halfH){
+  const runs = [];
+  boxes.forEach(([x0,y0,x1,y1])=>{
+    let a0 = Infinity, a1 = -Infinity, p0 = Infinity, p1 = -Infinity;
+    for(const [cx,cy] of [[x0,y0],[x1,y0],[x0,y1],[x1,y1]]){
+      const dx = cx - roseP.x, dy = cy - roseP.y;
+      const a = dx*ux + dy*uy, p = -dx*uy + dy*ux;
+      if(a<a0) a0=a; if(a>a1) a1=a;
+      if(p<p0) p0=p; if(p>p1) p1=p;
+    }
+    if(p1 < -halfH || p0 > halfH) return; // clears the line sideways
+    runs.push([a0 - halfLen, a1 + halfLen]);
+  });
+  runs.sort((m,n)=>m[0]-n[0]);
+  const merged = [];
+  runs.forEach(r=>{
+    const last = merged[merged.length-1];
+    if(last && r[0] <= last[1]) last[1] = Math.max(last[1], r[1]);
+    else merged.push(r.slice());
+  });
+  return merged;
+}
+
+/* Nearest position to `desired` that is inside [lo,hi] and outside every blocked run. The
+   edges of a blocked run are themselves free, so they make good candidates — sliding just
+   past whatever is in the way is exactly the behaviour wanted. */
+function compassFreeSlot(desired, lo, hi, blocked){
+  if(lo > hi) return null;
+  const inside = d => blocked.some(b => d > b[0] + 0.01 && d < b[1] - 0.01);
+  const clamped = Math.min(Math.max(desired, lo), hi);
+  if(!inside(clamped)) return clamped;
+  const cands = [lo, hi];
+  blocked.forEach(b=>{ cands.push(b[0], b[1]); });
+  const ok = cands.filter(d => d >= lo && d <= hi && !inside(d));
+  if(!ok.length) return null;
+  ok.sort((m,n)=> Math.abs(m-desired) - Math.abs(n-desired));
+  return ok[0];
+}
+
+const COMPASS_ROSE_SVG = `<svg viewBox="-20 -20 200 200" width="200" height="200" style="overflow:visible;">
+  <circle cx="80" cy="80" r="72" fill="none" stroke="var(--brass)" stroke-width="2.6"></circle>
+  <circle cx="80" cy="80" r="60" fill="none" stroke="var(--brass)" stroke-width="1.4"></circle>
+  <path d="M80.0 26.0 L75.9 65.6 L84.1 65.6 Z" fill="var(--brass)" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round" opacity="1"></path>
+  <path d="M106.9 53.1 L87.3 66.9 L93.1 72.7 Z" fill="none" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round" opacity="0.9"></path>
+  <path d="M134.0 80.0 L94.4 75.9 L94.4 84.1 Z" fill="var(--brass)" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round" opacity="1"></path>
+  <path d="M106.9 106.9 L93.1 87.3 L87.3 93.1 Z" fill="none" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round" opacity="0.9"></path>
+  <path d="M80.0 134.0 L84.1 94.4 L75.9 94.4 Z" fill="var(--brass)" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round" opacity="1"></path>
+  <path d="M53.1 106.9 L72.7 93.1 L66.9 87.3 Z" fill="none" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round" opacity="0.9"></path>
+  <path d="M26.0 80.0 L65.6 84.1 L65.6 75.9 Z" fill="var(--brass)" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round" opacity="1"></path>
+  <path d="M53.1 53.1 L66.9 72.7 L72.7 66.9 Z" fill="none" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round" opacity="0.9"></path>
+  <line x1="91.3" y1="16.0" x2="92.5" y2="9.1" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="102.2" y1="18.9" x2="104.6" y2="12.3" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="112.5" y1="23.7" x2="116.0" y2="17.6" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="121.8" y1="30.2" x2="126.3" y2="24.8" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="129.8" y1="38.2" x2="135.2" y2="33.7" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="136.3" y1="47.5" x2="142.4" y2="44.0" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="141.1" y1="57.8" x2="147.7" y2="55.4" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="144.0" y1="68.7" x2="150.9" y2="67.5" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="144.0" y1="91.3" x2="150.9" y2="92.5" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="141.1" y1="102.2" x2="147.7" y2="104.6" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="136.3" y1="112.5" x2="142.4" y2="116.0" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="129.8" y1="121.8" x2="135.2" y2="126.3" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="121.8" y1="129.8" x2="126.3" y2="135.2" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="112.5" y1="136.3" x2="116.0" y2="142.4" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="102.2" y1="141.1" x2="104.6" y2="147.7" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="91.3" y1="144.0" x2="92.5" y2="150.9" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="68.7" y1="144.0" x2="67.5" y2="150.9" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="57.8" y1="141.1" x2="55.4" y2="147.7" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="47.5" y1="136.3" x2="44.0" y2="142.4" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="38.2" y1="129.8" x2="33.7" y2="135.2" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="30.2" y1="121.8" x2="24.8" y2="126.3" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="23.7" y1="112.5" x2="17.6" y2="116.0" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="18.9" y1="102.2" x2="12.3" y2="104.6" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="16.0" y1="91.3" x2="9.1" y2="92.5" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="16.0" y1="68.7" x2="9.1" y2="67.5" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="18.9" y1="57.8" x2="12.3" y2="55.4" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="23.7" y1="47.5" x2="17.6" y2="44.0" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="30.2" y1="38.2" x2="24.8" y2="33.7" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="38.2" y1="30.2" x2="33.7" y2="24.8" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="47.5" y1="23.7" x2="44.0" y2="17.6" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="57.8" y1="18.9" x2="55.4" y2="12.3" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="68.7" y1="16.0" x2="67.5" y2="9.1" stroke="var(--brass)" stroke-width="1.6"></line>
+  <line x1="121.0" y1="39.0" x2="130.9" y2="29.1" stroke="var(--brass)" stroke-width="2.2"></line>
+  <line x1="121.0" y1="121.0" x2="130.9" y2="130.9" stroke="var(--brass)" stroke-width="2.2"></line>
+  <line x1="39.0" y1="121.0" x2="29.1" y2="130.9" stroke="var(--brass)" stroke-width="2.2"></line>
+  <line x1="39.0" y1="39.0" x2="29.1" y2="29.1" stroke="var(--brass)" stroke-width="2.2"></line>
+  <line x1="80.0" y1="20.0" x2="80.0" y2="8.0" stroke="var(--brass)" stroke-width="3"></line>
+  <line x1="140.0" y1="80.0" x2="152.0" y2="80.0" stroke="var(--brass)" stroke-width="3"></line>
+  <line x1="80.0" y1="140.0" x2="80.0" y2="152.0" stroke="var(--brass)" stroke-width="3"></line>
+  <line x1="20.0" y1="80.0" x2="8.0" y2="80.0" stroke="var(--brass)" stroke-width="3"></line>
+  <path d="M80.0 -4.0 L72.6 9.4 L87.4 9.4 Z" fill="var(--brass)" stroke="var(--brass)" stroke-width="1.6" stroke-linejoin="round"></path>
+  <text x="80.0" y="-15.0" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="17" font-weight="800" fill="var(--brass)">N</text>
+  <text x="168.0" y="80.0" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="15" font-weight="800" fill="var(--brass)">E</text>
+  <text x="80.0" y="168.0" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="15" font-weight="800" fill="var(--brass)">S</text>
+  <text x="-8.0" y="80.0" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="15" font-weight="800" fill="var(--brass)">W</text>
+  <text x="142.2" y="17.8" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="800" fill="var(--brass)" opacity=".9">NE</text>
+  <text x="142.2" y="142.2" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="800" fill="var(--brass)" opacity=".9">SE</text>
+  <text x="17.8" y="142.2" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="800" fill="var(--brass)" opacity=".9">SW</text>
+  <text x="17.8" y="17.8" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="800" fill="var(--brass)" opacity=".9">NW</text>
+  <circle cx="80" cy="80" r="3.5" fill="var(--brass)"></circle>
+</svg>`;
+
+const compassLayer = L.layerGroup();
+let compassOn = false;
+let compassActiveSpot = null;   // the spot whose bearing is currently drawn
+let compassPinnedId = null;     // set by tap/click so the line survives mouseout
+
+function compassOffshoreMarkers(){
+  return markers.filter(m => m.spotRef && m.spotRef.zone === 'offshore' && !m.spotRef.ramp);
+}
+
+/* Catches carry no zone of their own — the log form records species, time, tide and position
+   but never inshore/offshore — so one is classed as offshore when the nearest fishing spot to
+   it is an offshore spot. That reuses the zoning already on the spot list rather than guessing
+   at a coastline, and it is stable: a catch logged at or near an offshore site always reads as
+   offshore. Launches are skipped in the comparison since they are land points. */
+function catchGroupIsOffshore(g){
+  let best = null, bestD = Infinity;
+  SPOTS.forEach(s=>{
+    if(s.ramp || s.zone === 'launch') return;
+    const d = map.distance([g.lat, g.lng], [s.lat, s.lng]);
+    if(d < bestD){ bestD = d; best = s; }
+  });
+  return !!best && best.zone === 'offshore';
+}
+
+/* Offshore catch groups get the compass too, standing in for a spot via a light shim carrying
+   the fields the bearing code actually reads. */
+function compassOffshoreCatchMarkers(){
+  return catchMarkers.filter(m => m.group && catchGroupIsOffshore(m.group));
+}
+function compassSpotForCatch(g){
+  return { id: 'catchgrp-' + g.lat.toFixed(6) + ',' + g.lng.toFixed(6),
+           name: '', lat: g.lat, lng: g.lng, ramp: false, zone: 'offshore' };
+}
+function compassTargets(){
+  return compassOffshoreMarkers().concat(compassOffshoreCatchMarkers());
+}
+
+/* Popups are stashed rather than destroyed: bindPopup() accepts the same Popup instance back,
+   so the bound content function and options survive a toggle round-trip untouched. */
+function setCompassPopupSuppression(on){
+  compassTargets().forEach(m=>{
+    if(on){
+      const p = m.getPopup();
+      if(p){ m._compassStashedPopup = p; m.closePopup(); m.unbindPopup(); }
+    } else if(m._compassStashedPopup){
+      m.bindPopup(m._compassStashedPopup);
+      m._compassStashedPopup = null;
     }
   });
-  return kept;
 }
-/* Great-circle destination point given a start, bearing, and distance — used to place every
-   bearing label on the same arc around the rose, instead of at a fraction of each line's own
-   (very different) length. */
-function destPoint(lat, lng, bearingDegVal, distMeters){
-  const R = 6371000;
-  const toRad = x=>x*Math.PI/180, toDeg = x=>x*180/Math.PI;
-  const brg = toRad(bearingDegVal), lat1 = toRad(lat), lng1 = toRad(lng), delta = distMeters/R;
-  const lat2 = Math.asin(Math.sin(lat1)*Math.cos(delta) + Math.cos(lat1)*Math.sin(delta)*Math.cos(brg));
-  const lng2 = lng1 + Math.atan2(Math.sin(brg)*Math.sin(delta)*Math.cos(lat1), Math.cos(delta)-Math.sin(lat1)*Math.sin(lat2));
-  return { lat: toDeg(lat2), lng: toDeg(lng2) };
-}
-const COMPASS_LABEL_ARC_M = 402.336; // 1/4 statute mile out from the rose — same for every label, regardless of the line's own length
-/* Light, fine-line rose in the style of an old chart's compass card: hairline graduated
-   ring (every 10°), an 8-point star of thin spokes, no filled disc — just ink on the chart. */
-const COMPASS_ROSE_SVG = `<svg viewBox="0 0 160 160" width="160" height="160" style="overflow:visible;">
-  <circle cx="80" cy="80" r="72" fill="none" stroke="var(--brass)" stroke-width="1" opacity=".8"></circle>
-  <circle cx="80" cy="80" r="46" fill="none" stroke="var(--brass)" stroke-width=".6" opacity=".35"></circle>
-    <line x1="80" y1="80" x2="80.0" y2="24.0" stroke="var(--brass)" stroke-width="0.6" opacity=".4"></line>
-    <line x1="80" y1="80" x2="108.3" y2="51.7" stroke="var(--brass)" stroke-width="0.6" opacity=".4"></line>
-    <line x1="80" y1="80" x2="136.0" y2="80.0" stroke="var(--brass)" stroke-width="0.6" opacity=".4"></line>
-    <line x1="80" y1="80" x2="108.3" y2="108.3" stroke="var(--brass)" stroke-width="0.6" opacity=".4"></line>
-    <line x1="80" y1="80" x2="80.0" y2="136.0" stroke="var(--brass)" stroke-width="0.6" opacity=".4"></line>
-    <line x1="80" y1="80" x2="51.7" y2="108.3" stroke="var(--brass)" stroke-width="0.6" opacity=".4"></line>
-    <line x1="80" y1="80" x2="24.0" y2="80.0" stroke="var(--brass)" stroke-width="0.6" opacity=".4"></line>
-    <line x1="80" y1="80" x2="51.7" y2="51.7" stroke="var(--brass)" stroke-width="0.6" opacity=".4"></line>
-    <line x1="91.5" y1="15.0" x2="92.5" y2="9.1" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="102.6" y1="18.0" x2="104.6" y2="12.3" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="113.0" y1="22.8" x2="116.0" y2="17.6" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="122.4" y1="29.4" x2="126.3" y2="24.8" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="130.6" y1="37.6" x2="135.2" y2="33.7" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="137.2" y1="47.0" x2="142.4" y2="44.0" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="142.0" y1="57.4" x2="147.7" y2="55.4" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="145.0" y1="68.5" x2="150.9" y2="67.5" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="145.0" y1="91.5" x2="150.9" y2="92.5" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="142.0" y1="102.6" x2="147.7" y2="104.6" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="137.2" y1="113.0" x2="142.4" y2="116.0" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="130.6" y1="122.4" x2="135.2" y2="126.3" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="122.4" y1="130.6" x2="126.3" y2="135.2" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="113.0" y1="137.2" x2="116.0" y2="142.4" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="102.6" y1="142.0" x2="104.6" y2="147.7" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="91.5" y1="145.0" x2="92.5" y2="150.9" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="68.5" y1="145.0" x2="67.5" y2="150.9" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="57.4" y1="142.0" x2="55.4" y2="147.7" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="47.0" y1="137.2" x2="44.0" y2="142.4" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="37.6" y1="130.6" x2="33.7" y2="135.2" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="29.4" y1="122.4" x2="24.8" y2="126.3" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="22.8" y1="113.0" x2="17.6" y2="116.0" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="18.0" y1="102.6" x2="12.3" y2="104.6" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="15.0" y1="91.5" x2="9.1" y2="92.5" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="15.0" y1="68.5" x2="9.1" y2="67.5" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="18.0" y1="57.4" x2="12.3" y2="55.4" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="22.8" y1="47.0" x2="17.6" y2="44.0" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="29.4" y1="37.6" x2="24.8" y2="33.7" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="37.6" y1="29.4" x2="33.7" y2="24.8" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="47.0" y1="22.8" x2="44.0" y2="17.6" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="57.4" y1="18.0" x2="55.4" y2="12.3" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="68.5" y1="15.0" x2="67.5" y2="9.1" stroke="var(--brass)" stroke-width="0.6" opacity="0.45"></line>
-    <line x1="119.6" y1="40.4" x2="130.9" y2="29.1" stroke="var(--brass)" stroke-width="1" opacity="0.75"></line>
-    <line x1="119.6" y1="119.6" x2="130.9" y2="130.9" stroke="var(--brass)" stroke-width="1" opacity="0.75"></line>
-    <line x1="40.4" y1="119.6" x2="29.1" y2="130.9" stroke="var(--brass)" stroke-width="1" opacity="0.75"></line>
-    <line x1="40.4" y1="40.4" x2="29.1" y2="29.1" stroke="var(--brass)" stroke-width="1" opacity="0.75"></line>
-    <line x1="80.0" y1="34.0" x2="80.0" y2="8.0" stroke="var(--brass)" stroke-width="1.3" opacity="0.95"></line>
-    <line x1="126.0" y1="80.0" x2="152.0" y2="80.0" stroke="var(--brass)" stroke-width="1.3" opacity="0.95"></line>
-    <line x1="80.0" y1="126.0" x2="80.0" y2="152.0" stroke="var(--brass)" stroke-width="1.3" opacity="0.95"></line>
-    <line x1="34.0" y1="80.0" x2="8.0" y2="80.0" stroke="var(--brass)" stroke-width="1.3" opacity="0.95"></line>
-    <path d="M80.0 2.0 L74.1 12.3 L85.9 12.3 Z" fill="none" stroke="var(--brass)" stroke-width="1" opacity=".85"></path>
-    <text x="80.0" y="44.0" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="13" font-weight="600" fill="var(--brass)" opacity=".95">N</text>
-    <text x="116.0" y="80.0" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="13" font-weight="600" fill="var(--brass)" opacity=".95">E</text>
-    <text x="80.0" y="116.0" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="13" font-weight="600" fill="var(--brass)" opacity=".95">S</text>
-    <text x="44.0" y="80.0" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="13" font-weight="600" fill="var(--brass)" opacity=".95">W</text>
-    <text x="115.4" y="44.6" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="7" font-weight="500" fill="var(--brass)" opacity=".65">NE</text>
-    <text x="115.4" y="115.4" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="7" font-weight="500" fill="var(--brass)" opacity=".65">SE</text>
-    <text x="44.6" y="115.4" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="7" font-weight="500" fill="var(--brass)" opacity=".65">SW</text>
-    <text x="44.6" y="44.6" text-anchor="middle" dominant-baseline="middle" font-family="Space Grotesk,sans-serif" font-size="7" font-weight="500" fill="var(--brass)" opacity=".65">NW</text>
-  <circle cx="80" cy="80" r="2" fill="none" stroke="var(--brass)" stroke-width="1" opacity=".9"></circle>
-</svg>`;
-function buildCompassLayer(){
-  const group = L.layerGroup();
-  buildCompassSites().forEach(s=>{
-    L.polyline([[COMPASS_ROSE_POS.lat,COMPASS_ROSE_POS.lng],[s.lat,s.lng]], {
-      color:'var(--brass)', weight:1, opacity:.55, dashArray:'2,5', interactive:false
-    }).addTo(group);
-    const brg = roseBearingDeg(s.lat,s.lng);
-    const labelPt = destPoint(COMPASS_ROSE_POS.lat, COMPASS_ROSE_POS.lng, brg, COMPASS_LABEL_ARC_M);
-    // Rotate text to run along the line's own heading, then flip 180° when that would
-    // print upside-down, so it always reads left-to-right.
-    let textAngle = ((brg - 90 + 180) % 360 + 360) % 360 - 180;
-    if(textAngle > 90 || textAngle < -90) textAngle += 180;
-    // Nudge a few px to one side (perpendicular to the line) so the label sits beside
-    // the dashes instead of printing on top of them.
-    const OFFSET_PX = 8;
-    const perpRad = (brg + 90) * Math.PI/180;
-    const perpX = Math.sin(perpRad) * OFFSET_PX;
-    const perpY = -Math.cos(perpRad) * OFFSET_PX;
-    L.marker([labelPt.lat,labelPt.lng], {
-      icon: L.divIcon({className:'', html:`<div class="compass-label" style="transform-origin:center; transform:translate(-50%,-50%) translate(${perpX.toFixed(1)}px, ${perpY.toFixed(1)}px) rotate(${textAngle.toFixed(1)}deg);">${roseBearingPair(s.lat,s.lng)}</div>`, iconSize:[0,0], iconAnchor:[0,0]}),
-      interactive:false
-    }).addTo(group);
+
+/* Wiring is idempotent and re-run on every toggle-on, so offshore spots and catches added
+   after load still pick up the hover/tap behaviour. */
+function wireCompassMarkers(){
+  compassTargets().forEach(m=>{
+    if(m._compassWired) return;
+    m._compassWired = true;
+    const target = m.spotRef ? m.spotRef : compassSpotForCatch(m.group);
+    m.on('mouseover', ()=>{ if(compassOn && !compassPinnedId) compassShow(target); });
+    m.on('mouseout',  ()=>{ if(compassOn && !compassPinnedId) compassShow(null); });
+    m.on('click',     ()=>{
+      if(!compassOn) return;
+      // Tapping the pin that is already pinned clears it, so touch users can dismiss a line.
+      if(compassPinnedId === target.id){ compassPinnedId = null; compassShow(null); }
+      else { compassPinnedId = target.id; compassShow(target); }
+    });
   });
-  L.marker([COMPASS_ROSE_POS.lat,COMPASS_ROSE_POS.lng], {
-    icon: L.divIcon({className:'compass-rose-wrap', html:COMPASS_ROSE_SVG, iconSize:[160,160], iconAnchor:[80,80]}),
-    interactive:false, zIndexOffset:500
-  }).addTo(group);
-  return group;
 }
-const compassLayer = buildCompassLayer();
+
+function compassShow(spot){
+  compassActiveSpot = spot;
+  redrawCompass();
+}
+
+function redrawCompass(){
+  compassLayer.clearLayers();
+  if(!compassOn) return;
+
+  const roseLL = [COMPASS_ROSE_POS.lat, COMPASS_ROSE_POS.lng];
+
+  if(compassActiveSpot){
+    const s = compassActiveSpot;
+    const brg = roseBearingDeg(s.lat, s.lng);
+    const g = compassLabelGeometry(brg);
+    const size = map.getSize();
+    const roseP = map.latLngToContainerPoint(roseLL);
+    const endP  = map.latLngToContainerPoint([s.lat, s.lng]);
+    const lenPx = Math.hypot(endP.x - roseP.x, endP.y - roseP.y);
+
+    if(lenPx > 1){
+      const startPx = Math.min(COMPASS_ROSE_RADIUS_PX, lenPx * 0.9);
+      const at = t => L.point(roseP.x + (endP.x-roseP.x)*t, roseP.y + (endP.y-roseP.y)*t);
+
+      /* Everything below is reckoned in SCREEN PIXELS, not in the 0..1 parameter along the
+         line. That distinction is the whole fix: a clearance expressed in t means a different
+         number of pixels at every zoom, so zoomed right in on a close site the label drifted
+         back over the rose. The nearest edge of the text — not its centre — is what has to
+         clear COMPASS_ROSE_CLEAR_PX, so the label's own half-width is part of the sum. */
+      const vis = clipRayToViewport(roseP, endP, size, 24);
+      const visStartPx = vis ? vis[0] * lenPx : startPx;
+      const visEndPx   = vis ? vis[1] * lenPx : lenPx;
+      const desiredPx  = visStartPx + (visEndPx - visStartPx) * COMPASS_LINE_LABEL_T;
+
+      /* Prefer the wide one-line form; fall back to the stacked form — "To ###" riding above
+         the line and "From ###" below it — which is less than half as wide and so fits where
+         the one-liner can't. The line runs between the two halves there, so no gap is carved;
+         in the wide form the line is split so it passes under the text. */
+      const wideHalf  = compassTextWidth(g.text)/2 + COMPASS_GAP_PAD_PX;
+      const stackHalf = Math.max(compassTextWidth(g.toText), compassTextWidth(g.fromText))/2 + COMPASS_GAP_PAD_PX;
+
+      /* Keep-out at the far end. The pin's name tooltip is pinned to the RIGHT of the pin, so
+         it only threatens the bearing label when the line arrives from the right — that is,
+         when the direction back toward the rose has a positive x component. Scaling the
+         tooltip's width by that component falls off to nothing for a vertical line, where the
+         label sits above or below the pin and the tooltip is off to the side. Only counted
+         when the Labels pill is actually on, since otherwise no tooltip is drawn. */
+      let pinClear = COMPASS_PIN_R_PX;
+      if(labelsOn && !s.ramp){
+        const backX = (roseP.x - endP.x) / lenPx;
+        if(backX > 0){
+          const tipW = COMPASS_TOOLTIP_OFFSET_PX + compassSpotLabelWidth((s.name || '').replace(/^CR /, ''));
+          pinClear = Math.max(pinClear, COMPASS_PIN_R_PX + tipW * backX);
+        }
+      }
+
+      /* The label has to live in the corridor between the rose and the pin: at least
+         ROSE_CLEAR + its own half-length out from the rose, and at least pinClear + its own
+         half-length short of the pin. Narrowing to the stacked form widens that corridor. */
+      const corridor = halfLen => ({ lo: COMPASS_ROSE_CLEAR_PX + halfLen, hi: lenPx - pinClear - halfLen });
+
+      /* Now slide the label along its line to the nearest stretch that isn't already occupied
+         by another spot's pin or name tag. Both label forms are tried: the one-liner first,
+         and the stacked form second, since narrowing the label frees up runs the wide one
+         can't fit in — though the stacked form is taller, so it can also catch obstacles the
+         one-liner would have squeaked past. */
+      const ux = (endP.x - roseP.x) / lenPx, uy = (endP.y - roseP.y) / lenPx;
+      const boxes = compassObstacles(s);
+      const slotFor = (halfLen, halfH) => {
+        const c = corridor(halfLen);
+        return compassFreeSlot(desiredPx, c.lo, c.hi,
+          compassBlockedRuns(boxes, roseP, ux, uy, halfLen, halfH));
+      };
+
+      let stacked = false, half = wideHalf;
+      let centerPx = slotFor(wideHalf, COMPASS_LABEL_HALF_H_WIDE);
+
+      if(centerPx === null){
+        const alt = slotFor(stackHalf, COMPASS_LABEL_HALF_H_STACK);
+        if(alt !== null){ stacked = true; half = stackHalf; centerPx = alt; }
+      } else if(centerPx + wideHalf > visEndPx){
+        // The one-liner fits but lands off-screen; prefer the stacked form if it lands on
+        // screen — a bearing you can't see is no use.
+        const alt = slotFor(stackHalf, COMPASS_LABEL_HALF_H_STACK);
+        if(alt !== null && alt + stackHalf <= visEndPx){ stacked = true; half = stackHalf; centerPx = alt; }
+      }
+
+      if(centerPx === null){
+        // Nothing anywhere along the line is clear — park it beyond the pin, still on the
+        // bearing, where neither the rose nor anything on the line can cover it.
+        stacked = true; half = stackHalf;
+        centerPx = Math.max(lenPx + pinClear + half, COMPASS_ROSE_CLEAR_PX + half);
+      }
+
+      const labelT = centerPx / lenPx;
+      const halfT  = half / lenPx;
+      const startT = startPx / lenPx;
+
+      const html = stacked
+        ? `<div class="compass-label compass-label-stack" style="transform-origin:center; transform:translate(-50%,-50%) rotate(${g.theta.toFixed(1)}deg);">`
+          + `<span style="transform:translateY(-${COMPASS_STACK_OFFSET_PX}px);">${g.toText}</span>`
+          + `<span style="transform:translateY(${COMPASS_STACK_OFFSET_PX}px);">${g.fromText}</span></div>`
+        : `<div class="compass-label" style="transform-origin:center; transform:translate(-50%,-50%) rotate(${g.theta.toFixed(1)}deg);">${g.text}</div>`;
+
+      L.marker(map.containerPointToLatLng(at(labelT)), {
+        icon: L.divIcon({ className:'', html, iconSize:[0,0], iconAnchor:[0,0] }),
+        interactive: false, zIndexOffset: 700
+      }).addTo(compassLayer);
+
+      const segs = [];
+      if(!stacked && labelT > startT && labelT < 1){
+        segs.push([startT, Math.max(startT, labelT - halfT)]);
+        segs.push([Math.min(1, labelT + halfT), 1]);
+      } else if(startT < 1){
+        segs.push([startT, 1]);
+      }
+
+      segs.forEach(([t0,t1])=>{
+        if(t1 - t0 < 0.002) return;
+        L.polyline([map.containerPointToLatLng(at(t0)), map.containerPointToLatLng(at(t1))],
+          { color:'var(--brass)', weight:2.4, opacity:1, dashArray:'4,5', interactive:false }
+        ).addTo(compassLayer);
+      });
+    }
+  }
+
+  L.marker(roseLL, {
+    icon: L.divIcon({ className:'compass-rose-wrap', html:COMPASS_ROSE_SVG, iconSize:[200,200], iconAnchor:[100,100] }),
+    interactive:false, zIndexOffset:500
+  }).addTo(compassLayer);
+}
+
+map.on('zoomend moveend', ()=>{ if(compassOn) redrawCompass(); });
+// Tapping empty map clears a pinned line.
+map.on('click', ()=>{ if(compassOn && compassPinnedId){ compassPinnedId = null; compassShow(null); } });
+
 document.getElementById('compassFab').addEventListener('click', function(){
-  const on = this.classList.toggle('pressed');
-  if(on){ compassLayer.addTo(map); } else { map.removeLayer(compassLayer); }
+  compassOn = this.classList.toggle('pressed');
+  compassActiveSpot = null;
+  compassPinnedId = null;
+  setCompassPopupSuppression(compassOn);
+  // The inlet name sits right where the rose lands, so it comes off the map while the
+  // compass is up and goes back when it's switched off.
+  if(compassOn) map.removeLayer(inletLabelMarker);
+  else if(!map.hasLayer(inletLabelMarker)) inletLabelMarker.addTo(map);
+  if(compassOn){
+    wireCompassMarkers();
+    compassLayer.addTo(map);
+    redrawCompass();
+  } else {
+    map.removeLayer(compassLayer);
+  }
 });
 
 let buoyCache = null, buoyCacheTime = 0;
