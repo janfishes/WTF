@@ -823,10 +823,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
     color:var(--teal); pointer-events:none;
   }
   #speciesCol{
-    /* Stops short of the bottom so the zoom buttons and scale bar can sit underneath it.
-       Raised from 84px to 114px when the zoom moved on top of the scale (~104px block), and
-       to 128px again when the build stamp moved above that column at bottom:110px. */
-    position:absolute; left:10px; top:10px; bottom:128px; z-index:1100;
+    /* Stops short of the bottom so the bottom-left stack can sit underneath it. That stack is
+       now +/- bar (~34px) + 4px + scale (~17px) + 22px stamp slot = ~77px, down from the ~104px
+       it took when the +/- bar was vertical — hence 88px here rather than 128px, which puts
+       several more species buttons on screen without a scroll. */
+    position:absolute; left:10px; top:10px; bottom:88px; z-index:1100;
     display:flex; flex-direction:column; gap:3px; overflow-y:auto;
     pointer-events:auto; padding-right:4px; padding-bottom:8px; align-items:flex-start;
     scrollbar-width:none;
@@ -863,7 +864,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
        out of the box instead of wrapping onto the next line. Inset-aware, breakable, and
        clamped against the viewport rather than only against a percentage of it. */
     box-sizing:border-box;
-    max-width:min(72vw, 520px, calc(100vw - 14px));
+    /* The last term also keeps the credit clear of the build stamp, which shares this row
+       at the far left; 124px is that stamp's width plus its margin plus a little air. */
+    max-width:min(72vw, 520px, calc(100vw - 124px));
     overflow-wrap:anywhere; word-break:break-word;
     line-height:1.45; padding:3px 9px 3px 8px !important; border-radius:6px 0 0 0;
   }
@@ -871,18 +874,37 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-control-attribution a{color:#7fd0ff !important;}
   .leaflet-control-zoom a{background:var(--navy-900) !important; color:var(--fog) !important; border-color:var(--line) !important;}
   /* Leaflet gives corner controls clear:both and appends bottom controls in reverse, so this
-     corner is re-laid-out as a column: zoom on top, miles scale underneath, zoom centred on it.
-     The column is pinned to 72px — the scale control's maxWidth — rather than shrink-wrapping
-     the bar, because the bar's length changes at every zoom level and a centred-on-the-bar
-     button would slide sideways each time it was pressed. */
+     corner is re-laid-out by hand. Everything in it is now flush-left at the same 10px margin
+     and stacked tight: the +/- bar laid out HORIZONTALLY on top, the miles scale immediately
+     under it, and the build stamp under that (absolutely positioned, but into the gap this
+     column reserves for it). Left-aligned rather than centred, so nothing slides sideways when
+     the scale bar changes length from one zoom level to the next — which is what the old
+     72px-wide centred column existed to prevent. Short stack overall, so the species filter
+     column above it gets back the height the taller arrangement was taking. */
   /* Above the attribution, which is painted after it and would otherwise cover the buttons. */
   .leaflet-bottom.leaflet-left{
-    display:flex; flex-direction:column; align-items:center;
-    width:72px; margin-left:10px; z-index:1001;
+    display:flex; flex-direction:column; align-items:flex-start;
+    width:auto; margin-left:10px; z-index:1001;
   }
   .leaflet-bottom.leaflet-left .leaflet-control{float:none; clear:none; margin-left:0; margin-right:0;}
-  .leaflet-bottom.leaflet-left .leaflet-control-zoom{order:0; margin-bottom:8px;}
-  .leaflet-bottom.leaflet-left .leaflet-control-scale{order:1; margin-bottom:14px; align-self:stretch;}
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom{
+    order:0; margin-bottom:4px; display:flex; flex-direction:row;
+    /* 6px on the end buttons inside the bar's own 2px border = 8px on the bar. */
+    border-radius:8px;
+  }
+  /* Leaflet's bar stacks its buttons vertically: each <a> is display:block with a bottom
+     divider, and the rounding is top-pair / bottom-pair. Turned on its side, the divider has
+     to become a right-hand one and the rounding a left-pair / right-pair. */
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom a{
+    display:block; float:none;
+    border-bottom:none !important;
+    border-right:1px solid var(--line);
+    border-radius:0 !important;
+  }
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom a:first-child{border-radius:6px 0 0 6px !important;}
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom a:last-child{border-radius:0 6px 6px 0 !important; border-right:none;}
+  /* 22px of clear space under the scale is the build stamp's slot — see .build-stamp. */
+  .leaflet-bottom.leaflet-left .leaflet-control-scale{order:1; margin-bottom:22px;}
   .leaflet-control-scale-line{
     background:rgba(6,15,24,.8) !important; color:#fff !important; border-color:var(--fog) !important;
     font-family:'JetBrains Mono',monospace !important; font-size:11px !important; font-weight:600 !important;
@@ -1506,15 +1528,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .th-card p{margin:9px 0;}
   .th-card ol{margin:8px 0 12px; padding-left:20px;}
   .th-card li{margin-bottom:6px;}
-  /* bottom:26px put this squarely underneath the scale bar. The bottom-left corner is no
-     longer just the scale: it is a 72px column holding the zoom buttons on top of the scale,
-     about 104px tall in total. So the stamp clears the whole column instead of trying to
-     thread between its parts, and #speciesCol above was given the matching room. Left edge
-     lines up with the column's 10px margin. Faint on purpose — it should be legible when
-     looked for and invisible when not. */
-  .build-stamp{position:absolute; left:10px; bottom:110px; z-index:1000; pointer-events:none;
+  /* Sits in the 22px the scale control reserves beneath itself, so the whole bottom-left
+     corner reads as one short stack: +/- bar, scale, stamp. Parked above the corner at
+     bottom:110px it was landing on the species filter buttons on a desktop window, where
+     that column is long enough to reach it. Left edge lines up with the 10px margin the
+     Leaflet corner uses. Faint on purpose — legible when looked for, invisible when not. */
+  .build-stamp{position:absolute; left:10px; bottom:5px; z-index:1002; pointer-events:none;
     font:600 9px/1.2 'JetBrains Mono',monospace; letter-spacing:.03em; color:var(--fog);
-    opacity:.5; text-shadow:0 1px 2px rgba(0,0,0,.75);}
+    opacity:.55; text-shadow:0 1px 2px rgba(0,0,0,.8); white-space:nowrap;}
   #themeGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
   .theme-opt{
     display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:11px;
@@ -1708,10 +1729,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </header>
 
 <div id="map">
-  <!-- Build stamp: sits above the zoom/scale column in the bottom-left corner, clear of
-       both, so it can be read at a glance without opening anything. Its whole job is to
-       tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-28 V108</div>
+  <!-- Build stamp: bottom-left, directly under the scale bar. Short form on purpose —
+       date then build number — because it shares that row with nothing but map. Its whole
+       job is to tell you which copy of the file is running. -->
+  <div class="build-stamp" id="buildStamp">07/28/26 Build 109</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1899,7 +1920,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-28 · v108 · Backups are now two files: a <b>full backup</b> carrying your catches with their photos, your own spots, your edits to built-in spots and your drop labels, and a small <b>log-only</b> copy with the photos stripped out so it will go through email. Both have a <b>Share</b> button that hands the file straight to the phone's share sheet — Mail, Messages, AirDrop — instead of dropping it in Downloads, and a failed import now says which check failed rather than shrugging. <b>Amberjack</b> and <b>Triggerfish</b> added, bringing the list to 23 species, now in alphabetical order everywhere. Themes renamed: Parrot Head, Green-Eyed Lady, Purple Haze, Tequila Sunrise, Blue Suede Shoes, Brown Sugar. Spots and launches can be added and deleted — built-in ones included — and the Inshore/Offshore/Launches totals now update either way. Flagler Ave Reef and Sunglow Reef now lead with their county numbers like every other county site — <b>Site 14 Flagler Ave Reef</b> and <b>Site 15 Sunglow Reef</b>. Fixed: the CLOSE button no longer covers the artwork on the hidden-pin popup, the hidden pin now hides with the Offshore switch on older Android, and the map credit no longer runs off the right edge on iPhone. This build stamp also moved up out from under the map scale bar.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-28 · v109 · Backups are now two files: a <b>full backup</b> carrying your catches with their photos, your own spots, your edits to built-in spots and your drop labels, and a small <b>log-only</b> copy with the photos stripped out so it will go through email. Both have a <b>Share</b> button that hands the file straight to the phone's share sheet — Mail, Messages, AirDrop — instead of dropping it in Downloads, and a failed import now says which check failed rather than shrugging. <b>Amberjack</b> and <b>Triggerfish</b> added, bringing the list to 23 species, now in alphabetical order everywhere. Themes renamed: Parrot Head, Green-Eyed Lady, Purple Haze, Tequila Sunrise, Blue Suede Shoes, Brown Sugar. Spots and launches can be added and deleted — built-in ones included — and the Inshore/Offshore/Launches totals now update either way. Flagler Ave Reef and Sunglow Reef now lead with their county numbers like every other county site — <b>Site 14 Flagler Ave Reef</b> and <b>Site 15 Sunglow Reef</b>. Fixed: the CLOSE button no longer covers the artwork on the hidden-pin popup, the hidden pin now hides with the Offshore switch on older Android, and the map credit no longer runs off the right edge on iPhone. The map's <b>+ / −</b> buttons are now a horizontal bar with the scale tucked directly beneath them, and the build stamp sits under the scale in short form — <span style="color:var(--brass); font-weight:600;">07/28/26 Build 109</span> — which also gives the species filter column back about 40px of height.</p>
     </div>
   </div>
 </div>
