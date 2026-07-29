@@ -854,9 +854,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* `calc(100% - 170px)` was wrong: Leaflet's corner container shrink-wraps to its own
        content, so the percentage was self-referential and collapsed the box to ~38px on a
        phone, clipping the right-hand end instead of wrapping. Clamped against the viewport. */
-    white-space:normal !important; max-width:min(72vw, 520px); text-align:right;
-    line-height:1.45; padding:3px 6px !important; border-radius:6px 0 0 0;
+    white-space:normal !important; text-align:right;
+    /* Clipped by a few characters on an iPhone. Two things were doing it. Leaflet pins the
+       bottom-right corner container at right:0, which on a notched phone -- and in landscape
+       especially -- sits under the safe-area inset; and the credit contains long unbreakable
+       tokens (domain names) that `white-space:normal` alone will not break, so the tail ran
+       out of the box instead of wrapping onto the next line. Inset-aware, breakable, and
+       clamped against the viewport rather than only against a percentage of it. */
+    box-sizing:border-box;
+    max-width:min(72vw, 520px, calc(100vw - 14px));
+    overflow-wrap:anywhere; word-break:break-word;
+    line-height:1.45; padding:3px 9px 3px 8px !important; border-radius:6px 0 0 0;
   }
+  .leaflet-bottom.leaflet-right{ padding-right:env(safe-area-inset-right, 0px); }
   .leaflet-control-attribution a{color:#7fd0ff !important;}
   .leaflet-control-zoom a{background:var(--navy-900) !important; color:var(--fog) !important; border-color:var(--line) !important;}
   /* Leaflet gives corner controls clear:both and appends bottom controls in reverse, so this
@@ -1549,10 +1559,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 5px rgba(0,0,0,.5);
   }
   .egg-img{
-    display:block; width:100%; height:auto; border-radius:8px; margin-top:2px;
+    display:block; width:100%; height:auto; border-radius:8px; margin-top:0;
     max-width:min(74vw, 260px); max-height:62vh; object-fit:contain;
   }
   @media (min-width:760px){ .egg-img{max-width:340px; max-height:70vh;} }
+  /* The CLOSE X chip is positioned against the popup, not against whatever is inside
+     it, so on this popup it landed square on the artwork's top-right corner -- which
+     is exactly where the artist's credit is printed. Same fix the spot popups use:
+     reserve a strip at the top for the button and start the picture below it.
+     8px inset + 26px button + 4px of air = 38. */
+  .egg-pop{padding:38px 10px 10px !important;}
   /* Ponce wave buoy. Same 26px disc, same gold three-waves-plus-arrow glyph as the tide
      stations, but on a brilliant blue ground rather than the near-black one, so it reads as
      a wave gauge without being mistaken for a tide gauge. */
@@ -1689,7 +1705,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="map">
   <!-- Build stamp: sits just above the scale bar so it can be read at a glance without
        opening anything. Its whole job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">Build 2026-Jul-28 V106</div>
+  <div class="build-stamp" id="buildStamp">Build 2026-Jul-28 V107</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1773,7 +1789,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div class="zk"><div class="dot" style="background:var(--offshore)"></div>Offshore — natural reefs, artificial sites &amp; wrecks 3–34 nm (3.5–39.1 sm) out</div>
       </div>
       <div class="subhead">Offshore Sites</div>
-      <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 17–34 nm (19.6–39.1 sm) out and are outside the default view; pan/zoom to find them.</p>
+      <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Sites 1–13 are named for their county number; the two that carry place names show the number alongside it — <b>Flagler Ave Reef (Site 14)</b> and <b>Sunglow Reef (Site 15)</b>. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 17–34 nm (19.6–39.1 sm) out and are outside the default view; pan/zoom to find them.</p>
     </div>
     <div id="panel-catches" style="display:none;">
       <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later but that happened earlier drops into place by its own date. Use ✎ to edit an entry or ✕ to delete it. Below are two ways to get your data off this device, and one to bring it back.</p>
@@ -1877,7 +1893,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-28 · v105 · Flagler Ave Reef and Sunglow Reef can now be found by their county numbers, Site 14 and Site 15 — the search shows which number matched.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-28 · v107 · Backups are now two files: a <b>full backup</b> carrying your catches with their photos, your own spots, your edits to built-in spots and your drop labels, and a small <b>log-only</b> copy with the photos stripped out so it will go through email. Both have a <b>Share</b> button that hands the file straight to the phone's share sheet — Mail, Messages, AirDrop — instead of dropping it in Downloads, and a failed import now says which check failed rather than shrugging. <b>Amberjack</b> and <b>Triggerfish</b> added, bringing the list to 23 species, now in alphabetical order everywhere. Themes renamed: Parrot Head, Green-Eyed Lady, Purple Haze, Tequila Sunrise, Blue Suede Shoes, Brown Sugar. Spots and launches can be added and deleted — built-in ones included — and the Inshore/Offshore/Launches totals now update either way. Flagler Ave Reef and Sunglow Reef carry their county numbers in their names, Site 14 and Site 15. Fixed: the CLOSE button no longer covers the artwork on the hidden-pin popup, the hidden pin now hides with the Offshore switch on older Android, and the map credit no longer runs off the right edge on iPhone.</p>
     </div>
   </div>
 </div>
@@ -2237,7 +2253,7 @@ const SPOTS = [
   { id:"brickhouse-cove", name:"Brickhouse Cove", zone:"inshore", lat:28.923217, lng:-80.860917, meta:"Cove", species:[] },
   { id:"bissitte-bay", name:"Bissitte Bay", zone:"inshore", lat:28.897717, lng:-80.846133, meta:"Bay", species:[] },
   { id:"haulover-canal", name:"Haulover Canal", zone:"inshore", lat:28.712183, lng:-80.778183, meta:"Canal", species:[] },
-  { id:"reef-flagler", name:"Flagler Ave Reef", alt:["Site 14"], zone:"offshore", lat:29.0428, lng:-80.8819, meta:"37–40ft · 3.7 nm/4.3 sm from Inlet · 12 drops",
+  { id:"reef-flagler", name:"Flagler Ave Reef (Site 14)", alt:["Site 14"], zone:"offshore", lat:29.0428, lng:-80.8819, meta:"37–40ft · 3.7 nm/4.3 sm from Inlet · 12 drops",
     desc:"A shallow culvert-and-barrier complex just south of the Flagler County line — the shallowest permitted structure in the county system.",
     tip:"An easy, quick run for snapper and flounder without having to run all the way out to the numbered offshore sites.",
     species:["snapper","flounder"] },
@@ -2245,7 +2261,7 @@ const SPOTS = [
     desc:"The newest reef in the county system, placed in 2022 just off Lighthouse Point Park — concrete culverts and granite blocks.",
     tip:"Small and close — a good first stop for snapper and flounder right off the beach before running further out for grouper.",
     species:["snapper","flounder","grouper"] },
-  { id:"reef-sunglow", name:"Sunglow Reef", alt:["Site 15"], zone:"offshore", lat:29.1533, lng:-80.9549, meta:"45–50ft · 5.0 nm/5.8 sm from Inlet · 8 drops",
+  { id:"reef-sunglow", name:"Sunglow Reef (Site 15)", alt:["Site 15"], zone:"offshore", lat:29.1533, lng:-80.9549, meta:"45–50ft · 5.0 nm/5.8 sm from Inlet · 8 drops",
     desc:"A shallow reef complex off Daytona Beach Shores, built from concrete barriers and culverts.",
     tip:"Close enough for a short run in almost any conditions — solid, reliable snapper and flounder water.",
     species:["snapper","flounder"] },
@@ -3426,12 +3442,19 @@ async function loadAll(){
      path can never resurrect a stale lag. Built-in lags now live ONLY in TIDE_LAG_STATIONS. */
   try{ await storeDel(TIDE_LAGS_KEY); }catch(e){}   // safe: loadAll() is invoked at the very bottom of the script, after TIDE_LAGS_KEY is evaluated
   await loadSpotOverrides();
-  /* Round 42 renamed this spot at source (Flagler Reef -> Flagler Ave Reef). A device that
-     had already edited its name would keep overriding the new one forever, so the stale name
-     override is dropped once, here. Any position or zone edit on that spot is preserved. */
-  if(spotOverrides['reef-flagler'] && spotOverrides['reef-flagler'].name != null){
-    delete spotOverrides['reef-flagler'].name;
-    await saveSpotOverrides();
+  /* Round 42 renamed this spot at source (Flagler Reef -> Flagler Ave Reef); this round
+     appends the FWC county numbers to both named reefs. A device that had already edited
+     either name would keep overriding the new one forever, so a stale name override on
+     these two is dropped. Any position or zone edit on them is preserved. */
+  {
+    let droppedName = false;
+    ['reef-flagler', 'reef-sunglow'].forEach(id=>{
+      if(spotOverrides[id] && spotOverrides[id].name != null){
+        delete spotOverrides[id].name;
+        droppedName = true;
+      }
+    });
+    if(droppedName) await saveSpotOverrides();
   }
   await loadDropLabels();
   applySpotOverrides();
@@ -4154,17 +4177,34 @@ const EGG_CARTOON = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4K
 let eggMarker = null;
 function syncEggMarker(){
   const show = offshorePinsVisible();
-  if(!show){ if(eggMarker && map.hasLayer(eggMarker)) map.removeLayer(eggMarker); return; }
+  /* Switching Offshore off left this pin on screen on an old Android WebView. The hide
+     was gated on map.hasLayer(), and on that browser removeLayer() during a pan/zoom (or
+     with the popup open) can leave the icon element behind in the marker pane while
+     Leaflet has already forgotten the layer -- hasLayer() then answers false, the guard
+     skips the removal, and the ghost is permanent. So: close the popup first, remove
+     unconditionally (a no-op in Leaflet if the layer is already gone), and hide the
+     element by hand as well, so a node left behind is invisible and untappable. */
+  if(!show){
+    if(eggMarker){
+      const ghost = eggMarker._icon;
+      try{ eggMarker.closePopup(); }catch(e){}
+      map.removeLayer(eggMarker);
+      if(ghost && ghost.style) ghost.style.display = 'none';
+    }
+    return;
+  }
   if(!eggMarker){
     eggMarker = L.marker([28.938607, -80.487613], {
-      icon: L.divIcon({ className:'', html:'<div class="egg-pin"></div>', iconSize:[14,14], iconAnchor:[7,7], popupAnchor:[0,-8] }),
+      icon: L.divIcon({ className:'egg-icon', html:'<div class="egg-pin"></div>', iconSize:[14,14], iconAnchor:[7,7], popupAnchor:[0,-8] }),
       zIndexOffset:-150
     }).bindPopup(
-      '<div class="pop"><img class="egg-img" src="' + EGG_CARTOON + '" alt="Cartoon: a diver beside a Spear Gun Rentals sign under a boat full of anglers"></div>',
-      { maxWidth: 360 }
+      '<div class="pop egg-pop"><img class="egg-img" src="' + EGG_CARTOON + '" alt="Cartoon: a diver beside a Spear Gun Rentals sign under a boat full of anglers"></div>',
+      { maxWidth: 360, className: 'egg-popup' }
     );
   }
   if(!map.hasLayer(eggMarker)) eggMarker.addTo(map);
+  // addTo() builds a fresh _icon, so the display reset has to come after it.
+  if(eggMarker._icon && eggMarker._icon.style) eggMarker._icon.style.display = '';
 }
 
 function applyFilter(){
@@ -6055,9 +6095,10 @@ searchInput.addEventListener('input', ()=>{
   let html = '';
 
   /* Locations by name, or by an alternate name. Sites 1-13 are literally named "Site 1"
-     ... "Site 13", but FWC's Site 14 and Site 15 carry place names here (Flagler Ave Reef,
-     Sunglow Reef), so a search for their county number used to come back empty. `alt` holds
-     the number; the row shows which alternate matched, so the result isn't a non sequitur. */
+     ... "Site 13"; FWC's Site 14 and Site 15 carry place names, so those two now show the
+     county number in the name itself -- "Flagler Ave Reef (Site 14)". `alt` is kept as a
+     belt-and-braces match, and the row shows which alternate matched on the rare occasion
+     it is the alternate rather than the name that hit, so the result isn't a non sequitur. */
   const altHit = (s)=> (s.alt||[]).find(a=> a.toLowerCase().includes(q));
   const locHits = SPOTS.concat(customSpots).filter(s=> !s._deleted && (s.name.toLowerCase().includes(q) || altHit(s))).slice(0, 20);
   if(locHits.length){
