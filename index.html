@@ -823,17 +823,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
     color:var(--teal); pointer-events:none;
   }
   #speciesCol{
-    /* Stops short of the bottom so the bottom-left stack can sit underneath it. That stack is
-       now +/- bar (~34px) + 4px + scale (~17px) + 22px stamp slot = ~77px, down from the ~104px
-       it took when the +/- bar was vertical — hence 88px here rather than 128px, which puts
-       several more species buttons on screen without a scroll. */
-    position:absolute; left:10px; top:10px; bottom:88px; z-index:1100;
-    display:flex; flex-direction:column; gap:3px; overflow-y:auto;
-    pointer-events:auto; padding-right:4px; padding-bottom:8px; align-items:flex-start;
+    /* Stops short of the bottom so the corner controls fit underneath. That corner is now a
+       single ~26px row (scale + short +/- bar) over a 22px stamp slot = 48px, down from 77px
+       when they were stacked and 104px before that. 23 species at 22px a chip plus 2px gaps
+       need ~554px; at bottom:56px that fits without scrolling in any window taller than about
+       680px, which is what a Mac browser window usually is. */
+    position:absolute; left:10px; top:10px; bottom:56px; z-index:1100;
+    display:flex; flex-direction:column; gap:2px; overflow-y:auto;
+    pointer-events:auto; padding-right:4px; padding-bottom:4px; align-items:flex-start;
     scrollbar-width:none;
     scroll-behavior:smooth; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   }
   #speciesCol::-webkit-scrollbar{ display:none; }
+
   #speciesCol .chip{padding:4px 8px; font-size:12px; font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
   #speciesCol .chip .dot{width:6px; height:6px; border-radius:1px; transform:rotate(45deg);}
 
@@ -865,8 +867,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
        clamped against the viewport rather than only against a percentage of it. */
     box-sizing:border-box;
     /* The last term also keeps the credit clear of the build stamp, which shares this row
-       at the far left; 124px is that stamp's width plus its margin plus a little air. */
-    max-width:min(72vw, 520px, calc(100vw - 124px));
+       at the far left; 132px is that stamp's width plus its 18px inset plus a little air. */
+    max-width:min(72vw, 520px, calc(100vw - 132px));
     overflow-wrap:anywhere; word-break:break-word;
     line-height:1.45; padding:3px 9px 3px 8px !important; border-radius:6px 0 0 0;
   }
@@ -882,29 +884,40 @@ svg.leaflet-image-layer.leaflet-interactive path {
      72px-wide centred column existed to prevent. Short stack overall, so the species filter
      column above it gets back the height the taller arrangement was taking. */
   /* Above the attribution, which is painted after it and would otherwise cover the buttons. */
+  /* One row now, not a stack: miles scale on the left, the +/- bar immediately to its right,
+     both sitting on the same baseline. Two rows of controls plus the stamp came to ~77px of
+     map height; this is ~26px plus the stamp's slot, and every pixel saved goes to the species
+     filter column above, which was having to scroll on a desktop window. */
   .leaflet-bottom.leaflet-left{
-    display:flex; flex-direction:column; align-items:flex-start;
-    width:auto; margin-left:10px; z-index:1001;
+    display:flex; flex-direction:row; align-items:flex-end;
+    /* 22px of bottom margin is the build stamp's slot — see .build-stamp. */
+    width:auto; margin:0 0 22px 10px; z-index:1001;
   }
-  .leaflet-bottom.leaflet-left .leaflet-control{float:none; clear:none; margin-left:0; margin-right:0;}
+  .leaflet-bottom.leaflet-left .leaflet-control{float:none; clear:none; margin:0;}
+  /* A FIXED 66px slot, not shrink-to-fit. The scale LINE inside re-sizes itself to a round
+     distance at every zoom level, so on a shrink-wrapped box the +/- bar beside it would jump
+     sideways each time the map zoomed — and a button that moves under your finger between
+     presses is worse than a little dead space. 66px is the control's own maxWidth. */
+  .leaflet-bottom.leaflet-left .leaflet-control-scale{order:0; flex:0 0 66px; width:66px;}
   .leaflet-bottom.leaflet-left .leaflet-control-zoom{
-    order:0; margin-bottom:4px; display:flex; flex-direction:row;
-    /* 6px on the end buttons inside the bar's own 2px border = 8px on the bar. */
-    border-radius:8px;
+    order:1; margin-left:6px; display:flex; flex-direction:row;
+    /* 5px on the end buttons inside the bar's own 2px border = 7px on the bar. */
+    border-radius:7px;
   }
   /* Leaflet's bar stacks its buttons vertically: each <a> is display:block with a bottom
      divider, and the rounding is top-pair / bottom-pair. Turned on its side, the divider has
-     to become a right-hand one and the rounding a left-pair / right-pair. */
+     to become a right-hand one and the rounding a left-pair / right-pair. Squat, too — 22px
+     rather than the stock 30px, so the whole row is no taller than it has to be. */
   .leaflet-bottom.leaflet-left .leaflet-control-zoom a{
+    width:30px !important; height:22px !important; line-height:22px !important;
+    font-size:17px !important;
     display:block; float:none;
     border-bottom:none !important;
     border-right:1px solid var(--line);
     border-radius:0 !important;
   }
-  .leaflet-bottom.leaflet-left .leaflet-control-zoom a:first-child{border-radius:6px 0 0 6px !important;}
-  .leaflet-bottom.leaflet-left .leaflet-control-zoom a:last-child{border-radius:0 6px 6px 0 !important; border-right:none;}
-  /* 22px of clear space under the scale is the build stamp's slot — see .build-stamp. */
-  .leaflet-bottom.leaflet-left .leaflet-control-scale{order:1; margin-bottom:22px;}
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom a:first-child{border-radius:5px 0 0 5px !important;}
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom a:last-child{border-radius:0 5px 5px 0 !important; border-right:none;}
   .leaflet-control-scale-line{
     background:rgba(6,15,24,.8) !important; color:#fff !important; border-color:var(--fog) !important;
     font-family:'JetBrains Mono',monospace !important; font-size:11px !important; font-weight:600 !important;
@@ -1528,12 +1541,31 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .th-card p{margin:9px 0;}
   .th-card ol{margin:8px 0 12px; padding-left:20px;}
   .th-card li{margin-bottom:6px;}
-  /* Sits in the 22px the scale control reserves beneath itself, so the whole bottom-left
-     corner reads as one short stack: +/- bar, scale, stamp. Parked above the corner at
-     bottom:110px it was landing on the species filter buttons on a desktop window, where
-     that column is long enough to reach it. Left edge lines up with the 10px margin the
-     Leaflet corner uses. Faint on purpose — legible when looked for, invisible when not. */
-  .build-stamp{position:absolute; left:10px; bottom:5px; z-index:1002; pointer-events:none;
+  /* A short window -- a Mac browser that isn't full-screen, typically -- cannot fit 23 chips
+     at the roomy size, and the column falls back to scrolling, which hides species behind a
+     gesture nobody knows is there. Under 820px of viewport height the chips give up 1px of
+     padding top and bottom, taking the list from ~554px to ~508px, which fits a ~620px window.
+     A phone in portrait is taller than this threshold and keeps the bigger touch targets.
+     Placed down here, after every other #speciesCol rule: it matches their specificity exactly,
+     so source order is the only thing that decides it. */
+  @media (max-height:820px){
+    #speciesCol{gap:2px; padding-bottom:2px;}
+    #speciesCol .chip{padding:3px 8px;}
+  }
+  /* Second step for a genuinely short window. 23 chips at 20px still want 506px and a 620px
+     window only offers 500, so below 700px the chips drop to 18px (needs ~460px) and the
+     column starts a little higher. Under about 580px of window there is no honest way to fit
+     them and it goes back to scrolling — that is phone-landscape territory, where the map
+     itself is the thing worth seeing. */
+  @media (max-height:700px){
+    #speciesCol{top:6px; bottom:52px;}
+    #speciesCol .chip{padding:2px 8px;}
+  }
+  /* Sits in the 22px the control row reserves beneath itself. Pulled in off the corner --
+     10px/5px put the leading "07" right where a desktop window's own rounded bottom-left
+     corner clips, which is why the month was losing a character there and not on a phone.
+     Faint on purpose — legible when looked for, invisible when not. */
+  .build-stamp{position:absolute; left:18px; bottom:7px; z-index:1002; pointer-events:none;
     font:600 9px/1.2 'JetBrains Mono',monospace; letter-spacing:.03em; color:var(--fog);
     opacity:.55; text-shadow:0 1px 2px rgba(0,0,0,.8); white-space:nowrap;}
   #themeGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
@@ -1732,7 +1764,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <!-- Build stamp: bottom-left, directly under the scale bar. Short form on purpose —
        date then build number — because it shares that row with nothing but map. Its whole
        job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">07/28/26 Build 109</div>
+  <div class="build-stamp" id="buildStamp">07/28/26 Build 110</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -1920,7 +1952,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-28 · v109 · Backups are now two files: a <b>full backup</b> carrying your catches with their photos, your own spots, your edits to built-in spots and your drop labels, and a small <b>log-only</b> copy with the photos stripped out so it will go through email. Both have a <b>Share</b> button that hands the file straight to the phone's share sheet — Mail, Messages, AirDrop — instead of dropping it in Downloads, and a failed import now says which check failed rather than shrugging. <b>Amberjack</b> and <b>Triggerfish</b> added, bringing the list to 23 species, now in alphabetical order everywhere. Themes renamed: Parrot Head, Green-Eyed Lady, Purple Haze, Tequila Sunrise, Blue Suede Shoes, Brown Sugar. Spots and launches can be added and deleted — built-in ones included — and the Inshore/Offshore/Launches totals now update either way. Flagler Ave Reef and Sunglow Reef now lead with their county numbers like every other county site — <b>Site 14 Flagler Ave Reef</b> and <b>Site 15 Sunglow Reef</b>. Fixed: the CLOSE button no longer covers the artwork on the hidden-pin popup, the hidden pin now hides with the Offshore switch on older Android, and the map credit no longer runs off the right edge on iPhone. The map's <b>+ / −</b> buttons are now a horizontal bar with the scale tucked directly beneath them, and the build stamp sits under the scale in short form — <span style="color:var(--brass); font-weight:600;">07/28/26 Build 109</span> — which also gives the species filter column back about 40px of height.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-28 · v110 · Backups are now two files: a <b>full backup</b> carrying your catches with their photos, your own spots, your edits to built-in spots and your drop labels, and a small <b>log-only</b> copy with the photos stripped out so it will go through email. Both have a <b>Share</b> button that hands the file straight to the phone's share sheet — Mail, Messages, AirDrop — instead of dropping it in Downloads, and a failed import now says which check failed rather than shrugging. <b>Amberjack</b> and <b>Triggerfish</b> added, bringing the list to 23 species, now in alphabetical order everywhere. Themes renamed: Parrot Head, Green-Eyed Lady, Purple Haze, Tequila Sunrise, Blue Suede Shoes, Brown Sugar. Spots and launches can be added and deleted — built-in ones included — and the Inshore/Offshore/Launches totals now update either way. Flagler Ave Reef and Sunglow Reef now lead with their county numbers like every other county site — <b>Site 14 Flagler Ave Reef</b> and <b>Site 15 Sunglow Reef</b>. Fixed: the CLOSE button no longer covers the artwork on the hidden-pin popup, the hidden pin now hides with the Offshore switch on older Android, and the map credit no longer runs off the right edge on iPhone. The bottom-left corner of the map is one short row now: the miles scale, then a squat horizontal <b>+ / −</b> bar beside it, with the build stamp underneath in short form — <span style="color:var(--brass); font-weight:600;">07/28/26 Build 110</span>. That corner went from about 104px of map height to 48px, so the species filter column down the left edge fits all 23 buttons without scrolling on a desktop window.</p>
     </div>
   </div>
 </div>
