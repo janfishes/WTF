@@ -1881,7 +1881,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <!-- Build stamp: bottom-left, directly under the scale bar. Short form on purpose —
        date then build number — because it shares that row with nothing but map. Its whole
        job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">07/29/26 Build 153</div>
+  <div class="build-stamp" id="buildStamp">07/29/26 Build 154</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -2040,9 +2040,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">You can add gauges of your own. Open <b>⚙ Create &amp; Calibrate Tide Stations</b> in Help and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create &amp; Calibrate Tide Stations</button></div>
       <p class="sheet-note" style="margin-top:10px;"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to a National Data Buoy Center (NDBC) buoy pin and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled straight from NOAA's National Data Buoy Center, each with its observation time. Needs internet — it always shows whatever NDBC last reported. The buoy is <b>41070</b>, 13.4 nm north-north-east of Ponce Inlet, off Daytona.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> <b>Compass</b> puts a chart-style compass rose on the water just off the inlet mouth and gives you the run out to any offshore mark. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose out to that pin, labelled with the heading both ways — <b>To</b> is the heading out from the inlet, <b>From</b> is the reciprocal for the run home. One line at a time, so nothing piles up on the map. On a phone the line stays put once tapped; tap the same pin again, or tap open water, to clear it. The label slides itself along the line to wherever it won't be covered by the rose, the pin, or any other site's name tag, and where the line is short it splits into two lines with <b>To</b> above and <b>From</b> below.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> <b>Compass</b> puts a chart-style compass rose on the water just off the inlet mouth and gives you the run out to any offshore mark. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose out to that pin, labelled with the heading both ways — <b>To</b> is the heading out from the inlet, <b>From</b> is the reciprocal for the run home. One line at a time, so nothing piles up on the map. On a phone the line stays put once tapped; tap the same pin again, or tap open water, to clear it. The label also carries <b>the run itself</b>, in nautical miles and statute miles — so a single line gives you the heading out, the heading home, and how far it is. The label slides itself along the line to wherever it won't be covered by the rose, the pin, or any other site's name tag, and it narrows as the line gets shorter: first everything on one line, then the bearings on one row with the distance beneath them, and on the shortest lines just <b>To</b> above and <b>From</b> below, with the distance dropped rather than crowding the headings out (the site's popup and its drop list both still carry it).</p>
       <p class="sheet-note">It works on <b>offshore sites only</b> — the county reef Sites, the wrecks and ledges, any offshore site you've added yourself, and your own logged catches out there. Inshore spots, launches, and inshore catches are left alone, since a bearing from the inlet is no use for a creek or a bridge. While the compass is switched on, <b>tapping an offshore pin shows its bearing instead of opening its details</b> — the popup would sit right on top of the line you asked for. Switch the compass off and pins open normally again.</p>
-      <p class="sheet-note">One caution worth knowing: the rose sits where a boater would actually pick up a heading, out past the inlet mouth, which is not the same point the app measures each site's nm-and-bearing figures from in its popup. For the three closest sites those two numbers can differ by 15–30°; further out they agree within a few degrees. It's a planning aid for getting the lay of the grounds in your head, <b>not a substitute for your chartplotter</b>.</p>
+      <p class="sheet-note"><b>Site to site.</b> The rose gives you the run out from the inlet; a <b>second tap</b> gives you the run between two grounds. Tap one offshore mark — that is the rose line as usual — then tap another, and the rose line is dropped for a leg <b>from the first mark to the second</b>, labelled the same way with the heading both ways and the distance. The mark the leg is measured <i>from</i> carries a ring so there is never any doubt which end is which. Tap a third mark and the origin stays put while only the far end moves, so you can fan several legs off one ground without re-picking it. Every tap steps back: tapping the far mark again returns you to that mark's run from the rose, tapping the ringed origin drops the leg, and tapping open water clears the lot. This works between any two of the marks the compass covers — reef Sites, wrecks, ledges, your own offshore sites and your offshore catches, in any combination.</p>
+      <p class="sheet-note">One caution worth knowing: the rose sits where a boater would actually pick up a heading, out past the inlet mouth, which is not the same point the app measures each site's nm-and-bearing figures from in its popup. For the three closest sites those two numbers can differ by 15–30°; further out they agree within a few degrees. The distance now printed on the line is measured from the same place the bearing is — the rose — so it too will read a little differently from the nm figure in the site's own popup, most noticeably on the closest sites. A site-to-site leg has no such problem: both ends are the marks themselves. All of it is a planning aid for getting the lay of the grounds in your head, <b>not a substitute for your chartplotter</b>. Every figure is <b>true</b>, not magnetic — around Ponce Inlet the difference is roughly 7° west, so a magnetic heading off your steering compass reads about that much higher.</p>
       <p class="sheet-note">There is a third reference point in play, and it matters most for the county reefs. The <b>nm and bearing printed in a county reef Site's own popup are FWC's published figures</b>, carried straight across from the Artificial Reef Program's deployment records rather than calculated by this app — and FWC measures them from <b>29°04.500&#8242;N 80°55.500&#8242;W</b> (29.0750, −80.9250), a point out in the inlet mouth channel. That is <i>not</i> the point this app uses for everything else. Its own offshore nm/bearing figures run from 29°04.902&#8242;N 80°56.202&#8242;W — inside the end of the north jetty, about 0.7&nbsp;nm northwest of FWC's origin. The compass rose is further seaward again, at 29°04.653&#8242;N 80°54.385&#8242;W. Three origins strung along a mile of water, so three slightly different numbers for the same run, and that spread is most of why the closest sites disagree while the distant ones don't.</p>
       <p class="sheet-note">FWC's origin was not published with the records — it was recovered by fitting all <b>191 county drop coordinates</b> against their stated distances. Every one of the 191 lands within 0.05&nbsp;nm of that point, which is the rounding tolerance on a figure given to one decimal, so the fit is as exact as the source data allows. Your own natural-reef sites are a separate case: their distances were measured from close to the rose position, not from either inlet point.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> drops your GPS position on the map (tap again to remove it).</p>
@@ -2079,13 +2080,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Warning</div>
       <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
-      <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. A boater reads a bearing once clear of the inlet, not before, so the rose is anchored just offshore of the inlet mouth rather than at the same point each site's popup measures its nm/bearing figures from. For the closest sites — <b>Lighthouse Point Reef</b>, <b>Site 14 Flagler Ave Reef</b>, and <b>Site 15 Sunglow Reef</b> — that difference in reference point can swing the rose's bearing 15–30° from the number shown in the site's own popup; farther-out sites agree within a few degrees. Bear in mind those three popups are quoting <b>FWC's</b> figures, taken from 29°04.500&#8242;N 80°55.500&#8242;W in the inlet mouth channel — not this app's own reference inside the end of the north jetty, and not the rose. Close in, that choice of origin moves the bearing more than the run itself does.</p>
+      <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. A boater reads a bearing once clear of the inlet, not before, so the rose is anchored just offshore of the inlet mouth rather than at the same point each site's popup measures its nm/bearing figures from. For the closest sites — <b>Lighthouse Point Reef</b>, <b>Site 14 Flagler Ave Reef</b>, and <b>Site 15 Sunglow Reef</b> — that difference in reference point can swing the rose's bearing 15–30° from the number shown in the site's own popup; farther-out sites agree within a few degrees. Bear in mind those three popups are quoting <b>FWC's</b> figures, taken from 29°04.500&#8242;N 80°55.500&#8242;W in the inlet mouth channel — not this app's own reference inside the end of the north jetty, and not the rose. Close in, that choice of origin moves the bearing more than the run itself does. The distance printed on the line is measured from the rose as well, for the same reason and with the same caveat. A <b>site-to-site leg</b> sidesteps all three origins — it is measured between the two marks themselves — but it is still <b>true</b>, not magnetic.</p>
 
       <div class="subhead">Copyright</div>
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The “Where’s the fish?” cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span> and is used with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-29 · <b>v153</b> · <b>Buoy 41069 withdrawn.</b> The position it went in on was wrong — it placed the buoy 2.4 nm off Ponce Inlet when the station lies up near 41070 — and an unverified position does not belong on a chart. Back to one buoy; the multi-buoy plumbing from v151 stays, so it returns as one line once the position is checked. v152 · <b>New: NDBC Buoy 41069</b> at 29°04'46.031"N 080°53'29.015"W — 29.079453 / −80.891393, about <b>2.4 nm ESE of Ponce Inlet</b> and 13.4 nm from 41070, so the two pins are well clear of each other. Own pin, own popup, same five readings and the same four-source fetch as 41070. The Waves button still flies to 41070; 41069 opens from its pin. Named <i>Ponce Inlet Buoy 41069</i> pending NDBC’s own station name. v151 · <b>Waves rebuilt for more than one buoy.</b> Groundwork, no visible change. Station 41070 was hardwired — its number was written into the popup, all four fetch URLs and both failure messages — so a second buoy could not be added without duplicating the lot. There is now a <b>BUOYS list</b>, and the pins, popups, fetches, the 5-minute cache (now kept per station, so two buoys cannot overwrite each other’s readings) and the Waves button all read from it. The Waves button flies to <b>WAVES_PRIMARY</b>, still 41070; any other buoy opens from its own pin. Source order is unchanged — corsproxy, NDBC direct, codetabs, allorigins. v150 · <b>Spot “Channel Marker 57” withdrawn.</b> The last of the channel marks that had been added as inshore spots — marker 47 went in v136, this one was missed. It sat at 29.1419 N 80.97175 W, about 45 m off the charted <i>Halifax River Daybeacon 57</i> that ICW Channel view now plots at 29.14223 N 80.97146 W, so it was a duplicate in the wrong place. Aids to navigation belong to the channel layer, not the spot list. <b>115 built-in spots.</b> Nothing else referenced it, and catches carry their own coordinates and location label rather than a spot id, so no logged catch is affected. v149 · <b>Help corrected for v145.</b> The Channel markers paragraph still said “tap or hover a dot”, which described the 4px hit test v145 replaced. It now states what actually happens: the nearest mark within about a finger’s width wins, the name holds until you move or clear it, and hover still works with a mouse. Text only. v148 · <b>ICW Channel shading settled between v146 and v147.</b> v147 went too far. Outline opacity <b>0.38</b>, fill <b>0.075</b> — the midpoint of the two, against 0.9/0.18 as first drawn. v147 · <b>ICW Channel shading lightened again.</b> Outline opacity 0.5 → <b>0.28</b> and fill 0.18 → <b>0.05</b>, roughly half of v146 and about a third of what v139 drew. The channel now reads as a tint over the satellite photo rather than a layer on top of it. v146 · <b>ICW Channel shading lightened.</b> The cyan outline drops from 0.9 to <b>0.5</b> opacity and the fill from 0.18 to <b>0.10</b> — about half on both — so more of the satellite photo reads through the channel. Nothing else changed: same polygons, same colour, same weight. v145 · <b>Bug fix: channel marker names would not open on a phone.</b> The dots are 3.5–4px and were hit-tested against their own radius, which a mouse pointer can land on and a fingertip cannot — so tapping them did nothing on iPhone while hovering them worked on the desktop. The dots no longer carry the label; a tap now <b>searches for the nearest mark within 20px</b> and names that one. Nearest also fixes a second fault the old way had: where two marks overlap — <i>Boat Works 3</i> and <i>5</i> are about 12 m apart, as are the Inlet Harbor buoys — Leaflet named whichever was drawn last, not the one under your finger. Tap open water to clear the name, another mark to move it; leaving ICW Channel view clears it. Hovering still works with a mouse. v144 · <b>Location messages rewritten.</b> A denial now names <b>Private Browsing first</b> — Safari keeps no site permissions in a Private tab, so location is refused there however many times it is approved, and the old wording sent you into Settings where nothing could fix it. Settings paths follow, including the separate Home Screen entry. All three location buttons now share one message builder instead of the two of them saying only “Could not get your location.” v143 · <b>Locate Me now says when a fix is impossible.</b> Browsers block location by origin, not by hardware: a copy opened straight from Files runs on <i>file://</i> and gets nothing, as does any plain <i>http://</i> page. Both used to report “GPS timed out”, which points at the sky instead of the address bar. All three location buttons now check first and name the real reason. v142 · <b>Bug fix: Locate Me timing out.</b> It asked only for a GPS-grade fix and refused any cached position over 15 seconds old, so a cold start indoors or under cover ran out the 20-second budget while a coarse network fix was available in about a second. It now runs both at once and takes whichever is usable first — GPS wins outright, a network fix is accepted after 6 seconds, and a cached position up to 2 minutes old counts. A fix worse than 150 m now says so rather than looking precise. Also, every error except “denied” used to be swallowed and reported as a timeout; real causes are now named. v141 · Map button’s third state renamed <b>Channel → ICW Channel</b>, on the button and through the Help. Nothing else changed. v140 · <b>New: channel markers.</b> Channel view now plots the <b>240 charted aids</b> on Volusia’s channels — 217 fixed daybeacons, 23 buoys — red/green/amber dots, tap for the full charted name and light characteristic. From NOAA ENC Harbour-band cells, merging three S-57 layers: the beacons and buoys carry the names, the light records carry the characteristics and are joined by position (38 of 38 test matches at 0.0 m). 14 KB, offline, canvas-drawn. <b>Numbers restart on every waterway</b> — five marks are numbered 47 in this county — so full names are shown, never bare numbers. v139 · <b>Channel view now covers all of Volusia County, both sides.</b> The layer is selected by the survey’s own county label — <i>IWW JAX TO MIA (VOLUSIA COUNTY)</i>, 137 polygons, the whole Intracoastal through the county exactly — in place of the latitude band v138 used, which let three Flagler polygons through and dropped Volusia water. Added the <b>St Johns River</b> on the county’s western boundary: Lake Monroe plus the reach up to the Putnam line above Lake George, 15 polygons. 152 polygons, 60 KB, all maintained to 12 ft. v138 · v137 · <b>New: Channel view.</b> The map button now cycles <b>Topo Satellite → Street Map → Channel</b>. Channel shades the maintained ICW channel in cyan over the satellite photo — USACE National Channel Framework, Florida East, surveyed June 2020, all authorised and maintained to 12 ft. Stored on the device, so it works offline. Drawn on canvas and non-interactive so panning stays smooth. <b>Paperwork, not soundings</b> — it shows where the channel is authorised to be, not where the water is now. v136 · <b>Channel Marker 47 withdrawn.</b> It was added in v135 from coordinates that turned out to be wrong, and is removed rather than left on the map in the wrong place. Nothing else changed. v134 · <b>Reverted:</b> the white glow behind the off-state filter pills — it blurred the text rather than lifting it. Back to the dark shadow only. <b>Bug fix:</b> the scale bar was printing its end line through the “mi” of its own label. Cause was v132 capping the bar at 52px to move the <b>+/−</b> buttons clear of the attribution; the bar has to be free to run as long as the distance it states, so it is back to 66px and the clearance now comes from the attribution reserving the whole bottom-left row (150px instead of 132px). It wraps to one more line on a narrow phone, which is the cheaper trade. v133 · <b>Bug fix:</b> pill text sat about 1.5px above centre. The base chip had 3px more padding below the text than above it (5/8), and since the text is centred inside the padded box rather than the pill, that lifted every label. Now 7/6 — same 13px total, so no pill changes height. Affects every pill in the app, not just the filter row; it was most obvious on <b>Inshore</b> because the off-state pills no longer carry the 2px-down shadow that used to mask it. v132 · <b>New:</b> inshore spot <b>Spruce Creek Mouth</b> at 29°05′15.9″N 80°57′03.4″W. <b>Bug fix:</b> on a phone the attribution wrapped up into the <b>+/−</b> bar and covered the minus — the bar now sits tighter to the scale and ends clear of it (scale slot 66→52px, maxWidth to match). <b>New:</b> white glow behind the text of the Catches, Inshore, Offshore and Launches pills when off, for readability. v131 · <b>Bug fix:</b> the <b>Launches</b> filter pill used a lighter red when off (#ff6b6b) than the red it fills with when on (#e02020), so the two states did not match. Both now use <i>--launch</i>. Inshore and Offshore still lighten when off — their blues need it on black, red does not. v130 · <b>New:</b> pin count badges (offshore, inshore, catches) now use the flat black of the species pills with white numerals; border still follows the theme. <b>Bug fix:</b> the numbers sat above centre in their circles — centring was pinned to a line-height that did not match the box, now done with flex at any size. v129 · <b>Bug fix:</b> count badge on offshore pins no longer changes with the theme — it read <i>--navy-950 / --fog / --line</i> (dark navy in Parrot Head, near-white in Brown Sugar), now pinned to the Parrot Head values in all six themes. v128 · <b>New:</b> Seasons button (was App Guide), moved above Compass. New FAB order. Help updated. Build notes condensed to keywords. v127 · FAB order: App Guide above Locate Me. v126 · Guide renamed App Guide; moved below Locate Me. v125 · FAB order: Guide below Waves. v124 · <b>Bug fix:</b> compass rose ignored theme accent — <i>--rose</i> was declared on <i>:root</i>, now on <i>body</i>. v123 · <b>New:</b> compass rose halo (<i>--rose-halo</i>), on rose, lines and labels. v122 · <b>New:</b> compass rose follows theme accent — light blue for Blue Suede Shoes, white for Brown Sugar. New FAB order. v121 · <b>New:</b> <i>--rose</i> variable. Theme ids renamed to match picker names, with migration for saved ids. FAB order. <b>Bug fix:</b> stray escape in + Spot tips. v120 · <b>Bug fix:</b> + Spot type pills — one pill lit, rest black and dimmed. <b>New:</b> spot type set automatically from position (Inshore / Offshore / Launch), with a verify note. Checked against all 115 built-in spots. v118 · Compass reference points documented — county reef figures are FWC’s, from 29°04.500&#8242;N 80°55.500&#8242;W; this app’s own from 29°04.902&#8242;N 80°56.202&#8242;W; rose at 29°04.653&#8242;N 80°54.385&#8242;W. v117 · <b>Bug fix:</b> tide times ran an hour early through daylight saving. <b>New:</b> Aqua Ct calibrated gauge (+144 High / +170 Low); Turnbull Bay timed by distance — Three Bridges +50/+60, Turnbull Bay N +60/+75, Turnbull Bay Bridge +100/+120 (interpolated, medium confidence). v116 · <b>New:</b> Compass rose overlay — offshore marks only, one bearing line at a time, off by default. Croaker Hole removed (coordinates were inland freshwater).</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-29 · <b>v154</b> · <b>New: site-to-site bearings, and distance on every compass line.</b> The rose only ever answered “how do I get there from the inlet”. A <b>second tap</b> now answers “how do I get from this ground to that one”: tap an offshore mark, then tap another, and the rose line is replaced by a leg between the two, with the heading both ways and the run. The origin mark carries a <b>ring</b>; a third tap moves only the far end, so legs fan off one ground; tapping the far mark steps back to its rose line, the ringed origin drops the leg, open water clears everything. Works between any two marks the compass covers, catches included. Every line — rose or leg — now also prints the <b>distance in nm and sm</b>. The label has <b>three forms</b> instead of two and narrows as the line shortens: all on one line, then bearings with the distance beneath, then <b>To</b>/<b>From</b> alone on the shortest runs. Internally the draw code took an <i>origin</i> rather than assuming the rose — near-end clearance is the rose graphic’s 108px or, on a leg, the origin pin plus its name tag; the origin mark is excluded from the label’s obstacle list; <i>roseBearingDeg</i> is gone as redundant. Switching the compass off, or tapping open water, clears the leg along with the pinned mark. Help updated with the site-to-site paragraph, the distance wording, and a note that all figures are <b>true, not magnetic</b> (about 7° west here). v153 · <b>Buoy 41069 withdrawn.</b> The position it went in on was wrong — it placed the buoy 2.4 nm off Ponce Inlet when the station lies up near 41070 — and an unverified position does not belong on a chart. Back to one buoy; the multi-buoy plumbing from v151 stays, so it returns as one line once the position is checked. v152 · <b>New: NDBC Buoy 41069</b> at 29°04'46.031"N 080°53'29.015"W — 29.079453 / −80.891393, about <b>2.4 nm ESE of Ponce Inlet</b> and 13.4 nm from 41070, so the two pins are well clear of each other. Own pin, own popup, same five readings and the same four-source fetch as 41070. The Waves button still flies to 41070; 41069 opens from its pin. Named <i>Ponce Inlet Buoy 41069</i> pending NDBC’s own station name. v151 · <b>Waves rebuilt for more than one buoy.</b> Groundwork, no visible change. Station 41070 was hardwired — its number was written into the popup, all four fetch URLs and both failure messages — so a second buoy could not be added without duplicating the lot. There is now a <b>BUOYS list</b>, and the pins, popups, fetches, the 5-minute cache (now kept per station, so two buoys cannot overwrite each other’s readings) and the Waves button all read from it. The Waves button flies to <b>WAVES_PRIMARY</b>, still 41070; any other buoy opens from its own pin. Source order is unchanged — corsproxy, NDBC direct, codetabs, allorigins. v150 · <b>Spot “Channel Marker 57” withdrawn.</b> The last of the channel marks that had been added as inshore spots — marker 47 went in v136, this one was missed. It sat at 29.1419 N 80.97175 W, about 45 m off the charted <i>Halifax River Daybeacon 57</i> that ICW Channel view now plots at 29.14223 N 80.97146 W, so it was a duplicate in the wrong place. Aids to navigation belong to the channel layer, not the spot list. <b>115 built-in spots.</b> Nothing else referenced it, and catches carry their own coordinates and location label rather than a spot id, so no logged catch is affected. v149 · <b>Help corrected for v145.</b> The Channel markers paragraph still said “tap or hover a dot”, which described the 4px hit test v145 replaced. It now states what actually happens: the nearest mark within about a finger’s width wins, the name holds until you move or clear it, and hover still works with a mouse. Text only. v148 · <b>ICW Channel shading settled between v146 and v147.</b> v147 went too far. Outline opacity <b>0.38</b>, fill <b>0.075</b> — the midpoint of the two, against 0.9/0.18 as first drawn. v147 · <b>ICW Channel shading lightened again.</b> Outline opacity 0.5 → <b>0.28</b> and fill 0.18 → <b>0.05</b>, roughly half of v146 and about a third of what v139 drew. The channel now reads as a tint over the satellite photo rather than a layer on top of it. v146 · <b>ICW Channel shading lightened.</b> The cyan outline drops from 0.9 to <b>0.5</b> opacity and the fill from 0.18 to <b>0.10</b> — about half on both — so more of the satellite photo reads through the channel. Nothing else changed: same polygons, same colour, same weight. v145 · <b>Bug fix: channel marker names would not open on a phone.</b> The dots are 3.5–4px and were hit-tested against their own radius, which a mouse pointer can land on and a fingertip cannot — so tapping them did nothing on iPhone while hovering them worked on the desktop. The dots no longer carry the label; a tap now <b>searches for the nearest mark within 20px</b> and names that one. Nearest also fixes a second fault the old way had: where two marks overlap — <i>Boat Works 3</i> and <i>5</i> are about 12 m apart, as are the Inlet Harbor buoys — Leaflet named whichever was drawn last, not the one under your finger. Tap open water to clear the name, another mark to move it; leaving ICW Channel view clears it. Hovering still works with a mouse. v144 · <b>Location messages rewritten.</b> A denial now names <b>Private Browsing first</b> — Safari keeps no site permissions in a Private tab, so location is refused there however many times it is approved, and the old wording sent you into Settings where nothing could fix it. Settings paths follow, including the separate Home Screen entry. All three location buttons now share one message builder instead of the two of them saying only “Could not get your location.” v143 · <b>Locate Me now says when a fix is impossible.</b> Browsers block location by origin, not by hardware: a copy opened straight from Files runs on <i>file://</i> and gets nothing, as does any plain <i>http://</i> page. Both used to report “GPS timed out”, which points at the sky instead of the address bar. All three location buttons now check first and name the real reason. v142 · <b>Bug fix: Locate Me timing out.</b> It asked only for a GPS-grade fix and refused any cached position over 15 seconds old, so a cold start indoors or under cover ran out the 20-second budget while a coarse network fix was available in about a second. It now runs both at once and takes whichever is usable first — GPS wins outright, a network fix is accepted after 6 seconds, and a cached position up to 2 minutes old counts. A fix worse than 150 m now says so rather than looking precise. Also, every error except “denied” used to be swallowed and reported as a timeout; real causes are now named. v141 · Map button’s third state renamed <b>Channel → ICW Channel</b>, on the button and through the Help. Nothing else changed. v140 · <b>New: channel markers.</b> Channel view now plots the <b>240 charted aids</b> on Volusia’s channels — 217 fixed daybeacons, 23 buoys — red/green/amber dots, tap for the full charted name and light characteristic. From NOAA ENC Harbour-band cells, merging three S-57 layers: the beacons and buoys carry the names, the light records carry the characteristics and are joined by position (38 of 38 test matches at 0.0 m). 14 KB, offline, canvas-drawn. <b>Numbers restart on every waterway</b> — five marks are numbered 47 in this county — so full names are shown, never bare numbers. v139 · <b>Channel view now covers all of Volusia County, both sides.</b> The layer is selected by the survey’s own county label — <i>IWW JAX TO MIA (VOLUSIA COUNTY)</i>, 137 polygons, the whole Intracoastal through the county exactly — in place of the latitude band v138 used, which let three Flagler polygons through and dropped Volusia water. Added the <b>St Johns River</b> on the county’s western boundary: Lake Monroe plus the reach up to the Putnam line above Lake George, 15 polygons. 152 polygons, 60 KB, all maintained to 12 ft. v138 · v137 · <b>New: Channel view.</b> The map button now cycles <b>Topo Satellite → Street Map → Channel</b>. Channel shades the maintained ICW channel in cyan over the satellite photo — USACE National Channel Framework, Florida East, surveyed June 2020, all authorised and maintained to 12 ft. Stored on the device, so it works offline. Drawn on canvas and non-interactive so panning stays smooth. <b>Paperwork, not soundings</b> — it shows where the channel is authorised to be, not where the water is now. v136 · <b>Channel Marker 47 withdrawn.</b> It was added in v135 from coordinates that turned out to be wrong, and is removed rather than left on the map in the wrong place. Nothing else changed. v134 · <b>Reverted:</b> the white glow behind the off-state filter pills — it blurred the text rather than lifting it. Back to the dark shadow only. <b>Bug fix:</b> the scale bar was printing its end line through the “mi” of its own label. Cause was v132 capping the bar at 52px to move the <b>+/−</b> buttons clear of the attribution; the bar has to be free to run as long as the distance it states, so it is back to 66px and the clearance now comes from the attribution reserving the whole bottom-left row (150px instead of 132px). It wraps to one more line on a narrow phone, which is the cheaper trade. v133 · <b>Bug fix:</b> pill text sat about 1.5px above centre. The base chip had 3px more padding below the text than above it (5/8), and since the text is centred inside the padded box rather than the pill, that lifted every label. Now 7/6 — same 13px total, so no pill changes height. Affects every pill in the app, not just the filter row; it was most obvious on <b>Inshore</b> because the off-state pills no longer carry the 2px-down shadow that used to mask it. v132 · <b>New:</b> inshore spot <b>Spruce Creek Mouth</b> at 29°05′15.9″N 80°57′03.4″W. <b>Bug fix:</b> on a phone the attribution wrapped up into the <b>+/−</b> bar and covered the minus — the bar now sits tighter to the scale and ends clear of it (scale slot 66→52px, maxWidth to match). <b>New:</b> white glow behind the text of the Catches, Inshore, Offshore and Launches pills when off, for readability. v131 · <b>Bug fix:</b> the <b>Launches</b> filter pill used a lighter red when off (#ff6b6b) than the red it fills with when on (#e02020), so the two states did not match. Both now use <i>--launch</i>. Inshore and Offshore still lighten when off — their blues need it on black, red does not. v130 · <b>New:</b> pin count badges (offshore, inshore, catches) now use the flat black of the species pills with white numerals; border still follows the theme. <b>Bug fix:</b> the numbers sat above centre in their circles — centring was pinned to a line-height that did not match the box, now done with flex at any size. v129 · <b>Bug fix:</b> count badge on offshore pins no longer changes with the theme — it read <i>--navy-950 / --fog / --line</i> (dark navy in Parrot Head, near-white in Brown Sugar), now pinned to the Parrot Head values in all six themes. v128 · <b>New:</b> Seasons button (was App Guide), moved above Compass. New FAB order. Help updated. Build notes condensed to keywords. v127 · FAB order: App Guide above Locate Me. v126 · Guide renamed App Guide; moved below Locate Me. v125 · FAB order: Guide below Waves. v124 · <b>Bug fix:</b> compass rose ignored theme accent — <i>--rose</i> was declared on <i>:root</i>, now on <i>body</i>. v123 · <b>New:</b> compass rose halo (<i>--rose-halo</i>), on rose, lines and labels. v122 · <b>New:</b> compass rose follows theme accent — light blue for Blue Suede Shoes, white for Brown Sugar. New FAB order. v121 · <b>New:</b> <i>--rose</i> variable. Theme ids renamed to match picker names, with migration for saved ids. FAB order. <b>Bug fix:</b> stray escape in + Spot tips. v120 · <b>Bug fix:</b> + Spot type pills — one pill lit, rest black and dimmed. <b>New:</b> spot type set automatically from position (Inshore / Offshore / Launch), with a verify note. Checked against all 115 built-in spots. v118 · Compass reference points documented — county reef figures are FWC’s, from 29°04.500&#8242;N 80°55.500&#8242;W; this app’s own from 29°04.902&#8242;N 80°56.202&#8242;W; rose at 29°04.653&#8242;N 80°54.385&#8242;W. v117 · <b>Bug fix:</b> tide times ran an hour early through daylight saving. <b>New:</b> Aqua Ct calibrated gauge (+144 High / +170 Low); Turnbull Bay timed by distance — Three Bridges +50/+60, Turnbull Bay N +60/+75, Turnbull Bay Bridge +100/+120 (interpolated, medium confidence). v116 · <b>New:</b> Compass rose overlay — offshore marks only, one bearing line at a time, off by default. Croaker Hole removed (coordinates were inland freshwater).</p>
     </div>
   </div>
 </div>
@@ -6072,20 +6073,35 @@ const COMPASS_TOOLTIP_OFFSET_PX = 10; // spot name tooltips are pinned 10px righ
 const COMPASS_GAP_PAD_PX = 10;      // extra gap carved either side of the label text
 const COMPASS_LINE_LABEL_T = 0.45;  // where along the visible run of the line the label sits
 
-function roseBearingDeg(lat,lng){ return bearingDeg(COMPASS_ROSE_POS.lat, COMPASS_ROSE_POS.lng, lat, lng); }
+/* Bearings and runs are computed in redrawCompass from whichever end the line starts at —
+   the rose, or another mark when a site-to-site leg is live — so there is no rose-only helper. */
 
 /* The northward-pointing member of the pair is printed first and the rotation is normalised
    into (-90°, 90°] so nothing prints upside-down — together that means the label always reads
    from the same head orientation whichever way the line happens to run. */
-function compassLabelGeometry(brg){
+function compassLabelForms(brg, nm){
   const back = (brg + 180) % 360;
   const northFirst = Math.cos(brg * Math.PI/180) >= 0;
   let theta = (northFirst ? brg : back) - 90;
   theta = ((theta + 180) % 360 + 360) % 360 - 180;
   if(theta > 90) theta -= 180; else if(theta <= -90) theta += 180;
   const pad = v => String(Math.round(v)).padStart(3,'0');
-  const toText = `To ${pad(brg)}\u00b0`, fromText = `From ${pad(back)}\u00b0`;
-  return { theta, text: `${toText} / ${fromText}`, toText, fromText };
+  const to = `To ${pad(brg)}\u00b0`, from = `From ${pad(back)}\u00b0`;
+  const dist = `${nm.toFixed(1)} nm / ${(nm*1.15078).toFixed(1)} sm`;
+  /* Three forms, widest first. The run is quoted with the headings, so on a long line it all
+     reads as one string; on a shorter one the distance drops to its own row under the
+     bearings; on the shortest the distance is dropped rather than crowd the headings out,
+     since the popup and the drop list both carry it anyway. */
+  const forms = [
+    { stack:false, lines:[`${to} / ${from} \u00b7 ${dist}`] },
+    { stack:true,  lines:[`${to} / ${from}`, dist] },
+    { stack:true,  lines:[to, from] }
+  ];
+  forms.forEach(f=>{
+    f.halfLen = Math.max.apply(null, f.lines.map(compassTextWidth))/2 + COMPASS_GAP_PAD_PX;
+    f.halfH = f.stack ? COMPASS_LABEL_HALF_H_STACK : COMPASS_LABEL_HALF_H_WIDE;
+  });
+  return { theta, forms };
 }
 
 /* Measured, not guessed — the gap carved in the line has to match the text actually drawn. */
@@ -6128,12 +6144,13 @@ const COMPASS_LABEL_HALF_H_STACK = 17;
    Labels pill is on, a spot's box is widened to swallow its name tag, which hangs off to the
    right of the pin and is far wider than the pin itself. The active spot is excluded — its own
    pin is handled separately by pinClear, which stops the label short of the end of the line. */
-function compassObstacles(activeSpot){
+function compassObstacles(activeSpot, originSpot){
   const boxes = [];
   const half = COMPASS_PIN_R_PX;
   markers.forEach(m=>{
     const s = m.spotRef;
     if(!s || (activeSpot && s.id === activeSpot.id)) return;
+    if(originSpot && s.id === originSpot.id) return;
     if(!map.hasLayer(m)) return;
     const p = map.latLngToContainerPoint([s.lat, s.lng]);
     let x0 = p.x - half, x1 = p.x + half, y0 = p.y - half, y1 = p.y + half;
@@ -6151,12 +6168,12 @@ function compassObstacles(activeSpot){
    otherwise it blocks a run of positions widened by the label's half-length at each end.
    Projecting onto only the line's axes (rather than the boxes' axes too) can call a near miss
    a hit — which errs toward extra clearance, the safe direction. */
-function compassBlockedRuns(boxes, roseP, ux, uy, halfLen, halfH){
+function compassBlockedRuns(boxes, originP, ux, uy, halfLen, halfH){
   const runs = [];
   boxes.forEach(([x0,y0,x1,y1])=>{
     let a0 = Infinity, a1 = -Infinity, p0 = Infinity, p1 = -Infinity;
     for(const [cx,cy] of [[x0,y0],[x1,y0],[x0,y1],[x1,y1]]){
-      const dx = cx - roseP.x, dy = cy - roseP.y;
+      const dx = cx - originP.x, dy = cy - originP.y;
       const a = dx*ux + dy*uy, p = -dx*uy + dy*ux;
       if(a<a0) a0=a; if(a>a1) a1=a;
       if(p<p0) p0=p; if(p>p1) p1=p;
@@ -6255,8 +6272,9 @@ const COMPASS_ROSE_SVG = `<svg viewBox="-20 -20 200 200" width="200" height="200
 
 const compassLayer = L.layerGroup();
 let compassOn = false;
-let compassActiveSpot = null;   // the spot whose bearing is currently drawn
+let compassActiveSpot = null;   // the spot at the far end of the line currently drawn
 let compassPinnedId = null;     // set by tap/click so the line survives mouseout
+let compassLegOrigin = null;    // near end of the line: null means the rose, a spot means a leg
 
 function compassOffshoreMarkers(){
   return markers.filter(m => m.spotRef && m.spotRef.zone === 'offshore' && !m.spotRef.ramp);
@@ -6315,9 +6333,26 @@ function wireCompassMarkers(){
     m.on('mouseout',  ()=>{ if(compassOn && !compassPinnedId) compassShow(null); });
     m.on('click',     ()=>{
       if(!compassOn) return;
-      // Tapping the pin that is already pinned clears it, so touch users can dismiss a line.
-      if(compassPinnedId === target.id){ compassPinnedId = null; compassShow(null); }
-      else { compassPinnedId = target.id; compassShow(target); }
+      /* Two-tap legs. Nothing pinned: the first tap pins a mark and shows its run from the
+         rose, exactly as before. With one already pinned, tapping a SECOND mark drops the rose
+         line and runs the leg between the two instead. Every tap is reversible:
+
+           far-end mark tapped again  -> step back one stage (leg to rose line, rose line to nothing)
+           origin mark tapped         -> drop the leg, leave that mark pinned to the rose
+           a third mark tapped        -> same origin, new far end, so legs fan out from one spot
+           open water                 -> clears the lot (map click handler below)                */
+      if(!compassPinnedId){ compassLegOrigin = null; compassPinnedId = target.id; compassShow(target); return; }
+      if(compassPinnedId === target.id){
+        if(compassLegOrigin){ const o = compassLegOrigin; compassLegOrigin = null; compassPinnedId = o.id; compassShow(o); }
+        else { compassPinnedId = null; compassShow(null); }
+        return;
+      }
+      if(compassLegOrigin && compassLegOrigin.id === target.id){
+        compassLegOrigin = null; compassPinnedId = target.id; compassShow(target); return;
+      }
+      compassLegOrigin = compassLegOrigin || compassActiveSpot || null;
+      compassPinnedId = target.id;
+      compassShow(target);
     });
   });
 }
@@ -6333,98 +6368,109 @@ function redrawCompass(){
 
   const roseLL = [COMPASS_ROSE_POS.lat, COMPASS_ROSE_POS.lng];
 
+  /* The line's near end. Normally the rose; when a leg is live it is another offshore mark,
+     and everything below reads `originP` rather than the rose's own pixel position, so one
+     code path draws both cases. */
+  const o = compassLegOrigin;
+  const isLeg = !!(o && compassActiveSpot && o.id !== compassActiveSpot.id);
+  const originLL = isLeg ? [o.lat, o.lng] : roseLL;
+
   if(compassActiveSpot){
     const s = compassActiveSpot;
-    const brg = roseBearingDeg(s.lat, s.lng);
-    const g = compassLabelGeometry(brg);
+    const brg = bearingDeg(originLL[0], originLL[1], s.lat, s.lng);
+    const nm  = map.distance(originLL, [s.lat, s.lng]) / 1852;
+    const g = compassLabelForms(brg, nm);
     const size = map.getSize();
-    const roseP = map.latLngToContainerPoint(roseLL);
+    const originP = map.latLngToContainerPoint(originLL);
     const endP  = map.latLngToContainerPoint([s.lat, s.lng]);
-    const lenPx = Math.hypot(endP.x - roseP.x, endP.y - roseP.y);
+    const lenPx = Math.hypot(endP.x - originP.x, endP.y - originP.y);
 
     if(lenPx > 1){
-      const startPx = Math.min(COMPASS_ROSE_RADIUS_PX, lenPx * 0.9);
-      const at = t => L.point(roseP.x + (endP.x-roseP.x)*t, roseP.y + (endP.y-roseP.y)*t);
+      /* Keep-out at the NEAR end. From the rose that is the rose graphic itself — 108px of
+         ring and cardinal letters. From another mark it is only that mark's pin, widened by
+         its name tag when the line departs to the right, since the tag hangs off that side. */
+      let originClear = COMPASS_PIN_R_PX;
+      if(isLeg && labelsOn && !o.ramp){
+        const fwdX = (endP.x - originP.x) / lenPx;
+        if(fwdX > 0){
+          const tipW = COMPASS_TOOLTIP_OFFSET_PX + compassSpotLabelWidth((o.name || '').replace(/^CR /, ''));
+          originClear = Math.max(originClear, COMPASS_PIN_R_PX + tipW * fwdX);
+        }
+      }
+      const lineStartPx  = isLeg ? originClear : COMPASS_ROSE_RADIUS_PX;
+      const labelClearPx = isLeg ? originClear : COMPASS_ROSE_CLEAR_PX;
+
+      const startPx = Math.min(lineStartPx, lenPx * 0.9);
+      const at = t => L.point(originP.x + (endP.x-originP.x)*t, originP.y + (endP.y-originP.y)*t);
 
       /* Everything below is reckoned in SCREEN PIXELS, not in the 0..1 parameter along the
          line. That distinction is the whole fix: a clearance expressed in t means a different
          number of pixels at every zoom, so zoomed right in on a close site the label drifted
          back over the rose. The nearest edge of the text — not its centre — is what has to
-         clear COMPASS_ROSE_CLEAR_PX, so the label's own half-width is part of the sum. */
-      const vis = clipRayToViewport(roseP, endP, size, 24);
+         clear the near end, so the label's own half-width is part of the sum. */
+      const vis = clipRayToViewport(originP, endP, size, 24);
       const visStartPx = vis ? vis[0] * lenPx : startPx;
       const visEndPx   = vis ? vis[1] * lenPx : lenPx;
       const desiredPx  = visStartPx + (visEndPx - visStartPx) * COMPASS_LINE_LABEL_T;
 
-      /* Prefer the wide one-line form; fall back to the stacked form — "To ###" riding above
-         the line and "From ###" below it — which is less than half as wide and so fits where
-         the one-liner can't. The line runs between the two halves there, so no gap is carved;
-         in the wide form the line is split so it passes under the text. */
-      const wideHalf  = compassTextWidth(g.text)/2 + COMPASS_GAP_PAD_PX;
-      const stackHalf = Math.max(compassTextWidth(g.toText), compassTextWidth(g.fromText))/2 + COMPASS_GAP_PAD_PX;
-
       /* Keep-out at the far end. The pin's name tooltip is pinned to the RIGHT of the pin, so
          it only threatens the bearing label when the line arrives from the right — that is,
-         when the direction back toward the rose has a positive x component. Scaling the
+         when the direction back toward the origin has a positive x component. Scaling the
          tooltip's width by that component falls off to nothing for a vertical line, where the
          label sits above or below the pin and the tooltip is off to the side. Only counted
          when the Labels pill is actually on, since otherwise no tooltip is drawn. */
       let pinClear = COMPASS_PIN_R_PX;
       if(labelsOn && !s.ramp){
-        const backX = (roseP.x - endP.x) / lenPx;
+        const backX = (originP.x - endP.x) / lenPx;
         if(backX > 0){
           const tipW = COMPASS_TOOLTIP_OFFSET_PX + compassSpotLabelWidth((s.name || '').replace(/^CR /, ''));
           pinClear = Math.max(pinClear, COMPASS_PIN_R_PX + tipW * backX);
         }
       }
 
-      /* The label has to live in the corridor between the rose and the pin: at least
-         ROSE_CLEAR + its own half-length out from the rose, and at least pinClear + its own
-         half-length short of the pin. Narrowing to the stacked form widens that corridor. */
-      const corridor = halfLen => ({ lo: COMPASS_ROSE_CLEAR_PX + halfLen, hi: lenPx - pinClear - halfLen });
+      /* The label has to live in the corridor between the two ends: at least the near-end
+         clearance plus its own half-length out from the origin, and at least pinClear plus its
+         own half-length short of the far pin. A narrower form widens that corridor. */
+      const corridor = halfLen => ({ lo: labelClearPx + halfLen, hi: lenPx - pinClear - halfLen });
 
       /* Now slide the label along its line to the nearest stretch that isn't already occupied
-         by another spot's pin or name tag. Both label forms are tried: the one-liner first,
-         and the stacked form second, since narrowing the label frees up runs the wide one
-         can't fit in — though the stacked form is taller, so it can also catch obstacles the
-         one-liner would have squeaked past. */
-      const ux = (endP.x - roseP.x) / lenPx, uy = (endP.y - roseP.y) / lenPx;
-      const boxes = compassObstacles(s);
-      const slotFor = (halfLen, halfH) => {
-        const c = corridor(halfLen);
-        return compassFreeSlot(desiredPx, c.lo, c.hi,
-          compassBlockedRuns(boxes, roseP, ux, uy, halfLen, halfH));
-      };
+         by another spot's pin or name tag, trying each form in turn from widest to narrowest —
+         narrowing frees up runs the wide one can't fit in, though the stacked forms are taller
+         and so can catch obstacles the one-liner would have squeaked past. A form that fits but
+         lands off screen is held as a fallback while the narrower ones are tried, since a
+         bearing you can't see is no use. */
+      const ux = (endP.x - originP.x) / lenPx, uy = (endP.y - originP.y) / lenPx;
+      const boxes = compassObstacles(s, isLeg ? o : null);
 
-      let stacked = false, half = wideHalf;
-      let centerPx = slotFor(wideHalf, COMPASS_LABEL_HALF_H_WIDE);
-
-      if(centerPx === null){
-        const alt = slotFor(stackHalf, COMPASS_LABEL_HALF_H_STACK);
-        if(alt !== null){ stacked = true; half = stackHalf; centerPx = alt; }
-      } else if(centerPx + wideHalf > visEndPx){
-        // The one-liner fits but lands off-screen; prefer the stacked form if it lands on
-        // screen — a bearing you can't see is no use.
-        const alt = slotFor(stackHalf, COMPASS_LABEL_HALF_H_STACK);
-        if(alt !== null && alt + stackHalf <= visEndPx){ stacked = true; half = stackHalf; centerPx = alt; }
+      let chosen = null, offScreen = null;
+      for(const f of g.forms){
+        const c = corridor(f.halfLen);
+        const px = compassFreeSlot(desiredPx, c.lo, c.hi,
+          compassBlockedRuns(boxes, originP, ux, uy, f.halfLen, f.halfH));
+        if(px === null) continue;
+        if(px + f.halfLen > visEndPx){ if(!offScreen) offScreen = { f, px }; continue; }
+        chosen = { f, px };
+        break;
+      }
+      if(!chosen) chosen = offScreen;
+      if(!chosen){
+        // Nothing anywhere along the line is clear — park the narrowest form beyond the pin,
+        // still on the bearing, where neither end of the line can cover it.
+        const f = g.forms[g.forms.length - 1];
+        chosen = { f, px: Math.max(lenPx + pinClear + f.halfLen, labelClearPx + f.halfLen) };
       }
 
-      if(centerPx === null){
-        // Nothing anywhere along the line is clear — park it beyond the pin, still on the
-        // bearing, where neither the rose nor anything on the line can cover it.
-        stacked = true; half = stackHalf;
-        centerPx = Math.max(lenPx + pinClear + half, COMPASS_ROSE_CLEAR_PX + half);
-      }
-
-      const labelT = centerPx / lenPx;
+      const form = chosen.f;
+      const half = form.halfLen;
+      const labelT = chosen.px / lenPx;
       const halfT  = half / lenPx;
       const startT = startPx / lenPx;
 
-      const html = stacked
+      const html = form.stack
         ? `<div class="compass-label compass-label-stack" style="transform-origin:center; transform:translate(-50%,-50%) rotate(${g.theta.toFixed(1)}deg);">`
-          + `<span style="transform:translateY(-${COMPASS_STACK_OFFSET_PX}px);">${g.toText}</span>`
-          + `<span style="transform:translateY(${COMPASS_STACK_OFFSET_PX}px);">${g.fromText}</span></div>`
-        : `<div class="compass-label" style="transform-origin:center; transform:translate(-50%,-50%) rotate(${g.theta.toFixed(1)}deg);">${g.text}</div>`;
+          + `<span style="transform:translateY(-${COMPASS_STACK_OFFSET_PX}px);">${form.lines[0]}</span>`
+          + `<span style="transform:translateY(${COMPASS_STACK_OFFSET_PX}px);">${form.lines[1]}</span></div>`
+        : `<div class="compass-label" style="transform-origin:center; transform:translate(-50%,-50%) rotate(${g.theta.toFixed(1)}deg);">${form.lines[0]}</div>`;
 
       L.marker(map.containerPointToLatLng(at(labelT)), {
         icon: L.divIcon({ className:'', html, iconSize:[0,0], iconAnchor:[0,0] }),
@@ -6432,7 +6478,7 @@ function redrawCompass(){
       }).addTo(compassLayer);
 
       const segs = [];
-      if(!stacked && labelT > startT && labelT < 1){
+      if(!form.stack && labelT > startT && labelT < 1){
         segs.push([startT, Math.max(startT, labelT - halfT)]);
         segs.push([Math.min(1, labelT + halfT), 1]);
       } else if(startT < 1){
@@ -6446,6 +6492,12 @@ function redrawCompass(){
         ).addTo(compassLayer);
       });
     }
+
+    /* A ring round the near end so it is never in doubt which mark the leg is measured FROM. */
+    if(isLeg){
+      L.circleMarker(originLL, { radius:11, color:'var(--rose)', weight:2.4, opacity:1,
+        fill:false, interactive:false, className:'compass-line' }).addTo(compassLayer);
+    }
   }
 
   L.marker(roseLL, {
@@ -6456,12 +6508,13 @@ function redrawCompass(){
 
 map.on('zoomend moveend', ()=>{ if(compassOn) redrawCompass(); });
 // Tapping empty map clears a pinned line.
-map.on('click', ()=>{ if(compassOn && compassPinnedId){ compassPinnedId = null; compassShow(null); } });
+map.on('click', ()=>{ if(compassOn && compassPinnedId){ compassPinnedId = null; compassLegOrigin = null; compassShow(null); } });
 
 document.getElementById('compassFab').addEventListener('click', function(){
   compassOn = this.classList.toggle('pressed');
   compassActiveSpot = null;
   compassPinnedId = null;
+  compassLegOrigin = null;
   setCompassPopupSuppression(compassOn);
   // The inlet name sits right where the rose lands, so it comes off the map while the
   // compass is up and goes back when it's switched off.
