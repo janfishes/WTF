@@ -7,6 +7,15 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 6:24 PM EDT · v234 · Help polish
+------------------------------------------------------------------------------
+Three touches to the help sheet. "Tight Lines!" moved out of the opening
+paragraph onto its own centred line right below it, with the fishing-rod
+emoji blown up to 52 px (scaling with the A text-size control). The
+"Shape Guide" heading is now "Button Shapes", and "Actions" is now
+"Button Actions".
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 6:03 PM EDT · v233 · Brighter banner
 ------------------------------------------------------------------------------
 The MOB banner's border stepped up from 2 px #ff5252 to 3 px #ff1414 —
