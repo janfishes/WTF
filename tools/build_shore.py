@@ -25,10 +25,11 @@ for sr in sf.iterShapeRecords():
 
 # Wide bay mouths the 3.3 km closing can't seal on its own: bridge them so the
 # whole estuary stays "inside" (keeps its photo) like the sealed lagoons do.
-seals = [
-    box(-82.80, 27.52, -82.60, 27.72),   # Tampa Bay mouth (Anna Maria - Egmont Key - Ft De Soto)
-    box(-88.10, 30.20, -87.96, 30.32),   # Mobile Bay mouth (Ft Morgan - Dauphin Is.)
-]
+# Seals hug the island chains: earlier box seals stuck ~3 nm into the Gulf
+# (a straight blue wall offshore Anna Maria/Egmont Key). Tampa's bridges
+# Anna Maria -> Egmont Key -> Mullet Key; Mobile's bridges Dauphin Island ->
+# Fort Morgan, both staying behind the islands' Gulf shores.
+seals = [box(-82.77, 27.53, -82.68, 27.63), box(-88.10, 30.222, -87.96, 30.40)]
 land = unary_union(geoms + seals)
 
 CLOSE = 0.03

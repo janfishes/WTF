@@ -21,7 +21,11 @@ for sr in sf.iterShapeRecords():
     rec = dict(zip(fields, sr.record))
     if rec['STUSPS'] in want:
         geoms.append(shape(sr.shape.__geo_interface__))
-seals = [box(-82.80, 27.52, -82.60, 27.72), box(-88.10, 30.20, -87.96, 30.32)]
+# Seals hug the island chains: earlier box seals stuck ~3 nm into the Gulf
+# (a straight blue wall offshore Anna Maria/Egmont Key). Tampa's bridges
+# Anna Maria -> Egmont Key -> Mullet Key; Mobile's bridges Dauphin Island ->
+# Fort Morgan, both staying behind the islands' Gulf shores.
+seals = [box(-82.77, 27.53, -82.68, 27.63), box(-88.10, 30.222, -87.96, 30.40)]
 land = unary_union(geoms + seals)
 CLOSE = 0.03
 env = land.buffer(CLOSE, join_style='round').buffer(-CLOSE, join_style='round')
