@@ -7,6 +7,26 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 5:17 PM EDT · v228 · MOB help wording
+------------------------------------------------------------------------------
+Help wording only; no behaviour changed. The quick-tour paragraph now
+explains Locate Me's two jobs in one sentence — a short tap puts a pin at
+your location, a 1-second press triggers the MOB (man-overboard) function —
+placed between the Compass and map-button sentences. The Locate Me note
+says plainly that the small red person figure on the button signifies a
+MOB function. The MOB paragraph opens "MOB (man-overboard) function. Press
+and HOLD Locate Me for at least 1 second to activate," and the red figure
+leading it more than doubled (14 to 30 px) so the section is findable at a
+flick-scroll.
+
+Two slivers of behaviourless UI in the same build: the banner's caution
+line stepped up again, 11.5 to 13 px bold — at arm's length on a moving
+boat, "small print" is no print — and the action stack reordered so the
+map-mode button sits ABOVE Locate Me, leaving Locate Me at the bottom
+corner of the stack where a held thumb has the most room; the help's
+action-stack listing follows the new order.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 5:08 PM EDT · v227 · Bolder MOB
 ------------------------------------------------------------------------------
 The MOB figure is bolder everywhere (thicker limbs, bigger head) and the
