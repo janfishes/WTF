@@ -1,0 +1,1088 @@
+WTF Log — Build Notes
+=====================
+
+Moved out of the in-app help on 2026-07-31 at 4:00 PM EDT (Build 221).
+Newest first. The help keeps a two-or-three-word tl;dr per build; the full
+note for every build lives here. New builds are added at the top, date- and
+time-stamped.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · 4:00 PM EDT · v221 · Build notes moved
+------------------------------------------------------------------------------
+Build notes moved out of the help. The full story of every build now lives in
+BUILD_NOTES.txt alongside the app (the help links to it); each build keeps
+only a two-or-three-word summary in the help itself, so the panel stays short
+as builds pile up. New builds add their full note here, date- and
+time-stamped, and their tl;dr there.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v220 · Help search fix
+------------------------------------------------------------------------------
+Fix: Help search-result snippets could spill past the edge of their result
+rows; they now stay inside. (Shipped without a help note; entry added when the
+notes moved here.)
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v219 · Instant reopens
+------------------------------------------------------------------------------
+The app now keeps a copy of itself on your device — after the first visit,
+opening it serves that saved copy instantly instead of re-downloading the
+whole page, and the newest build is fetched quietly in the background for the
+next open (the update pill still announces it, now with every word bold, no
+dash, and a bigger ✕). The splash fish swims in place and stays up just until
+the first map tiles have drawn — never more than a couple of extra seconds,
+and a tap still dismisses it. The A control now also grows the Compass bearing
+& distance text on the lines, at the same half-strength rate as the buttons.
+And the header's fish logo and the ™ mark were both stepped up in size.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v218 · Faster launch
+------------------------------------------------------------------------------
+The app opens faster, centred on Ponce DeLeon Inlet. The Street Map view's
+vector renderer — about a megabyte of code that the opening Topo Satellite
+view never touches — no longer downloads before the app can start; it fetches
+the first time the MAP button reaches Street Map, with the plain street map
+filling in for the moment that takes. The fonts stopped holding up the first
+paint too, and the map now opens with Ponce DeLeon Inlet at the centre of the
+view instead of a point averaged from every pin.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v217 · Update pill redesign
+------------------------------------------------------------------------------
+The update pill was redesigned — its message is now bold and properly centred,
+sitting between a teal reload glyph and a round dismiss button instead of
+hanging left of a bare ✕. And the header now grows with the A control: WTF Log
+and the tagline scale at the same half-strength rate as the buttons, and the ™
+mark was raised from a speck to a readable size — riding the tagline's scaling
+on top of that.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v216 · Help opener retitled
+------------------------------------------------------------------------------
+The opening section of this help is now titled Read This Paragraph to Get
+Hooked.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v215 · Compass home bearing
+------------------------------------------------------------------------------
+The compass prints the way home on a single-pin run. Tap one offshore pin (or
+hover one on a computer) and the label now carries the to/from pair —
+156°/336° 4.3 sm — course out, then the reciprocal course back to the inlet,
+which with one pin is the same track reversed. On a route of several legs the
+second number stays off, where it would read as the way back along the route
+rather than home. On a line too crowded for the pair, the outbound course
+alone is the fallback, as before.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v214 · Help printing fix
+------------------------------------------------------------------------------
+Fix: printing the help from the home-screen app was refused ("this site does
+not allow printing"). An app opened from the home screen runs in a shell that
+has no print dialog at all, so asking it to print could only fail. Print this
+help now opens the help as its own black-on-white page in a real browser
+window — from the home screen that means Safari, where printing works — and
+the print dialog is called there. If the new window is blocked, the old
+in-place path still runs as the fallback.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v213 · Wording tweaks
+------------------------------------------------------------------------------
+Wording in Read This To Get Hooked: Compass takes "one or more offshore pins",
+and the closing line now points at the three things worth reading on for —
+your own tide station, the offline map that works without Internet, and
+backing up all your photos and data.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v212 · TL;DR reworked
+------------------------------------------------------------------------------
+The TL;DR is now "Read This To Get Hooked". Its sentences follow the order of
+the button stack down the right side of the map — Catch, Spot, Bite, Tides,
+Waves, My Log, Seasons, Compass, then the map button — with two additions:
+Seasons (typical feeding times by month) and Compass (tap it and one or more
+offshore pins for bearings and distance). Tight Lines! 🎣
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v211 · Filter row layout
+------------------------------------------------------------------------------
+The filter pills own the top of the map. The species column now starts below
+the filter row instead of sharing the strip, so the row runs the full width,
+stays on one line wherever it fits, and wraps to a second only when the window
+or the biggest text size demands it — never three. The column's top is
+measured off the live row, since the row's height is not a constant. Help: the
+TL;DR was rewritten, button names throughout print as the buttons do — ALL
+CAPS and a step larger — and Search now covers Help: type a topic and matching
+sections are listed; tap one to open Help right at that section.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v210 · ICW view renamed
+------------------------------------------------------------------------------
+The ICW Channel view is now called Hi Res & ICW — on the map button and
+everywhere this help mentions it — since the view is as much about the hi-res
+aerial photo it rides on as the channel drawn over it. Nothing about the view
+itself changed. Earlier build notes below keep the old name; they describe the
+builds as they shipped.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v209 · Pill overlap fix
+------------------------------------------------------------------------------
+Fix: at the bigger text sizes the Catches pill could land on the species
+buttons. The filter row starts at a fixed distance from the left edge to clear
+the species column — but v208 grew the species chips with the text size and
+left that distance alone. It now grows in step, and steeper on narrow phones,
+where the centred filter row only moves half of any change and there is no
+spare width. Checked at three window widths × all three text sizes: no button
+touches another anywhere.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v208 · Buttons scale too
+------------------------------------------------------------------------------
+The A button now grows the buttons too. The text-size control has always
+scaled the reading surfaces — panels, popups, the tide panel — while the map
+buttons stayed fixed, because their tight pill boxes would wrap at 130%. They
+now follow at half strength: at the 130% setting the FAB pills, filter pills,
+species switches and header cookies print about 15% bigger, and each pill
+grows a little to fit its larger text instead of wrapping. One tap, one
+setting, saved on your device as before.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v207 · TL;DR + printing
+------------------------------------------------------------------------------
+Help opens with a TL;DR and can be printed. A ten-second summary of the whole
+app now sits at the top of this panel, and above it a Print this help button
+sends just this panel to the printer — full text, black on white, no map — for
+a paper copy in the boat bag. On the chart, the Ponce DeLeon Inlet name moved
+off the north jetty into the middle of the channel: it now sits on the
+centreline of the marked cut, halfway along the open reach between Buoy 5 and
+Lighted Buoy 8, where it covers no red or green mark.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v206 · Boundary writing spared
+------------------------------------------------------------------------------
+The chart writes on its own boundary — so the blue now steps just past the
+line instead of slicing that writing lengthwise. The county names are printed
+along the state-waters lines (Levy County · Citrus County down the Gulf's
+9-mile line, Brevard County and the rest along the Atlantic's 3-mile line),
+and the boundary dashes are the line itself — starting the flat blue exactly
+at the line cut all of it in half. Zoomed in past the 1-mile scale the blue
+now begins about a half-mile seaward of the limit, so the charted dashes, the
+junctions where county lines meet the boundary, and every name riding the line
+read whole. (If Crystal Bay, its power-plant channel, or the waters above
+Anclote Key still look cut off, that is the previous build lingering in the
+cache — the update pill or a reload brings this one in.)
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v205 · Chart returns close-up
+------------------------------------------------------------------------------
+Zoomed in, the chart comes back: from the 1-mile scale the blue pulls back to
+the state-waters line. The tight one-mile cut that cures the blocky water at
+wide zooms was, up close, painting over real chart content — the
+Circumnavigational Paddling Trail down Biscayne Bay and Card Sound and along
+the whole Gulf, the Intracoastal's course through the sounds, county boundary
+lines (Broward/Dade, Pasco/Pinellas, Levy/Citrus and the rest), airport and
+base names like Patrick SFB and Fort Lauderdale, bay names (Gullivan Bay,
+Crystal Bay), Marjory Stoneman Douglas, and the small keys of the island
+chains around Islamorada, Marathon, Key West, Anclote Key, Cape Romano. So the
+cut is now zoom-aware: out wide (through the 2-mile scale) the ocean is clean
+flat blue from a mile off the beach, exactly as before; from the 1-mile scale
+in, the photo opens out to the state-waters limit — everything between the
+beach and the dashed line is the chart itself, trails and boundaries and
+islands included, and the flat blue takes over only past the line, where there
+is genuinely nothing charted to lose.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v204 · Coastline label fixes
+------------------------------------------------------------------------------
+Two coastline fixes: the straight blue wall off the Tampa Bay mouth is gone,
+and printed names the blue was cutting in half now show whole. The coastline
+data had sealed Tampa Bay's mouth with a crude rectangle whose edge stood ~3
+miles out in the Gulf — between Bradenton and Clearwater the blue began at
+that wall instead of the beaches. The seal now hugs the real island chain
+(Anna Maria → Egmont Key → Mullet Key), so the photo strip follows the actual
+shore; the Mobile Bay seal got the same treatment. And where the chart prints
+a coastal name that runs out over the water — Cape Canaveral, Satellite Beach,
+New Smyrna Beach Municipal Airport, Ormond-by-the-Sea, St. Augustine and
+friends — the blue now steps back in a small window around the name at the
+zooms where it was being cut, so the map's own label reads whole. The app's
+replacement names pull back to the two widest zooms accordingly. More cut-off
+names can be added to the window list as they're spotted.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v203 · Blocky water gone
+------------------------------------------------------------------------------
+Topo Satellite's blue now starts about a mile off the beach — the blocky water
+is gone — and the dashed state-waters line rides on top. Keeping the aerial
+photo out to the state-waters line (v201–v202) kept the problem it was meant
+to fix: USGS's offshore water is a patchwork of mismatched flight rectangles
+all the way out, so the strip between the beach and the dashed line still
+showed blocks. The Topo view now cuts to the flat ocean blue along the same
+shoreline envelope as the ICW Channel view — photo to about a mile off the
+beach, jetties and islands kept — and the dashed state-waters limit (3
+nautical miles Atlantic, 9 Gulf) is drawn across the blue instead of bounding
+the photo. The coastal town names moved in with the cut: they now print just
+off each town's own beach, and they stay on one zoom level deeper since the
+narrower photo strip cuts the imagery's labels at closer zooms too. Also:
+Halifax Harbor Marina Boat Ramp moved to its GPS-verified position
+(29°12.301′N 81°00.738′W), about 100 yards from where it sat.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v202 · Gulf 9-mile line
+------------------------------------------------------------------------------
+The Gulf line moved out to 9 nautical miles — Florida's real state-waters
+limit there. v201 drew the limit at 3 miles on every coast, but the two coasts
+are not the same: the Atlantic limit is 3 nautical miles, while in the Gulf,
+Florida's waters run 3 marine leagues — 9 nautical miles — the boundary the
+old imagery's own county-name dashes sat on. The dashed line and the flat blue
+now follow the real limits: 3 on the Atlantic, 9 in the Gulf, joined along the
+spine of the Keys so the ocean side of the Keys keeps the 3-mile cut while
+Florida Bay and the Dry Tortugas get the Gulf's 9. The coastal names moved out
+with the line. Inside the Gulf's wider photo strip the map shows whatever the
+chart shows — aerial imagery near shore, then USGS's own pale rendered sea
+with its charted 3-mile and county lines — and the flat blue begins only past
+the state line.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v201 · Statewide ocean repair
+------------------------------------------------------------------------------
+The Topo Satellite ocean repair now goes all the way around Florida — and the
+3-mile line is drawn back on, with the coastal town names. Until now the
+flat-blue repair covered only the east coast; the Gulf still showed the raw
+patchwork of black tiles and mismatched water past the ~500 ft scale. The fill
+now runs from the Alabama line around the Keys and up to Georgia, clipped
+along a statewide 3-mile state-waters line computed from the same real
+coastline the ICW view uses, so the photo keeps every foot of state waters on
+every coast. Since the paint covers the chart's own dashed boundary in the new
+areas, the app now draws the dashed 3-mile line itself, right along the edge
+where the blue begins — one consistent line on every coast. And the coastal
+place names the old repair used to cut in half at wide zooms — a label is a
+fixed number of pixels, so zoomed out it reaches miles over the water; Boynton
+Beach was losing its second half — are printed back by the app, just seaward
+of the line in the flat blue, the majors at the widest zoom and every coastal
+town one click in. From the ~500 ft scale inward the imagery's own labels fit
+inside the photo strip and the app's copies stand down.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v199–v200 · ICW ocean repair
+------------------------------------------------------------------------------
+The ICW Channel view's ocean got the same repair the Topo Satellite got in
+v196 — and the cut now follows Florida's real shoreline, all the way around.
+The channel view's aerial photo reaches miles out to sea, but past the surf
+zone it turns into the same patchy, mismatched water the satellite views were
+cured of: flight-line seams, sun glint, different-day exposures. Now
+everything seaward of the coast is the one flat ocean blue, cut per-pixel
+along the state's actual charted coastline — Atlantic, the Keys and the Gulf
+alike, continuing up the Georgia coast and along the panhandle — with a margin
+of about three-quarters of a mile so the surf, the inlet jetties and the
+islands keep their photo. Every inside water keeps its photo entirely: the
+ICW, the Halifax and Indian Rivers, Mosquito Lagoon, Tampa Bay, Charlotte
+Harbor, the panhandle bays — the coastline used is an envelope that treats
+them as inside the coast, exactly as a boater does. v199 first shipped this as
+a straight 1-mile-off-the-beach line derived from the app's coarse surf table;
+that line clipped part of Cape Canaveral's shore, which is what forced the
+move to the real coastline in v200. Wide zooms (past the ~500 ft scale) are
+untouched, as before, and the opt-in offline download for this view skips
+open-sea tiles — they'd never be shown — so it is a noticeably smaller
+download too.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v197–v198 · Marina pins added
+------------------------------------------------------------------------------
+Every saltwater marina in Volusia County is now an inshore spot. Eleven new
+blue pins on the Halifax and Indian River: Loggerhead, Halifax River Yacht
+Club, Seven Seas, Adventure Yacht Harbor, Harbour Village, Inlet Harbor, Sea
+Love, Lighthouse Boatyard, New Smyrna Marina, Anglers Yacht Club and Smyrna
+Yacht Club. Positions come from OpenStreetMap's marina basin outlines and were
+cross-checked against this chart's own daybeacons wherever a marina has a
+marked channel. Halifax Harbor Marina and Cassen Park were already on the map
+as launch pins, so they are not duplicated. Marinas count toward the Inshore
+total and take drops, marks and catches like any other inshore pin. v197
+briefly carried the county's St. Johns River marinas too; v198 keeps the map
+saltwater-only, so the eight freshwater pins are gone.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · v190–v196 · Satellite views rebuilt
+------------------------------------------------------------------------------
+The satellite views were rebuilt. Close zoom no longer goes blocky — a NAIP
+aerial layer takes over where the old imagery ran out — and the ocean's
+mismatched rectangles are gone. v193–v196 finished the job: the water makes
+one transition — detailed nearshore photo out to Florida's charted 3-mile
+boundary (the dashed line, which stays on the map) along the entire east
+coast, Georgia line to Key Biscayne, then a single flat ocean blue matched to
+USGS's own wide-zoom ocean — cut per-pixel along the line's shape rather than
+at tile edges. Zoomed out past the ~500 ft scale the map is now untouched: the
+whole world, the Gulf and the wide-zoom Atlantic are USGS's own rendering, so
+every coast matches. ICW Channel now rides on a hi-res aerial photo of land
+and water out to ~7 nm, and the Offline sheet can save that imagery too
+(opt-in checkbox). The app now announces its own updates — a tap-to-reload
+pill appears when a newer build ships, ending the stale-cache guessing. v191
+fixed the offline checkbox crushed to a one-letter column by the global input
+width. v192 fixed intermittent compass bearings on iPhone: iOS fires a fake
+hover before every tap, and the preview line it drew could cancel the tap that
+was meant to pin the leg — phones now pin straight from the tap, with a guard
+so the same gesture can't instantly clear it.
+
+------------------------------------------------------------------------------
+Build 2026-07-30 · v189 · Startup error fix
+------------------------------------------------------------------------------
+Bug fix: one error anywhere could lock you out of the app entirely, with
+nothing on screen to say why. The Accept gate was the last thing wired in a
+9,000-line script — so any error above it, in code with nothing whatever to do
+with the disclaimer, left the button inert and the app unreachable. It is now
+the first thing wired, in its own script block ahead of every line of app
+code, so whatever breaks later you can still get in. It also no longer assumes
+the map exists — that call is guarded, so the gate closes even if the app
+script died before the map was built. And errors now print on the screen
+instead of into a console no phone shows. Anything thrown at load, and any
+unhandled promise rejection, is written into the gate in red: message, line
+and column. A truncated upload reads as a syntax error, a real bug reads as
+itself, and either way it can be read off the phone rather than guessed at. If
+an error arrives after the gate was dismissed, the gate reopens to carry it,
+since an error nobody sees is an error nobody fixes. Note on v183–v188:
+withdrawn, nothing from them ships. Those builds tried to remove the
+rectangular patches of mismatched water in the satellite view offshore — an
+artefact of USGS imagery being stitched from state and county flights of
+different years and exposures. Three approaches were tried and all three
+traded away more than they fixed: erasing the water to Sentinel-2 swapped one
+mosaic for another and cut place names in half; gating that by zoom was on the
+wrong axis, since a label is a fixed number of pixels wide and so reaches
+further in metres the further you zoom out, meaning labels are cut at LOW
+zoom, exactly where the clip was left on; and magnifying USGS's small-scale
+rendering to keep its shaded sea floor magnified its place names too, putting
+New Smyrna Beach Municipal Airport across the open Atlantic as a blur miles
+wide. The satellite view is therefore unchanged from v182, patches and all.
+What the work did leave behind is worth keeping: a verified land mask built
+from NOAA ENC Harbour-band cells (US5), LNDARE — the same cells the 240
+channel markers came from — checked against all 115 built-in spots, with the
+open Atlantic separated from the Halifax, Spruce Creek, Turnbull Bay, Mosquito
+Lagoon and the Indian River by growing the land 2.5 km and keeping only water
+connected to the open sea. If the patches are worth another attempt, real
+bathymetry from GEBCO or NOAA coastal relief — actual depth data as its own
+layer, rather than a magnified picture of a map — is the approach that has not
+been tried. v182 · The header is re-set: cookies centred in the bar, and on a
+phone the fish centred between the two blocks either side of it. The cookies
+sat on the bottom edge of the bar. The header bottom-aligns its children, and
+it is right to — the title block wants it, with the tagline on the baseline of
+the bar and the name stacked above it. The cookies are not that: they are a
+free-standing row of circles with nothing to share a baseline with, so
+bottom-aligning them bought nothing and left a band of dead bar above them.
+They are centred in the bar’s height now, by align-self on the group rather
+than by changing the header, so the title block keeps the alignment it needs.
+And on a phone the fish is now centred in the GAP, not in the bar. Centring it
+in the bar is right on a wide screen and wrong on a narrow one: the title
+block runs roughly twice the width of the cookie group, so the true middle of
+the bar sits well inside the left-hand block, and the fish came out crowding
+the tagline rather than sitting between the two. Done by taking it out of
+absolute positioning at the phone breakpoint and letting it be what it
+actually is — the middle child of a three-item flex row — with auto margins
+either side. Auto margins take precedence over space-between and split the
+leftover space equally, which is the definition of centred in the gap, and it
+costs no measuring: whatever those two blocks come out as on that phone, in
+that theme, at that text size, the fish lands between them. It stays
+shrink-wrapped to the image, which it has to be — the WTF rides on it at
+47%/44% of the wrap, so a wrap any wider than the fish would slide the
+lettering off the body. And it now takes real space, so on the narrowest
+phones it gives a little. Floating over the bar, it could never push anything
+off; in the flow it can, so below 400px the fish goes 66px to 56px and
+everything drawn on it follows proportionally — cap height, tracking, the
+centring compensation tracking costs, and the emboldening stroke — so it is
+the same mark at a smaller size rather than a differently proportioned one.
+The wide-screen header is untouched. v181 · Popups now open clear of the
+furniture sitting on top of the map. The Waves popup is the tall one and it
+opened with its top half buried under the filter row. Leaflet does already pan
+a popup into view — but the only thing it knows about is the map container. It
+has no idea this app parks a filter row across the top of the chart, a species
+column down the left, the action stack down the right and the scale, +/− bar,
+build stamp and credits cookie along the bottom, all of them absolutely
+positioned inside the map and all painted above the popup pane. A popup could
+therefore satisfy Leaflet completely — fit the container, edge to edge — and
+still open underneath the pills. Leaflet has the hook for this,
+autoPanPaddingTopLeft and autoPanPaddingBottomRight; it just had to be told
+what the numbers are. They cannot be constants — the filter row wraps to a
+second line on a narrow phone, the Eye puts the stack and the species column
+away entirely, the tide banner comes and goes, and the credits cookie now sits
+on a safe-area inset — so all four sides are measured off the live elements
+every time a popup opens. A control that is hidden reserves nothing, read from
+offsetParent, which is what both the Eye and the banner actually use to
+disappear. Clearance the popup cannot use is given back. This is the half that
+matters on a phone. If the free band is narrower than the popup, Leaflet
+resolves the two impossible constraints by pinning it hard against the leading
+edge — which would take a 300px popup off the species column and shove it
+straight under the action stack, worse than where it started. So each axis is
+checked against the popup’s real measured size and the reservation is handed
+back if it will not fit. The top is kept whatever happens: it is the filter
+row, it is the thing being fixed, and Leaflet already resolves a too-tall
+popup in favour of its top edge. Each side is also capped at 38% of the map,
+so no arrangement of furniture can squeeze a popup into a strip down the
+middle. And a popup you once dragged will pan itself again. Dragging and
+resizing switch autoPan off so they do not fight the finger — but that flag
+lives on the popup instance, and popups here are stashed and handed back
+rather than rebuilt, so once dragged, a popup stayed unable to pan for the
+rest of the session. It is put back on every fresh open. The pan is re-run on
+the next frame after opening, since Leaflet had already done its own during
+onAdd, before any of this was known and with the wrong numbers. It is a no-op
+when the popup already fits. v180 · Bug fix: the credits cookie was being
+clipped by the edge of the phone. v179 put it flush against the right edge, on
+the reasoning that the credit panel had always sat flush there. That was wrong
+on hardware: an iPhone’s display has rounded corners, and
+safe-area-inset-right is 0 in portrait — it only reports the notch, in
+landscape — so nothing at all was reserving that curve and the right-hand side
+of the cookie was disappearing into it. The same lesson the build stamp
+learned in the opposite corner, where 10px/5px put the leading 07 exactly
+where a rounded corner clips it. The whole corner moves in 10px, not just the
+cookie — padding-right on the corner container, with the safe-area inset still
+added on top for landscape and for a notch — so the credit panel and the
+cookie stay in line with each other rather than one being pulled in and the
+other left behind. And the cookie is now round. Flush against the edge it had
+to be a half-tab, square on its right side with no border there, because a
+full round shape hard against the screen edge reads as something growing out
+of it. Clear of the edge it can be what it is: 28px, fully bordered, fully
+round, the same kind of control as the cookies in the header. The credit panel
+loses its square right-hand corners for the same reason — 6px all round now.
+The panel’s width reservation follows, 100vw − 150px to 100vw − 160px, so the
+10px it moved is 10px it no longer has. Nothing else about v179 changes — same
+collapse, same licence reasoning, same Eye behaviour, same 44px under the FAB
+stack. v179 · The map credits fold away behind an ⓘ cookie, and the drop rows
+stop asking to be named. The credit line has been permanently on the chart,
+wrapping to two or three lines on a phone, and on an older iPhone and Android
+the Satellite pill sat on top of it — so the one thing on that corner that has
+to be readable was the thing being covered. It is now collapsed: a 26px ⓘ in
+the bottom-right opens it, a second tap or a tap on open water puts it away.
+It could not simply move to About. The imagery comes under ODbL
+(OpenStreetMap, through OpenFreeMap) and CC BY 4.0 (Sentinel-2 cloudless,
+EOX), and both require the credit to be on or beside the map rather than on a
+credits page — OSMF’s guidelines reject a separate page outright. What they do
+allow, and say so, is one tap behind an obvious control on a small screen,
+which is what Google, Mapbox and Apple all do. So it stays where the licence
+puts it and stops spending three lines of chart to do it. Hidden, not faded —
+display:none, so a credit that is down goes hit area and all and cannot
+swallow a tap meant for the water, same construction the Eye uses on the FAB
+column. The Eye deliberately does not hide the ⓘ: the Eye is for reading the
+chart, and a licence credit that can be switched off is not a credit. Leaflet
+still assembles the text itself from whatever layers are on the map, so Topo
+Satellite / Street Map / ICW Channel still rewrite it and nothing here has to
+know what the sources are. The corner is laid out by hand — flex, credit above
+cookie by order rather than by which control was added first — and lifted to
+z-index 1101, above the FAB column’s 1100, so the opened panel is read over
+the buttons instead of under them. The cookie itself never reaches them: it
+ends at 26px and the stack now starts at 44px. And the FAB column gets 28px
+back. bottom goes from 72px to 44px and the cap from 100% − 170px to 100% −
+142px, because 72 was reserving room for a credit that wrapped and there is no
+longer anything to wrap. This also ends the running argument the credit’s
+max-width has been having with the rest of the corner since v132 and v134 — a
+hardcoded pixel budget that went stale every time a control changed size. Bug
+fix: every unnamed drop row was advertising the rename. A row with no name
+printed ＋ name at its end, which on a fourteen-drop clustered ground meant the
+same two words fourteen times, sitting past the bearing where the row is
+already wider than the popup and you have to scroll sideways to reach it.
+Unnamed rows now end at the bearing. Nothing about naming changed — the row is
+still tap-to-rename, still carries its tooltip, and a drop that has a name
+still prints it. Help updated for the credits cookie and for how a drop is
+named now the prompt has gone. v178 · The splash is rebuilt on teal, and the
+WTF is a hole rather than a colour. Ground goes from the app navy to the theme
+accent deepened to 65% of its brightness, written as color-mix(in srgb,
+var(--teal) 65%, #000) so it is derived from whatever accent the theme is set
+to rather than pinned to one teal; flat var(--teal) sits above it as the
+fallback. The depth is not decoration — at full strength the accent carries
+white type at 1.98:1, well under the 3.0 floor for large text, and the tagline
+read as a ghost beside the name. At 65% white lands at 4.44:1 and black at
+4.73:1, so the two lines carry equal weight and size does the hierarchy. The
+WTF on the fish is now punched clean through the artwork. Not painted teal —
+removed, so the ground shows through it. That means it follows the theme with
+no live text to keep in register and no colour to keep in step: the hole is
+whatever is behind it, always. It is also the same construction as the
+home-screen icon, so the splash and the icon are now literally one piece of
+artwork. About takes the same image, where the hole shows the sheet's own dark
+ground and the mark reads as the decal always has. Tagline white, name black,
+and the name is much bigger: WTF Log goes from 0.042 of the fish width to 0.18
+— from the smallest thing on its own opening screen to 74% of the fish across
+— with its margin above cut from 28px to 14px so it reads as part of the group
+rather than adrift below it, and its trailing letter-space handed back as a
+margin so it centres true. Order is unchanged: fish, tagline, name. The
+tagline's shadow is lightened to suit a mid-tone ground and the name's
+dropped, a dark shadow under black type being nothing but cost. Note: v177 was
+handed over and withdrawn before release; nothing shipped under that number.
+v176 · The WTF is bigger on the fish. Cap height goes from 190px to 217px at
+logo scale and the block from 568px to 656px wide, which is 36% of the fish
+against 31% before — it now sits across the body rather than in the middle of
+it. Checked against the silhouette rather than by eye: the nearest ink is 66px
+clear of the body edge at logo scale, and the body runs at least 414px deep
+under the block against the lettering's 217px, so there is room on all four
+sides and nothing crowds the dorsal notch, the belly or the gill line.
+Tracking stays at 0.10em and the emboldening stroke at 1.3% of the type size,
+both proportional, so the letters grew without changing their spacing or their
+weight relative to each other. The header follows at 16px from 14, spacing
+3.5px from 3, and the narrow breakpoint at 11.5px from 10 — held to the same
+36% of the fish the artwork now uses, so the small mark in the bar and the
+large one on the splash are the same mark at two sizes rather than two
+slightly different marks. Centring compensation follows the spacing to 1.75px.
+Splash artwork, About artwork and both trademark drawings regenerated from the
+one source. v175 · The WTF on the fish is tracked out and set heavier. In
+Comic Neue the W and the T were all but touching — 3px apart at logo scale
+against 23px between the T and the F — so the three letters read as a lump on
+the left of the body with a gap after it rather than as three letters spaced
+across it. Tracking of 0.10em now sits between them: the gaps go to 24px and
+44px and the block widens from 526px to 568px, still inside the 597px the
+original decal lettering occupied, so nothing runs out over the belly or the
+gill plate. Heavier, by outline rather than by weight. Comic Neue has exactly
+one weight above regular and the mark was already on it, so there is no bolder
+face to ask for — asking for 800 or 900 buys a synthetic smear. The artwork is
+drawn with a stroke of 1.3% of the type size in the fill colour, which
+thickens the glyph itself, and the header does the same live with
+-webkit-text-stroke in currentColor so it takes the theme accent and thickens
+rather than rings. Ink in the WTF box goes from 30.5% to 35.0% — past the
+33.4% the Comic Sans original carried, so it now reads heavier than what it
+replaced rather than lighter. The header keeps its position. CSS applies
+letter-spacing after the final letter as well, which drags a centred box left
+by half a space, so the extra 1px is handed back as a 1.5px margin and the WTF
+stays where it has sat since v168. Both breakpoints tracked, the narrow one
+proportionally. The tagline is deliberately untouched — it was not crowded,
+and tracking it would have shrunk it to hold its width. Splash artwork, About
+artwork and both trademark drawings all regenerated from the one source, so no
+copy of the mark disagrees with another. v174 · Bug fix: the lock-up tagline
+shrank when the face changed. The splash and About taglines are sized as a
+fraction of the fish width so the pair hold the proportion the artwork has —
+tagline about 85% of the fish. That fraction, .0915, was solved against Comic
+Sans metrics back in v169. v173 swapped the face for Comic Neue, which sets
+appreciably narrower at the same point size, and the fraction went with it
+unchanged — so the tagline came out at about 71% of the fish and the lock-up
+sat wrong, text too small under artwork too big. Re-solved against Comic Neue:
+.108, which lands at 84.5%. Both panels take the same figure, since both were
+carrying the same stale one. Nothing else moves — same artwork, same margins,
+same order. Worth noting for next time: any ratio tuned against a typeface has
+to be re-derived when the typeface changes, and this one gave no error and
+threw nothing; it just quietly drew the mark in the wrong proportion. v173 ·
+Comic Sans is out. Comic Neue is the face of the app. v167 put the title lines
+in Comic Sans MS and carried a small Comic Neue subset behind it for Android,
+which does not ship Comic Sans at all. That was backwards: it meant the app
+looked like one thing on a Mac and another on a phone, and the one that got
+the real face depended on what the device happened to have installed rather
+than on anything shipped with the app. Comic Neue is SIL OFL — free to embed,
+free to redistribute, ours to rely on — so it is now the face itself rather
+than the understudy, and Comic Sans is gone from the stack entirely. --comic
+is 'Comic Neue', cursive. The subset widens from the 81 characters the two
+title lines happened to use to full Latin-1 plus the quotes, dashes and ™, 200
+characters, because a face the whole app is set in cannot be cut to the
+strings that exist today; 5 KB becomes 10 KB, and it is still a data URI, so
+there is no request to fail, no flash of a substitute and nothing to go wrong
+offshore with no signal. The artwork was relettered to match. This is the half
+that mattered: the WTF and the tagline drawn into the splash and About lock-up
+were set in Comic Sans, so leaving them would have put the drawn mark in one
+hand and the live text beside it in another. Both are re-set in Comic Neue
+Bold from the source artwork, refitted to the same boxes, and the silhouette,
+the eye and every position are untouched. Comic Neue Bold carries about 9%
+less ink than Comic Sans Bold at the same fitted size, so the lettering reads
+a shade lighter; it was left at its true weight rather than being smeared
+bolder to imitate a face we are deliberately dropping. The trademark drawings
+were regenerated from the same artwork, so what would be filed and what is on
+screen cannot disagree. v172 · Cartoon attribution corrected: adapted, not
+merely used. The Disclaimer credited “the Where’s the fish? cartoon” as ©
+1987, 2009 Denise J. Morrissette and used with permission. Both halves were
+wrong. The cartoon was drawn and copyrighted without those words — they are
+not its title and never were — so naming it that way credited her with wording
+that is not hers and quietly muddied where the tagline came from. And the
+permission granted was not to reproduce it as it stood but to alter it by
+adding the line, which makes what is in the app a derivative work: the
+underlying cartoon remains hers, the addition is not. It now reads The cartoon
+is © 1987, 2009 Denise J. Morrissette. Adapted with permission. — the credit
+stays exactly where it was and stays in her name, and it now describes what
+was actually agreed. Text only; nothing else changed. v171 · New: About, and
+the fish in the bar is the way into it. The splash puts the mark up for under
+two seconds and then takes itself away, which is right for a splash and no use
+at all when you want to look something up. About is the standing version of
+it: the same lock-up — fish, tagline, name, in that order — at sheet scale,
+over the build, a line on what the app is for, and the notices. It opens from
+the fish logo in the header. That logo has been inert since the credits moved
+to the Disclaimer — pointer-events:none, aria-hidden, a picture and nothing
+more. It is now a real control: role="button", a label, keyboard-reachable on
+Enter and Space, and it dims on press so a tap reads as a tap. It stays
+absolutely centred at 92px, so it covers only its own width and cannot take a
+tap meant for the title block or the buttons either side. No new button in a
+bar that already carries three. The artwork is not embedded twice. About reads
+the src straight off the splash image at start-up — before the splash removes
+itself from the DOM — so the panel costs no extra bytes and the two cannot
+ever show different fish. The build line is written from BUILD_DATE and
+BUILD_NUM, the same constants the lower-left map stamp reads, for the reason
+v164 gave: a number typed into markup by hand is a number that will be stale
+in nine builds. The tagline is sized off the fish width the way the splash
+sizes it, so the lock-up holds the artwork's proportion at sheet scale too.
+Registered in OVERLAY_PAIRS, so opening any other sheet closes it and it
+closes everything else on the way up, same as the rest; CLOSE and a tap on the
+scrim both shut it. v170 · The mark carries a ™ instead of a ©, and the ©
+moves to where a copyright notice belongs. A small superscript © has sat
+beside Where's The Fish? in the header since the credit line went in, and it
+was the wrong symbol in the wrong place doing neither job. © is a copyright
+notice — it claims the app as a work of authorship, and it belongs on the app,
+with a year, not hung off the end of a brand line. ™ is the trademark notice,
+it claims the words and the fish as a mark for the software, it needs no
+registration to use, and it is part of how a claim to a mark is built and
+defended. The header now reads Where's The Fish?™, the splash lock-up carries
+the same ™ under the fish. The © already had a proper home — the Disclaimer
+carries © 2026 Jan G. Neal. All rights reserved. — so nothing was added there;
+the stray one in the header simply goes. ™ and not ® — ® is only lawful once a
+registration has actually issued, and using it before then is a real problem,
+not a formality. One rule does both notices: the old .credit-c is now .mark-tm
+and is sized in em rather than px, so the same declaration serves the 15px
+kicker and the splash tagline that runs a hundred times larger on a wide
+screen, and it inherits its colour rather than pinning teal, so it follows
+whatever it is set beside. The vertical-align:super and the -2px nudge the ©
+needed are gone: ™ is already drawn at cap height in every face in the stack,
+and raising an already-raised glyph pushes it off the top of the line. And the
+embedded fallback font was missing the glyph. The Comic Neue subset shipped in
+v167 was cut to letters, digits and the punctuation the two title lines used —
+which did not include ™, © or ®. On a phone with no Comic Sans the browser
+would have gone hunting through the rest of the stack for that one character
+and set it in a different face. Re-subset with all three; the file grows by
+about 300 bytes. v169 · New: a splash on load, carrying the mark as it is
+drawn. The header sets the three parts of the mark side by side — title and
+tagline stacked at the left, fish with its WTF centred in the bar — which is
+the right layout for a working strip 44px tall and the wrong one for showing
+the mark whole. It never appears anywhere in the app as the vertical composite
+it actually is: fish above the tagline. It does now. Full-bleed panel in the
+app background, fish at min(72vw, 420px), Where's The Fish? beneath it and WTF
+Log under that in the theme accent. The tagline is sized as a fraction of the
+fish width rather than in vw, so the two hold the proportion the artwork has —
+tagline about 85% of the fish, measured off the artwork — on a phone and on a
+desktop alike, instead of drifting apart at the ends of the range. On the
+splash the WTF is drawn into the artwork, black knocked into the white body
+the way the decal reads, rather than being the themed span the header uses;
+the header is unchanged and still takes the accent. It gets out of the way on
+its own. Fades after 1.7 seconds or on the first tap, whichever lands first,
+and is removed from the DOM once the fade finishes rather than left at zero
+opacity — a transparent panel over the whole chart is a tap sink, and this one
+cannot become one. 8 KB of artwork, quantised, no network fetch, so it is up
+before the map is. v168 · The WTF comes off the fish PNG and goes back on top
+of it as text. v167 drew the lettering into the logo image, which fixed it as
+black — and black is the one thing it cannot be, because the mark has taken
+the theme accent since the themes went in and reads against six different
+backgrounds. It is a positioned span again, --teal as before, so Brown Sugar
+and Blue Suede Shoes move it with everything else; the logo image is back to
+the plain silhouette, byte for byte what it was before v167, and the wrapper
+drop-shadow plus the span's own text-shadow carry it the way they did. What is
+new is the face: it is set in the --comic stack with the rest of the header
+rather than Space Grotesk. Bold at 700, not 900 — Comic Sans MS ships a real
+bold at 700 and has nothing above it, so asking for 900 only buys a synthetic
+smear of the same face; the embedded Comic Neue fallback is a 700 too, so the
+two agree. Position, size and letter-spacing are unchanged at both
+breakpoints, and Comic Sans sets wider than Space Grotesk, so the 47%/44%
+offsets may want a nudge once it is seen on the bar. And the kicker is no
+longer italic. Where's The Fish? was italic because JetBrains Mono is a mono
+and needed the slant to read as a tagline rather than a readout. Comic Sans is
+already a hand, the slant was synthetic — neither Comic Sans MS nor the Comic
+Neue subset carries a true italic — and a faked slope on a face that is all
+curves smears it. font-style:normal. v167 · The two title lines are now Comic
+Sans, and the WTF is baked into the fish. The header carried WTF Log in Space
+Grotesk and Where's The Fish? in italic JetBrains Mono — two typefaces doing
+the logo's job, neither of them the hand the decal is lettered in. Both lines
+now read that hand. Comic Sans MS ships with macOS, iOS and Windows and is
+used wherever it is found; Android has neither it nor a dependable cursive, so
+a 5 KB subset of Comic Neue (SIL OFL — letters, digits and the punctuation
+these two lines use) is embedded as an @font-face fallback rather than leaving
+the phone to pick something. One --comic stack, declared once, read by the
+title and the kicker, so the two cannot drift apart. Sizes, weights, spacing
+and the italic on the kicker are untouched. And the WTF is now part of the
+fish rather than a label sitting over it. The mini logo was a plain silhouette
+with a teal WTF in Space Grotesk absolutely positioned at 47%/44% on top of it
+— a second thing to keep in register at every size, with its own font-size and
+letter-spacing on the narrow breakpoint. The lettering is now drawn into the
+PNG, black inside the white body exactly as it is on the decal, and the
+overlay span and its three CSS rules are gone. Silhouette, eye position and
+the 308×120 box are unchanged, so nothing around it moves and the wrapper's
+drop-shadow still traces the whole mark, lettering included. The tagline
+deliberately stays out of the logo image — it already sits in the header, and
+a second copy under the fish would only say it twice. v166 · The tide gauge
+pins now ride with the Tides button. Eleven gauges sat on the chart at all
+times, on every screen, whether or not you were thinking about the tide — they
+are the marks a forecast is timed from, working furniture for one job, and the
+rest of the time they were eleven more pins over water you were trying to
+read. They are now up only while Tides is lit and off when it is not. Tides
+stays lit across the whole job, not just while placing. The button used to
+light on the tap that armed the pin and go dark the moment you dropped it,
+which would have blinked the gauges off exactly when the forecast panel — the
+thing they explain — came open. Lit now means armed to drop a pin or a
+forecast open off one, read from a single tidesActive(), and both the lit
+class and the gauges hang off that rather than off placingTidePin. And the
+button is now the off switch for all of it. Tapping a lit Tides closes the
+panel, takes the dropped tide pin off the chart and puts the gauges away in
+one tap — new clearTideMode(), which the panel's CLOSE and a tap on open water
+both go through as well, so there is one way out rather than three that each
+remembered a different part of it. Hiding is the same display:none on the
+marker element the Eye cookie uses, so a gauge that is off goes hit area and
+all and cannot be tapped by accident, and any gauge popup left open closes on
+the way out. The class starts on the body in the markup, so the pins are never
+drawn and then taken away on load. A force-closed tide panel
+(closeAllOverlays, when another sheet opens over it) now takes the gauges and
+the lit button with it instead of leaving both behind. Nothing about the
+gauges themselves changed — same positions, same lags, same popups, same
+interpolation — and the Eye still hides whatever Tides has up. Help updated in
+four places: the Tides paragraph, the opening of the Tide Gauges section, the
+note on gauges you add yourself, and the Eye paragraph. v165 · The popup
+resize handles are now two opposing triangles. The bottom corners of a catch
+or spot popup carried a double-headed diagonal arrow drawn in stroke only, in
+brass. Thin strokes in an accent colour are the hardest thing to keep legible
+over a satellite photo — the handles sit on the outer popup element,
+unclipped, so half of each one is very often over the chart rather than over
+the dark window. Each handle is now a pair of solid triangles pointing away
+from each other along the drag axis: for the bottom-right handle one triangle
+sits square in the corner pointing down-right and its opposite sits up-left,
+and the bottom-left handle is the mirror of it. Dark fill with a white border,
+so there is a filled shape carrying its own contrast rather than a line hoping
+for it, and the right-angled corner of the outer triangle lines up with the
+popup’s own corner. The fill is a literal dark, not --navy-950, because that
+variable reads near-white in Brown Sugar — same reasoning as the pin count
+badges in v129. The border is white in every theme; the accent colour moves to
+the pressed state, which is where it does more good. Geometry, hit area, drag
+maths and repositioning are all unchanged — this build only changes what is
+drawn inside the 32px handle. v164 · The Waves panel stopped speaking in
+tongues when it fails. Every failure read the same Couldn’t reach the buoy
+feed right now followed by a line of proxy names and HTTP codes — the app
+talking to itself, printed exactly where you are trying to work out whether it
+is worth going out. There are now three messages, one per cause, because only
+one of the three is worth waiting out: no internet — nothing to retry until
+you have signal, and it says so while noting that tides, spots and the chart
+all work without it; couldn’t reach NDBC — online but the relay would not
+answer, the common one, usually passes in a minute; and the station isn’t
+reporting — NDBC answered and sent nothing readable, so it is the buoy rather
+than your connection and it will not clear up in a minute. Told apart by
+counting errors against empties across the four sources, with navigator.onLine
+read before the first fetch and again after the last and trusted only when it
+is explicitly false. The 45-second watchdog and the outer catch now go through
+the same message builder instead of each carrying wording of its own. A Try
+again button sits under every failure message, so a relay that was down a
+minute ago does not mean closing the popup and reopening it. It is wired each
+time the message is drawn, since innerHTML takes every listener with it, and
+loadBuoyData() now refuses to start a second run for a station while one is
+still going, so a double tap cannot set two fetch chains off against each
+other. A failure never populates the cache, so a retry always goes back out to
+the network rather than being handed the same failure from memory. The proxy
+diagnostics are folded away under Details. They stay — they are how the stale
+v151 stamp was spotted — but corsproxy: 403 · ndbc: Failed to fetch is the app
+talking to itself, and it now waits behind a tap instead of being the loudest
+thing on a panel you are reading to decide whether to go out. Native
+<details>, so it starts shut and needs no script of its own; the build tag
+rides inside it. And the last good reading is now kept on the device. The
+cache was in memory and five minutes deep, so any failure left the panel with
+nothing at all — worst offshore, which is exactly where the fetch fails. A
+reading is saved under wtf:buoy:last:<id> on every success and shown beneath
+whichever failure message applies, with its age on it: Last reading 3h ago —
+minutes under the hour, hours out to a day and a half, then days. Stale
+numbers with their age on them beat no numbers; three hours old still tells
+you whether it is building or laying down. Because that age has to be
+recomputed every time it is shown, the cache and the parser no longer hold
+finished HTML — they hold the readings and the observation time, and the
+markup is built at the point of display. parseNdbcText() returns {f, obsTime},
+and buoyRowsHTML() takes an optional footer so the stale form carries the age
+line in place of the observed line. Guards added while in there: a file too
+short to hold a data row, a timestamp that will not parse and a row with
+nothing readable in it are all rejected rather than cached, and corrupt saved
+data reads back as nothing instead of throwing. New: the buoy’s position now
+prints in both forms. Its popup already carried the position, but only as
+29°17.340′N 80°48.180′W — deg and decimal minutes, the form every other pin
+here uses and the form you key into the plotter. NDBC’s own station listing
+writes the same spot as 29.289 / −80.803, so checking one against the other
+meant converting in your head. The decimal pair now follows the deg-min pair
+in brackets on the same meta line — 29°17.340′N 80°48.180′W (29.289 N 80.803
+W) — rather than replacing it, so nothing that was there has gone and no other
+pin changes. It is its own span on a wrapping row, so on a narrow phone it
+drops to a second line instead of squeezing the first. New toDecDeg() and
+decPart() beside the existing toDMS() and dmsPart(), trimming trailing zeros
+so 29.289 does not print as 29.2890; both read the same BUOYS lat/lng the pin
+is placed from, so the two forms cannot disagree with each other or with the
+marker. The position itself was already correct — 29.289 / −80.803 has been in
+the BUOYS entry since v151 and is unchanged; this build only prints it a
+second way. Distance to the buoy corrected: 13.4 nm → 13.8 nm. Help had
+carried 13.4 since the buoy went in; measured from the compass rose, which is
+where every other figure in the app is measured from, it is 13.8 nm at 023°
+true, and the paragraph now says which point it is measured from rather than
+leaving you to guess between the rose, the inlet mouth and the ramp. Bug fix:
+the buoy’s diagnostic stamps still said v151, nine builds on. The build was
+spelled out by hand in five places — the popup’s loading line, the 45-second
+watchdog, the all-sources-failed message and the fetch-error message — so each
+had to be remembered separately and none of them had been. They now read a
+single BUILD_TAG built from BUILD_DATE and BUILD_NUM, declared once at the
+head of the app script, and the lower-left map stamp is written from the same
+constants instead of being typed into the markup. One place to change per
+build, and a stamp cannot drift out of step again; the stamp keeps its literal
+text as a fallback for the instant before the script runs. Help rewritten for
+the saved reading, the three messages and the position in both forms. v163 ·
+Reciprocals off the map, and the words with them. A reciprocal is plus or
+minus 180 — anyone running a boat does that faster than they can read it, and
+the trip home is the route reversed — so every leg now reads heading and run
+only: 156° · 4.3 sm. With a single bearing on the row there is nothing to tell
+it apart from, so To and From went with the second number; a lone figure on a
+leg can only be its heading. Every leg is now labelled identically — no
+special case for the inlet leg, and the showFrom and firstLeg plumbing is gone
+from drawCompassRun() and the redraw loop. The label is about 96px wide
+against 187px, which is the real gain: it stops shedding on short legs and
+stops fighting the pins and name tags. Two forms remain, heading-and-run and
+heading alone. The reciprocal is still printed where you would actually want
+to read it — the offshore popups and drop lists, which give both directions
+and both units. v162 · Bug fix: leg labels sat 7.3° off their own line. The
+rotation was worked out from the bearing printed on the label, which has been
+magnetic since v155, while the line itself is drawn from true geometry — so
+every label crossed its own leg at a slight angle, the same 7.3° as the
+variation, at every bearing. The angle is now read off the leg as drawn, from
+the pixel direction between its two ends, by a new compassLabelAngle(); it
+cannot drift again whatever is being printed. All three measures now sit on
+one row, centred on the line. The inlet leg reads To 156° · From 336° · 4.3 sm
+along the line rather than one part above it and another below; legs after it
+are unchanged at bearing and run. Shedding still goes reciprocal first, then
+the run. The stacked two-row form is gone and its flex-column CSS with it,
+since there are no longer rows to lay out. Text is still folded upright, so a
+south-westerly leg reads from its far end back toward the rose. v161 · The run
+now sits beside its bearing rather than on a row of its own. On the inlet leg
+that means two rows — To 156° on top, From 336° 4.3 sm beneath — and on every
+leg after it a single row, 043° 9.7 sm. The space between a bearing and its
+distance is set from the zoom: 4px zoomed out where the map is busy and every
+pixel of label width crowds something, opening to 16px zoomed right in. It is
+a styled spacer rather than typed spaces, so it is exact, and it is recomputed
+on every redraw — which already runs on zoomend, so no extra wiring was
+needed. Because the spacer is an element and not text it cannot be measured,
+so each row now carries its own width alongside its markup for the
+label-placement maths. Shedding order changed to match. A short leg drops the
+reciprocal row first and the run moves up beside the heading instead of
+vanishing with it; only the shortest legs show the heading alone. Row spans
+are selected as direct children now so the run can stay inline inside its row,
+and the unused COMPASS_LABEL_HALF_H_STACK is gone with the three-row form.
+v160 · Eye cookie now hides the tide gauge pins too, alongside the FAB column
+and the species pills. The class moved onto the marker element rather than the
+glyph inside it, so the pin goes hit area and all — a hidden gauge cannot be
+tapped by accident — and any gauge popup left open closes on the way out. Leg
+labels re-laid-out. On the leg out of the inlet the run now sits in the middle
+row, which is the row that lands on the dashed line: To above it, the run on
+the line, From below, all three centred on each other. The word "To" comes off
+every leg after the first. It earns its place on the inlet leg, where a From
+sits opposite it; further down a route there is nothing to tell the bearing
+apart from, so it stands alone as 156°. Row-shedding on a short leg is
+unchanged — reciprocal first, then the run. v159 · New: Eye cookie, sitting to
+the right of A. It hides the whole FAB column and the species pills so the
+chart underneath can be read, and shows them again on a second tap. Open eye =
+showing, closed eye = hidden, so the cookie reads as the state of the map
+rather than the action, the way the other cookies do. Nothing is unloaded or
+reset — filters, species switches and any compass route come back untouched —
+and the state is saved per device under ui-hidden alongside the theme and text
+size. Compass labels reworked again. The needle is gone and the words are
+back: a leg standing on its own out from the rose now carries To, From and the
+run, so one mark still gives you the way out and the way home. The moment a
+second leg is strung on, every leg drops the From — a route is one-way, and
+its return is the route backwards — leaving the heading to steer and the run.
+Statute miles only on the lines; nm comes off the labels, and stays in the
+popups and drop lists where both units are still printed. Rows are shed rather
+than the whole block collapsing: reciprocal first, then the run, then the
+heading alone on the shortest legs. v158 · Leg labels restacked, and the M
+comes off the numbers. Each label is now three tight rows centred on the
+dashed line — heading, then the run in sm, then the same run in nm — and the
+line is cut away behind the whole block rather than threading between the rows
+as it did when the stack was two halves pushed clear of it.
+COMPASS_STACK_OFFSET_PX is gone with them; the gap is now carved for every
+label form, not just the one-liners. The block is a third the width of the old
+one-line form, so it fits on legs that used to force a fallback. Two forms
+remain: the three rows, and the heading alone where even that won’t fit. No
+more °M. The M is off every bearing in the app. Magnetic is declared where a
+chart declares it — MAGNETIC · VAR 7.3°W 2026 printed beneath the rose, both
+lines read from the MAG_VAR_DEG constant so the caption cannot drift out of
+step with the maths. Offshore popups carry (magnetic) once beside their
+to/from pair, and a drop list carries one note at its head instead of an M on
+as many as nineteen rows. Help updated for the stack and for how magnetic is
+now denoted. v157 · Bug fix: tapping a mark on the route only took one leg
+off. v156 truncated the route to just before whichever mark you tapped, so
+tapping the third mark of a three-leg route left the first two legs drawn. A
+route is one thing you are planning, so tapping any mark already on it now
+clears the whole route in one tap — same result as tapping open water. Adding
+marks is unchanged: each tap on a fresh mark strings another leg onto the end.
+Help corrected to match. v156 · The compass now draws a route, not a fan. v155
+measured every leg from the first mark tapped and dropped the inlet leg as
+soon as a second mark went on, which is not how a trip runs. The legs now
+chain: rose → first ground → next ground → and so on for as many marks as you
+tap, with the inlet leg staying drawn the whole way through. Every mark on the
+route gets a ring, not just the origin. Tapping a mark already on the route
+backs the route up to just before it, so the last mark tapped is the undo and
+the first clears it; open water still clears the lot. Labels are one-way now.
+The reciprocal is gone — in a route of several legs a second heading per line
+is clutter, and the run home is the route backwards — so each leg reads
+heading and distance only. In place of the word To the heading carries a small
+needle, the same solid isoceles needle the rose draws on its cardinal points,
+filled with currentColor so it takes the theme accent and the halo with the
+digits. It points the way you would travel, and is flipped where the label has
+been rotated to keep its digits upright, so it never points back down its own
+leg. Distance is on every leg. The three label forms are now heading-and-run
+on one line, the run dropped beneath the heading, and the heading alone on the
+shortest legs. Internally compassChain replaces the origin-plus-fan pair, the
+leg direction is computed before the label is built so the needle can be
+aimed, and the needle’s 13px is added to the measured text width rather than
+measured. Help rewritten for the route and the needle. v155 · Every bearing is
+now MAGNETIC. A heading that disagrees with the chartplotter by seven degrees
+is worse than no heading, so variation is now applied to every bearing the app
+prints — the compass rose lines, the site-to-site legs, and the to/from
+figures in offshore popups and Show drops lists. Ponce Inlet is taken as 7.3°
+W (WMM, 2026) in a single MAG_VAR_DEG constant, converted at the moment of
+printing by toMagnetic() so no half-converted figure is possible, and every
+printed bearing carries an M — To 156°M / From 336°M. The geometry still works
+in true bearings underneath. The one figure deliberately left true is the
+buoy’s Mean Wave Direction, which is NOAA’s own reading and is labelled “deg
+true”. sm now leads nm everywhere a pair is printed: all 46 built-in site
+descriptions, the drop rows, the my-spot popups, the compass labels and two
+figures in the Help. Legs now stay open. Tapping a third mark adds a second
+leg off the same ground instead of replacing the first, so legs build into a
+fan — each with its own heading and run. Tapping a mark already in the fan
+removes just that leg; the last one off returns to the rose line; the ringed
+origin drops the fan; open water clears all. Each label starts its search from
+a different point along its own line and treats labels already drawn as
+obstacles, so a busy fan does not stack its numbers. Internally the per-line
+draw became drawCompassRun(), called once per leg. v154 · New: site-to-site
+bearings, and distance on every compass line. The rose only ever answered “how
+do I get there from the inlet”. A second tap now answers “how do I get from
+this ground to that one”: tap an offshore mark, then tap another, and the rose
+line is replaced by a leg between the two, with the heading both ways and the
+run. The origin mark carries a ring; a third tap moves only the far end, so
+legs fan off one ground; tapping the far mark steps back to its rose line, the
+ringed origin drops the leg, open water clears everything. Works between any
+two marks the compass covers, catches included. Every line — rose or leg — now
+also prints the distance in nm and sm. The label has three forms instead of
+two and narrows as the line shortens: all on one line, then bearings with the
+distance beneath, then To/From alone on the shortest runs. Internally the draw
+code took an origin rather than assuming the rose — near-end clearance is the
+rose graphic’s 108px or, on a leg, the origin pin plus its name tag; the
+origin mark is excluded from the label’s obstacle list; roseBearingDeg is gone
+as redundant. Switching the compass off, or tapping open water, clears the leg
+along with the pinned mark. Help updated with the site-to-site paragraph, the
+distance wording, and a note that all figures are true, not magnetic (about 7°
+west here). v153 · Buoy 41069 withdrawn. The position it went in on was wrong
+— it placed the buoy 2.4 nm off Ponce Inlet when the station lies up near
+41070 — and an unverified position does not belong on a chart. Back to one
+buoy; the multi-buoy plumbing from v151 stays, so it returns as one line once
+the position is checked. v152 · New: NDBC Buoy 41069 at 29°04'46.031"N
+080°53'29.015"W — 29.079453 / −80.891393, about 2.4 nm ESE of Ponce Inlet and
+13.4 nm from 41070, so the two pins are well clear of each other. Own pin, own
+popup, same five readings and the same four-source fetch as 41070. The Waves
+button still flies to 41070; 41069 opens from its pin. Named Ponce Inlet Buoy
+41069 pending NDBC’s own station name. v151 · Waves rebuilt for more than one
+buoy. Groundwork, no visible change. Station 41070 was hardwired — its number
+was written into the popup, all four fetch URLs and both failure messages — so
+a second buoy could not be added without duplicating the lot. There is now a
+BUOYS list, and the pins, popups, fetches, the 5-minute cache (now kept per
+station, so two buoys cannot overwrite each other’s readings) and the Waves
+button all read from it. The Waves button flies to WAVES_PRIMARY, still 41070;
+any other buoy opens from its own pin. Source order is unchanged — corsproxy,
+NDBC direct, codetabs, allorigins. v150 · Spot “Channel Marker 57” withdrawn.
+The last of the channel marks that had been added as inshore spots — marker 47
+went in v136, this one was missed. It sat at 29.1419 N 80.97175 W, about 45 m
+off the charted Halifax River Daybeacon 57 that ICW Channel view now plots at
+29.14223 N 80.97146 W, so it was a duplicate in the wrong place. Aids to
+navigation belong to the channel layer, not the spot list. 115 built-in spots.
+Nothing else referenced it, and catches carry their own coordinates and
+location label rather than a spot id, so no logged catch is affected. v149 ·
+Help corrected for v145. The Channel markers paragraph still said “tap or
+hover a dot”, which described the 4px hit test v145 replaced. It now states
+what actually happens: the nearest mark within about a finger’s width wins,
+the name holds until you move or clear it, and hover still works with a mouse.
+Text only. v148 · ICW Channel shading settled between v146 and v147. v147 went
+too far. Outline opacity 0.38, fill 0.075 — the midpoint of the two, against
+0.9/0.18 as first drawn. v147 · ICW Channel shading lightened again. Outline
+opacity 0.5 → 0.28 and fill 0.18 → 0.05, roughly half of v146 and about a
+third of what v139 drew. The channel now reads as a tint over the satellite
+photo rather than a layer on top of it. v146 · ICW Channel shading lightened.
+The cyan outline drops from 0.9 to 0.5 opacity and the fill from 0.18 to 0.10
+— about half on both — so more of the satellite photo reads through the
+channel. Nothing else changed: same polygons, same colour, same weight. v145 ·
+Bug fix: channel marker names would not open on a phone. The dots are 3.5–4px
+and were hit-tested against their own radius, which a mouse pointer can land
+on and a fingertip cannot — so tapping them did nothing on iPhone while
+hovering them worked on the desktop. The dots no longer carry the label; a tap
+now searches for the nearest mark within 20px and names that one. Nearest also
+fixes a second fault the old way had: where two marks overlap — Boat Works 3
+and 5 are about 12 m apart, as are the Inlet Harbor buoys — Leaflet named
+whichever was drawn last, not the one under your finger. Tap open water to
+clear the name, another mark to move it; leaving ICW Channel view clears it.
+Hovering still works with a mouse. v144 · Location messages rewritten. A
+denial now names Private Browsing first — Safari keeps no site permissions in
+a Private tab, so location is refused there however many times it is approved,
+and the old wording sent you into Settings where nothing could fix it.
+Settings paths follow, including the separate Home Screen entry. All three
+location buttons now share one message builder instead of the two of them
+saying only “Could not get your location.” v143 · Locate Me now says when a
+fix is impossible. Browsers block location by origin, not by hardware: a copy
+opened straight from Files runs on file:// and gets nothing, as does any plain
+http:// page. Both used to report “GPS timed out”, which points at the sky
+instead of the address bar. All three location buttons now check first and
+name the real reason. v142 · Bug fix: Locate Me timing out. It asked only for
+a GPS-grade fix and refused any cached position over 15 seconds old, so a cold
+start indoors or under cover ran out the 20-second budget while a coarse
+network fix was available in about a second. It now runs both at once and
+takes whichever is usable first — GPS wins outright, a network fix is accepted
+after 6 seconds, and a cached position up to 2 minutes old counts. A fix worse
+than 150 m now says so rather than looking precise. Also, every error except
+“denied” used to be swallowed and reported as a timeout; real causes are now
+named. v141 · Map button’s third state renamed Channel → ICW Channel, on the
+button and through the Help. Nothing else changed. v140 · New: channel
+markers. Channel view now plots the 240 charted aids on Volusia’s channels —
+217 fixed daybeacons, 23 buoys — red/green/amber dots, tap for the full
+charted name and light characteristic. From NOAA ENC Harbour-band cells,
+merging three S-57 layers: the beacons and buoys carry the names, the light
+records carry the characteristics and are joined by position (38 of 38 test
+matches at 0.0 m). 14 KB, offline, canvas-drawn. Numbers restart on every
+waterway — five marks are numbered 47 in this county — so full names are
+shown, never bare numbers. v139 · Channel view now covers all of Volusia
+County, both sides. The layer is selected by the survey’s own county label —
+IWW JAX TO MIA (VOLUSIA COUNTY), 137 polygons, the whole Intracoastal through
+the county exactly — in place of the latitude band v138 used, which let three
+Flagler polygons through and dropped Volusia water. Added the St Johns River
+on the county’s western boundary: Lake Monroe plus the reach up to the Putnam
+line above Lake George, 15 polygons. 152 polygons, 60 KB, all maintained to 12
+ft. v138 · v137 · New: Channel view. The map button now cycles Topo Satellite
+→ Street Map → Channel. Channel shades the maintained ICW channel in cyan over
+the satellite photo — USACE National Channel Framework, Florida East, surveyed
+June 2020, all authorised and maintained to 12 ft. Stored on the device, so it
+works offline. Drawn on canvas and non-interactive so panning stays smooth.
+Paperwork, not soundings — it shows where the channel is authorised to be, not
+where the water is now. v136 · Channel Marker 47 withdrawn. It was added in
+v135 from coordinates that turned out to be wrong, and is removed rather than
+left on the map in the wrong place. Nothing else changed. v134 · Reverted: the
+white glow behind the off-state filter pills — it blurred the text rather than
+lifting it. Back to the dark shadow only. Bug fix: the scale bar was printing
+its end line through the “mi” of its own label. Cause was v132 capping the bar
+at 52px to move the +/− buttons clear of the attribution; the bar has to be
+free to run as long as the distance it states, so it is back to 66px and the
+clearance now comes from the attribution reserving the whole bottom-left row
+(150px instead of 132px). It wraps to one more line on a narrow phone, which
+is the cheaper trade. v133 · Bug fix: pill text sat about 1.5px above centre.
+The base chip had 3px more padding below the text than above it (5/8), and
+since the text is centred inside the padded box rather than the pill, that
+lifted every label. Now 7/6 — same 13px total, so no pill changes height.
+Affects every pill in the app, not just the filter row; it was most obvious on
+Inshore because the off-state pills no longer carry the 2px-down shadow that
+used to mask it. v132 · New: inshore spot Spruce Creek Mouth at 29°05′15.9″N
+80°57′03.4″W. Bug fix: on a phone the attribution wrapped up into the +/− bar
+and covered the minus — the bar now sits tighter to the scale and ends clear
+of it (scale slot 66→52px, maxWidth to match). New: white glow behind the text
+of the Catches, Inshore, Offshore and Launches pills when off, for
+readability. v131 · Bug fix: the Launches filter pill used a lighter red when
+off (#ff6b6b) than the red it fills with when on (#e02020), so the two states
+did not match. Both now use --launch. Inshore and Offshore still lighten when
+off — their blues need it on black, red does not. v130 · New: pin count badges
+(offshore, inshore, catches) now use the flat black of the species pills with
+white numerals; border still follows the theme. Bug fix: the numbers sat above
+centre in their circles — centring was pinned to a line-height that did not
+match the box, now done with flex at any size. v129 · Bug fix: count badge on
+offshore pins no longer changes with the theme — it read --navy-950 / --fog /
+--line (dark navy in Parrot Head, near-white in Brown Sugar), now pinned to
+the Parrot Head values in all six themes. v128 · New: Seasons button (was App
+Guide), moved above Compass. New FAB order. Help updated. Build notes
+condensed to keywords. v127 · FAB order: App Guide above Locate Me. v126 ·
+Guide renamed App Guide; moved below Locate Me. v125 · FAB order: Guide below
+Waves. v124 · Bug fix: compass rose ignored theme accent — --rose was declared
+on :root, now on body. v123 · New: compass rose halo (--rose-halo), on rose,
+lines and labels. v122 · New: compass rose follows theme accent — light blue
+for Blue Suede Shoes, white for Brown Sugar. New FAB order. v121 · New: --rose
+variable. Theme ids renamed to match picker names, with migration for saved
+ids. FAB order. Bug fix: stray escape in + Spot tips. v120 · Bug fix: + Spot
+type pills — one pill lit, rest black and dimmed. New: spot type set
+automatically from position (Inshore / Offshore / Launch), with a verify note.
+Checked against all 115 built-in spots. v118 · Compass reference points
+documented — county reef figures are FWC’s, from 29°04.500′N 80°55.500′W; this
+app’s own from 29°04.902′N 80°56.202′W; rose at 29°04.653′N 80°54.385′W. v117
+· Bug fix: tide times ran an hour early through daylight saving. New: Aqua Ct
+calibrated gauge (+144 High / +170 Low); Turnbull Bay timed by distance —
+Three Bridges +50/+60, Turnbull Bay N +60/+75, Turnbull Bay Bridge +100/+120
+(interpolated, medium confidence). v116 · New: Compass rose overlay — offshore
+marks only, one bearing line at a time, off by default. Croaker Hole removed
+(coordinates were inland freshwater).
+
