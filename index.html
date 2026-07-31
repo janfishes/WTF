@@ -696,7 +696,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <style>
   :root{
     /* Species + zone colors (fixed across themes) */
-    --inshore:#1636ff; --offshore:#7a2fd6; --launch:#e02020; --catch:#7a2fd6;
+    --inshore:#1636ff; --offshore:#7a2fd6; --launch:#8a97a8; --mob:#e02020; --catch:#7a2fd6;
     --brass:#c99a4b; --rust:#b5573a;
     /* Ink for the compass rose, its bearing lines and its labels. Its own variable because
        the rose is drawn straight onto the map imagery rather than onto a themed surface, so
@@ -1309,7 +1309,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:#b478ff !important; border-color:#b478ff !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
   .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:700; border:1px solid var(--launch) !important; box-shadow:none !important;}
-  .chip[data-zone="launch"]:not(.active){opacity:1; color:#ff6b6b !important; border-color:#ff6b6b !important;}
+  .chip[data-zone="launch"]:not(.active){opacity:1; color:#b8c2cc !important; border-color:#b8c2cc !important;}
   .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
   /* Log-sheet species picker: match the bright left-column buttons (black bg,
@@ -1353,7 +1353,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #addSpotZoneRow .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
   #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:#b478ff !important; border-color:#5c3d80 !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
-  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#ff6b6b !important; border-color:#7d3a3a !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#b8c2cc !important; border-color:#55606a !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
   /* The line under the Type pills that says how the type was chosen. */
   #addSpotZoneNote{font-size:11px; line-height:1.35; margin:6px 0 0; color:var(--muted);}
@@ -1364,11 +1364,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
      OFF: the theme colour, via --accent-lite so it stays legible on the black chip. */
   #catchToggle.active{background:var(--teal) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;
     text-shadow:0 1px 2px rgba(0,0,0,.7), 0 0 3px rgba(0,0,0,.45);}
-  /* Launches filter pill. OFF and ON are the SAME red - var(--launch), #e02020 - so the
-     outline and text of the off state match the fill of the on state exactly. It used to
-     lighten to #ff6b6b when off, following the same trick the Inshore and Offshore pills
-     use to lift their dark blues off the black chip; red does not need it and the lightened
-     tone read pink beside the on-state fill. Sourced from the variable rather than retyped so
+  /* Launches filter pill. OFF and ON are the SAME gray - var(--launch), #8a97a8 (red until
+     v232, when red was handed to the MOB spots) - so the outline and text of the off state
+     match the fill of the on state exactly. Gray is light enough on the black chip that no
+     lightened off-state tone is needed. Sourced from the variable rather than retyped so
      the two states cannot drift. (--launch is fixed in :root, not per-theme.) */
   #launchToggle{background:#000 !important; color:var(--launch) !important; font-weight:700; border:1px solid var(--launch) !important; box-shadow:none !important;}
   #launchToggle:not(.active){opacity:1; color:var(--launch) !important; border-color:var(--launch) !important;}
@@ -2430,7 +2429,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead">Photos</div>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and CLOSE ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Spot</b> saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. You can <b>add and delete</b> both fishing spots and launches, and the same goes for the ones that came with the app: tap any pin and use <b>✎ Edit</b> to rename or move it, or <b>Delete</b> to take it off the map. The Inshore, Offshore and Launches totals in the pills at the top update the moment you add or delete one, either way. Deleting a built-in spot only hides it on this device — <b>↺ Restore built-in spots</b> in the Add-a-spot sheet brings every one of them back. Your own spots, your edits to built-in ones, and your drop labels all travel in either backup file.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Spot</b> saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. You can <b>add and delete</b> both fishing spots and launches, and the same goes for the ones that came with the app: tap any pin and use <b>✎ Edit</b> to rename or move it, or <b>Delete</b> to take it off the map. The Inshore, Offshore and Launches totals in the pills at the top update the moment you add or delete one, either way. Deleting a built-in spot only hides it on this device — <b>↺ Restore built-in spots</b> in the Add-a-spot sheet brings every one of them back. Your own spots, your edits to built-in ones, and your drop labels all travel in either backup file. Cleared <b>MOB marks land in this same list</b> — red pins named MOB with their date and time — and are deleted the same way, with the ✕ beside the entry under <b>Your saved spots</b>.</p>
       <p class="sheet-note"><b>The type sets itself.</b> You no longer have to pick inshore, offshore or launch before you save — drop the pin and the app reads the position and lights the matching pill. It works in three steps. If the pin lands within a couple of hundred yards of a spot that is already on the map, it takes that spot's type, so a pin at a known ramp comes up <b>Launch</b> and a pin on a known reef comes up <b>Offshore</b>. Failing that, if the pin is east of the beach it is <b>Offshore</b>. Failing that, if it sits on one of the waterways the app already follows for tide timing — the Halifax, the Indian River and the lagoon, Spruce Creek, Rose Bay, Turnbull Bay — it is <b>Inshore</b>. Anything left over is inland but off the water, which is what a ramp or a bank access looks like, so it comes up <b>Launch</b>. The line under the pills always says which of those decided it.</p>
       <p class="sheet-note"><b>Check it before you save.</b> The app carries a coarse beach line and channel centrelines, not a real shoreline, so the water's edge is the one place the guess goes wrong: a ramp right at the water can read Inshore, and a spot a few hundred yards up a narrow creek can read Launch. Every guess is only a suggestion — tap the right pill and your choice is what gets saved. Your own corrections also feed the first step above, so a ramp you save yourself will be recognised the next time you drop a pin near it. Exactly one pill is ever lit; the other two sit black and dimmed.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> <b>Bite</b> opens a 3-day solunar feeding forecast — the moon phase and % lit at the top, then Major and Minor feeding windows for that day, in the order they occur. Majors center on the moon overhead or underfoot; minors center on moonrise and moonset. Computed fully offline from moon-position astronomy, no internet is needed.</p>
@@ -2456,7 +2455,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">FWC's origin was not published with the records — it was recovered by fitting all <b>191 county drop coordinates</b> against their stated distances. Every one of the 191 lands within 0.05&nbsp;nm of that point, which is the rounding tolerance on a figure given to one decimal, so the fit is as exact as the source data allows. Your own natural-reef sites are a separate case: their distances were measured from close to the rose position, not from either inlet point.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> <b>Topo Satellite / Street Map</b> (the label shows whichever view is currently active) switches between the satellite and street-map views.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> drops your GPS position on the map (tap again to remove it). The small red person figure on the Locate Me button signifies a MOB function.</p>
-      <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#mobFig"></use></svg> <b>MOB (man-overboard) function.</b> Press and <b>HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. The app drops a <b>MOB mark</b> at your position and starts guiding you back: a red banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red figure in a dashed ring — and the screen stays awake while it's up. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while MOB is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see boat and mark together; <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b>, named with its date and time, as a record. One thing to do <b>at the dock, not on the water</b>: the first time MOB (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, so a real emergency press drops the mark instead of waiting behind a permission dialog. Two honest cautions: the mark is where the <b>phone</b> was when the button was pressed, not where the person went in, and a person in the water <b>drifts</b> from the mark with current and wind — the longer the clock runs, the wider the circle. This is an aid to memory, <b>not a rescue device</b>: the drill is still a spotter who never stops pointing, flotation in the water, and a VHF call.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#mobFig"></use></svg> <b>MOB (man-overboard) function.</b> Press and <b>HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. The app drops a <b>MOB mark</b> at your position and starts guiding you back: a red banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red figure in a dashed ring — and the screen stays awake while it's up. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while MOB is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see boat and mark together; <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b> as a record — a <b>red pin</b> named MOB with its date and time, filed under <b>Inshore</b> or <b>Offshore</b> by where it happened. To delete one later, tap its red pin and use <b>Delete</b>, or open <b>+ Spot</b> and scroll to <b>Your saved spots</b>: MOB entries sit together alphabetically, each with ✎ and ✕ buttons — ✕ removes it. One thing to do <b>at the dock, not on the water</b>: the first time MOB (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, so a real emergency press drops the mark instead of waiting behind a permission dialog. Two honest cautions: the mark is where the <b>phone</b> was when the button was pressed, not where the person went in, and a person in the water <b>drifts</b> from the mark with current and wind — the longer the clock runs, the wider the circle. This is an aid to memory, <b>not a rescue device</b>: the drill is still a spotter who never stops pointing, flotation in the water, and a VHF call.</p>
 
       <div class="subhead">Help &amp; View Tips</div>
       <p class="sheet-note">A popup <b>opens clear of the controls on the map</b> — the map pans itself so the whole window sits below the filter pills, inside the species column and the button stack, and above the scale and credits. Turn the <b>Eye</b> off and it uses the room the hidden buttons free up. Where a popup is simply too big for what's left — the <b>Waves</b> readings on a small phone — its <b>top</b> is what stays visible, since that is where its title and first readings are; drag it from there if you want to see the rest.</p>
@@ -2501,6 +2500,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v232</b> · Red MOB, gray launches</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v231</b> · Banner wording</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v230</b> · MOB declutter</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v229</b> · MOB in caps</p>
@@ -3288,7 +3288,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 231;
+const BUILD_NUM  = 232;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6453,6 +6453,7 @@ async function saveCustomSpots(){
   try{ await storeSet(CUSTOM_SPOTS_KEY, JSON.stringify(customSpots)); }catch(e){}
 }
 function customSpotFill(s){
+  if(s.mob) return resolveVar('var(--mob)');   // MOB record pins are red whatever water they mark
   if(s.zone==='launch') return resolveVar('var(--launch)');
   return resolvedZoneColor[s.zone] || (s.zone==='offshore' ? resolveVar('var(--offshore)') : resolveVar('var(--inshore)'));
 }
@@ -8525,9 +8526,13 @@ function mobClear(){
     const d = new Date(mob.t);
     const name = 'MOB ' + (d.getMonth()+1) + '/' + d.getDate() + ' '
                + d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
-    let zone = 'offshore'; try{ zone = autoSpotZone(mob.lat, mob.lng).zone; }catch(e){}
+    /* A person overboard is in the water, so the record files as Inshore or Offshore by
+       where it happened \u2014 never Launches, which is where the inland fallback used to put
+       a mark pressed at the dock. The mob flag paints the pin red whatever its zone. */
+    let zone = 'inshore';
+    try{ const z = autoSpotZone(mob.lat, mob.lng).zone; if(z === 'offshore') zone = 'offshore'; }catch(e){}
     const s = {id:'custom-'+Date.now(), name, zone, lat:mob.lat, lng:mob.lng,
-               meta: customSpotTypeLabel({zone}) + ' \u00b7 MOB mark', custom:true, species:[], ramp:(zone==='launch')};
+               meta: customSpotTypeLabel({zone}) + ' \u00b7 MOB mark', custom:true, mob:true, species:[], ramp:false};
     customSpots.push(s);
     addCustomSpotMarker(s);
     saveCustomSpots();

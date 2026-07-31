@@ -7,6 +7,29 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 5:56 PM EDT · v232 · Red MOB, gray launches
+------------------------------------------------------------------------------
+Red now belongs to MOB alone. Launches — pins, filter pill, and the
+type chips in the add-spot sheet — went from red to gray (--launch
+#e02020 → #8a97a8, off-state chip tones matched), and cleared MOB marks
+get the freed red (new --mob variable, a mob flag on the saved spot that
+customSpotFill honours over the zone colour).
+
+Cleared MOB marks also stopped filing as Launches: the inland fallback in
+the zone guesser used to classify a mark pressed near land as a ramp.
+A person overboard is in the water, so the record now files as Inshore or
+Offshore only, by where it happened.
+
+Help: the MOB note explains the red pin and its Inshore/Offshore filing,
+and — along with the + Spot note — where to delete old MOB records:
++ Spot → Your saved spots, ✕ beside the entry (they sort together under
+"MOB"), or Delete in the pin's own popup.
+
+Note for existing test marks: MOB spots saved before this build carry no
+mob flag, so they show as (now gray) launches — delete them from + Spot →
+Your saved spots and any new ones will file and colour correctly.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 5:47 PM EDT · v231 · Banner wording
 ------------------------------------------------------------------------------
 The MOB banner's bearing unit reads "Mag" instead of a lone "M", and the
