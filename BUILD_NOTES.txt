@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 4:17 PM EDT · v222 · Compass new-spot fix
+------------------------------------------------------------------------------
+Fix: a spot saved while the Compass overlay was open didn't answer to a tap —
+no bearing line, just the ordinary popup. The compass wires up the offshore
+pins at the moment it's switched on, and a pin born after that moment was
+never wired. New and edited spots now join the overlay the instant they're
+saved, so an offshore spot added mid-session draws its leg from the rose like
+any other mark. (Toggling the compass off and on was the old workaround.)
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 4:00 PM EDT · v221 · Build notes moved
 ------------------------------------------------------------------------------
 Build notes moved out of the help. The full story of every build now lives in

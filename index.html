@@ -2412,6 +2412,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v222</b> · Compass new-spot fix</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v221</b> · Build notes moved</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v220</b> · Help search fix</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v219</b> · Instant reopens</p>
@@ -3189,7 +3190,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 221;
+const BUILD_NUM  = 222;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6343,6 +6344,14 @@ function addCustomSpotMarker(s){
   markers.push(m);            // so labels + zoom logic include it
   customSpotMarkers[s.id] = m;
   if(typeof applyFilter === 'function') applyFilter();
+  /* A spot saved while the compass is open must join the overlay immediately: the
+     toggle-on pass stashed popups and wired taps before this marker existed, so
+     without this a fresh offshore spot opens its popup instead of drawing the leg.
+     Both calls are idempotent, and the edit path lands here too. */
+  if(typeof compassOn !== 'undefined' && compassOn){
+    setCompassPopupSuppression(true);
+    wireCompassMarkers();
+  }
 }
 function customSpotTypeLabel(s){ return s.zone==='launch' ? 'Launch' : (s.zone==='offshore'?'Offshore':'Inshore'); }
 function customSpotPopup(s){
