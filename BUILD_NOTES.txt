@@ -7,6 +7,45 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 4:58 PM EDT · v226 · Man overboard
+------------------------------------------------------------------------------
+Press and HOLD Locate Me (about a second — the pill floods red while it
+arms) to drop a MAN OVERBOARD mark and start guiding back to it. A small
+red human figure now rides on the Locate Me pill to mark the hold function;
+the shape carries the meaning, the red carries the urgency.
+
+What a press gets you: a MOB mark at your position — the FIRST fix
+available, immediately, upgraded in place if a sharper GPS fix lands within
+twelve seconds of the press (the opposite tradeoff from Locate Me, which
+waits for quality; a boat at 20 kt covers a hundred metres in ten seconds,
+so here fast-and-rough wins). The mark is a red figure on a white disc in a
+DASHED red ring, pulsing. A red banner sits over everything with the
+bearing to steer (magnetic, like every bearing in the app), the distance
+(feet under ~1000 ft, statute miles beyond), and a clock since the press —
+the clock is what tells the crew how wide the drift circle has grown. A
+dashed red line runs boat→mark, updated from a high-accuracy GPS watch,
+with your live position shown alongside. The screen holds awake while MOB
+is active (wake lock, re-acquired on returning to the foreground).
+
+The mark is written to localStorage synchronously the instant it exists, so
+a Safari reload or phone restart mid-recovery brings the banner and
+guidance straight back on load. Tapping the banner fits boat and mark in
+view. CLEAR asks first, then keeps the mark in your spots as
+"MOB <date> <time>" — the record you'd hand the Coast Guard.
+
+Long-press mechanics: pointer events, 12 px of wander cancels (that's a
+drag), releasing early cancels, the after-hold click is eaten by a capture
+listener, and the context menu is suppressed on the pill. Holding again
+while active just re-centres and says to CLEAR first — no accidental
+re-marks.
+
+Help gets a Man Overboard section (quick-tour line plus a full note under
+Locate Me) with the two honest cautions: the mark is where the PHONE was
+at the press, not where the person went in, and people drift — this is an
+aid to memory, not a rescue device; the drill is still a pointing spotter,
+flotation, and the VHF.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 4:42 PM EDT · v225 · Offline help wording
 ------------------------------------------------------------------------------
 The help's "Using the App Offline" section now says to run the offline map

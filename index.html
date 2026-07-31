@@ -1914,6 +1914,52 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .loc-dot{width:26px; height:26px; display:flex; align-items:center; justify-content:center; color:var(--accent-lite); filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));}
   .pin-preview{width:17px; height:17px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--brass); border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.5);}
 
+  /* ---------- MOB (man overboard) ---------- */
+  /* The badge on Locate Me: the red figure itself is the affordance — a SHAPE, not a colour
+     coding, so it still reads if the red doesn't. The !importants outshout the theme block's
+     `.fab svg{stroke:var(--teal) !important}` above; being later at equal specificity wins. */
+  #locateBtn{-webkit-touch-callout:none; -webkit-user-select:none; user-select:none; touch-action:manipulation;}
+  #locateBtn svg.mob-hint{color:#e5484d !important; stroke:none !important; margin:0 0 0 6px; width:calc(12px * var(--tsb)); height:calc(12px * var(--tsb));}
+  #locateBtn.active-locate svg.mob-hint{color:#ffd7d9 !important;}
+  /* Holding the pill floods it red over the full hold — the "am I doing it?" feedback.
+     Let go early and it snaps straight back (no transition without the class). */
+  #locateBtn.mob-arming{background:#c11a1a !important; border-color:#c11a1a !important; color:#fff !important;
+    transition:background-color .9s linear, border-color .9s linear, color .4s linear;}
+  #locateBtn.mob-arming svg{color:#fff !important; stroke:#fff !important;}
+  #locateBtn.mob-arming svg.mob-hint{color:#fff !important; stroke:none !important;}
+
+  #mobBanner{
+    position:fixed; left:50%; top:calc(env(safe-area-inset-top, 0px) + 8px); transform:translateX(-50%);
+    z-index:6000; width:min(360px, calc(100vw - 16px)); box-sizing:border-box;
+    background:rgba(26,5,8,.94); border:2px solid #ff5252; border-radius:14px;
+    color:#fff; font-family:'Space Grotesk',sans-serif; padding:8px 12px 9px;
+    box-shadow:0 6px 26px rgba(0,0,0,.55); backdrop-filter:blur(6px); cursor:pointer;
+  }
+  #mobBanner .mob-top{display:flex; align-items:center; gap:7px;}
+  #mobBanner .mob-fig{width:17px; height:17px; color:#ff5252; flex:0 0 auto;}
+  #mobBanner .mob-title{font-weight:800; letter-spacing:.09em; font-size:calc(13px * var(--tsb)); color:#ff8a8a;}
+  #mobBanner .mob-clock{margin-left:auto; font-weight:700; font-variant-numeric:tabular-nums; font-size:calc(13px * var(--tsb)); color:var(--fog);}
+  #mobBanner #mobClearBtn{
+    background:#fff; color:#a01212; border:none; border-radius:100px; cursor:pointer;
+    font-family:inherit; font-weight:800; font-size:calc(11px * var(--tsb)); letter-spacing:.06em; padding:3px 10px;
+  }
+  #mobBanner .mob-nav{display:flex; align-items:baseline; justify-content:center; gap:18px; margin:3px 0 2px;
+    font-weight:800; font-variant-numeric:tabular-nums; font-size:calc(27px * var(--tsb)); line-height:1.15;}
+  #mobBanner .mob-nav .u{font-size:calc(14px * var(--tsb)); font-weight:700; color:var(--fog);}
+  #mobBanner .mob-foot{font-size:calc(9.5px * var(--tsb)); line-height:1.4; color:var(--muted); text-align:center;}
+  #mobBanner .mob-foot b{color:var(--fog);}
+
+  /* The mark on the water: red figure on a white disc inside a DASHED red ring, with a slow
+     pulse — shape, pattern and motion all say "this one is different" before colour does. */
+  .mob-pin{position:relative; width:38px; height:38px; display:flex; align-items:center; justify-content:center;}
+  .mob-pin .disc{position:absolute; inset:2px; border-radius:50%; background:rgba(255,255,255,.95);
+    border:2.5px dashed #e5231b; box-sizing:border-box; box-shadow:0 2px 7px rgba(0,0,0,.5);}
+  .mob-pin svg{position:relative; width:21px; height:21px; color:#d81f17;}
+  .mob-pin .pulse{position:absolute; inset:-3px; border-radius:50%; border:2px solid #ff5252;
+    animation:mobPulse 1.6s ease-out infinite; pointer-events:none;}
+  @keyframes mobPulse{0%{transform:scale(.65); opacity:.95;} 100%{transform:scale(1.9); opacity:0;}}
+  .mob-line{filter:drop-shadow(0 0 2px rgba(255,255,255,.8));}
+
   .search-row{
     display:flex; align-items:center; justify-content:space-between; gap:8px;
     padding:9px 11px; margin-bottom:6px; border-radius:9px;
@@ -2160,6 +2206,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <line x1="15.2" y1="11" x2="17.2" y2="11"></line>
   </g>
 </symbol>
+<!-- MOB figure: a person with both arms thrown up — the distress pose every chartplotter's
+     man-overboard key wears, so the SHAPE says what it is before the red does. Drawn in
+     currentColor; each usage (the Locate Me badge, the map mark, the banner) sets its own
+     red so the figure is never invisible on any background. -->
+<symbol id="mobFig" viewBox="0 0 24 24">
+  <circle cx="12" cy="4.6" r="2.4" fill="currentColor"></circle>
+  <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <path d="M12 8.4v6"></path>
+    <path d="M12 10 6.6 6.2"></path>
+    <path d="M12 10l5.4-3.8"></path>
+    <path d="M12 14.4l-3.4 4.9"></path>
+    <path d="M12 14.4l3.4 4.9"></path>
+  </g>
+</symbol>
 </svg>
 
 <div class="splash" id="splash" aria-hidden="true">
@@ -2244,15 +2304,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg>
       Compass
     </button>
-    <button class="fab" id="locateBtn">
+    <button class="fab" id="locateBtn" title="Tap: drop your GPS position. Press and HOLD: mark man overboard.">
       <svg viewBox="0 0 24 28" width="15" height="17" style="vertical-align:-3px;"><use href="#locatePin"></use></svg>
       Locate Me
+      <svg class="mob-hint" viewBox="0 0 24 24" aria-hidden="true"><use href="#mobFig"></use></svg>
     </button>
     <button class="fab" id="mapModeBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
       Topo Satellite
     </button>
   </div>
+</div>
+
+<!-- MAN OVERBOARD banner. Fixed over everything (z above sheets and the gate) because while
+     it is up, nothing else on the screen matters. Tapping the banner body fits the map to
+     the boat and the mark; only the CLEAR button (with a confirm) takes it down. -->
+<div id="mobBanner" hidden>
+  <div class="mob-top">
+    <svg class="mob-fig" viewBox="0 0 24 24" aria-hidden="true"><use href="#mobFig"></use></svg>
+    <span class="mob-title">MAN&nbsp;OVERBOARD</span>
+    <span class="mob-clock" id="mobClock">0:00</span>
+    <button id="mobClearBtn" type="button">CLEAR</button>
+  </div>
+  <div class="mob-nav"><span id="mobBrg">&mdash;</span><span id="mobDist">waiting for GPS&hellip;</span></div>
+  <div class="mob-foot">Bearing is <b>magnetic</b> &mdash; steer it on your compass. The mark is where the phone was at the press; the person <b>drifts</b> from it. Tap this banner to see boat and mark together.</div>
 </div>
 
 <!-- ===================== INFO SHEET ===================== -->
@@ -2317,7 +2392,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="panel-help" style="display:none;">
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 10px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">&#128424;&#xFE0E; Print this help</button>
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
-      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. Tap any <b>Species</b> button to filter your total number of catches. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. The <b>map button</b> cycles <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b> Tight Lines! 🎣</p>
+      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. Tap any <b>Species</b> button to filter your total number of catches. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Press and hold Locate Me</b> (the pill with the small red figure) to drop a <b>man-overboard mark</b> and get live bearing and distance back to it. The <b>map button</b> cycles <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b> Tight Lines! 🎣</p>
       <div class="subhead">Shape Guide</div>
       <p class="sheet-note"><b>Cookies</b> (round buttons, top-right of the header) are Search <span style="vertical-align:-2px;">🔍</span>, Help <b>?</b>, Themes <span style="vertical-align:-2px;">🎨</span>, Text Size <b>A</b>, and the <b>Eye</b>, which hides the buttons and species pills.</p>
       <p class="sheet-note"><b>Chips</b> (larger round shapes on the map) are the tide stations <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> and the USCG wave buoy 41070 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg>.</p>
@@ -2366,7 +2441,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">One caution worth knowing: the rose sits where a boater would actually pick up a heading, out past the inlet mouth, which is not the same point the app measures each site's nm-and-bearing figures from in its popup. For the three closest sites those two numbers can differ by 15–30°; further out they agree within a few degrees. The distance now printed on the line is measured from the same place the bearing is — the rose — so it too will read a little differently from the nm figure in the site's own popup, most noticeably on the closest sites. A site-to-site leg has no such problem: both ends are the marks themselves. All of it is a planning aid for getting the lay of the grounds in your head, <b>not a substitute for your chartplotter</b>. Every bearing the app prints is <b>magnetic</b> — the route legs and the to/from figures in the offshore popups and drop lists alike — declared once beneath the rose rather than on each number. The popups and drop lists still print both directions; only the lines on the map are one-way. Variation at Ponce Inlet is taken as <b>7.3° west</b> (WMM, 2026), added to the true bearing the geometry gives, so nothing here disagrees with the compass in front of you. It drifts a little further west each year, so it is worth a re-check every few years. The one figure left in true degrees is the buoy's <b>Mean Wave Direction</b>, which is NOAA's own reading rather than anything this app worked out; its popup says so.</p>
       <p class="sheet-note">There is a third reference point in play, and it matters most for the county reefs. The <b>nm and bearing printed in a county reef Site's own popup are FWC's published figures</b>, carried straight across from the Artificial Reef Program's deployment records rather than calculated by this app — and FWC measures them from <b>29°04.500&#8242;N 80°55.500&#8242;W</b> (29.0750, −80.9250), a point out in the inlet mouth channel. That is <i>not</i> the point this app uses for everything else. Its own offshore nm/bearing figures run from 29°04.902&#8242;N 80°56.202&#8242;W — inside the end of the north jetty, about 0.7&nbsp;nm northwest of FWC's origin. The compass rose is further seaward again, at 29°04.653&#8242;N 80°54.385&#8242;W. Three origins strung along a mile of water, so three slightly different numbers for the same run, and that spread is most of why the closest sites disagree while the distant ones don't.</p>
       <p class="sheet-note">FWC's origin was not published with the records — it was recovered by fitting all <b>191 county drop coordinates</b> against their stated distances. Every one of the 191 lands within 0.05&nbsp;nm of that point, which is the rounding tolerance on a figure given to one decimal, so the fit is as exact as the source data allows. Your own natural-reef sites are a separate case: their distances were measured from close to the rose position, not from either inlet point.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> drops your GPS position on the map (tap again to remove it).</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> drops your GPS position on the map (tap again to remove it). The small red figure on the pill marks its second job, below.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="14" height="14" style="color:#e5484d; vertical-align:-2px;"><use href="#mobFig"></use></svg> <b>Man Overboard.</b> <b>Press and HOLD Locate Me</b> — the pill floods red for about a second — and the app drops a <b>MOB mark</b> at your position and starts guiding you back: a red banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red figure in a dashed ring — and the screen stays awake while it's up. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see boat and mark together; <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b>, named with its date and time, as a record. Two honest cautions: the mark is where the <b>phone</b> was when the button was pressed, not where the person went in, and a person in the water <b>drifts</b> from the mark with current and wind — the longer the clock runs, the wider the circle. This is an aid to memory, <b>not a rescue device</b>: the drill is still a spotter who never stops pointing, flotation in the water, and a VHF call.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> <b>Topo Satellite / Street Map</b> (the label shows whichever view is currently active) switches between the satellite and street-map views.</p>
 
       <div class="subhead">Help &amp; View Tips</div>
@@ -2412,6 +2488,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v226</b> · Man overboard</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v225</b> · Offline help wording</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v224</b> · Tile retry</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v223</b> · Update pill wording</p>
@@ -3193,7 +3270,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 225;
+const BUILD_NUM  = 226;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -8263,6 +8340,230 @@ document.getElementById('locateBtn').addEventListener('click', function(){
   showToast('Finding your location\u2026', 8000);
   getFixOnce(place, err=> showToast(geoErrorMessage(err), 9000), 20000);
 });
+
+/* ===================== MOB \u2014 MAN OVERBOARD =====================
+
+   Press and HOLD Locate Me (~1 s; the pill floods red while it arms) to drop a man-overboard
+   mark and start guiding back to it. Not a plotter feature copied for fun \u2014 the one thing a
+   crew loses instantly when someone goes in is the spot, and any phone already on deck can
+   hold it.
+
+   The fix tradeoff is the OPPOSITE of Locate Me's. getFixOnce holds a coarse fix back six
+   seconds hoping GPS beats it, and will take a cached position two minutes old \u2014 right for
+   "where am I on the map", wrong here, where a boat at 20 kt covers a hundred metres in ten
+   seconds. MOB takes the FIRST position it can get, however rough, then quietly moves the
+   mark when a tighter fix lands within the first few seconds (MOB_UPGRADE_MS from the press
+   \u2014 after that the mark is frozen; later fixes are the boat, not the person).
+
+   While active: a high-accuracy watch feeds the boat position; the banner shows the bearing
+   to steer (MAGNETIC, same as the compass rose and every helm compass), the distance (feet
+   under ~1000 ft, statute miles beyond \u2014 "0.02 sm" is useless on final approach), and the
+   clock since the press, which is what tells the crew how far the drift has spread. The mark
+   is written to localStorage the moment it exists \u2014 synchronously, not through the async
+   store \u2014 so if Safari reloads or the phone reboots mid-recovery the banner is back up
+   before the map finishes loading. A screen wake lock keeps iOS from suspending the page
+   (re-acquired on every return to foreground; the lock dies each time the app is hidden).
+
+   CLEAR is deliberate: a confirm, and the mark is kept as a spot named "MOB <date time>" \u2014
+   if it was real, that record is what goes to the Coast Guard.
+
+   None of this replaces the drill: a pointing spotter, thrown flotation, the VHF. The help
+   says so in as many words. */
+
+const MOB_KEY = 'wtf:mob';
+const MOB_HOLD_MS = 900;        // press-and-hold time; matches the pill's CSS flood
+const MOB_UPGRADE_MS = 12000;   // window (from the press) in which a tighter fix may move the mark
+let mob = null;                 // {lat,lng,t,acc} \u2014 t is the PRESS moment, not the fix's arrival
+let mobFix = null;              // latest live boat position while active
+let mobWatchId = null, mobTicker = null, mobWakeLock = null;
+let mobMarker = null, mobBoat = null, mobLine = null;
+
+function mobSaveState(){ try{ localStorage.setItem(MOB_KEY, JSON.stringify(mob)); }catch(e){} }
+
+function mobPlaceMark(){
+  if(!mob) return;
+  const ll = [mob.lat, mob.lng];
+  const html = '<div class="mob-pin"><span class="pulse"></span><span class="disc"></span>'
+             + '<svg viewBox="0 0 24 24"><use href="#mobFig"></use></svg></div>';
+  if(mobMarker) mobMarker.setLatLng(ll);
+  else mobMarker = L.marker(ll, {icon: L.divIcon({className:'', html, iconSize:[38,38], iconAnchor:[19,19]}),
+                                 zIndexOffset: 2000, interactive: false}).addTo(map);
+}
+
+function mobFmtClock(ms){
+  const s = Math.max(0, Math.floor(ms/1000));
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), r = s%60;
+  return h ? h + ':' + String(m).padStart(2,'0') + ':' + String(r).padStart(2,'0')
+           : m + ':' + String(r).padStart(2,'0');
+}
+
+/* Bearing + distance + leg, redrawn on every fix. The clock has its own 1 s ticker. */
+function mobUpdate(){
+  const brgEl = document.getElementById('mobBrg'), distEl = document.getElementById('mobDist');
+  if(!mob){ brgEl.textContent = '\u2014'; distEl.textContent = 'dropping mark \u2014 waiting for GPS\u2026'; return; }
+  if(!mobFix){ brgEl.textContent = '\u2014'; distEl.textContent = 'waiting for GPS\u2026'; return; }
+  const b = [mobFix.coords.latitude, mobFix.coords.longitude], mk = [mob.lat, mob.lng];
+  const brg = toMagnetic(bearingDeg(b[0], b[1], mk[0], mk[1]));
+  const m = map.distance(b, mk), ft = m*3.28084, sm = m/1609.344;
+  brgEl.innerHTML = String(Math.round(brg)).padStart(3,'0') + '\u00b0<span class="u">&thinsp;M</span>';
+  distEl.innerHTML = ft < 1000 ? Math.round(ft) + '<span class="u">&thinsp;ft</span>'
+                               : sm.toFixed(sm < 10 ? 2 : 1) + '<span class="u">&thinsp;sm</span>';
+  if(mobLine) mobLine.setLatLngs([b, mk]);
+  else mobLine = L.polyline([b, mk], {color:'#ff5252', weight:2.4, opacity:1, dashArray:'4,5',
+                                      interactive:false, className:'mob-line'}).addTo(map);
+  const html = '<div class="loc-dot"><svg viewBox="0 0 24 28" width="22" height="26"><use href="#locatePin"></use></svg></div>';
+  if(mobBoat) mobBoat.setLatLng(b);
+  else mobBoat = L.marker(b, {icon: L.divIcon({className:'', html, iconSize:[26,26], iconAnchor:[13,13]}),
+                              interactive:false}).addTo(map);
+}
+
+async function mobWakeAcquire(){
+  try{ if('wakeLock' in navigator) mobWakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{
+  if((mob || mobWatchId != null) && document.visibilityState === 'visible') mobWakeAcquire();
+});
+
+/* Shared start for a fresh press and a resume-after-reload. */
+function mobEngage(resumed){
+  document.getElementById('mobBanner').hidden = false;
+  if(mobTicker == null) mobTicker = setInterval(()=>{
+    const t0 = mob ? mob.t : mobPressT;
+    document.getElementById('mobClock').textContent = mobFmtClock(Date.now() - t0);
+  }, 1000);
+  if(mobWatchId == null){
+    try{
+      mobWatchId = navigator.geolocation.watchPosition(pos=>{
+        mobFix = pos;
+        if(!mob) mobDrop(pos);
+        else if(Date.now() - mob.t < MOB_UPGRADE_MS && pos.coords.accuracy != null
+                && (mob.acc == null || pos.coords.accuracy < mob.acc)){
+          mob.lat = pos.coords.latitude; mob.lng = pos.coords.longitude; mob.acc = pos.coords.accuracy;
+          mobSaveState(); mobPlaceMark();
+        }
+        mobUpdate();
+      }, err=>{ if(err && err.code === 1) showToast(geoErrorMessage(err), 9000); },
+      {enableHighAccuracy:true, maximumAge:0, timeout:30000});
+    }catch(e){}
+  }
+  mobWakeAcquire();
+  if(mob){
+    mobPlaceMark();
+    map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), resumed ? 13 : 15));
+  }
+  mobUpdate();
+}
+
+let mobPressT = 0;
+function mobDrop(pos){
+  if(mob) return;
+  mob = {lat: pos.coords.latitude, lng: pos.coords.longitude, t: mobPressT || Date.now(),
+         acc: (pos.coords.accuracy != null) ? pos.coords.accuracy : null};
+  mobSaveState();
+  mobPlaceMark();
+  map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), 15));
+  showToast('MOB mark down \u2014 ' + toDMS(mob.lat, mob.lng)
+    + (mob.acc && mob.acc > 150 ? ' (rough fix, \u00b1' + Math.round(mob.acc) + ' m \u2014 tightening as GPS lands)' : ''), 6000);
+  mobUpdate();
+}
+
+function mobActivate(){
+  if(mob || mobWatchId != null){
+    if(mob) map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), 14));
+    showToast('MOB is already active \u2014 CLEAR it on the banner before dropping a new mark.', 5000);
+    return;
+  }
+  const blocked = geoBlockedReason();
+  if(blocked){ showToast(blocked, 7000); return; }
+  mobPressT = Date.now();
+  /* Instant coarse grab alongside the watch: a ten-second-old network fix beats waiting
+     eight more while the boat runs on. The watch's first tighter fix upgrades it. */
+  try{
+    navigator.geolocation.getCurrentPosition(pos=>{ if(!mob){ mobFix = mobFix || pos; mobDrop(pos); mobUpdate(); } },
+      ()=>{}, {enableHighAccuracy:false, timeout:8000, maximumAge:10000});
+  }catch(e){}
+  mobEngage(false);
+}
+
+function mobTeardown(){
+  if(mobWatchId != null){ try{ navigator.geolocation.clearWatch(mobWatchId); }catch(e){} mobWatchId = null; }
+  if(mobTicker != null){ clearInterval(mobTicker); mobTicker = null; }
+  if(mobWakeLock){ try{ mobWakeLock.release(); }catch(e){} mobWakeLock = null; }
+  [mobMarker, mobBoat, mobLine].forEach(l=>{ if(l) try{ map.removeLayer(l); }catch(e){} });
+  mobMarker = mobBoat = mobLine = null;
+  mob = null; mobFix = null; mobPressT = 0;
+  try{ localStorage.removeItem(MOB_KEY); }catch(e){}
+  document.getElementById('mobBanner').hidden = true;
+}
+
+function mobClear(){
+  if(!mob && mobWatchId == null) return;
+  if(!window.confirm('Clear the MAN OVERBOARD mark?' + (mob ? '\n\nIt will be kept in your spots as a record.' : ''))) return;
+  if(mob){
+    const d = new Date(mob.t);
+    const name = 'MOB ' + (d.getMonth()+1) + '/' + d.getDate() + ' '
+               + d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+    let zone = 'offshore'; try{ zone = autoSpotZone(mob.lat, mob.lng).zone; }catch(e){}
+    const s = {id:'custom-'+Date.now(), name, zone, lat:mob.lat, lng:mob.lng,
+               meta: customSpotTypeLabel({zone}) + ' \u00b7 MOB mark', custom:true, species:[], ramp:(zone==='launch')};
+    customSpots.push(s);
+    addCustomSpotMarker(s);
+    saveCustomSpots();
+    updateCustomSpotList();
+    if(typeof applyFilter === 'function') applyFilter();
+    if(typeof applySpotLabels === 'function') applySpotLabels();
+    showToast('MOB cleared \u2014 kept in your spots as \u201c' + name + '\u201d.', 6000);
+  }
+  mobTeardown();
+}
+
+document.getElementById('mobClearBtn').addEventListener('click', e=>{ e.stopPropagation(); mobClear(); });
+document.getElementById('mobBanner').addEventListener('click', ()=>{
+  if(!mob) return;
+  if(mobFix) map.fitBounds(L.latLngBounds([[mobFix.coords.latitude, mobFix.coords.longitude], [mob.lat, mob.lng]]),
+                           {padding:[70,70], maxZoom:16});
+  else map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), 14));
+});
+
+/* The long press itself. Pointer events; a 12 px wander cancels (that is a drag, not a hold),
+   as does letting go early. The click that iOS fires after a completed hold is eaten by a
+   document-level CAPTURE listener \u2014 at the button itself, capture order at the target is not
+   something to bet a safety feature on. */
+(function(){
+  const btn = document.getElementById('locateBtn');
+  let timer = null, sx = 0, sy = 0, firedAt = 0;
+  const cancel = ()=>{ if(timer){ clearTimeout(timer); timer = null; } btn.classList.remove('mob-arming'); };
+  btn.addEventListener('pointerdown', e=>{
+    if(e.isPrimary === false) return;
+    sx = e.clientX; sy = e.clientY;
+    btn.classList.add('mob-arming');
+    timer = setTimeout(()=>{ timer = null; firedAt = Date.now(); btn.classList.remove('mob-arming'); mobActivate(); }, MOB_HOLD_MS);
+  });
+  btn.addEventListener('pointermove', e=>{
+    if(timer && (Math.abs(e.clientX - sx) > 12 || Math.abs(e.clientY - sy) > 12)) cancel();
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=> btn.addEventListener(ev, cancel));
+  btn.addEventListener('contextmenu', e=> e.preventDefault());
+  /* Whether a completed hold is followed by a click varies by platform, so a boolean that
+     waits for one can go stale and eat the NEXT honest tap. A time window cannot: the ghost
+     click lands within a few hundred ms of the hold completing, or never. */
+  document.addEventListener('click', e=>{
+    if(Date.now() - firedAt < 700 && e.target && e.target.closest && e.target.closest('#locateBtn')){
+      e.preventDefault(); e.stopPropagation();
+    }
+  }, true);
+})();
+
+/* Resume: if a mark survived a reload, the banner and guidance are back before the user
+   has to remember what to press. */
+(function(){
+  let raw = null; try{ raw = localStorage.getItem(MOB_KEY); }catch(e){}
+  if(!raw) return;
+  let saved = null; try{ saved = JSON.parse(raw); }catch(e){}
+  if(!saved || typeof saved.lat !== 'number' || typeof saved.lng !== 'number'){ try{ localStorage.removeItem(MOB_KEY); }catch(e){} return; }
+  mob = {lat: saved.lat, lng: saved.lng, t: saved.t || Date.now(), acc: (saved.acc != null) ? saved.acc : null};
+  mobEngage(true);
+})();
 
 /* ===================== BACKUP EXPORT / IMPORT =====================
 
