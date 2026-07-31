@@ -2226,7 +2226,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tapping <b>Catches</b> shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins — turn one off to hide that zone entirely; each shows its total. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else, with its own total. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. Totals reflect every built-in and user-added spot, at any zoom level. All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕ button.</p>
 
       <p class="sheet-note"><b>Map credits.</b> The bottom-right corner carries a small <b>ⓘ</b> cookie. Tap it and the credits for whatever chart is currently drawn open above it — <b>USGS</b>, <b>USDA NAIP</b> and <b>Sentinel-2/EOX</b> on the satellite views, <b>OpenStreetMap</b> on the street map — and tapping it again, or tapping open water, puts them away. They used to sit on the map permanently, wrapped over two or three lines, and on a smaller phone the Satellite pill covered them. They have to be <b>on the map</b> rather than on a credits page — that is a condition of the licences the imagery comes under — but one tap behind an obvious control satisfies that, which is how every other mapping app does it. The <b>Eye</b> deliberately does not hide the ⓘ: a credit you can switch off is not a credit.</p>
-      <p class="sheet-note"><b>Updates.</b> Phones cache this app hard enough that a new build can hide behind an old copy for days. The app now checks quietly for a newer build — when it opens and when it comes back to the foreground, never more than once every 45 minutes — and if one is out, a small pill appears above the build stamp: <span class="g-emph">Update available — tap to reload</span>. One tap brings the new build in; the ✕ puts it off until next time. No connection, no check — it never interrupts you on the water.</p>
+      <p class="sheet-note"><b>Updates.</b> Phones cache this app hard enough that a new build can hide behind an old copy for days. The app now checks quietly for a newer build — every time it opens, and when it comes back to the foreground (those paced to once every 10 minutes) — and if one is out, a small pill appears above the build stamp: <span class="g-emph">Update available — tap to reload</span>. One tap brings the new build in; the ✕ puts it off until next time. No connection, no check — it never interrupts you on the water.</p>
 
       <div class="subhead">Species Switches</div>
       <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>Catches</b> is off. If you've never logged that fish, you'll get a note saying so.</p>
@@ -3041,7 +3041,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 193;
+const BUILD_NUM  = 194;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -3055,13 +3055,16 @@ const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message fo
    fails silently: offline, file://, or an unreachable server just means no
    banner. The fetch bypasses the HTTP cache, so it always sees the live copy. */
 const UPDATE_CHECK_KEY = 'wtf:last-update-check';
-const UPDATE_CHECK_EVERY_MS = 45*60*1000;
-function checkForUpdate(){
+const UPDATE_CHECK_EVERY_MS = 10*60*1000;
+/* force=true skips the throttle — used for the real page load, so a fresh open
+   always learns about a new build immediately. The throttle only paces the
+   visibilitychange checks (app-switching back and forth). */
+function checkForUpdate(force){
   try{
     if(navigator.onLine === false) return;
     if(!/^https?:$/.test(location.protocol)) return;
     const last = +(localStorage.getItem(UPDATE_CHECK_KEY)||0);
-    if(Date.now() - last < UPDATE_CHECK_EVERY_MS) return;
+    if(!force && Date.now() - last < UPDATE_CHECK_EVERY_MS) return;
     localStorage.setItem(UPDATE_CHECK_KEY, String(Date.now()));
     fetch(location.href.split(/[?#]/)[0], { cache:'no-store', credentials:'omit' })
       .then(r => r.ok ? r.text() : '')
@@ -3083,9 +3086,9 @@ function showUpdateBanner(newBuild){
   });
   document.body.appendChild(b);
 }
-checkForUpdate();
+checkForUpdate(true);
 document.addEventListener('visibilitychange', ()=>{
-  if(document.visibilityState === 'visible') checkForUpdate();
+  if(document.visibilityState === 'visible') checkForUpdate(false);
 });
 
 /* The splash carries the mark and then gets out of the way: it fades on a short timer
