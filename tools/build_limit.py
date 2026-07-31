@@ -1,18 +1,18 @@
-# Generates SEA3_RINGS (the statewide 3-mile state-waters line the Topo
-# Satellite view clips its ocean along, and the dashed line is drawn from) and
-# SEA_NAMES (the coastal place-name anchors printed over the flat blue), both
-# embedded in index.html. Same setup as build_shore.py:
+# Generates LIMIT_RINGS (the statewide state-waters limit the Topo Satellite
+# view clips its ocean along and draws its dashed line from: 3 nautical miles
+# on the Atlantic, 9 in the Gulf, joined along the Keys) and SEA_NAMES (the
+# coastal place-name anchors printed over the flat blue), both embedded in
+# index.html. Same setup as build_shore.py:
 #   python3 -m venv geo && ./geo/bin/pip install shapely pyshp
 #   curl -O https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_state_500k.zip
 #   unzip cb_2023_us_state_500k.zip -d states500k
-#   ./geo/bin/python build_sea3.py   # writes sea3_rings.js + sea_names.js
+#   ./geo/bin/python build_limit.py   # writes limit_rings.js + limit_names.js
 
 import shapefile, json, math
-from shapely.geometry import shape, Point, box
+from shapely.geometry import shape, Point, box, Polygon as SPoly
 from shapely.ops import unary_union, transform, nearest_points
 from shapely import Polygon, MultiPolygon
 
-# --- rebuild the shoreline envelope exactly as build_shore.py does ---
 sf = shapefile.Reader('states500k/cb_2023_us_state_500k')
 fields = [f[0] for f in sf.fields[1:]]
 want = {'FL','GA','AL','MS'}
@@ -26,52 +26,65 @@ land = unary_union(geoms + seals)
 CLOSE = 0.03
 env = land.buffer(CLOSE, join_style='round').buffer(-CLOSE, join_style='round')
 
-# --- buffer 3 nm seaward in a lon-scaled space so the distance is true ---
-K = math.cos(math.radians(27.75))     # mid-Florida; cos varies +-3% across the state
-fwd = lambda x, y, z=None: (x*1/K, y) # NB: scale so 1 unit = 1 deg lat everywhere
-inv = lambda x, y, z=None: (x*K, y)
-# work in scaled coords: lon' = lon/K would GROW lon; we want distances equal:
-# 1 deg lon = K deg-lat-equivalents, so scale lon by K going in.
+K = math.cos(math.radians(27.75))
 fwd = lambda x, y, z=None: (x*K, y)
 inv = lambda x, y, z=None: (x/K, y)
 env_s = transform(fwd, env)
-NM3 = 3/60.0
-sea3_s = env_s.buffer(NM3, join_style='round')
-sea3 = transform(inv, sea3_s)
-GATE = box(-88.4, 24.25, -79.25, 31.0)
-sea3_fill = sea3.intersection(GATE).simplify(0.003, preserve_topology=True)
+NM = 1/60.0
+buf3 = transform(inv, env_s.buffer(3*NM, join_style='round'))
+buf9 = transform(inv, env_s.buffer(9*NM, join_style='round'))
 
-polys = list(sea3_fill.geoms) if isinstance(sea3_fill, MultiPolygon) else [sea3_fill]
+# Gulf/Atlantic split: Florida gets 9 nm in the Gulf, 3 nm on the Atlantic.
+# The divider runs inland up the east coast (harmless on land), along the
+# spine of the Keys, then west past the Marquesas so the Dry Tortugas sit on
+# the Gulf side — matching how the charted lines meet near Key West.
+GULF_MASK = SPoly([
+    (-80.17,25.70),(-80.45,25.09),(-81.09,24.71),(-81.80,24.56),
+    (-82.00,24.50),(-82.20,24.45),(-88.60,24.45),(-88.60,31.50),
+    (-82.00,31.50),(-82.00,31.20),(-81.80,30.70),(-81.30,29.50),
+    (-80.90,28.50),(-80.60,27.50),(-80.30,26.50),
+])
+WORLD = box(-89.5, 23.5, -78.5, 32.0)
+ATL_MASK = WORLD.difference(GULF_MASK)
+limit = unary_union([buf9.intersection(GULF_MASK), buf3.intersection(ATL_MASK)])
+
+GATE = box(-88.4, 24.25, -79.25, 31.0)
+limit_fill = limit.intersection(GATE).simplify(0.003, preserve_topology=True)
+polys = list(limit_fill.geoms) if isinstance(limit_fill, MultiPolygon) else [limit_fill]
 rings = []
 for p in polys:
     if p.area < 2e-4: continue
     rings.append(list(p.exterior.coords))
 rings.sort(key=lambda r: -abs(Polygon(r).area))
-print('SEA3 rings:', len(rings), 'points:', sum(len(r) for r in rings))
+print('LIMIT rings:', len(rings), 'points:', sum(len(r) for r in rings))
 solid = MultiPolygon([Polygon(r) for r in rings])
 
 tests = [
  ('Daytona shore',            29.210, -81.005, True),
  ('2nm off Daytona',          29.210, -80.958, True),
- ('4nm off Daytona',          29.210, -80.920, False),
- ('Halifax lagoon',           29.140, -80.970, True),
+ ('4nm off Daytona (Atl=3)',  29.210, -80.920, False),
+ ('2nm off Boynton (Atl)',    26.526, -80.010, True),
+ ('5nm off Boynton (Atl=3)',  26.526, -79.955, False),
  ('Tampa Bay mid',            27.700, -82.550, True),
- ('2nm off Clearwater Bch',   27.977, -82.865, True),
- ('5nm off Clearwater Bch',   27.977, -82.925, False),
- ('2nm off Pensacola Bch',    30.300, -87.140, True),
- ('6nm off Pensacola Bch',    30.235, -87.140, False),
- ('2nm S of Key West',        24.520, -81.780, True),
- ('6nm S of Key West',        24.455, -81.780, False),
+ ('5nm off Clearwater (Gulf=9)', 27.977, -82.925, True),
+ ('8nm off Clearwater (Gulf=9)', 27.977, -82.980, True),
+ ('11nm off Clearwater',      27.977, -83.040, False),
+ ('6nm off Pensacola (Gulf)', 30.235, -87.140, True),
+ ('11nm off Pensacola',       30.150, -87.140, False),
+ ('6nm N of Key West (Gulf)', 24.655, -81.780, True),
+ ('4nm S of Key West (Atl=3)',24.488, -81.780, False),
+ ('8nm W of Dry Tortugas',    24.628, -83.020, True),
  ('mid Gulf',                 27.000, -85.000, False),
- ('2nm off Boynton Beach',    26.526, -80.010, True),
- ('5nm off Boynton Beach',    26.526, -79.955, False),
+ ('Florida Bay (Gulf side)',  25.000, -80.750, True),
+ ('Okeechobee',               26.950, -80.850, True),
+ ('Offshore GA (Atl=3, 5nm)', 30.900, -81.170, False),
 ]
 allok = True
 for name, lat, lon, expect in tests:
     got = solid.contains(Point(lon, lat))
     ok = got == expect; allok &= ok
     if not ok: print('FAIL', name, 'inside=' + str(got))
-print('SEA3 TESTS:', 'ALL PASS' if allok else 'FAILURES')
+print('LIMIT TESTS:', 'ALL PASS' if allok else 'FAILURES')
 
 out = []
 for r in rings:
@@ -80,12 +93,10 @@ for r in rings:
         flat.append(round(x, 4)); flat.append(round(y, 4))
     out.append(flat)
 js = json.dumps(out, separators=(',', ':'))
-open('sea3_rings.js','w').write(js)
-print('SEA3 JS size:', round(len(js)/1024,1), 'KB')
+open('limit_rings.js','w').write(js)
+print('LIMIT JS size:', round(len(js)/1024,1), 'KB')
 
-# --- coastal place-name anchors: nearest point on the 3-mile line, pushed a
-# little further seaward; alignment from the outward direction ---
-CITIES = [  # rank 1 shows from z9, rank 2 from z10
+CITIES = [
  (1,'Jacksonville Beach',30.283,-81.394),(2,'Fernandina Beach',30.669,-81.463),
  (1,'St. Augustine',29.901,-81.312),(2,'Palm Coast',29.585,-81.208),
  (2,'Flagler Beach',29.475,-81.127),(2,'Ormond Beach',29.286,-81.056),
@@ -121,18 +132,17 @@ CITIES = [  # rank 1 shows from z9, rank 2 from z10
  (2,'Pensacola Beach',30.335,-87.139),(1,'Pensacola',30.421,-87.217),
  (2,'Perdido Key',30.310,-87.440),
 ]
-line_s = transform(fwd, sea3).boundary
+line_s = transform(fwd, limit).boundary
 names = []
 for rank, name, lat, lon in CITIES:
     c = Point(lon*K, lat)
     p = nearest_points(line_s, c)[0]
     dx, dy = p.x - c.x, p.y - c.y
     d = math.hypot(dx, dy) or 1e-9
-    ax, ay = p.x + dx/d*0.010, p.y + dy/d*0.010   # 0.6 nm past the line
+    ax, ay = p.x + dx/d*0.010, p.y + dy/d*0.010
     ux = dx/d
     align = 'l' if ux > 0.45 else ('r' if ux < -0.45 else 'c')
     names.append([round(ay,4), round(ax/K,4), align, rank, name])
 js2 = json.dumps(names, separators=(',', ':'), ensure_ascii=False)
-open('sea_names.js','w').write(js2)
-print('names:', len(names), 'JS size:', round(len(js2)/1024,1), 'KB')
-for n in names[:6]: print(' sample', n)
+open('limit_names.js','w').write(js2)
+print('names:', len(names), 'sample gulf:', [n for n in names if n[4]=='Clearwater'][0])
