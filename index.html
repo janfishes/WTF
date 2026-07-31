@@ -2412,6 +2412,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v223</b> · Update pill wording</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v222</b> · Compass new-spot fix</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v221</b> · Build notes moved</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v220</b> · Help search fix</p>
@@ -3190,7 +3191,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 222;
+const BUILD_NUM  = 223;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -3199,7 +3200,7 @@ const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message fo
    Phones cache this page hard enough that a new build can sit unseen behind an
    old copy for days (the stamp said 189 for a day after 190 shipped). So the
    running copy quietly re-fetches the deployed page — on open and whenever the
-   app comes back to the foreground, but at most once every 45 minutes — reads
+   app comes back to the foreground, but at most once every 10 minutes — reads
    the BUILD_NUM out of it, and if it's newer offers one tap to reload. It
    fails silently: offline, file://, or an unreachable server just means no
    banner. The fetch bypasses the HTTP cache, so it always sees the live copy. */
@@ -3227,8 +3228,10 @@ function showUpdateBanner(newBuild){
   if(document.getElementById('updateBanner')) return;
   const b = document.createElement('div');
   b.id = 'updateBanner';
+  /* Two centred lines, no build number: which build it is means nothing in the moment —
+     the only decision on offer is reload now or not. (newBuild still gates the caller.) */
   b.innerHTML = '<span class="ub-ico" aria-hidden="true">&#8635;</span>' +
-    '<span class="ub-msg"><b>Update available</b> Build ' + newBuild + '<br>Tap to reload</span>' +
+    '<span class="ub-msg"><b>Update available</b><br>Tap to Reload</span>' +
     '<span id="updateDismiss" role="button" aria-label="Not now">✕</span>';
   b.addEventListener('click', async (e)=>{
     if(e.target && e.target.id === 'updateDismiss'){ b.remove(); return; }

@@ -7,6 +7,15 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 4:25 PM EDT · v223 · Update pill wording
+------------------------------------------------------------------------------
+The update pill no longer prints the incoming build number — which build it
+is means nothing in the moment; the only decision on offer is reload now or
+not. It now reads as two centred lines: "Update available" over "Tap to
+Reload". Also corrected a stale comment in the update-check code that said
+the foreground re-check throttle was 45 minutes; it has been 10 for a while.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 4:17 PM EDT · v222 · Compass new-spot fix
 ------------------------------------------------------------------------------
 Fix: a spot saved while the Compass overlay was open didn't answer to a tap —
