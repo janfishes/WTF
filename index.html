@@ -1824,6 +1824,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
      than the theme accent, so the button matches what is drawn on the water. */
   #mapModeBtn.icw-on{background:#39d6ff !important; border-color:#39d6ff !important; color:#04141e !important;}
   #mapModeBtn.icw-on svg{stroke:#04141e !important;}
+  /* Coastal place names the app prints over the flat ocean blue in the Topo
+     Satellite view (USGS's own labels get cut off by the ocean repair at wide
+     zooms) — styled after USGS's white-on-halo label look. */
+  .seaNameWrap{background:none; border:none;}
+  .seaName{color:#f2f7fc; font:600 11px/1.1 -apple-system,'Segoe UI',Roboto,sans-serif; letter-spacing:.3px;
+    text-shadow:0 1px 2px #0c2036, 0 -1px 2px #0c2036, 1px 0 2px #0c2036, -1px 0 2px #0c2036;
+    white-space:nowrap; pointer-events:none; display:inline-block;}
+  .seaName-l{transform:translate(4px,-50%);}
+  .seaName-r{transform:translate(calc(-100% - 4px),-50%);}
+  .seaName-c{transform:translate(-50%,4px);}
   .loc-dot{width:26px; height:26px; display:flex; align-items:center; justify-content:center; color:var(--accent-lite); filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));}
   .pin-preview{width:17px; height:17px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--brass); border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.5);}
 
@@ -2217,7 +2227,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>Cookies</b> (round buttons, top-right of the header) are Search <span style="vertical-align:-2px;">🔍</span>, Help <b>?</b>, Themes <span style="vertical-align:-2px;">🎨</span>, Text Size <b>A</b>, and the <b>Eye</b>, which hides the buttons and species pills.</p>
       <p class="sheet-note"><b>Chips</b> (larger round shapes on the map) are the tide stations <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> and the USCG wave buoy 41070 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg>.</p>
       <p class="sheet-note"><b>Pills</b> (hot-dog shapes) are the row of filter switches along the top of the map below the header (Catches, Inshore, Offshore, Launches) and the Labels pill that toggles these switches' labels on/off — the number next to Catches, Inshore, Offshore, and Launches is a total count. <b>Species filter switches</b> (23) are down the left edge of the map, denoted by colored diamonds. The pills along the lower right of the map's edge are the action stack: <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Catch, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> Spot, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> Bite, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tides, <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> Waves, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> My Log, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons, <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> Compass, <svg viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> Locate Me, and <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite/Streets/ICW Channel. Small colored pins on the map show the locations of your catches, inshore spots, offshore sites, and launch areas. Catch pins with numbers show how many catches you've logged at that location. Offshore pins with numbers show how many sites are at a named artificial or natural reef. Tap a numbered pin to see the catches or coordinates at that location, along with other details.</p>
-      <p class="sheet-note"><b>ICW Channel view.</b> The map button cycles three ways: <b>Topo Satellite</b>, <b>ICW Channel</b>, and <b>Street Map</b>. ICW Channel rides on its own hi-res aerial photo — one continuous image of the land and every inside water (the ICW, the lagoons, the bays), the sharpest view of the flats, bars and nearshore bottom, so the water you're picking a line over is shown at full detail (it has no printed place names, which the Topo Satellite keeps). Off the beach the photo gives way to the same single flat ocean blue as the Topo Satellite view — but here the blue follows the actual shoreline all the way around Florida, Atlantic <i>and</i> Gulf, with enough margin that the surf, the inlet jetties and the islands stay in the photo — and shades the <b>federally maintained channels of Volusia County</b> over it in cyan — the Intracoastal the whole way through the county, and the St Johns River along the county’s western boundary from Lake Monroe up past Lake George, so you can see the dredged cut itself rather than guessing it from the markers — useful for picking a line through the Halifax or down the Indian River, and for seeing how far off the channel a spot really sits. It is the channel <i>area</i>, not a centreline, and every stretch of it in Volusia County is authorised and maintained to <b>12 feet</b>. It is stored on your device, so it draws with the signal off.</p>
+      <p class="sheet-note"><b>ICW Channel view.</b> The map button cycles three ways: <b>Topo Satellite</b>, <b>ICW Channel</b>, and <b>Street Map</b>. In Topo Satellite the sea past Florida's <b>3-mile state-waters limit</b> is one flat ocean blue on every coast — Gulf, Keys and Atlantic — with the limit itself drawn as a <b>dashed line</b> and the coastal town names printed over the blue at wide zooms, where the imagery's own labels would otherwise be cut off at the line. ICW Channel rides on its own hi-res aerial photo — one continuous image of the land and every inside water (the ICW, the lagoons, the bays), the sharpest view of the flats, bars and nearshore bottom, so the water you're picking a line over is shown at full detail (it has no printed place names, which the Topo Satellite keeps). Off the beach the photo gives way to the same single flat ocean blue as the Topo Satellite view — but here the blue follows the actual shoreline all the way around Florida, Atlantic <i>and</i> Gulf, with enough margin that the surf, the inlet jetties and the islands stay in the photo — and shades the <b>federally maintained channels of Volusia County</b> over it in cyan — the Intracoastal the whole way through the county, and the St Johns River along the county’s western boundary from Lake Monroe up past Lake George, so you can see the dredged cut itself rather than guessing it from the markers — useful for picking a line through the Halifax or down the Indian River, and for seeing how far off the channel a spot really sits. It is the channel <i>area</i>, not a centreline, and every stretch of it in Volusia County is authorised and maintained to <b>12 feet</b>. It is stored on your device, so it draws with the signal off.</p>
       <p class="sheet-note"><b>Channel markers.</b> ICW Channel view also plots the <b>240 charted aids to navigation</b> along those channels — 217 fixed daybeacons and 23 buoys — as small red and green dots, red for the marks on your starboard hand coming in from sea, green to port, and amber for the two or three preferred-channel junction marks. <b>Tap a dot</b> — or near enough to one, since a tap takes the closest mark within about a finger’s width — for its full charted name and, where it is lit, its light characteristic — <span class="g-emph">Halifax River Light 47 · Fl G 4s</span>. The name stays put until you tap another mark to move it or open water to clear it, and with a mouse hovering does the same thing. They come and go with the channel shading, since they belong to it.</p>
       <p class="sheet-note"><b>The numbers start again on every waterway</b>, which is worth knowing before you go looking for one. There are <b>five marks numbered 47</b> in Volusia County alone — on the Halifax River, at New Smyrna Beach, in Mosquito Lagoon and elsewhere — so "marker 47" on its own does not identify a spot. That is why every dot carries its full name rather than just a number. Positions come from NOAA's electronic navigational charts (Harbour-band cells); the light characteristics are matched to each mark by position from the charts' separate light records. Same caution as the channel itself: aids get moved, go missing and change characteristic, so this is for planning, not for running an inlet at night.</p>
       <p class="sheet-note">The outlines come from the US Army Corps of Engineers' National Channel Framework — the Florida East survey published <b>June 2020</b> — selected by the survey’s own county labelling. <b>Treat it as paperwork, not as soundings.</b> It shows where the channel is authorised to be, not where the water actually is now: shoaling moves the usable water around inside these outlines, and this coast gets plenty of it. Read your sounder and your chartplotter; use the shading to get the lay of the channel in your head, the same caution that applies to the compass rose.</p>
@@ -2305,6 +2315,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v201</b> · <b>The Topo Satellite ocean repair now goes all the way around Florida — and the 3-mile line is drawn back on, with the coastal town names.</b> Until now the flat-blue repair covered only the east coast; the Gulf still showed the raw patchwork of black tiles and mismatched water past the ~500 ft scale. The fill now runs from the Alabama line around the Keys and up to Georgia, clipped along a <b>statewide 3-mile state-waters line</b> computed from the same real coastline the ICW view uses, so the photo keeps every foot of state waters on every coast. Since the paint covers the chart's own dashed boundary in the new areas, the app now draws the <b>dashed 3-mile line</b> itself, right along the edge where the blue begins — one consistent line on every coast. And the coastal <b>place names</b> the old repair used to cut in half at wide zooms — a label is a fixed number of pixels, so zoomed out it reaches miles over the water; <span class="g-emph">Boynton Beach</span> was losing its second half — are printed back by the app, just seaward of the line in the flat blue, the majors at the widest zoom and every coastal town one click in. From the ~500 ft scale inward the imagery's own labels fit inside the photo strip and the app's copies stand down.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v199–v200</b> · <b>The ICW Channel view's ocean got the same repair the Topo Satellite got in v196 — and the cut now follows Florida's real shoreline, all the way around.</b> The channel view's aerial photo reaches miles out to sea, but past the surf zone it turns into the same patchy, mismatched water the satellite views were cured of: flight-line seams, sun glint, different-day exposures. Now everything seaward of the coast is the one flat ocean blue, cut per-pixel along the state's <b>actual charted coastline</b> — Atlantic, the Keys and the Gulf alike, continuing up the Georgia coast and along the panhandle — with a margin of about <b>three-quarters of a mile</b> so the surf, the <b>inlet jetties</b> and the <b>islands</b> keep their photo. Every inside water keeps its photo entirely: the ICW, the Halifax and Indian Rivers, Mosquito Lagoon, Tampa Bay, Charlotte Harbor, the panhandle bays — the coastline used is an envelope that treats them as inside the coast, exactly as a boater does. v199 first shipped this as a straight <b>1-mile-off-the-beach</b> line derived from the app's coarse surf table; that line clipped part of <b>Cape Canaveral's shore</b>, which is what forced the move to the real coastline in v200. Wide zooms (past the ~500 ft scale) are untouched, as before, and the opt-in offline download for this view skips open-sea tiles — they'd never be shown — so it is a noticeably smaller download too.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v197–v198</b> · <b>Every saltwater marina in Volusia County is now an inshore spot.</b> Eleven new blue pins on the Halifax and Indian River: <b>Loggerhead</b>, <b>Halifax River Yacht Club</b>, <b>Seven Seas</b>, <b>Adventure Yacht Harbor</b>, <b>Harbour Village</b>, <b>Inlet Harbor</b>, <b>Sea Love</b>, <b>Lighthouse Boatyard</b>, <b>New Smyrna Marina</b>, <b>Anglers Yacht Club</b> and <b>Smyrna Yacht Club</b>. Positions come from OpenStreetMap's marina basin outlines and were cross-checked against this chart's own daybeacons wherever a marina has a marked channel. <b>Halifax Harbor Marina</b> and <b>Cassen Park</b> were already on the map as launch pins, so they are not duplicated. Marinas count toward the Inshore total and take drops, marks and catches like any other inshore pin. v197 briefly carried the county's St. Johns River marinas too; v198 keeps the map saltwater-only, so the eight freshwater pins are gone.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v190–v196</b> · <b>The satellite views were rebuilt.</b> Close zoom no longer goes blocky — a NAIP aerial layer takes over where the old imagery ran out — and the ocean's mismatched rectangles are gone. v193–v196 finished the job: the water makes <b>one transition</b> — detailed nearshore photo out to <b>Florida's charted 3-mile boundary</b> (the dashed line, which stays on the map) along the <b>entire east coast</b>, Georgia line to Key Biscayne, then a single flat ocean blue matched to USGS's own wide-zoom ocean — cut per-pixel along the line's shape rather than at tile edges. Zoomed out past the ~500 ft scale the map is now untouched: the whole world, the Gulf and the wide-zoom Atlantic are USGS's own rendering, so every coast matches. <b>ICW Channel now rides on a hi-res aerial photo</b> of land <i>and</i> water out to ~7 nm, and the Offline sheet can save that imagery too (opt-in checkbox). <b>The app now announces its own updates</b> — a tap-to-reload pill appears when a newer build ships, ending the stale-cache guessing. v191 fixed the offline checkbox crushed to a one-letter column by the global input width. v192 fixed <b>intermittent compass bearings on iPhone</b>: iOS fires a fake hover before every tap, and the preview line it drew could cancel the tap that was meant to pin the leg — phones now pin straight from the tap, with a guard so the same gesture can't instantly clear it.</p>
@@ -3060,7 +3071,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 200;
+const BUILD_NUM  = 201;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -3210,12 +3221,15 @@ const TILE_PROVIDERS = [
       // "best available imagery" composite often blends in higher-res local/partner
       // imagery beyond plain NAIP — but its tile cache stops at z16 (~2 m/px), so
       // past that it was being stretched into the blocky view zooming in used to give.
-      { url:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', nativeZoom:16, zIndex:2, oceanFill:'#295890', keyFiller:true },
+      // Clipped along the statewide 3-mile line (SEA3_RINGS): photo keeps the
+      // 3 miles of state water on every coast — Gulf included — flat deep blue
+      // beyond, with the app's own dashed 3-mile line drawn on top.
+      { url:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', nativeZoom:16, zIndex:2, oceanFill:'#295890', keyFiller:true, seaClip:'limit3' },
       // Top: NAIP aerial photo (USDA, ~0.6 m/px) for close zooms only. Takes over
       // from z17 where the Imagery Topo cache runs out, so zooming in stays sharp
-      // to z18 instead of upscaling z16 tiles. Clipped to the same coast line as
+      // to z18 instead of upscaling z16 tiles. Clipped to the same 3-mile line as
       // the layer below so the one-transition ocean holds at every zoom.
-      { type:'wms', url:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', wmsLayer:'USGSNAIPImagery:NaturalColor', minZoom:17, nativeZoom:18, zIndex:3, oceanFill:'#295890', clipOcean:true }
+      { type:'wms', url:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', wmsLayer:'USGSNAIPImagery:NaturalColor', minZoom:17, nativeZoom:18, zIndex:3, oceanFill:'#295890', seaClip:'limit3' }
     ]
   },
   { name:'Hi-Res NAIP land & water + Sentinel-2 ocean', type:'composite',
@@ -3225,7 +3239,7 @@ const TILE_PROVIDERS = [
       // coverage. Open-sea tiles render locally as the flat deep blue along
       // the same shoreline envelope the NAIP layer above is clipped to, so a
       // NAIP outage degrades to the identical ocean instead of a different edge.
-      { url:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg', nativeZoom:16, zIndex:1, oceanFill:'#295890', shoreOcean:true },
+      { url:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg', nativeZoom:16, zIndex:1, oceanFill:'#295890', seaClip:'shore' },
       // Top: NAIP aerial photo — one continuous 0.6 m image of land AND water.
       // NAIP's water photo gets noisy past the surf zone (flight seams, sun
       // glint), so this view keeps it only along the shore: everything seaward
@@ -3235,7 +3249,7 @@ const TILE_PROVIDERS = [
       // waters — the ICW, lagoons, bays — are inside the envelope and keep
       // their photo at full detail. No topo labels, no filler patches: this
       // is the base imagery under the ICW Channel view.
-      { type:'wms', url:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', wmsLayer:'USGSNAIPImagery:NaturalColor', nativeZoom:18, zIndex:2, oceanFill:'#295890', shoreOcean:true, shoreClip:true }
+      { type:'wms', url:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', wmsLayer:'USGSNAIPImagery:NaturalColor', nativeZoom:18, zIndex:2, oceanFill:'#295890', seaClip:'shore' }
     ]
   },
   { name:'OpenStreetMap (street map)', url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attribution:'&copy; OpenStreetMap contributors', nativeZoom:19 }
@@ -3263,14 +3277,14 @@ const OFFLINE_TILE_TEMPLATES = [
   // get pre-cached; the USGS layer renders open-ocean tiles locally as
   // transparent, so its water tiles are skipped (skipOcean).
   { type:'xyz', tpl:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg' },
-  { type:'xyz', tpl:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', skipOcean:true }
+  { type:'xyz', tpl:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', skipOcean:true, seaClip:'limit3' }
 ];
 // Optional add-on set: the ICW Channel view's hi-res NAIP imagery (one aerial
 // photo of land AND water). Opt-in from the Offline sheet — photographic PNG
 // tiles run much heavier than the topo set, so it isn't downloaded by default.
 // Its URLs are built by the same wmsTileUrl() the live layer uses, so cached
 // tiles are reused exactly.
-const OFFLINE_ICW_TEMPLATE = { type:'wms', base:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', layer:'USGSNAIPImagery:NaturalColor', skipOcean:true, shore:true };
+const OFFLINE_ICW_TEMPLATE = { type:'wms', base:'https://imagery.nationalmap.gov/arcgis/services/USGSNAIPImagery/ImageServer/WMSServer', layer:'USGSNAIPImagery:NaturalColor', skipOcean:true, seaClip:'shore' };
 
 let _tileCachePromise = null;
 function tileCacheOpen(){
@@ -3287,7 +3301,7 @@ async function fetchTileCacheFirst(url){
   if(resp && resp.ok && cache){ try{ await cache.put(url, resp.clone()); }catch(e){} }
   return resp;
 }
-/* ---- Open-ocean tile handling ----
+/* ---- Open-sea tile handling ----
    USGS ImageryTopo has two very different oceans. Zoomed out (z<=8) it draws
    a proper rendered ocean — the light blue the whole Gulf and the world view
    show. Zoomed in (z>=9) it serves solid-black tiles offshore, patches of
@@ -3295,150 +3309,25 @@ async function fetchTileCacheFirst(url){
    patchwork. So the fix only runs where the problem lives:
    - at z<=8 nothing is touched — the world, the Gulf and the wide-zoom
      Atlantic are USGS's own rendering, identical on every coast;
-   - at z>=9, everything seaward of the COAST_EAST line below (Florida's
-     charted 3-mile state-waters boundary, the dashed line on the map) is
-     painted flat #295890 — the same light blue USGS's own z8 ocean uses, so
-     zooming across the boundary doesn't change colour. Tiles wholly seaward
-     render locally (no request); tiles the line crosses are clipped
-     per-pixel so the edge is the smooth line itself, not tile staircases;
-     and #004C74 filler patches west of the line recolour to match.
-   The fill stops at OCEAN_EAST_LON (west of the Bahamas) and at the line's
-   north/south ends (coastEastLon returns Infinity outside them), so nothing
-   beyond Florida's east coast is ever repainted. */
+   - at z>=9, everything seaward of a clip boundary is painted flat #295890 —
+     the same light blue USGS's own z8 ocean uses, so zooming across the
+     boundary doesn't change colour. Tiles wholly seaward render locally (no
+     request); tiles the boundary crosses are clipped per-pixel by canvas
+     polygon compositing so the edge is the boundary's own smooth shape, not
+     tile staircases; and #004C74 filler patches landward recolour to match.
+   Two clip boundaries exist, both statewide — Gulf, Keys and Atlantic — and
+   both bounded by the SHORE_GATE box so nothing beyond Florida's corner of
+   the sea is ever repainted (see SEA_CLIPS below):
+   - 'limit3' (Topo Satellite): the 3-mile state-waters line, so the photo
+     keeps all of state waters; the app draws its own dashed line along it.
+   - 'shore'  (ICW Channel): the coastline envelope itself plus a pad that
+     keeps beaches, inlet jetties and islands in the photo. */
 const OCEAN_DEEP = '#295890';
 const OCEAN_DEEP_R = 41, OCEAN_DEEP_G = 88, OCEAN_DEEP_B = 144;
 const OCEAN_MIN_Z = 9;             // z<=8: USGS's own ocean rendering; leave it alone
-const OCEAN_EAST_LON = -79.25;     // fill stops well west of the Bahamas
-/* The ICW Channel view uses the same flat-blue repair but along the actual
-   shoreline, all the way around Florida — Atlantic and Gulf — instead of the
-   east-coast 3-mile table. See the SHORE_RINGS coastline envelope below. */
 const FILLER_TOL = 8;                       // JPEG wiggle around exact #004C74
 function isFillerPixel(r,g,b){
   return r <= FILLER_TOL && g >= 76-FILLER_TOL && g <= 76+FILLER_TOL && b >= 116-FILLER_TOL && b <= 116+FILLER_TOL;
-}
-/* For row j of a size-px tile at coords, the [start,end) pixel-column range
-   that lies in the fill zone: seaward of the coast line but west of
-   OCEAN_EAST_LON. start===end means the row is untouched. Longitude is linear
-   in x, so two boundary columns per row suffice. */
-function oceanClipRange(coords, size, j){
-  if(coords.z < OCEAN_MIN_Z) return [size, size];
-  const n = Math.pow(2, coords.z);
-  const lat = Math.atan(Math.sinh(Math.PI*(1 - 2*(coords.y + (j+0.5)/size)/n)))*180/Math.PI;
-  const lim = coastEastLon(lat);
-  if(lim === Infinity) return [size, size];
-  const sCol = Math.max(0, Math.min(size, Math.ceil(((lim+180)/360*n - coords.x)*size - 0.5)));
-  const eCol = Math.max(sCol, Math.min(size, Math.ceil(((OCEAN_EAST_LON+180)/360*n - coords.x)*size - 0.5)));
-  return [sCol, eCol];
-}
-// lat → the longitude where the photo water ends and the flat ocean fill
-// begins: Florida's Atlantic 3-mile state-waters boundary — the charted
-// dashed line — from the Georgia line down to Key Biscayne, offset 0.01°
-// seaward so the dashes and their labels stay visible in the photo zone.
-// Source: Census TIGER Florida state polygon (generalised), with the Volusia
-// stretch replaced by the county polygon's finer arc since that is the home
-// water. Outside the table's latitude range coastEastLon returns Infinity —
-// no filling, so Georgia, the Keys and the rest of the world are untouched.
-const COAST_EAST = [
-  [30.712,-81.337],
-  [30.686,-81.342],
-  [30.663,-81.363],
-  [30.627,-81.371],
-  [30.544,-81.368],
-  [30.493,-81.345],
-  [30.447,-81.344],
-  [30.416,-81.31],
-  [30.379,-81.312],
-  [30.299,-81.321],
-  [30.0,-81.245],
-  [29.942,-81.225],
-  [29.922,-81.214],
-  [29.875,-81.199],
-  [29.822,-81.195],
-  [29.76,-81.176],
-  [29.723,-81.157],
-  [29.666,-81.139],
-  [29.605,-81.114],
-  [29.518,-81.07],
-  [29.433,-81.032],
-  [29.36,-81.001],
-  [29.34,-80.991],
-  [29.315,-80.979],
-  [29.292,-80.967],
-  [29.266,-80.954],
-  [29.245,-80.944],
-  [29.216,-80.932],
-  [29.182,-80.916],
-  [29.145,-80.897],
-  [29.106,-80.865],
-  [29.085,-80.851],
-  [29.063,-80.835],
-  [29.043,-80.822],
-  [29.013,-80.803],
-  [28.993,-80.79],
-  [28.948,-80.76],
-  [28.927,-80.747],
-  [28.886,-80.719],
-  [28.858,-80.7],
-  [28.833,-80.683],
-  [28.808,-80.665],
-  [28.608,-80.513],
-  [28.575,-80.501],
-  [28.54,-80.494],
-  [28.492,-80.468],
-  [28.463,-80.459],
-  [28.425,-80.471],
-  [28.391,-80.509],
-  [28.336,-80.524],
-  [28.271,-80.534],
-  [28.077,-80.49],
-  [27.761,-80.322],
-  [27.662,-80.289],
-  [27.639,-80.285],
-  [27.573,-80.258],
-  [27.519,-80.24],
-  [27.486,-80.219],
-  [27.463,-80.218],
-  [27.239,-80.117],
-  [27.181,-80.085],
-  [27.125,-80.071],
-  [27.092,-80.053],
-  [27.03,-80.029],
-  [26.875,-79.984],
-  [26.8,-79.965],
-  [26.765,-79.966],
-  [26.703,-79.965],
-  [26.664,-79.971],
-  [26.569,-79.972],
-  [26.433,-79.996],
-  [26.321,-80.005],
-  [26.248,-80.015],
-  [25.881,-80.056],
-  [25.848,-80.053],
-  [25.802,-80.057],
-  [25.779,-80.063],
-  [25.757,-80.059],
-  [25.737,-80.066],
-  [25.607,-80.098]
-];
-function coastEastLon(lat){
-  const c = COAST_EAST;
-  if(lat > c[0][0] || lat < c[c.length-1][0]) return Infinity;
-  for(let i=0;i<c.length-1;i++){
-    const a=c[i], b=c[i+1];
-    if(lat<=a[0] && lat>=b[0]){ const t=(lat-b[0])/(a[0]-b[0]); return b[1]+t*(a[1]-b[1]); }
-  }
-  return Infinity;
-}
-function isOpenOceanTile(coords){
-  if(coords.z < OCEAN_MIN_Z) return false;
-  const n = Math.pow(2, coords.z);
-  const lonW = coords.x/n*360 - 180;
-  const lonE = (coords.x+1)/n*360 - 180;
-  if(lonE > OCEAN_EAST_LON) return false;   // reaches toward the Bahamas — fetch normally
-  // southern edge: the coast sits furthest east at the tile's lowest latitude,
-  // so testing there means the whole tile is seaward of the beach.
-  const latS = Math.atan(Math.sinh(Math.PI*(1 - 2*(coords.y+1)/n)))*180/Math.PI;
-  return lonW > coastEastLon(latS);
 }
 function oceanTileElement(fill, size){
   const c = document.createElement('canvas');
@@ -3463,11 +3352,22 @@ function oceanTileElement(fill, size){
    happens inside SHORE_GATE and at z>=OCEAN_MIN_Z, so the wide-zoom world and
    every other coast are untouched. */
 const SHORE_RINGS = [[-81.4232,31.0,-81.4182,30.9867,-81.4085,30.9777,-81.4034,30.9579,-81.4041,30.9037,-81.4306,30.8318,-81.4458,30.8123,-81.4542,30.7935,-81.4609,30.7566,-81.4588,30.7407,-81.4463,30.7138,-81.4385,30.7061,-81.4259,30.7004,-81.442,30.5997,-81.4432,30.5685,-81.4359,30.5261,-81.4375,30.5088,-81.4295,30.4929,-81.4132,30.4829,-81.4088,30.4212,-81.4018,30.4049,-81.3935,30.3955,-81.398,30.3604,-81.3915,30.3029,-81.3087,29.9686,-81.2913,29.9202,-81.2752,29.8988,-81.2656,29.8587,-81.2607,29.8074,-81.2533,29.7753,-81.2112,29.6663,-81.1639,29.556,-81.0465,29.3074,-80.9657,29.1471,-80.9434,29.1095,-80.9096,29.0709,-80.8776,29.0109,-80.7104,28.7577,-80.6428,28.6727,-80.6157,28.6333,-80.5743,28.5853,-80.5602,28.5289,-80.5251,28.4588,-80.529,28.4497,-80.5607,28.4375,-80.58,28.4206,-80.5944,28.3945,-80.6044,28.3541,-80.6068,28.2978,-80.603,28.2504,-80.5939,28.1947,-80.5718,28.1109,-80.5576,28.0712,-80.5308,28.0133,-80.4931,27.941,-80.4474,27.8626,-80.3807,27.7326,-80.3489,27.6263,-80.3311,27.5966,-80.3123,27.527,-80.2701,27.4153,-80.1935,27.2505,-80.1615,27.1928,-80.1534,27.1693,-80.1535,27.1549,-80.1412,27.1177,-80.1168,27.0724,-80.0939,27.0186,-80.0464,26.8597,-80.0314,26.7963,-80.032,26.7737,-80.0364,26.7578,-80.0331,26.7014,-80.0388,26.5701,-80.0583,26.459,-80.0803,26.2587,-80.0886,26.2337,-80.1027,26.1369,-80.1049,26.0953,-80.1101,26.0732,-80.1213,25.9172,-80.1195,25.8282,-80.1309,25.7644,-80.1471,25.7362,-80.1482,25.7191,-80.1561,25.6922,-80.153,25.6716,-80.158,25.6654,-80.166,25.6773,-80.1773,25.6866,-80.173,25.6985,-80.1727,25.7151,-80.1766,25.7261,-80.1844,25.7348,-80.1949,25.7399,-80.2094,25.74,-80.2252,25.7349,-80.2394,25.7222,-80.2444,25.712,-80.2452,25.6984,-80.2637,25.6666,-80.272,25.6392,-80.2863,25.6201,-80.2981,25.6134,-80.3049,25.6041,-80.3077,25.59,-80.3027,25.5695,-80.3135,25.5374,-80.3237,25.5299,-80.3302,25.5202,-80.3327,25.5041,-80.3389,25.4918,-80.3395,25.4797,-80.3316,25.4527,-80.3205,25.4371,-80.3152,25.4179,-80.3003,25.4066,-80.2895,25.3914,-80.2699,25.3854,-80.227,25.4047,-80.2179,25.4127,-80.1945,25.4601,-80.1878,25.4849,-80.1897,25.5041,-80.174,25.5253,-80.1778,25.5017,-80.1767,25.4859,-80.201,25.4284,-80.2039,25.4145,-80.2264,25.3901,-80.2374,25.3635,-80.2394,25.3506,-80.2522,25.3396,-80.26,25.3249,-80.2745,25.3124,-80.2871,25.2846,-80.3078,25.2559,-80.3471,25.1903,-80.3499,25.1689,-80.3582,25.1533,-80.3772,25.1304,-80.4001,25.1061,-80.4237,25.0957,-80.4347,25.0856,-80.4455,25.0696,-80.4467,25.0512,-80.4715,25.0467,-80.4815,25.0411,-80.4946,25.0231,-80.5184,25.002,-80.5328,24.9945,-80.5658,24.9571,-80.5918,24.9491,-80.6073,24.9403,-80.6368,24.912,-80.6577,24.8974,-80.6786,24.8937,-80.7034,24.8684,-80.725,24.8581,-80.7352,24.8489,-80.7422,24.852,-80.7405,24.8566,-80.7329,24.8643,-80.7187,24.8698,-80.71,24.8777,-80.7005,24.908,-80.681,24.9127,-80.6685,24.9264,-80.6499,24.9382,-80.6438,24.9514,-80.6439,24.9632,-80.6522,24.9785,-80.6714,24.9877,-80.6767,24.9986,-80.6881,25.0078,-80.6994,25.0106,-80.711,25.0088,-80.7306,24.9933,-80.7449,25.0174,-80.7566,25.0265,-80.7713,25.0289,-80.7915,25.0236,-80.7841,25.0375,-80.783,25.0489,-80.7929,25.0695,-80.7902,25.0809,-80.7917,25.0922,-80.8028,25.1094,-80.8221,25.1157,-80.8384,25.114,-80.8515,25.1078,-80.8649,25.1089,-80.8758,25.1051,-80.8861,25.0951,-80.8906,25.0815,-80.8892,25.07,-80.8791,25.0466,-80.8892,25.0502,-80.9023,25.0493,-80.9141,25.0706,-80.9322,25.08,-80.9366,25.0997,-80.9496,25.1198,-80.9608,25.1288,-80.9778,25.1312,-80.9992,25.1243,-81.0247,25.1291,-81.0505,25.1281,-81.0879,25.1162,-81.0982,25.1319,-81.1176,25.1499,-81.141,25.1572,-81.1422,25.1802,-81.1482,25.196,-81.1576,25.2104,-81.172,25.223,-81.1671,25.27,-81.1595,25.2979,-81.1521,25.3121,-81.1519,25.3248,-81.1354,25.3513,-81.1359,25.3691,-81.1505,25.3873,-81.1505,25.4132,-81.1712,25.4653,-81.1889,25.4808,-81.2097,25.5065,-81.2075,25.5294,-81.211,25.5433,-81.2336,25.5689,-81.2481,25.602,-81.2574,25.6096,-81.2715,25.6144,-81.2778,25.6368,-81.2899,25.6543,-81.2926,25.676,-81.2998,25.6888,-81.3182,25.6979,-81.3506,25.6899,-81.3556,25.6925,-81.3531,25.7173,-81.3557,25.7288,-81.3649,25.7403,-81.3818,25.7492,-81.3845,25.7652,-81.3936,25.7764,-81.415,25.7844,-81.4303,25.7948,-81.4437,25.7983,-81.4579,25.7978,-81.4702,25.8034,-81.479,25.8163,-81.497,25.8283,-81.53,25.8386,-81.5384,25.846,-81.5791,25.8649,-81.586,25.8773,-81.6013,25.8887,-81.6226,25.8907,-81.6354,25.8956,-81.6499,25.8941,-81.6656,25.881,-81.6783,25.8453,-81.6895,25.8527,-81.7126,25.8961,-81.7295,25.9094,-81.7308,25.9256,-81.7355,25.9368,-81.7531,25.9511,-81.7555,25.9573,-81.7491,25.9709,-81.7497,25.9855,-81.7624,26.0061,-81.8017,26.0914,-81.8089,26.1522,-81.8146,26.1732,-81.8209,26.2379,-81.8328,26.2928,-81.8441,26.3263,-81.8685,26.3773,-81.9017,26.4111,-81.9095,26.426,-81.9725,26.4644,-81.9894,26.4682,-82.0031,26.4637,-82.014,26.4521,-82.0624,26.4258,-82.0836,26.4222,-82.1266,26.4363,-82.1478,26.4545,-82.1729,26.4677,-82.1803,26.4758,-82.1866,26.49,-82.204,26.5639,-82.2114,26.5764,-82.2209,26.5839,-82.2244,26.5933,-82.2237,26.6117,-82.228,26.627,-82.2488,26.6613,-82.2625,26.6776,-82.2573,26.7025,-82.2642,26.7202,-82.2646,26.7547,-82.2704,26.786,-82.2827,26.8042,-82.2892,26.826,-82.3516,26.9083,-82.4457,27.0607,-82.4611,27.1017,-82.4689,27.1136,-82.4772,27.1412,-82.4995,27.1799,-82.5221,27.2283,-82.5444,27.2592,-82.564,27.2699,-82.5689,27.2756,-82.5703,27.2992,-82.5924,27.3302,-82.6244,27.363,-82.6612,27.4125,-82.69,27.4344,-82.7072,27.4861,-82.7223,27.5105,-82.7412,27.5198,-82.8,27.52,-82.8,27.72,-82.786,27.7222,-82.7764,27.7285,-82.7698,27.738,-82.7674,27.7521,-82.7717,27.7657,-82.7898,27.79,-82.8285,27.8223,-82.8421,27.844,-82.8493,27.864,-82.8521,27.8866,-82.8429,27.9339,-82.8324,27.9596,-82.8281,28.0201,-82.823,28.0394,-82.8248,28.0508,-82.8341,28.0638,-82.8386,28.0795,-82.8368,28.0964,-82.8433,28.1195,-82.8366,28.1448,-82.8397,28.1564,-82.8468,28.166,-82.8524,28.2102,-82.8495,28.2133,-82.8405,28.212,-82.8366,28.2016,-82.8288,28.193,-82.8096,28.1872,-82.7933,28.1928,-82.7825,28.2074,-82.7702,28.2172,-82.7582,28.2549,-82.7474,28.266,-82.7368,28.2899,-82.7314,28.325,-82.721,28.3397,-82.7181,28.3573,-82.7083,28.3718,-82.7066,28.4026,-82.6972,28.4202,-82.6843,28.4313,-82.6791,28.4422,-82.6812,28.4642,-82.6739,28.4848,-82.6781,28.4993,-82.6702,28.5138,-82.6549,28.5838,-82.6777,28.6548,-82.6731,28.6674,-82.6728,28.6791,-82.6787,28.6925,-82.6971,28.7078,-82.7072,28.7128,-82.7208,28.7137,-82.7105,28.7376,-82.7118,28.7547,-82.7201,28.7665,-82.7367,28.7737,-82.7469,28.7828,-82.7573,28.8007,-82.7477,28.8069,-82.7411,28.8162,-82.7279,28.8712,-82.7109,28.8768,-82.6991,28.8899,-82.6967,28.9074,-82.7033,28.9271,-82.7294,28.9617,-82.7436,28.9702,-82.7571,28.986,-82.764,28.9997,-82.7573,29.0259,-82.7635,29.0453,-82.7807,29.0562,-82.8048,29.0543,-82.8155,29.073,-82.8236,29.0989,-82.8114,29.1119,-82.8088,29.1298,-82.8143,29.1431,-82.8254,29.1523,-82.8567,29.1618,-82.8764,29.1594,-82.9195,29.1689,-82.9849,29.1703,-82.9995,29.162,-83.0205,29.1326,-83.0269,29.111,-83.0265,29.0959,-83.0295,29.0938,-83.0486,29.0999,-83.0654,29.0957,-83.0772,29.1002,-83.0814,29.11,-83.0902,29.1187,-83.0935,29.1311,-83.0734,29.1448,-83.0662,29.1663,-83.0688,29.1783,-83.0877,29.2157,-83.0818,29.2429,-83.0885,29.2617,-83.1128,29.2767,-83.1461,29.2869,-83.1616,29.2857,-83.1691,29.2898,-83.1746,29.3071,-83.1713,29.3215,-83.175,29.3409,-83.1891,29.3607,-83.2025,29.3713,-83.206,29.3899,-83.2222,29.4171,-83.2444,29.432,-83.2727,29.4324,-83.2937,29.4371,-83.2998,29.4526,-83.313,29.469,-83.3311,29.4756,-83.3572,29.4956,-83.3792,29.5036,-83.3875,29.5115,-83.4002,29.5173,-83.4019,29.5583,-83.4071,29.5706,-83.4069,29.5885,-83.3999,29.6171,-83.4058,29.6471,-83.413,29.6592,-83.4309,29.6731,-83.4553,29.6765,-83.4837,29.6882,-83.4886,29.6999,-83.4968,29.7078,-83.5371,29.7262,-83.5479,29.7281,-83.567,29.7516,-83.5842,29.7585,-83.5892,29.7833,-83.5892,29.807,-83.5974,29.8245,-83.6185,29.8424,-83.6439,29.8879,-83.6848,29.9197,-83.7845,29.9739,-83.8129,29.9766,-83.829,29.9699,-83.8352,29.9873,-83.8445,29.9971,-83.9254,30.0346,-83.9585,30.0614,-83.9832,30.0731,-84.0201,30.1001,-84.0572,30.1014,-84.0831,30.0923,-84.1026,30.0916,-84.1138,30.0855,-84.1303,30.0853,-84.1573,30.0728,-84.1679,30.0715,-84.1791,30.0732,-84.1985,30.0841,-84.2501,30.0855,-84.2634,30.0785,-84.2772,30.0603,-84.3014,30.0556,-84.3197,30.0465,-84.3469,30.0154,-84.3497,29.998,-84.3402,29.9754,-84.3424,29.9572,-84.3338,29.9246,-84.336,29.913,-84.3445,29.8991,-84.3809,29.8938,-84.4233,29.9033,-84.4491,29.9196,-84.463,29.9233,-84.4771,29.92,-84.492,29.9099,-84.5091,29.9154,-84.5358,29.9099,-84.5837,29.8846,-84.5947,29.8711,-84.5968,29.8568,-84.5934,29.8457,-84.5861,29.8367,-84.5723,29.8277,-84.5722,29.8187,-84.5794,29.8079,-84.6238,29.7885,-84.6819,29.7738,-84.7643,29.7004,-84.7984,29.6819,-84.8709,29.6583,-84.9565,29.614,-85.0451,29.587,-85.1017,29.6261,-85.141,29.6341,-85.1749,29.6587,-85.2043,29.6726,-85.2252,29.6775,-85.2422,29.677,-85.2753,29.6833,-85.2974,29.684,-85.3265,29.6793,-85.3515,29.6667,-85.365,29.6773,-85.381,29.7024,-85.3982,29.7424,-85.4136,29.8004,-85.4175,29.8299,-85.4117,29.8598,-85.3847,29.8816,-85.3776,29.9004,-85.3839,29.9195,-85.4072,29.9398,-85.4254,29.9489,-85.4526,29.9561,-85.4813,29.9579,-85.503,29.9683,-85.5155,29.9779,-85.5324,29.9981,-85.5531,30.0114,-85.5972,30.0515,-85.7005,30.0992,-85.7283,30.1177,-85.7768,30.1571,-85.8775,30.2153,-85.9221,30.2374,-85.9994,30.2706,-86.0893,30.3033,-86.28,30.3589,-86.342,30.3712,-86.4117,30.3803,-86.4702,30.3839,-86.5061,30.3823,-86.5259,30.3874,-86.6242,30.3966,-86.7548,30.3918,-86.9096,30.3724,-87.1549,30.3278,-87.2059,30.3215,-87.2709,30.3168,-87.2945,30.3237,-87.3067,30.324,-87.4146,30.2989,-87.5587,30.2713,-87.5759,30.2705,-87.6592,30.2508,-87.7997,30.2295,-87.8392,30.2272,-87.9337,30.23,-87.952,30.2206,-87.9607,30.2,-88.1,30.2,-88.1005,30.224,-88.1064,30.2369,-88.1203,30.2466,-88.1394,30.2497,-88.2019,30.2474,-88.3041,30.2282,-88.3263,30.2285,-88.3201,30.232,-88.2979,30.2321,-88.2015,30.2511,-88.1429,30.2557,-88.1334,30.2613,-88.1255,30.272,-88.1223,30.2833,-88.1236,30.295,-88.1313,30.3074,-88.1481,30.3215,-88.1589,30.326,-88.1719,30.326,-88.1916,30.3187,-88.2078,30.3233,-88.2254,30.3199,-88.2422,30.3271,-88.2578,30.3256,-88.2624,30.3342,-88.2631,30.3542,-88.2708,30.3662,-88.2889,30.3743,-88.3139,30.3712,-88.3226,30.3867,-88.3379,30.395,-88.3525,30.3944,-88.38,30.3813,-88.391,30.3699,-88.3946,30.3501,-88.4,30.3469,-88.4,31.0],[-81.8154,24.5624,-81.8034,24.5786,-81.7995,24.5941,-81.7815,24.5973,-81.7702,24.6065,-81.7651,24.617,-81.7653,24.6326,-81.7618,24.6411,-81.7542,24.654,-81.7463,24.6594,-81.7014,24.6778,-81.6723,24.6995,-81.6568,24.7035,-81.6438,24.7123,-81.5891,24.7347,-81.5705,24.7566,-81.5614,24.7603,-81.5336,24.758,-81.5195,24.7616,-81.5088,24.7714,-81.4981,24.7925,-81.4435,24.8133,-81.4282,24.7962,-81.417,24.7922,-81.4048,24.7925,-81.3785,24.7824,-81.3719,24.7791,-81.3606,24.766,-81.3498,24.7613,-81.338,24.7612,-81.3251,24.7671,-81.3084,24.7686,-81.2932,24.7808,-81.2848,24.7717,-81.2957,24.757,-81.3008,24.7378,-81.2974,24.7167,-81.3008,24.7005,-81.2977,24.6893,-81.2906,24.6802,-81.2805,24.6744,-81.269,24.6728,-81.2461,24.6758,-81.2431,24.6733,-81.2448,24.6692,-81.2818,24.6538,-81.2983,24.654,-81.3327,24.6397,-81.3948,24.6212,-81.4126,24.6331,-81.427,24.6366,-81.4541,24.6284,-81.4629,24.6203,-81.4689,24.6085,-81.4982,24.6239,-81.5342,24.6174,-81.5545,24.6108,-81.6043,24.5862,-81.6646,24.5719,-81.6853,24.5587,-81.7353,24.5567,-81.8036,24.5446,-81.8125,24.5455],[-81.124,24.7072,-81.0691,24.7238,-81.0416,24.7432,-81.0253,24.7387,-81.0135,24.7394,-80.9977,24.7468,-80.9887,24.7601,-80.9706,24.7606,-80.9538,24.7709,-80.9384,24.7747,-80.914,24.7786,-80.9084,24.7769,-80.9066,24.7707,-80.9114,24.7664,-80.9492,24.7608,-81.0166,24.7196,-81.0238,24.7169,-81.0405,24.7223,-81.0545,24.719,-81.0687,24.7086,-81.0773,24.69,-81.108,24.6886],[-82.1652,24.5528,-82.1645,24.5634,-82.1521,24.5737,-82.1454,24.5899,-82.14,24.5951,-82.1248,24.597,-82.1017,24.585,-82.1014,24.5655,-82.1167,24.5493,-82.159,24.548],[-80.7848,24.8375,-80.7869,24.8228,-80.7946,24.8121,-80.8222,24.8118,-80.8492,24.8035,-80.8311,24.8135,-80.8089,24.8335,-80.7927,24.8434],[-81.9361,24.5293,-81.9244,24.5463,-81.9127,24.5569,-81.908,24.5678,-81.8839,24.5612,-81.9077,24.5503,-81.9148,24.541,-81.9184,24.5289,-81.9283,24.5266],[-82.0096,24.5356,-82.0068,24.5376,-81.9916,24.5286,-82.0064,24.5275],[-81.9843,24.5266,-81.9709,24.5269,-81.9598,24.5241,-81.9643,24.5213],[-82.875,24.6293,-82.8633,24.6288,-82.8629,24.6257,-82.8736,24.6265],[-80.8685,25.0365,-80.8622,25.0338,-80.8612,25.0297,-80.8653,25.03]];
-const SHORE_PAD_M = 1300;
+const SHORE_PAD_M = 1300;          // 'shore' clip: painted edge pushed ~1.3 km seaward of the rings
 const SHORE_GATE = { s:24.25, n:31.0, w:-88.4, e:-79.25 };
-let _shoreBB = null;
-function shoreBboxes(){
-  if(!_shoreBB) _shoreBB = SHORE_RINGS.map(r=>{
+/* The 3-mile state-waters line for the Topo Satellite view: the shoreline
+   envelope above buffered 3 nautical miles seaward (computed in a
+   longitude-scaled space so the distance holds in every direction — see
+   tools/build_shore.py). The photo keeps all of state waters on every coast;
+   the app draws its own dashed line along this boundary (sea overlays, further
+   down), replacing USGS's charted dashes wherever the fill covers them. */
+const SEA3_RINGS = [[-81.3579,30.9999,-81.3473,30.9632,-81.3483,30.8961,-81.3762,30.8177,-81.3955,30.7894,-81.4039,30.7636,-81.4002,30.7449,-81.3771,30.7257,-81.3695,30.7029,-81.3855,30.5972,-81.3858,30.5595,-81.3795,30.5232,-81.3666,30.5111,-81.3578,30.4925,-81.352,30.4293,-81.3374,30.4016,-81.3415,30.3628,-81.3363,30.3134,-81.2541,29.9814,-81.2406,29.9425,-81.2202,29.9103,-81.1991,29.7893,-81.1113,29.5743,-80.9152,29.1695,-80.8955,29.1361,-80.8606,29.0958,-80.8286,29.0358,-80.6624,28.784,-80.521,28.602,-80.5064,28.5443,-80.4737,28.4802,-80.4686,28.4595,-80.4719,28.4385,-80.4845,28.4186,-80.5327,28.3926,-80.5406,28.3794,-80.5483,28.3482,-80.5468,28.2562,-80.5384,28.204,-80.5173,28.1242,-80.4791,28.0336,-80.3279,27.7502,-80.2949,27.6415,-80.2775,27.6126,-80.2582,27.5416,-80.2169,27.4322,-80.1417,27.2704,-80.1085,27.2101,-80.0878,27.134,-80.0404,27.0344,-79.9914,26.8712,-79.9749,26.7969,-79.9796,26.7551,-79.9766,26.7,-79.9824,26.5665,-80.0021,26.4535,-80.0241,26.2536,-80.0325,26.2273,-80.0539,26.0679,-80.0648,25.9155,-80.0631,25.825,-80.0756,25.7541,-80.0913,25.7259,-80.0991,25.6887,-80.0972,25.6636,-80.1082,25.64,-80.1307,25.6216,-80.1604,25.6154,-80.1895,25.6238,-80.2105,25.6449,-80.2235,25.6136,-80.2478,25.5836,-80.2471,25.5608,-80.2592,25.5234,-80.2765,25.4991,-80.2817,25.4828,-80.2649,25.4455,-80.249,25.4734,-80.2429,25.5208,-80.2174,25.5593,-80.1989,25.5708,-80.1795,25.5751,-80.1578,25.5733,-80.1385,25.5643,-80.1217,25.5449,-80.1164,25.5176,-80.1218,25.4742,-80.1531,25.3925,-80.1754,25.3679,-80.1907,25.3252,-80.2251,25.2855,-80.2841,25.1904,-80.3094,25.1281,-80.3593,25.0714,-80.3899,25.0549,-80.3932,25.0352,-80.4074,25.0153,-80.4447,24.9994,-80.4946,24.9567,-80.5318,24.9172,-80.5718,24.9012,-80.6018,24.8727,-80.6294,24.8541,-80.6478,24.8482,-80.6673,24.8299,-80.7045,24.8069,-80.7374,24.7988,-80.7655,24.7692,-80.8537,24.7532,-80.8646,24.7363,-80.8833,24.723,-80.9265,24.7137,-80.9851,24.6778,-81.0259,24.667,-81.0469,24.6477,-81.0737,24.6398,-81.114,24.6389,-81.1307,24.6428,-81.1466,24.6514,-81.168,24.6735,-81.1783,24.6908,-81.181,24.7115,-81.1746,24.7306,-81.1645,24.7426,-81.1457,24.7535,-81.096,24.7685,-81.0653,24.7886,-81.0315,24.7926,-81.0074,24.8073,-80.9493,24.8237,-80.8994,24.8269,-80.8816,24.8464,-80.8086,24.8914,-80.8328,24.9083,-80.8446,24.9391,-80.8724,24.9549,-80.8882,24.9843,-80.9476,25.0178,-80.9587,25.0355,-80.979,25.052,-80.9884,25.0752,-81.0412,25.0786,-81.0748,25.0669,-81.1023,25.0679,-81.1301,25.0822,-81.1497,25.1078,-81.1715,25.1151,-81.187,25.1282,-81.1959,25.1454,-81.2,25.1758,-81.2212,25.1976,-81.2282,25.2171,-81.2222,25.281,-81.1965,25.3584,-81.2051,25.3743,-81.2069,25.4025,-81.2133,25.4194,-81.2222,25.4404,-81.2622,25.4882,-81.266,25.5236,-81.2835,25.5456,-81.2943,25.5687,-81.3198,25.5885,-81.344,25.6402,-81.3717,25.6435,-81.3987,25.6602,-81.4116,25.6838,-81.4124,25.7072,-81.4275,25.7197,-81.4369,25.7384,-81.4536,25.7479,-81.4759,25.7504,-81.4979,25.7598,-81.526,25.7841,-81.5572,25.7948,-81.6228,25.8332,-81.6404,25.8083,-81.6741,25.7955,-81.7102,25.8025,-81.7362,25.8247,-81.7589,25.8661,-81.7808,25.8885,-81.786,25.9104,-81.8069,25.9358,-81.812,25.9577,-81.808,25.9756,-81.8566,26.0795,-81.8765,26.2288,-81.8882,26.2829,-81.9181,26.3529,-81.9552,26.3951,-81.9845,26.4094,-82.057,26.3747,-82.0852,26.3721,-82.1093,26.3759,-82.1586,26.3951,-82.208,26.4285,-82.2267,26.4472,-82.2413,26.4775,-82.2578,26.5461,-82.2713,26.5614,-82.2785,26.5788,-82.2804,26.6069,-82.3172,26.6653,-82.3159,26.7001,-82.324,26.7692,-82.3404,26.8035,-82.4002,26.8828,-82.4957,27.0375,-82.5303,27.1238,-82.5724,27.2053,-82.6182,27.2512,-82.626,27.2837,-82.6397,27.3024,-82.6691,27.3323,-82.704,27.3797,-82.7381,27.4081,-82.7609,27.47,-82.8193,27.4731,-82.8382,27.4832,-82.8533,27.5035,-82.8564,27.7221,-82.8512,27.7411,-82.8351,27.759,-82.877,27.7966,-82.8952,27.8269,-82.9068,27.8656,-82.9082,27.8925,-82.898,27.9448,-82.8884,27.9671,-82.8815,28.0367,-82.8948,28.0747,-82.8998,28.1182,-82.8959,28.1409,-82.9056,28.172,-82.9088,28.2135,-82.9009,28.2358,-82.8782,28.2564,-82.8501,28.2633,-82.8161,28.257,-82.7916,28.3048,-82.7848,28.3414,-82.7633,28.3872,-82.7604,28.4178,-82.7369,28.4559,-82.7341,28.5061,-82.7124,28.5801,-82.7331,28.645,-82.733,28.6649,-82.7545,28.6736,-82.7696,28.6885,-82.7773,28.7125,-82.7736,28.7359,-82.7973,28.7599,-82.811,28.7852,-82.8138,28.8001,-82.8095,28.8198,-82.7932,28.8392,-82.7787,28.8931,-82.7596,28.9125,-82.8058,28.9606,-82.8181,28.9852,-82.82,29.0062,-82.8391,29.0146,-82.8538,29.0294,-82.8707,29.0609,-82.8793,29.0906,-82.8788,29.1096,-82.9634,29.1194,-82.9782,29.0696,-82.9962,29.0534,-83.0168,29.0451,-83.0811,29.0475,-83.118,29.0656,-83.1416,29.0979,-83.1502,29.1241,-83.1457,29.1507,-83.128,29.1713,-83.1428,29.2048,-83.1427,29.2313,-83.1884,29.2417,-83.2164,29.2625,-83.2305,29.3001,-83.2284,29.3229,-83.2527,29.3484,-83.2651,29.3827,-83.292,29.3846,-83.3225,29.3941,-83.3402,29.4079,-83.3507,29.4288,-83.4431,29.4847,-83.4554,29.5065,-83.4631,29.564,-83.458,29.626,-83.5148,29.6465,-83.5353,29.668,-83.5823,29.6884,-83.604,29.7118,-83.6251,29.724,-83.6401,29.7483,-83.6453,29.7973,-83.6602,29.8086,-83.6672,29.817,-83.688,29.8551,-83.7228,29.8822,-83.8033,29.9254,-83.8307,29.9199,-83.857,29.9264,-83.8756,29.9406,-83.886,29.9609,-83.9547,29.9918,-84.0417,30.0498,-84.1161,30.0356,-84.1397,30.0252,-84.1624,30.0217,-84.2273,30.0346,-84.2499,30.0165,-84.2829,30.0076,-84.2892,29.9985,-84.2779,29.9165,-84.2911,29.8797,-84.3105,29.8591,-84.3358,29.8482,-84.3801,29.8435,-84.4383,29.8551,-84.4495,29.859,-84.4648,29.8662,-84.4874,29.8601,-84.513,29.8636,-84.5255,29.8563,-84.5157,29.8315,-84.5184,29.8033,-84.5281,29.7851,-84.5474,29.7667,-84.6054,29.7412,-84.6505,29.7299,-84.7279,29.6622,-84.7715,29.6379,-84.8465,29.6133,-84.9365,29.5673,-85.0194,29.5412,-85.0461,29.537,-85.0746,29.5444,-85.1281,29.5805,-85.1711,29.5918,-85.2237,29.6255,-85.2955,29.634,-85.3319,29.6198,-85.3531,29.6167,-85.3741,29.6209,-85.3985,29.6359,-85.4231,29.6651,-85.4397,29.6966,-85.4696,29.7936,-85.4739,29.8286,-85.4712,29.8525,-85.4626,29.8815,-85.4464,29.9019,-85.4973,29.9099,-85.5338,29.9264,-85.6295,30.0104,-85.7304,30.0568,-85.8103,30.1169,-85.9493,30.1936,-86.1101,30.2568,-86.3262,30.3176,-86.4186,30.3307,-86.5097,30.3324,-86.6285,30.3467,-86.7338,30.3435,-86.8996,30.3232,-87.148,30.2782,-87.2481,30.2675,-87.2779,30.2672,-87.3018,30.2727,-87.6459,30.2022,-87.7924,30.1799,-87.9085,30.1797,-87.926,30.1601,-87.9514,30.1506,-88.114,30.1516,-88.1455,30.1705,-88.1565,30.1999,-88.1927,30.198,-88.3018,30.1781,-88.3387,30.1797,-88.3603,30.1886,-88.3766,30.1665,-88.4,30.1553,-88.4,30.2564,-88.3802,30.2471,-88.3705,30.262,-88.3533,30.2742,-88.3293,30.2813,-88.2896,30.2843,-88.3084,30.3022,-88.3166,30.3205,-88.3436,30.3286,-88.3643,30.3078,-88.4,30.2956,-88.4,31.0],[-82.2221,24.5576,-82.2161,24.5836,-82.1873,24.6243,-82.1666,24.6392,-82.1371,24.6471,-82.1068,24.6444,-82.0683,24.6263,-82.0502,24.6055,-82.0432,24.5766,-82.0125,24.5877,-81.9748,24.5791,-81.9806,24.6044,-81.9732,24.6296,-81.9558,24.6473,-81.9311,24.6561,-81.9073,24.6551,-81.8874,24.6466,-81.8716,24.6319,-81.8627,24.6085,-81.8547,24.6045,-81.8419,24.6271,-81.8211,24.6403,-81.7994,24.684,-81.7806,24.6992,-81.7292,24.7214,-81.7001,24.743,-81.6249,24.7744,-81.5977,24.8005,-81.5768,24.8084,-81.5523,24.8098,-81.5271,24.8355,-81.4554,24.8622,-81.4204,24.8593,-81.3952,24.8418,-81.3344,24.8164,-81.3014,24.8303,-81.2798,24.8293,-81.2633,24.8231,-81.2378,24.8317,-81.212,24.8297,-81.1839,24.813,-81.1705,24.7842,-81.1728,24.7593,-81.1884,24.7386,-81.2148,24.7267,-81.2422,24.7271,-81.2107,24.7149,-81.1909,24.6927,-81.1877,24.6623,-81.2011,24.6375,-81.2179,24.6253,-81.2604,24.6075,-81.2849,24.6039,-81.3814,24.5726,-81.4003,24.5714,-81.4244,24.5777,-81.4418,24.5646,-81.4687,24.5585,-81.5059,24.5703,-81.5187,24.5688,-81.5803,24.541,-81.6406,24.525,-81.6691,24.5108,-81.7297,24.5069,-81.7947,24.4951,-81.8328,24.4989,-81.8578,24.5157,-81.88,24.4922,-81.8957,24.483,-81.9602,24.4714,-82.0321,24.4829,-82.0543,24.5003,-82.065,24.5243,-82.0822,24.5096,-82.1038,24.5003,-82.1589,24.498,-82.1799,24.5014,-82.1988,24.5113,-82.2121,24.525],[-82.904,24.582,-82.9415,24.58,-82.9725,24.5997,-82.9799,24.6129,-82.9823,24.6324,-82.9762,24.6512,-82.9636,24.667,-82.9424,24.6809,-82.913,24.6861,-82.8873,24.6789,-82.8491,24.6772,-82.8215,24.6624,-82.8103,24.646,-82.8065,24.6239,-82.8103,24.6076,-82.8216,24.591,-82.8544,24.5751]];
+// The two clip boundaries, by the name layers carry in their seaClip option.
+const SEA_CLIPS = {
+  shore:  { rings: SHORE_RINGS, pad: SHORE_PAD_M, bb: null },
+  limit3: { rings: SEA3_RINGS,  pad: 0,           bb: null }
+};
+function seaBboxes(clip){
+  if(!clip.bb) clip.bb = clip.rings.map(r=>{
     let w=Infinity, e=-Infinity, s=Infinity, n=-Infinity;
     for(let i=0;i<r.length;i+=2){
       if(r[i]<w)w=r[i]; if(r[i]>e)e=r[i];
@@ -3475,18 +3375,18 @@ function shoreBboxes(){
     }
     return [w,s,e,n];
   });
-  return _shoreBB;
+  return clip.bb;
 }
-// Point-in-envelope by ray cast across every ring. The rings are disjoint
+// Point-in-boundary by ray cast across every ring. The rings are disjoint
 // (union output), so a point is inside at most one; the bbox skip is safe
 // because a ring the point sits outside of contributes an even crossing count.
-function pointInShore(lng, lat){
-  const bb = shoreBboxes();
+function pointInRings(clip, lng, lat){
+  const bb = seaBboxes(clip);
   let inside = false;
-  for(let k=0;k<SHORE_RINGS.length;k++){
+  for(let k=0;k<clip.rings.length;k++){
     const b = bb[k];
     if(lng < b[0] || lng > b[2] || lat < b[1] || lat > b[3]) continue;
-    const r = SHORE_RINGS[k];
+    const r = clip.rings[k];
     for(let i=0, j=r.length-2; i<r.length; j=i, i+=2){
       const xi=r[i], yi=r[i+1], xj=r[j], yj=r[j+1];
       if((yi>lat) !== (yj>lat) && lng < (xj-xi)*(lat-yi)/(yj-yi)+xi) inside = !inside;
@@ -3498,15 +3398,16 @@ function pointInShore(lng, lat){
 // Edge-level, not ring-bbox-level, on purpose: the mainland ring's bbox spans
 // the whole gate, so a bbox test alone would flag every tile as coastal and
 // kill the open-sea shortcut.
-function shoreNearRings(lonW, latS, lonE, latN){
-  const padLon = SHORE_PAD_M/(111320*Math.cos(latN*Math.PI/180));
-  const padLat = SHORE_PAD_M/110540;
+function seaNearRings(clip, lonW, latS, lonE, latN){
+  const padM = Math.max(clip.pad, 50);       // a little slack even for a zero pad
+  const padLon = padM/(111320*Math.cos(latN*Math.PI/180));
+  const padLat = padM/110540;
   const w=lonW-padLon, e=lonE+padLon, s=latS-padLat, n=latN+padLat;
-  const bb = shoreBboxes(), out = [];
-  for(let k=0;k<SHORE_RINGS.length;k++){
+  const bb = seaBboxes(clip), out = [];
+  for(let k=0;k<clip.rings.length;k++){
     const b = bb[k];
     if(b[0]>e || b[2]<w || b[1]>n || b[3]<s) continue;
-    const r = SHORE_RINGS[k];
+    const r = clip.rings[k];
     for(let i=0, j=r.length-2; i<r.length; j=i, i+=2){
       const x1=r[j], y1=r[j+1], x2=r[i], y2=r[i+1];
       if(Math.max(x1,x2)<w || Math.min(x1,x2)>e || Math.max(y1,y2)<s || Math.min(y1,y2)>n) continue;
@@ -3515,26 +3416,28 @@ function shoreNearRings(lonW, latS, lonE, latN){
   }
   return out;
 }
-// True when the whole tile is open sea: inside the gate, no shoreline near any
-// edge, centre outside the envelope. Such tiles render locally as flat blue —
-// no request — and the offline downloader skips them.
-function isOpenSeaTile(coords){
-  if(coords.z < OCEAN_MIN_Z) return false;
+// True when the whole tile is open sea for the given clip boundary: inside the
+// gate, no boundary near any edge, centre outside the rings. Such tiles render
+// locally as flat blue — no request — and the offline downloader skips them.
+function isOpenSeaTile(coords, clipName){
+  const clip = SEA_CLIPS[clipName];
+  if(!clip || coords.z < OCEAN_MIN_Z) return false;
   const n = Math.pow(2, coords.z);
   const lonW = coords.x/n*360 - 180, lonE = (coords.x+1)/n*360 - 180;
   const latN = Math.atan(Math.sinh(Math.PI*(1 - 2*coords.y/n)))*180/Math.PI;
   const latS = Math.atan(Math.sinh(Math.PI*(1 - 2*(coords.y+1)/n)))*180/Math.PI;
   if(lonW < SHORE_GATE.w || lonE > SHORE_GATE.e || latS < SHORE_GATE.s || latN > SHORE_GATE.n) return false;
-  if(shoreNearRings(lonW, latS, lonE, latN).length) return false;
-  return !pointInShore((lonW+lonE)/2, (latS+latN)/2);
+  if(seaNearRings(clip, lonW, latS, lonE, latN).length) return false;
+  return !pointInRings(clip, (lonW+lonE)/2, (latS+latN)/2);
 }
 // Paint the open sea onto a coastal tile's canvas: flat deep blue everywhere
-// outside the envelope, minus a SHORE_PAD_M band along the rings (drawn by
-// stroking the coastline with a fat round-joined line into a punch-out mask),
-// so the blue edge is the coast's own smooth shape and jetties, surf and
-// islands keep their photo. Tiles wholly inland are left untouched.
-function paintSeaOverlay(g, coords, size){
-  if(coords.z < OCEAN_MIN_Z) return;
+// outside the clip boundary, minus the clip's pad band along the rings (drawn
+// by stroking the boundary with a fat round-joined line into a punch-out
+// mask), so the blue edge is the boundary's own smooth shape. Tiles wholly
+// inside the boundary are left untouched.
+function paintSeaOverlay(g, coords, size, clipName){
+  const clip = SEA_CLIPS[clipName];
+  if(!clip || coords.z < OCEAN_MIN_Z) return;
   const n = Math.pow(2, coords.z);
   const lonW = coords.x/n*360 - 180, lonE = (coords.x+1)/n*360 - 180;
   const latN = Math.atan(Math.sinh(Math.PI*(1 - 2*coords.y/n)))*180/Math.PI;
@@ -3548,9 +3451,9 @@ function paintSeaOverlay(g, coords, size){
   const gx0 = Math.max(0, lng2px(SHORE_GATE.w)), gx1 = Math.min(size, lng2px(SHORE_GATE.e));
   const gy0 = Math.max(0, lat2px(SHORE_GATE.n)), gy1 = Math.min(size, lat2px(SHORE_GATE.s));
   if(gx1 <= gx0 || gy1 <= gy0) return;
-  const near = shoreNearRings(lonW, latS, lonE, latN);
+  const near = seaNearRings(clip, lonW, latS, lonE, latN);
   if(!near.length){
-    if(pointInShore((lonW+lonE)/2, (latS+latN)/2)) return;   // wholly inland — untouched
+    if(pointInRings(clip, (lonW+lonE)/2, (latS+latN)/2)) return;   // wholly inside — untouched
     g.fillStyle = OCEAN_DEEP; g.fillRect(gx0, gy0, gx1-gx0, gy1-gy0);
     return;
   }
@@ -3560,25 +3463,26 @@ function paintSeaOverlay(g, coords, size){
   og.fillStyle = OCEAN_DEEP;
   og.fillRect(gx0, gy0, gx1-gx0, gy1-gy0);
   og.globalCompositeOperation = 'destination-out';
-  og.lineJoin = 'round'; og.lineCap = 'round';
-  const mPerPx = 40075016.686*Math.cos(((latN+latS)/2)*Math.PI/180)/(n*size);
-  og.lineWidth = 2*SHORE_PAD_M/mPerPx;
   og.beginPath();
   for(const k of near){
-    const r = SHORE_RINGS[k];
+    const r = clip.rings[k];
     og.moveTo(lng2px(r[0]), lat2px(r[1]));
     for(let i=2;i<r.length;i+=2) og.lineTo(lng2px(r[i]), lat2px(r[i+1]));
     og.closePath();
   }
-  og.fill(); og.stroke();
+  og.fill();
+  if(clip.pad > 0){
+    og.lineJoin = 'round'; og.lineCap = 'round';
+    const mPerPx = 40075016.686*Math.cos(((latN+latS)/2)*Math.PI/180)/(n*size);
+    og.lineWidth = 2*clip.pad/mPerPx;
+    og.stroke();
+  }
   g.drawImage(o, 0, 0);
 }
 
-// Leaflet tile layer that reads each tile cache-first, so a downloaded region
-// draws with the network off; anything fetched live is cached transparently.
 const OfflineTileLayer = L.TileLayer.extend({
   createTile(coords, done){
-    if(this.options.oceanFill && (this.options.shoreOcean ? isOpenSeaTile(coords) : isOpenOceanTile(coords))){
+    if(this.options.oceanFill && isOpenSeaTile(coords, this.options.seaClip)){
       const t = oceanTileElement(this.options.oceanFill, this.getTileSize());
       setTimeout(()=>done(null, t), 0);
       return t;
@@ -3602,10 +3506,10 @@ const OfflineTileLayer = L.TileLayer.extend({
     })();
     return tile;
   },
-  // Canvas tile for the coastal strip: everything seaward of the coast line is
-  // painted the flat deep-ocean blue (per-pixel, so the boundary is the smooth
-  // line, not tile edges), and USGS's #004C74 filler west of the line is
-  // recoloured to the same blue so filler patches can't print rectangles.
+  // Canvas tile for the coastal strip: USGS's #004C74 "no imagery" filler is
+  // recoloured to the flat deep-ocean blue so filler patches can't print
+  // rectangles, then everything seaward of the clip boundary is painted the
+  // same blue by paintSeaOverlay() — the smooth boundary, not tile edges.
   _createKeyedTile(coords, done){
     const size = this.getTileSize();
     const tile = document.createElement('canvas');
@@ -3625,21 +3529,19 @@ const OfflineTileLayer = L.TileLayer.extend({
           try{
             const g = tile.getContext('2d');
             g.drawImage(img, 0, 0, tile.width, tile.height);
-            const w = tile.width, h = tile.height;
-            const id = g.getImageData(0, 0, w, h), d = id.data;
-            let hit = false;
-            const inFillZone = coords.z >= OCEAN_MIN_Z;
-            for(let j=0; j<h; j++){
-              const range = oceanClipRange(coords, h, j);
-              for(let i=0; i<w; i++){
-                const k = (j*w + i)*4;
-                if((i >= range[0] && i < range[1]) || (inFillZone && isFillerPixel(d[k], d[k+1], d[k+2]))){
+            if(coords.z >= OCEAN_MIN_Z){
+              const w = tile.width, h = tile.height;
+              const id = g.getImageData(0, 0, w, h), d = id.data;
+              let hit = false;
+              for(let k=0; k<d.length; k+=4){
+                if(isFillerPixel(d[k], d[k+1], d[k+2])){
                   d[k] = OCEAN_DEEP_R; d[k+1] = OCEAN_DEEP_G; d[k+2] = OCEAN_DEEP_B; d[k+3] = 255;
                   hit = true;
                 }
               }
+              if(hit) g.putImageData(id, 0, 0);
             }
-            if(hit) g.putImageData(id, 0, 0);
+            paintSeaOverlay(g, coords, tile.width, this.options.seaClip);
           }catch(e){ /* canvas unavailable — the unclipped drawImage (or nothing) stands */ }
           finish(null);
         };
@@ -3681,13 +3583,12 @@ const OfflineWMSTileLayer = L.TileLayer.extend({
     return wmsTileUrl(this._wmsBase, this._wmsLayerName, coords.x, coords.y, coords.z, this.getTileSize().x);
   },
   createTile(coords, done){
-    if(this.options.oceanFill && (this.options.shoreOcean ? isOpenSeaTile(coords) : isOpenOceanTile(coords))){
+    if(this.options.oceanFill && isOpenSeaTile(coords, this.options.seaClip)){
       const t = oceanTileElement(this.options.oceanFill, this.getTileSize());
       setTimeout(()=>done(null, t), 0);
       return t;
     }
-    if(this.options.shoreClip) return this._createShoreClippedTile(coords, done);
-    if(this.options.clipOcean) return this._createClippedTile(coords, done);
+    if(this.options.seaClip) return this._createSeaClippedTile(coords, done);
     const tile = document.createElement('img');
     tile.alt = ''; tile.setAttribute('role','presentation');
     let settled = false;
@@ -3706,10 +3607,12 @@ const OfflineWMSTileLayer = L.TileLayer.extend({
     })();
     return tile;
   },
-  // Canvas tile that paints everything seaward of the coast line in the flat
-  // deep-ocean blue, so a coastal tile's imagery stops at the same smooth line
-  // the raster layers stop at, whatever zoom it's requested for.
-  _createClippedTile(coords, done){
+  // Canvas tile clipped along the layer's clip boundary (3-mile line for the
+  // topo view's close-zoom NAIP, shoreline envelope for the ICW view): the
+  // photo is drawn, then everything seaward is painted the flat deep blue by
+  // paintSeaOverlay(). Works over transparent photo areas too, so NAIP's
+  // ragged offshore coverage edge can never show.
+  _createSeaClippedTile(coords, done){
     const size = this.getTileSize();
     const tile = document.createElement('canvas');
     tile.width = size.x; tile.height = size.y;
@@ -3728,44 +3631,7 @@ const OfflineWMSTileLayer = L.TileLayer.extend({
           try{
             const g = tile.getContext('2d');
             g.drawImage(img, 0, 0, tile.width, tile.height);
-            g.fillStyle = OCEAN_DEEP;
-            for(let j=0; j<tile.height; j++){
-              const range = oceanClipRange(coords, tile.height, j);
-              if(range[1] > range[0]) g.fillRect(range[0], j, range[1] - range[0], 1);
-            }
-          }catch(e){ /* canvas unavailable — the unclipped drawImage stands */ }
-          finish(null);
-        };
-        img.onerror = ()=>{ URL.revokeObjectURL(obj); finish(new Error('decode')); };
-        img.src = obj;
-      }catch(e){ finish(e); }
-    })();
-    return tile;
-  },
-  // Canvas tile clipped along the shoreline envelope (ICW Channel view): the
-  // photo is drawn, then everything seaward of SHORE_RINGS is painted the flat
-  // deep blue by paintSeaOverlay(). Works over transparent photo areas too, so
-  // NAIP's ragged offshore coverage edge can never show.
-  _createShoreClippedTile(coords, done){
-    const size = this.getTileSize();
-    const tile = document.createElement('canvas');
-    tile.width = size.x; tile.height = size.y;
-    let settled = false;
-    const finish = (err)=>{ if(settled) return; settled = true; done(err || null, tile); };
-    const url = this.getTileUrl(coords);
-    (async ()=>{
-      try{
-        const resp = await fetchTileCacheFirst(url);
-        if(!resp || !resp.ok){ finish(new Error('tile ' + (resp && resp.status))); return; }
-        const blob = await resp.blob();
-        const obj = URL.createObjectURL(blob);
-        const img = new Image();
-        img.onload = ()=>{
-          URL.revokeObjectURL(obj);
-          try{
-            const g = tile.getContext('2d');
-            g.drawImage(img, 0, 0, tile.width, tile.height);
-            paintSeaOverlay(g, coords, tile.width);
+            paintSeaOverlay(g, coords, tile.width, this.options.seaClip);
           }catch(e){ /* canvas unavailable — the unclipped drawImage stands */ }
           finish(null);
         };
@@ -3783,10 +3649,11 @@ function offlineWMSTileLayer(baseUrl, wmsLayer, opts){
 // ---- Web-Mercator tile math + region enumeration ----
 function _lon2x(lon,z){ return Math.floor((lon+180)/360*Math.pow(2,z)); }
 function _lat2y(lat,z){ const r=lat*Math.PI/180; return Math.floor((1 - Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Math.pow(2,z)); }
-// Counts and enumerates ALL templates' tiles together. Open-ocean tiles are
-// skipped only for templates marked skipOcean (the USGS layer, which renders
-// them locally as transparent) — Sentinel's ocean tiles are the visible water
-// offshore, so they download like everything else.
+// Counts and enumerates ALL templates' tiles together. Open-sea tiles (per
+// each template's own clip boundary) are skipped only for templates marked
+// skipOcean — those render locally as flat blue and would never be shown.
+// Sentinel's ocean tiles are the visible water offshore in the topo view, so
+// they download like everything else.
 function offlineTileCount(bbox, zmin, zmax, templates){   // total tiles across the given templates
   templates = templates || OFFLINE_TILE_TEMPLATES;
   let n=0;
@@ -3794,7 +3661,7 @@ function offlineTileCount(bbox, zmin, zmax, templates){   // total tiles across 
     const x0=Math.min(_lon2x(bbox.w,z),_lon2x(bbox.e,z)), x1=Math.max(_lon2x(bbox.w,z),_lon2x(bbox.e,z));
     const y0=Math.min(_lat2y(bbox.n,z),_lat2y(bbox.s,z)), y1=Math.max(_lat2y(bbox.n,z),_lat2y(bbox.s,z));
     for(let x=x0; x<=x1; x++) for(let y=y0; y<=y1; y++){
-      for(const tpl of templates) if(!(tpl.skipOcean && (tpl.shore ? isOpenSeaTile({x,y,z}) : isOpenOceanTile({x,y,z})))) n++;
+      for(const tpl of templates) if(!(tpl.skipOcean && isOpenSeaTile({x,y,z}, tpl.seaClip))) n++;
     }
   }
   return n;
@@ -3807,7 +3674,7 @@ function offlineTileUrls(bbox, zmin, zmax, templates){
     const y0=Math.min(_lat2y(bbox.n,z),_lat2y(bbox.s,z)), y1=Math.max(_lat2y(bbox.n,z),_lat2y(bbox.s,z));
     for(let x=x0; x<=x1; x++) for(let y=y0; y<=y1; y++){
       for(const tpl of templates){
-        if(tpl.skipOcean && (tpl.shore ? isOpenSeaTile({x,y,z}) : isOpenOceanTile({x,y,z}))) continue;
+        if(tpl.skipOcean && isOpenSeaTile({x,y,z}, tpl.seaClip)) continue;
         urls.push(tpl.type === 'wms'
           ? wmsTileUrl(tpl.base, tpl.layer, x, y, z)
           : tpl.tpl.replace('{z}',z).replace('{x}',x).replace('{y}',y));
@@ -4013,17 +3880,15 @@ function mountBaseLayer(i){
       // A sublayer can opt in only at close zooms (the NAIP crisp layer starts
       // at z17); Leaflet simply doesn't draw it below its minZoom.
       if(sub.minZoom) opts.minZoom = sub.minZoom;
-      // Open-ocean tiles render locally as flat fill / transparent — see
-      // isOpenOceanTile() above.
+      // Open-sea tiles render locally as flat fill — see isOpenSeaTile() above.
       if(sub.oceanFill) opts.oceanFill = sub.oceanFill;
-      // Coastal tiles clipped/recoloured per-pixel along the coast line — see
-      // the open-ocean handling block above.
+      // Coastal tiles clipped/recoloured per-pixel along the clip boundary —
+      // see the open-sea handling block above.
       if(sub.keyFiller) opts.keyFiller = true;
-      if(sub.clipOcean) opts.clipOcean = true;
-      // ICW Channel sublayers clip along the shoreline envelope instead of
-      // the 3-mile line — see SHORE_RINGS / paintSeaOverlay() above.
-      if(sub.shoreOcean) opts.shoreOcean = true;
-      if(sub.shoreClip) opts.shoreClip = true;
+      // Which clip boundary the sublayer's sea is cut along: 'limit3' (topo,
+      // the 3-mile line) or 'shore' (ICW, the coastline envelope) — see
+      // SEA_CLIPS / paintSeaOverlay() above.
+      if(sub.seaClip) opts.seaClip = sub.seaClip;
       const t = (sub.type === 'wms')
         ? offlineWMSTileLayer(sub.url, sub.wmsLayer, opts)
         : offlineTileLayer(sub.url, opts);
@@ -4233,10 +4098,70 @@ document.getElementById('mapModeBtn').addEventListener('click', function(){
   }
   setIcwVisible(m.icw);
   setAidsVisible(m.icw);          // the marks belong to the channel; they come and go with it
+  updateSeaOverlays();            // 3-mile dashes + coastal names ride the topo view only
   this.childNodes[this.childNodes.length-1].textContent = m.label;
   this.classList.toggle('street-on', m.streetClass);
   this.classList.toggle('icw-on', m.icw);
 });
+
+/* ---- Topo Satellite sea overlays: the dashed 3-mile line, and the coastal
+   place names printed over the flat blue ----
+   The statewide ocean fill covers USGS's charted 3-mile dashes and cuts off
+   coastal city labels that reach over the water (a label is a fixed number of
+   pixels wide, so at wide zooms it spans miles of water), so the app draws
+   both back itself: a dashed line along SEA3_RINGS — the exact edge the blue
+   starts at — and, at the wide zooms where the cutting actually happens, each
+   coastal town's name printed just seaward of the line. Straight runs along
+   the SHORE_GATE box are clip artefacts, not the 3-mile line, so they are
+   not dashed. */
+const SEA_NAMES = [[30.2959,-81.3203,"l",1,"Jacksonville Beach"],[30.6546,-81.3635,"l",2,"Fernandina Beach"],[29.948,-81.2311,"l",1,"St. Augustine"],[29.6156,-81.1169,"l",2,"Palm Coast"],[29.4998,-81.0624,"l",2,"Flagler Beach"],[29.3171,-80.9771,"l",2,"Ormond Beach"],[29.2437,-80.9401,"l",1,"Daytona Beach"],[29.155,-80.8939,"l",2,"Port Orange"],[29.1307,-80.8779,"l",2,"Ponce Inlet"],[29.0644,-80.8327,"l",1,"New Smyrna Beach"],[29.0347,-80.8146,"l",2,"Edgewater"],[28.9222,-80.7396,"l",2,"Oak Hill"],[28.735,-80.6097,"l",2,"Titusville"],[28.3205,-80.5389,"l",1,"Cocoa Beach"],[28.1901,-80.5235,"l",2,"Satellite Beach"],[28.1125,-80.5017,"l",1,"Melbourne"],[27.8567,-80.3708,"l",2,"Sebastian"],[27.6616,-80.2876,"l",1,"Vero Beach"],[27.4792,-80.2237,"l",1,"Fort Pierce"],[27.2836,-80.1357,"l",2,"Jensen Beach"],[27.2549,-80.1205,"l",2,"Stuart"],[26.9488,-80.0031,"l",2,"Jupiter"],[26.7282,-79.967,"l",1,"West Palm Beach"],[26.6197,-79.9684,"l",2,"Lake Worth Beach"],[26.5132,-79.9809,"l",2,"Boynton Beach"],[26.4523,-79.9909,"l",2,"Delray Beach"],[26.3531,-80.001,"l",1,"Boca Raton"],[26.226,-80.0213,"l",2,"Pompano Beach"],[26.1187,-80.036,"l",1,"Fort Lauderdale"],[26.0052,-80.0476,"l",2,"Hollywood"],[25.7774,-80.0605,"l",1,"Miami Beach"],[25.7221,-80.0808,"l",2,"Miami"],[25.6883,-80.0878,"l",2,"Key Biscayne"],[25.0484,-80.3833,"l",1,"Key Largo"],[24.8849,-80.5736,"l",2,"Islamorada"],[24.7718,-81.1164,"c",1,"Marathon"],[24.5811,-81.3193,"c",2,"Big Pine Key"],[24.4926,-81.7562,"c",1,"Key West"],[25.9059,-81.796,"r",2,"Marco Island"],[26.1347,-81.8749,"r",1,"Naples"],[26.3159,-81.9123,"r",2,"Bonita Springs"],[26.3956,-81.9786,"c",2,"Fort Myers Beach"],[26.3968,-81.986,"l",2,"Sanibel"],[26.7992,-82.3506,"r",2,"Punta Gorda"],[27.0804,-82.5245,"r",2,"Venice"],[27.2784,-82.6356,"r",1,"Sarasota"],[27.4421,-82.7618,"r",2,"Bradenton"],[27.7581,-82.5541,"l",1,"St. Petersburg"],[27.9673,-82.8997,"r",1,"Clearwater"],[28.2661,-82.8209,"c",2,"Tarpon Springs"],[28.2953,-82.808,"r",2,"New Port Richey"],[28.7328,-82.7844,"r",2,"Homosassa"],[28.9132,-82.7709,"r",2,"Crystal River"],[29.1083,-82.9577,"l",1,"Cedar Key"],[29.6202,-83.4672,"r",2,"Steinhatchee"],[30.0242,-84.215,"c",2,"St. Marks"],[29.7262,-84.6233,"c",2,"Carrabelle"],[29.6567,-84.9776,"c",1,"Apalachicola"],[29.7804,-85.478,"r",2,"Port St. Joe"],[29.8932,-85.4519,"r",2,"Mexico Beach"],[30.1257,-85.8445,"r",1,"Panama City Beach"],[30.3233,-86.4895,"c",1,"Destin"],[30.3364,-86.6259,"c",2,"Fort Walton Beach"],[30.321,-86.8478,"c",2,"Navarre"],[30.2723,-87.1239,"c",2,"Pensacola Beach"],[30.2626,-87.1919,"c",1,"Pensacola"],[30.2357,-87.4277,"c",2,"Perdido Key"]];
+let seaLimitLayer = null, seaNamesLayer = null;
+function seaLimitStrands(){
+  const G = SHORE_GATE, eps = 1e-6;
+  const onGate = (x,y)=> Math.abs(x-G.w)<eps || Math.abs(x-G.e)<eps || Math.abs(y-G.s)<eps || Math.abs(y-G.n)<eps;
+  const strands = [];
+  for(const r of SEA3_RINGS){
+    const m = r.length/2;
+    let strand = null;
+    for(let i=0;i<m;i++){
+      const j = (i+1)%m;
+      const ax=r[2*i], ay=r[2*i+1], bx=r[2*j], by=r[2*j+1];
+      if(onGate(ax,ay) && onGate(bx,by)){ if(strand){ strands.push(strand); strand = null; } continue; }
+      if(!strand) strand = [[ay,ax]];
+      strand.push([by,bx]);
+    }
+    if(strand) strands.push(strand);
+  }
+  return strands;
+}
+function updateSeaOverlays(){
+  const z = map.getZoom();
+  const topo = (mapMode === 0);
+  const showLine = topo && z >= OCEAN_MIN_Z;
+  if(showLine && !seaLimitLayer){
+    seaLimitLayer = L.layerGroup(seaLimitStrands().map(s =>
+      L.polyline(s, { color:'#e8f1f8', weight:1.5, opacity:0.9, dashArray:'6 6', interactive:false })));
+  }
+  if(showLine) seaLimitLayer.addTo(map);
+  else if(seaLimitLayer) map.removeLayer(seaLimitLayer);
+  // Names only at the zooms where USGS's own labels get cut (z9 the majors,
+  // z10 everything); from z11 in, the photo strip is wide enough that USGS's
+  // labels survive whole and ours would just double them.
+  const showNames = topo && z >= 9 && z <= 10;
+  if(seaNamesLayer){ map.removeLayer(seaNamesLayer); seaNamesLayer = null; }
+  if(showNames){
+    const maxRank = (z === 9) ? 1 : 2;
+    seaNamesLayer = L.layerGroup(SEA_NAMES.filter(nm => nm[3] <= maxRank).map(nm =>
+      L.marker([nm[0], nm[1]], {
+        interactive:false, keyboard:false, zIndexOffset:-800,
+        icon: L.divIcon({ className:'seaNameWrap', iconSize:null,
+          html:'<div class="seaName seaName-' + nm[2] + '">' + nm[4] + '</div>' })
+      })));
+    seaNamesLayer.addTo(map);
+  }
+}
+map.on('zoomend', updateSeaOverlays);
+updateSeaOverlays();
 
 // Recover map sizing on devices where the container size settles late (iOS Safari)
 function kickMap(){
