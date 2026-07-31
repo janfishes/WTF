@@ -7,6 +7,24 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 5:08 PM EDT · v227 · Bolder MOB
+------------------------------------------------------------------------------
+The MOB figure is bolder everywhere (thicker limbs, bigger head) and the
+badge on the Locate Me pill grew from 12 to 16 px with a heavy red "!" to
+its right — the pill now reads figure-plus-exclamation, unmistakably a
+warning function. All the banner text stepped up: MAN OVERBOARD and the
+clock to 15 px at weight 900/800, the bearing/distance digits from 27 to
+32 px at weight 900, the caution line from 9.5 to 11.5 px semibold in the
+brighter fog ink (banner widened a touch to fit).
+
+The help's MOB note now also says to grant location permission AT THE DOCK
+— answer "Allow While Using App" the first time the phone asks — because
+in a real emergency the press should drop the mark, not wait behind a
+permission dialog. (That prompt appearing on first use is the phone's
+normal behaviour, not a fault: MOB and Locate Me read GPS, and iOS asks
+once per site/app before allowing it.)
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 4:58 PM EDT · v226 · Man overboard
 ------------------------------------------------------------------------------
 Press and HOLD Locate Me (about a second — the pill floods red while it

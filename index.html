@@ -1919,35 +1919,38 @@ svg.leaflet-image-layer.leaflet-interactive path {
      coding, so it still reads if the red doesn't. The !importants outshout the theme block's
      `.fab svg{stroke:var(--teal) !important}` above; being later at equal specificity wins. */
   #locateBtn{-webkit-touch-callout:none; -webkit-user-select:none; user-select:none; touch-action:manipulation;}
-  #locateBtn svg.mob-hint{color:#e5484d !important; stroke:none !important; margin:0 0 0 6px; width:calc(12px * var(--tsb)); height:calc(12px * var(--tsb));}
+  #locateBtn svg.mob-hint{color:#e5484d !important; stroke:none !important; margin:0 0 0 6px; width:calc(16px * var(--tsb)); height:calc(16px * var(--tsb));}
+  #locateBtn .mob-bang{color:#e5484d !important; font-weight:900; font-size:calc(15px * var(--tsb)); line-height:1; margin-left:2px;}
   #locateBtn.active-locate svg.mob-hint{color:#ffd7d9 !important;}
+  #locateBtn.active-locate .mob-bang{color:#ffd7d9 !important;}
   /* Holding the pill floods it red over the full hold — the "am I doing it?" feedback.
      Let go early and it snaps straight back (no transition without the class). */
   #locateBtn.mob-arming{background:#c11a1a !important; border-color:#c11a1a !important; color:#fff !important;
     transition:background-color .9s linear, border-color .9s linear, color .4s linear;}
   #locateBtn.mob-arming svg{color:#fff !important; stroke:#fff !important;}
   #locateBtn.mob-arming svg.mob-hint{color:#fff !important; stroke:none !important;}
+  #locateBtn.mob-arming .mob-bang{color:#fff !important;}
 
   #mobBanner{
     position:fixed; left:50%; top:calc(env(safe-area-inset-top, 0px) + 8px); transform:translateX(-50%);
-    z-index:6000; width:min(360px, calc(100vw - 16px)); box-sizing:border-box;
+    z-index:6000; width:min(384px, calc(100vw - 16px)); box-sizing:border-box;
     background:rgba(26,5,8,.94); border:2px solid #ff5252; border-radius:14px;
     color:#fff; font-family:'Space Grotesk',sans-serif; padding:8px 12px 9px;
     box-shadow:0 6px 26px rgba(0,0,0,.55); backdrop-filter:blur(6px); cursor:pointer;
   }
   #mobBanner .mob-top{display:flex; align-items:center; gap:7px;}
-  #mobBanner .mob-fig{width:17px; height:17px; color:#ff5252; flex:0 0 auto;}
-  #mobBanner .mob-title{font-weight:800; letter-spacing:.09em; font-size:calc(13px * var(--tsb)); color:#ff8a8a;}
-  #mobBanner .mob-clock{margin-left:auto; font-weight:700; font-variant-numeric:tabular-nums; font-size:calc(13px * var(--tsb)); color:var(--fog);}
+  #mobBanner .mob-fig{width:21px; height:21px; color:#ff5252; flex:0 0 auto;}
+  #mobBanner .mob-title{font-weight:900; letter-spacing:.09em; font-size:calc(15px * var(--tsb)); color:#ff8a8a;}
+  #mobBanner .mob-clock{margin-left:auto; font-weight:800; font-variant-numeric:tabular-nums; font-size:calc(15px * var(--tsb)); color:var(--fog);}
   #mobBanner #mobClearBtn{
     background:#fff; color:#a01212; border:none; border-radius:100px; cursor:pointer;
-    font-family:inherit; font-weight:800; font-size:calc(11px * var(--tsb)); letter-spacing:.06em; padding:3px 10px;
+    font-family:inherit; font-weight:800; font-size:calc(12px * var(--tsb)); letter-spacing:.06em; padding:3px 11px;
   }
   #mobBanner .mob-nav{display:flex; align-items:baseline; justify-content:center; gap:18px; margin:3px 0 2px;
-    font-weight:800; font-variant-numeric:tabular-nums; font-size:calc(27px * var(--tsb)); line-height:1.15;}
-  #mobBanner .mob-nav .u{font-size:calc(14px * var(--tsb)); font-weight:700; color:var(--fog);}
-  #mobBanner .mob-foot{font-size:calc(9.5px * var(--tsb)); line-height:1.4; color:var(--muted); text-align:center;}
-  #mobBanner .mob-foot b{color:var(--fog);}
+    font-weight:900; font-variant-numeric:tabular-nums; font-size:calc(32px * var(--tsb)); line-height:1.15;}
+  #mobBanner .mob-nav .u{font-size:calc(16px * var(--tsb)); font-weight:800; color:var(--fog);}
+  #mobBanner .mob-foot{font-size:calc(11.5px * var(--tsb)); font-weight:600; line-height:1.4; color:var(--fog); text-align:center;}
+  #mobBanner .mob-foot b{color:#fff;}
 
   /* The mark on the water: red figure on a white disc inside a DASHED red ring, with a slow
      pulse — shape, pattern and motion all say "this one is different" before colour does. */
@@ -2211,8 +2214,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
      currentColor; each usage (the Locate Me badge, the map mark, the banner) sets its own
      red so the figure is never invisible on any background. -->
 <symbol id="mobFig" viewBox="0 0 24 24">
-  <circle cx="12" cy="4.6" r="2.4" fill="currentColor"></circle>
-  <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+  <circle cx="12" cy="4.6" r="2.7" fill="currentColor"></circle>
+  <g fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
     <path d="M12 8.4v6"></path>
     <path d="M12 10 6.6 6.2"></path>
     <path d="M12 10l5.4-3.8"></path>
@@ -2307,7 +2310,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="fab" id="locateBtn" title="Tap: drop your GPS position. Press and HOLD: mark man overboard.">
       <svg viewBox="0 0 24 28" width="15" height="17" style="vertical-align:-3px;"><use href="#locatePin"></use></svg>
       Locate Me
-      <svg class="mob-hint" viewBox="0 0 24 24" aria-hidden="true"><use href="#mobFig"></use></svg>
+      <svg class="mob-hint" viewBox="0 0 24 24" aria-hidden="true"><use href="#mobFig"></use></svg><span class="mob-bang" aria-hidden="true">!</span>
     </button>
     <button class="fab" id="mapModeBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
@@ -2442,7 +2445,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">There is a third reference point in play, and it matters most for the county reefs. The <b>nm and bearing printed in a county reef Site's own popup are FWC's published figures</b>, carried straight across from the Artificial Reef Program's deployment records rather than calculated by this app — and FWC measures them from <b>29°04.500&#8242;N 80°55.500&#8242;W</b> (29.0750, −80.9250), a point out in the inlet mouth channel. That is <i>not</i> the point this app uses for everything else. Its own offshore nm/bearing figures run from 29°04.902&#8242;N 80°56.202&#8242;W — inside the end of the north jetty, about 0.7&nbsp;nm northwest of FWC's origin. The compass rose is further seaward again, at 29°04.653&#8242;N 80°54.385&#8242;W. Three origins strung along a mile of water, so three slightly different numbers for the same run, and that spread is most of why the closest sites disagree while the distant ones don't.</p>
       <p class="sheet-note">FWC's origin was not published with the records — it was recovered by fitting all <b>191 county drop coordinates</b> against their stated distances. Every one of the 191 lands within 0.05&nbsp;nm of that point, which is the rounding tolerance on a figure given to one decimal, so the fit is as exact as the source data allows. Your own natural-reef sites are a separate case: their distances were measured from close to the rose position, not from either inlet point.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> drops your GPS position on the map (tap again to remove it). The small red figure on the pill marks its second job, below.</p>
-      <p class="sheet-note"><svg viewBox="0 0 24 24" width="14" height="14" style="color:#e5484d; vertical-align:-2px;"><use href="#mobFig"></use></svg> <b>Man Overboard.</b> <b>Press and HOLD Locate Me</b> — the pill floods red for about a second — and the app drops a <b>MOB mark</b> at your position and starts guiding you back: a red banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red figure in a dashed ring — and the screen stays awake while it's up. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see boat and mark together; <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b>, named with its date and time, as a record. Two honest cautions: the mark is where the <b>phone</b> was when the button was pressed, not where the person went in, and a person in the water <b>drifts</b> from the mark with current and wind — the longer the clock runs, the wider the circle. This is an aid to memory, <b>not a rescue device</b>: the drill is still a spotter who never stops pointing, flotation in the water, and a VHF call.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="14" height="14" style="color:#e5484d; vertical-align:-2px;"><use href="#mobFig"></use></svg> <b>Man Overboard.</b> <b>Press and HOLD Locate Me</b> — the pill floods red for about a second — and the app drops a <b>MOB mark</b> at your position and starts guiding you back: a red banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red figure in a dashed ring — and the screen stays awake while it's up. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see boat and mark together; <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b>, named with its date and time, as a record. One thing to do <b>at the dock, not on the water</b>: the first time MOB (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, so a real emergency press drops the mark instead of waiting behind a permission dialog. Two honest cautions: the mark is where the <b>phone</b> was when the button was pressed, not where the person went in, and a person in the water <b>drifts</b> from the mark with current and wind — the longer the clock runs, the wider the circle. This is an aid to memory, <b>not a rescue device</b>: the drill is still a spotter who never stops pointing, flotation in the water, and a VHF call.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> <b>Topo Satellite / Street Map</b> (the label shows whichever view is currently active) switches between the satellite and street-map views.</p>
 
       <div class="subhead">Help &amp; View Tips</div>
@@ -2488,6 +2491,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v227</b> · Bolder MOB</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v226</b> · Man overboard</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v225</b> · Offline help wording</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v224</b> · Tile retry</p>
@@ -3270,7 +3274,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 226;
+const BUILD_NUM  = 227;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
