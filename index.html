@@ -2412,6 +2412,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v224</b> · Tile retry</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v223</b> · Update pill wording</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v222</b> · Compass new-spot fix</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v221</b> · Build notes moved</p>
@@ -3191,7 +3192,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 223;
+const BUILD_NUM  = 224;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -3454,6 +3455,31 @@ async function fetchTileCacheFirst(url){
   if(resp && resp.ok && cache){ try{ await cache.put(url, resp.clone()); }catch(e){} }
   return resp;
 }
+/* On-the-water connections drop tiles mid-fetch, and a failed tile used to sit as a
+   blurry Sentinel-2 patch until the map was panned. Live tiles now retry a couple of
+   times on their own before giving up. Only transient failures are retried — a network
+   drop (fetch throws) or a server buckling (5xx/429/408). A 404 is USGS saying "no tile
+   here" (routine over open ocean) and must fall through at once, both so the underlay
+   shows and so the mount's tileerror fallback logic isn't starved. Going fully offline
+   stops the retries — uncached tiles fail immediately, as before. The offline
+   downloader keeps the single-shot fetch; it has its own progress/cancel handling. */
+const TILE_RETRY_DELAYS_MS = [800, 2400];
+async function fetchTileRetrying(url){
+  let resp = null, err = null;
+  for(let a = 0; a <= TILE_RETRY_DELAYS_MS.length; a++){
+    if(a > 0){
+      if(navigator.onLine === false) break;
+      await new Promise(r => setTimeout(r, TILE_RETRY_DELAYS_MS[a-1]));
+    }
+    try{
+      resp = await fetchTileCacheFirst(url);
+      const retryable = !resp || resp.status >= 500 || resp.status === 429 || resp.status === 408;
+      if(resp && !retryable) return resp;   // ok, or a definitive answer like 404
+    }catch(e){ err = e; resp = null; }
+  }
+  if(resp) return resp;
+  throw (err || new Error('tile fetch failed'));
+}
 /* ---- Open-sea tile handling ----
    USGS ImageryTopo has two very different oceans. Zoomed out (z<=8) it draws
    a proper rendered ocean — the light blue the whole Gulf and the world view
@@ -3712,7 +3738,7 @@ const OfflineTileLayer = L.TileLayer.extend({
     const url = this.getTileUrl(coords);
     (async ()=>{
       try{
-        const resp = await fetchTileCacheFirst(url);
+        const resp = await fetchTileRetrying(url);
         if(!resp || !resp.ok){ finish(new Error('tile ' + (resp && resp.status))); return; }
         const blob = await resp.blob();
         const obj = URL.createObjectURL(blob);
@@ -3736,7 +3762,7 @@ const OfflineTileLayer = L.TileLayer.extend({
     const url = this.getTileUrl(coords);
     (async ()=>{
       try{
-        const resp = await fetchTileCacheFirst(url);
+        const resp = await fetchTileRetrying(url);
         if(!resp || !resp.ok){ finish(new Error('tile ' + (resp && resp.status))); return; }
         const blob = await resp.blob();
         const obj = URL.createObjectURL(blob);
@@ -3813,7 +3839,7 @@ const OfflineWMSTileLayer = L.TileLayer.extend({
     const url = this.getTileUrl(coords);
     (async ()=>{
       try{
-        const resp = await fetchTileCacheFirst(url);
+        const resp = await fetchTileRetrying(url);
         if(!resp || !resp.ok){ finish(new Error('tile ' + (resp && resp.status))); return; }
         const blob = await resp.blob();
         const obj = URL.createObjectURL(blob);
@@ -3838,7 +3864,7 @@ const OfflineWMSTileLayer = L.TileLayer.extend({
     const url = this.getTileUrl(coords);
     (async ()=>{
       try{
-        const resp = await fetchTileCacheFirst(url);
+        const resp = await fetchTileRetrying(url);
         if(!resp || !resp.ok){ finish(new Error('tile ' + (resp && resp.status))); return; }
         const blob = await resp.blob();
         const obj = URL.createObjectURL(blob);

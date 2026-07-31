@@ -7,6 +7,18 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 4:36 PM EDT · v224 · Tile retry
+------------------------------------------------------------------------------
+On a weak signal a map tile whose download dropped used to stay as a blurry
+low-res patch (the Sentinel-2 backup imagery showing through) until you
+panned or zoomed and made the map re-request it. Sharp tiles on both
+satellite views now retry on their own — twice, a moment apart — before
+giving up, so a momentary dip in signal heals itself. Genuine "no tile
+here" answers from USGS (routine over open ocean) are not retried, so the
+backup-imagery behaviour and the automatic view fallback are unchanged, and
+going fully offline still fails uncached tiles immediately.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 4:25 PM EDT · v223 · Update pill wording
 ------------------------------------------------------------------------------
 The update pill no longer prints the incoming build number — which build it
