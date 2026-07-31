@@ -2358,6 +2358,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v214</b> · <b>Fix: printing the help from the home-screen app was refused</b> ("this site does not allow printing"). An app opened from the home screen runs in a shell that has no print dialog at all, so asking it to print could only fail. <b>Print this help</b> now opens the help as its own black-on-white page in a real browser window — from the home screen that means Safari, where printing works — and the print dialog is called there. If the new window is blocked, the old in-place path still runs as the fallback.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v213</b> · Wording in <b>Read This To Get Hooked</b>: Compass takes "one or more offshore pins", and the closing line now points at the three things worth reading on for — your own tide station, the offline map that works without Internet, and backing up all your photos and data.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v212</b> · <b>The TL;DR is now "Read This To Get Hooked".</b> Its sentences follow the order of the button stack down the right side of the map — Catch, Spot, Bite, Tides, Waves, My Log, Seasons, Compass, then the map button — with two additions: <b>Seasons</b> (typical feeding times by month) and <b>Compass</b> (tap it and one or more offshore pins for bearings and distance). Tight Lines! 🎣</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v211</b> · <b>The filter pills own the top of the map.</b> The species column now starts below the filter row instead of sharing the strip, so the row runs the full width, stays on one line wherever it fits, and wraps to a second only when the window or the biggest text size demands it — never three. The column's top is measured off the live row, since the row's height is not a constant. <b>Help:</b> the TL;DR was rewritten, button names throughout print as the buttons do — ALL CAPS and a step larger — and <b>Search now covers Help</b>: type a topic and matching sections are listed; tap one to open Help right at that section.</p>
@@ -3126,7 +3127,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 213;
+const BUILD_NUM  = 214;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5840,10 +5841,36 @@ document.getElementById('helpBtn').addEventListener('click', ()=>{
     if(mq.addEventListener) mq.addEventListener('change', onMq);
     else if(mq.addListener) mq.addListener(onMq);
   }
+  /* v214: print via a NEW WINDOW carrying just the help, not window.print() on the app
+     itself. From the home screen (iOS standalone) window.print() is refused outright —
+     "this site does not allow printing" — but window.open escapes to real Safari, where
+     printing works; on a desktop browser the popup prints the same way. The in-place
+     @media print path survives only as the fallback for a blocked popup. */
   btn.addEventListener('click', ()=>{
-    document.body.classList.add('print-help');
-    // A beat for the class to land in the render tree before the print snapshot is taken.
-    setTimeout(()=> window.print(), 60);
+    let w = null;
+    try{ w = window.open('', '_blank'); }catch(e){}
+    if(!w){
+      document.body.classList.add('print-help');
+      setTimeout(()=> window.print(), 60);
+      return;
+    }
+    const help = document.getElementById('panel-help').cloneNode(true);
+    const pb = help.querySelector('#helpPrintBtn'); if(pb) pb.remove();
+    w.document.write('<!doctype html><html><head><meta charset="utf-8">' +
+      '<title>WTF Log — Help</title><style>' +
+      'body{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:#000; background:#fff;' +
+      ' margin:28px; line-height:1.6; font-size:13px;}' +
+      'h1{font-size:19px; margin:0 0 14px;}' +
+      '.subhead{font-weight:800; font-size:15px; margin:18px 0 6px;}' +
+      '.sheet-note{margin:0 0 12px;}' +
+      'b{font-weight:700;} b.bn{text-transform:uppercase; font-size:1.08em;}' +
+      'svg{width:12px; height:12px; vertical-align:-2px;}' +
+      'a{color:#000;}' +
+      '</style></head><body><h1>WTF Log — Help</h1>' + help.innerHTML + '</body></html>');
+    w.document.close();
+    /* A beat for the new document to lay out; print() from the app's window object works
+       because the popup is a real browser page, not the standalone shell. */
+    setTimeout(()=>{ try{ w.focus(); w.print(); }catch(e){} }, 400);
   });
 })();
 /* v211: tag every <b> in Help whose text is exactly a real button's label with .bn, which
