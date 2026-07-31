@@ -1922,6 +1922,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .search-row:active{background:var(--navy-700);}
   .search-row .nm{font-size:12.5px; font-weight:600; line-height:1.3;}
   .search-row .mt{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--muted); flex:0 0 auto; text-align:right; line-height:1.4;}
+  /* Help-hit snippets can run ~80 chars; unlike the other .mt metas they must shrink. */
+  .search-row .mt.snip{flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .search-row .sw{width:9px; height:9px; border-radius:50%; flex:0 0 auto; margin-right:2px;}
   #tileHelp{
     position:absolute; inset:0; z-index:1150; display:flex; align-items:center; justify-content:center;
@@ -3183,7 +3185,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 219;
+const BUILD_NUM  = 220;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -8649,7 +8651,7 @@ searchInput.addEventListener('input', ()=>{
     html += '<div class="subhead">Help</div>';
     html += helpHits.map(h=>`<div class="search-row" data-go="help" data-id="${h.i}">
       <div style="display:flex; align-items:center; gap:8px; min-width:0;"><span class="nm">${escapeHTML(h.title)}</span></div>
-      <div class="mt">${escapeHTML(h.snip)}</div>
+      <div class="mt snip">${escapeHTML(h.snip)}</div>
     </div>`).join('');
   }
 
