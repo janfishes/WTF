@@ -7,6 +7,19 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 5:23 PM EDT · v229 · MOB in caps
+------------------------------------------------------------------------------
+Help quick-tour, one sentence polished: "MOB" now gets the same big-caps
+.bn treatment as the real button names ('mob' added to the v211 label
+list), with "(man-overboard)" as a plain parenthetical after it. For the
+record, the asks behind this build — LOCATE ME in caps, MOB in caps, pin
+not mark — were already in v228's rewrite of the sentence: LOCATE ME was
+capitalised by the v211 button-name tagger at render time (the source
+reads "Locate Me"; the .bn class does the caps), and "pin" replaced
+"mark" in the rewrite. The phone that prompted the request was still
+showing v227's help.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 5:17 PM EDT · v228 · MOB help wording
 ------------------------------------------------------------------------------
 Help wording only; no behaviour changed. The quick-tour paragraph now
