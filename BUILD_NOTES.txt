@@ -7,6 +7,13 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 6:03 PM EDT · v233 · Brighter banner
+------------------------------------------------------------------------------
+The MOB banner's border stepped up from 2 px #ff5252 to 3 px #ff1414 —
+bright alarm red — and MAN OVERBOARD prints bold white instead of light
+red (white on the near-black banner reads ~19:1, comfortably past AAA).
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 5:56 PM EDT · v232 · Red MOB, gray launches
 ------------------------------------------------------------------------------
 Red now belongs to MOB alone. Launches — pins, filter pill, and the
