@@ -1164,11 +1164,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     text-shadow:none !important;
   }
 
-  /* Spot name labels: plain white, clean font, no bubble/arrow/shading */
+  /* Spot name labels: plain white, clean font, no bubble/arrow/shading.
+     v235: the name rides the A control at the buttons' half-strength scale (--tsb), like
+     the filter pills and compass text. Padding and border stay fixed — the +21 constant in
+     compassSpotLabelWidth() covers them, and only the text there carries the scale. */
   .spot-label{
     border:1.25px solid #fff !important; box-shadow:0 1px 4px rgba(0,0,0,.4) !important;
     color:#fff !important; font-family:'Inter',sans-serif !important; font-style:normal !important;
-    font-size:8.5px !important; font-weight:700 !important; padding:3px 9px !important;
+    font-size:calc(8.5px * var(--tsb,1)) !important; font-weight:700 !important; padding:3px 9px !important;
     white-space:nowrap !important; max-width:none !important; line-height:1.2 !important; text-align:center;
     border-radius:100px !important; text-shadow:none !important;
   }
@@ -1850,10 +1853,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
      above centre. align-items/justify-content centre the line box itself, which is
      correct at any font size or badge height. */
   .catch-count, .spot-count{
-    position:absolute; top:-7px; right:-8px; min-width:15px; height:15px; padding:0 3px;
+    position:absolute; top:-7px; right:-8px; padding:0 3px;
+    /* v235: numeral and badge box ride the A control at the buttons' half strength (--tsb),
+       like the name labels — a catch diamond's count is the only text it shows on the map.
+       The box scales with the digit or the number would burst the circle at 130%. */
+    min-width:calc(15px * var(--tsb,1)); height:calc(15px * var(--tsb,1));
     display:flex; align-items:center; justify-content:center;
     background:#000; color:#fff; border:1px solid var(--line); border-radius:100px;
-    font:700 9px/1 'Inter',sans-serif; box-shadow:0 1px 3px rgba(0,0,0,.55);
+    font-family:'Inter',sans-serif; font-weight:700; line-height:1;
+    font-size:calc(9px * var(--tsb,1)); box-shadow:0 1px 3px rgba(0,0,0,.55);
   }
   /* Stacked catches at one diamond: the My Log cards in a scrolling well. Capped by
      viewport height as well as pixels so a tall stack can't run off a phone screen, and
@@ -2470,7 +2478,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap <b>🎨</b> to pick a color theme — four dark options (<b>Parrot Head</b>, <b>Green-Eyed Lady</b>, <b>Purple Haze</b>, <b>Tequila Sunrise</b>) and <b>Blue Suede Shoes</b> and <b>Brown Sugar</b>, designed for reading in bright sun through polarized lenses. Saved on your device.</p>
 
       <div class="subhead">Text Size</div>
-      <p class="sheet-note">Tap <b>A</b> to set the reading text size (100%, 115% or 130%) for the panels and popups. The buttons follow along at half strength — at the 130% setting the map buttons, filter pills and species switches print about 15% bigger, growing their pills a little to fit rather than wrapping. The size is saved on your device.</p>
+      <p class="sheet-note">Tap <b>A</b> to set the reading text size (100%, 115% or 130%) for the panels and popups. The buttons follow along at half strength — at the 130% setting the map buttons, filter pills, species switches, the pins' name labels, and the count badges on the pins and catch diamonds print about 15% bigger, growing their pills a little to fit rather than wrapping. The size is saved on your device.</p>
       <p class="sheet-note">Tap the <b>Eye</b> to clear the map furniture out of the way — it hides the whole column of buttons down the right, the species pills, and any <b>tide gauge pins</b> <b>Tides</b> has up, leaving the chart, your fishing pins and the filter row. The gauges go hit area and all, so a hidden pin cannot be tapped by accident; a gauge popup left open closes on the way out.
       An <b>open eye</b> means they are showing; a <b>closed eye</b> means they are hidden, so the cookie always reads as the state of the map rather than as the action. Nothing is reset or unloaded:
       your filters, species switches and any compass route stay exactly as they were and reappear untouched. Like the theme and the text size, the setting is remembered on your device.</p>
@@ -2501,6 +2509,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v235</b> · Map labels scale</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v234</b> · Help polish</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v233</b> · Brighter banner</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v232</b> · Red MOB, gray launches</p>
@@ -3291,7 +3300,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 234;
+const BUILD_NUM  = 235;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -7586,9 +7595,10 @@ function compassTextWidth(txt){
   return _compassMeasure.measureText(txt).width;
 }
 /* The spot name tooltip is drawn in a different font from the bearing labels (see .spot-label),
-   so it needs its own measurement; the constant covers its 9px side padding and 1.25px border. */
+   so it needs its own measurement; the constant covers its 9px side padding and 1.25px border,
+   which stay fixed while the text itself carries the A control's half-strength scale (v235). */
 function compassSpotLabelWidth(name){
-  _compassMeasure.font = "700 8.5px Inter, system-ui, sans-serif";
+  _compassMeasure.font = "700 " + (8.5 * compassTextScale()) + "px Inter, system-ui, sans-serif";
   return _compassMeasure.measureText(name || '').width + 21;
 }
 
@@ -7629,8 +7639,9 @@ function compassObstacles(activeSpot, originSpot){
     const p = map.latLngToContainerPoint([s.lat, s.lng]);
     let x0 = p.x - half, x1 = p.x + half, y0 = p.y - half, y1 = p.y + half;
     if(labelsOn && m.getTooltip && m.getTooltip()){
+      const tipHalfH = 10 * compassTextScale();
       x1 = Math.max(x1, p.x + COMPASS_TOOLTIP_OFFSET_PX + compassSpotLabelWidth((s.name || '').replace(/^CR /, '')));
-      y0 = Math.min(y0, p.y - 10); y1 = Math.max(y1, p.y + 10);
+      y0 = Math.min(y0, p.y - tipHalfH); y1 = Math.max(y1, p.y + tipHalfH);
     }
     boxes.push([x0, y0, x1, y1]);
   });

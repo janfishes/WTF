@@ -7,6 +7,19 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 6:42 PM EDT · v235 · Map labels scale
+------------------------------------------------------------------------------
+The map's own text now rides the A text-size control at the buttons' half
+strength, like the filter pills and compass text: the pin name labels
+(inshore, offshore and launch pills shown when Labels is on) and the count
+badges on reef pins and merged catch diamonds — a catch diamond's count is
+the only text it shows on the map. The badge box grows with its numeral so
+the number can't burst the circle at 130%. The compass overlay's collision
+layout measures name-tag widths in px, so its measuring font (and the
+tag's half-height keep-out) carry the same factor. Help's Text Size note
+updated to match.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 6:24 PM EDT · v234 · Help polish
 ------------------------------------------------------------------------------
 Three touches to the help sheet. "Tight Lines!" moved out of the opening
