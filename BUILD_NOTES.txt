@@ -7,6 +7,13 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 4:42 PM EDT · v225 · Offline help wording
+------------------------------------------------------------------------------
+The help's "Using the App Offline" section now says to run the offline map
+download "before hitting the water" — the when mattered as much as the how.
+Text only; no behaviour changed.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 4:36 PM EDT · v224 · Tile retry
 ------------------------------------------------------------------------------
 On a weak signal a map tile whose download dropped used to stay as a blurry
