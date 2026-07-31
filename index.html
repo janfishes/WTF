@@ -2509,6 +2509,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v236</b> · Compass self-heals</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v235</b> · Map labels scale</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v234</b> · Help polish</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v233</b> · Brighter banner</p>
@@ -3300,7 +3301,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 235;
+const BUILD_NUM  = 236;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -7994,6 +7995,28 @@ function redrawCompass(){
 
   const roseLL = [COMPASS_ROSE_POS.lat, COMPASS_ROSE_POS.lng];
 
+  /* The rose goes on FIRST, and each leg draws inside its own try. This function used to
+     clear the overlay, draw the legs, and add the rose last — so one leg throwing mid-draw
+     (a route entry gone bad in some way the guards below don't anticipate) left the overlay
+     BLANK, and since the route lives only in memory, every hover, tap, pan and zoom replayed
+     the same failure until the page was reloaded. The whole compass looked dead. Now a bad
+     leg can lose only its own line: the rose and the other legs always land. Draw order
+     within the layer group carries no visual meaning — lines live in the overlay pane and
+     markers stack by zIndexOffset — so the rose moving first changes nothing on screen. */
+  L.marker(roseLL, {
+    icon: L.divIcon({ className:'compass-rose-wrap', html:COMPASS_ROSE_SVG, iconSize:[200,200], iconAnchor:[100,100] }),
+    interactive:false, zIndexOffset:500
+  }).addTo(compassLayer);
+
+  /* A route entry without finite coordinates can only poison redraws, so it is dropped from
+     the route itself — not merely skipped — and the route heals instead of wedging. */
+  const okSpot = t => !!t && Number.isFinite(t.lat) && Number.isFinite(t.lng);
+  if(compassChain.some(t => !okSpot(t))){
+    compassChain = compassChain.filter(okSpot);
+    if(!compassChain.length) compassPinnedId = null;
+  }
+  if(compassActiveSpot && !okSpot(compassActiveSpot)) compassActiveSpot = null;
+
   /* The route, as a list of legs. The first always starts at the rose, so the run out from the
      inlet stays drawn however many grounds are strung on after it; each later leg starts where
      the one before it ended. With no route up, a hovered mark gets the same single rose leg as a
@@ -8008,7 +8031,8 @@ function redrawCompass(){
   const labelBoxes = [];
   legs.forEach((leg, i)=>{
     if(leg.o && leg.o.id === leg.t.id) return;
-    drawCompassRun(leg.o, leg.t, COMPASS_FAN_LABEL_T[i % COMPASS_FAN_LABEL_T.length], labelBoxes);
+    try{ drawCompassRun(leg.o, leg.t, COMPASS_FAN_LABEL_T[i % COMPASS_FAN_LABEL_T.length], labelBoxes); }
+    catch(e){}
   });
 
   /* Every mark on the route gets a ring, so the whole run reads as a chain of ringed grounds
@@ -8017,11 +8041,6 @@ function redrawCompass(){
     L.circleMarker([t.lat, t.lng], { radius:11, color:'var(--rose)', weight:2.4, opacity:1,
       fill:false, interactive:false, className:'compass-line' }).addTo(compassLayer);
   });
-
-  L.marker(roseLL, {
-    icon: L.divIcon({ className:'compass-rose-wrap', html:COMPASS_ROSE_SVG, iconSize:[200,200], iconAnchor:[100,100] }),
-    interactive:false, zIndexOffset:500
-  }).addTo(compassLayer);
 }
 
 map.on('zoomend moveend', ()=>{ if(compassOn) redrawCompass(); });

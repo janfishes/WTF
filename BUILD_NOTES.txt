@@ -7,8 +7,25 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-07-31 · 6:42 PM EDT · v235 · Map labels scale
+Build 2026-07-31 · 7:40 PM EDT · v236 · Compass self-heals
 ------------------------------------------------------------------------------
+Hardens the compass redraw so it can no longer go dark for a whole session.
+The redraw used to clear the overlay, draw the route legs, and add the rose
+last — so if any one leg threw mid-draw, the overlay was left completely
+blank, and because the route lives only in memory the same failure replayed
+on every hover, tap, pan and zoom until the page was reloaded. That is the
+likely shape of the "dashed lines missing, legs not working on the Mac"
+report against v235 (the page itself was current — reloading fixed it while
+all saved data survived, which points at wedged in-memory route state, not
+the code or the cache).
+
+Three changes, all in redrawCompass(): the rose is drawn FIRST, so no leg
+failure can ever blank it; each leg draws inside its own try/catch, so a bad
+leg loses only its own line while the rose and the other legs still land;
+and any route entry without finite coordinates is dropped from the route
+itself at the top of the redraw, so a poisoned route heals on the next draw
+instead of wedging until reload. No visual or behavioural change when
+everything is healthy.
 The map's own text now rides the A text-size control at the buttons' half
 strength, like the filter pills and compass text: the pin name labels
 (inshore, offshore and launch pills shown when Labels is on) and the count
