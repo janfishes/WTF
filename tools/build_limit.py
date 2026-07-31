@@ -132,14 +132,18 @@ CITIES = [
  (2,'Pensacola Beach',30.335,-87.139),(1,'Pensacola',30.421,-87.217),
  (2,'Perdido Key',30.310,-87.440),
 ]
-line_s = transform(fwd, limit).boundary
+# Names anchor just seaward of the SHORELINE cut (the views clip at the shore
+# envelope since Build 203), not the state-waters line: 1.3 nm clears the
+# 1300 m photo pad and lands the name on the blue right off the town's beach.
+line_s = transform(fwd, env).boundary
+OFF = 1.3/60.0
 names = []
 for rank, name, lat, lon in CITIES:
     c = Point(lon*K, lat)
     p = nearest_points(line_s, c)[0]
     dx, dy = p.x - c.x, p.y - c.y
     d = math.hypot(dx, dy) or 1e-9
-    ax, ay = p.x + dx/d*0.010, p.y + dy/d*0.010
+    ax, ay = p.x + dx/d*OFF, p.y + dy/d*OFF
     ux = dx/d
     align = 'l' if ux > 0.45 else ('r' if ux < -0.45 else 'c')
     names.append([round(ay,4), round(ax/K,4), align, rank, name])
