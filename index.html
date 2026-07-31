@@ -855,6 +855,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .splash-fish{
     width:min(72vw,420px); height:auto; display:block;
     filter:drop-shadow(0 3px 6px rgba(0,0,0,.55));
+    /* v219: the fish swims in place — a slow bob with a hint of roll — so the splash
+       reads as the app working rather than a frozen card while the first tiles land
+       (the splash now waits for them, briefly; see the splash script). */
+    animation:splashSwim 2.4s ease-in-out infinite;
+  }
+  @keyframes splashSwim{
+    0%,100%{transform:translateY(0) rotate(0deg);}
+    50%{transform:translateY(-7px) rotate(-1.2deg);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .splash-fish{animation:none;}
   }
   .splash-tag{
     font-family:var(--comic); font-weight:700; color:#fff; white-space:nowrap;
@@ -955,7 +966,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
      WTF lettering too. */
   .logo-wtf{text-shadow:0 1px 2px rgba(0,0,0,.55);}
   .logo-wrap{position:relative; display:inline-flex; align-items:center; filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));}
-  .logo-mini{width:92px; height:auto; display:block;}
+  /* v219: bumped from a fixed 92px, and riding the A control at half strength like the
+     name and tagline beside it, so the whole lock-up grows as one piece. */
+  .logo-mini{width:calc(104px * var(--tsb,1)); height:auto; display:block;}
   /* Brown Sugar: the white fish needs a hard edge on a near-white ground, so the soft shadow
      is tightened into a thin dark outline there. */
   body[data-theme="brownsugar"] .logo-wrap{
@@ -965,9 +978,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
      take the theme accent the way the rest of the header does. Comic Neue ships a real
      bold at 700 and nothing above it, so 700 is the weight to ask for - 900 would only
      buy a synthetic smear of the same face. */
+  /* v219: sized and spaced up in step with the fish (92px → 104px) and riding the same
+     half-strength A scale, so the lettering holds its place on the body at every size. */
   .logo-wtf{
     position:absolute; left:47%; top:44%; transform:translate(-50%,-50%);
-    font-family:var(--comic); font-size:16px; font-weight:700; letter-spacing:3.5px;
+    font-family:var(--comic); font-size:calc(18px * var(--tsb,1)); font-weight:700; letter-spacing:calc(4px * var(--tsb,1));
     /* Comic Neue has one weight above regular and we are already on it, so extra heft
        has to come from the outline rather than from asking for a bolder face that does
        not exist. currentColor, so it thickens the glyph rather than ringing it. */
@@ -975,7 +990,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* letter-spacing is applied after the last letter too, which drags the centred box
        left by half a space. Given back here so the WTF keeps the position it has held
        since v168. */
-    margin-left:1.75px;
+    margin-left:calc(2px * var(--tsb,1));
     color:var(--teal); pointer-events:none;
   }
   /* Trademark notice on the mark. Sized in em rather than px so the one rule serves
@@ -983,9 +998,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
      drawn at cap height in the face here, so it takes no vertical-align nudge on top
      of that - raising an already-raised glyph puts it off the top of the line.
      v217: raised from .55em — the mark was reading as a speck; being em-based it also
-     rides the tagline's A scaling on top of this bump. */
+     rides the tagline's A scaling on top of this bump. v219: raised again, .75em → .9em. */
   .mark-tm{
-    font-size:.75em; font-weight:700; color:inherit;
+    font-size:.9em; font-weight:700; color:inherit;
     vertical-align:baseline; line-height:0; margin-left:2px; letter-spacing:0;
   }
   #speciesCol{
@@ -1171,9 +1186,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
      nudged to one side, with a gap carved in the line beneath it). Sized and weighted to
      match the species pills — 12px/800, full intensity, no glow — and the same brass as the
      rose and its lines. */
+  /* v219: the bearing/run text rides the A control at the buttons' half-strength scale
+     (--tsb), like the species pills it was sized to match. The px widths the collision
+     layout computes scale with it in compassTextWidth()/compassLabelForms(). */
   .compass-label{
     position:absolute; color:var(--rose); font-family:'Space Grotesk',sans-serif;
-    font-size:12px; font-weight:800; white-space:nowrap; pointer-events:none;
+    font-size:calc(12px * var(--tsb,1)); font-weight:800; white-space:nowrap; pointer-events:none;
     letter-spacing:.02em; opacity:1;
     /* Text can't take a drop-shadow filter without also haloing the element box, so the
        labels use text-shadow - same two-layer idea, same variable. */
@@ -1186,7 +1204,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Everything on a leg label sits on one row, centred on the line and rotated to lie along it,
      with spacers between the items whose width is set per redraw from the zoom — tight zoomed out
      where the map is busy, airier zoomed in. The run is a shade smaller so the bearings lead. */
-  .compass-label .run{font-size:11px; font-weight:700; letter-spacing:.01em;}
+  .compass-label .run{font-size:calc(11px * var(--tsb,1)); font-weight:700; letter-spacing:.01em;}
   .compass-label i.rg{display:inline-block; height:1px; vertical-align:middle;}
   /* The halo is a pair of drop-shadows at zero offset rather than a second copy of the rose
      drawn wider underneath: one filter covers all 67 strokes, fills and letters at once, and
@@ -1493,8 +1511,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       position:relative; left:auto; top:auto; transform:none;
       flex:0 0 auto; margin-left:auto; margin-right:auto; align-self:center;
     }
-    .logo-mini{width:66px;}
-    .logo-wtf{font-size:11.5px; letter-spacing:2.5px; margin-left:1.25px; -webkit-text-stroke:.4px currentColor;}
+    /* v219: bumped in the same 104/92 proportion as the full-width rule, and riding
+       the A control at half strength like it, lettering following proportionally. */
+    .logo-mini{width:calc(75px * var(--tsb,1));}
+    .logo-wtf{font-size:calc(13px * var(--tsb,1)); letter-spacing:calc(2.83px * var(--tsb,1)); margin-left:calc(1.41px * var(--tsb,1)); -webkit-text-stroke:.45px currentColor;}
     .help-btn{width:24px; height:24px; font-size:12px;}
     /* Shrink the emoji glyphs too (id beats the class font-size above) so they
        centre inside the smaller circle instead of overflowing it. */
@@ -1544,8 +1564,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
        height, tracking, the centring compensation that tracking costs, and the emboldening
        stroke -- so this is the same mark at a smaller size rather than a differently
        proportioned one. */
-    .logo-mini{width:56px;}
-    .logo-wtf{font-size:9.8px; letter-spacing:2.12px; margin-left:1.06px; -webkit-text-stroke:.34px currentColor;}
+    /* v219: 56px -> 63px, the same bump the wider rules took, still proportional. */
+    .logo-mini{width:calc(63px * var(--tsb,1));}
+    .logo-wtf{font-size:calc(11.1px * var(--tsb,1)); letter-spacing:calc(2.4px * var(--tsb,1)); margin-left:calc(1.2px * var(--tsb,1)); -webkit-text-stroke:.38px currentColor;}
     #filterWrap{left:8px;}
     #metaRow .chip{padding:4px 6px 6px; font-size:calc(12px * var(--tsb));}
     #metaRow #labelsToggle{padding:5px 6px 5px;}
@@ -1960,8 +1981,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
     display:inline-flex; align-items:center; justify-content:center;
     border:1px solid var(--line); background:rgba(0,0,0,.28); font-weight:700;}
   #updateBanner .ub-ico{color:var(--teal); font-size:16px; border-color:var(--teal);}
-  #updateBanner .ub-msg{flex:1 1 auto; text-align:center; line-height:1.35; white-space:nowrap;}
-  #updateBanner #updateDismiss{opacity:.75; font-size:13px;}
+  /* v219: the whole message is one weight — 800, the heaviest Space Grotesk ships — with
+     the accent carried by the teal alone, and the dismiss ✕ stepped up to match the
+     reload glyph so the two round ends read as equals. */
+  #updateBanner .ub-msg{flex:1 1 auto; text-align:center; line-height:1.35; white-space:nowrap; font-weight:800;}
+  #updateBanner #updateDismiss{opacity:.85; font-size:18px;}
   #updateBanner #updateDismiss:active{opacity:1; background:rgba(0,0,0,.45);}
   #themeGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
   .theme-opt{
@@ -2384,6 +2408,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v219</b> · <b>The app now keeps a copy of itself on your device</b> — after the first visit, opening it serves that saved copy instantly instead of re-downloading the whole page, and the newest build is fetched quietly in the background for the next open (the update pill still announces it, now with every word bold, no dash, and a bigger ✕). The splash fish <b>swims in place</b> and stays up just until the first map tiles have drawn — never more than a couple of extra seconds, and a tap still dismisses it. The <b>A</b> control now also grows the <b>Compass</b> bearing &amp; distance text on the lines, at the same half-strength rate as the buttons. And the header's fish logo and the <b>™</b> mark were both stepped up in size.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v218</b> · <b>The app opens faster, centred on Ponce DeLeon Inlet.</b> The Street Map view's vector renderer — about a megabyte of code that the opening Topo Satellite view never touches — no longer downloads before the app can start; it fetches the first time the <b>MAP</b> button reaches Street Map, with the plain street map filling in for the moment that takes. The fonts stopped holding up the first paint too, and the map now opens with <b>Ponce DeLeon Inlet</b> at the centre of the view instead of a point averaged from every pin.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v217</b> · <b>The update pill was redesigned</b> — its message is now bold and properly centred, sitting between a teal reload glyph and a round dismiss button instead of hanging left of a bare ✕. And the header now grows with the <b>A</b> control: <b>WTF Log</b> and the tagline scale at the same half-strength rate as the buttons, and the <b>™</b> mark was raised from a speck to a readable size — riding the tagline's scaling on top of that.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v216</b> · The opening section of this help is now titled <b>Read This Paragraph to Get Hooked</b>.</p>
@@ -3158,7 +3183,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 218;
+const BUILD_NUM  = 219;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -3196,10 +3221,23 @@ function showUpdateBanner(newBuild){
   const b = document.createElement('div');
   b.id = 'updateBanner';
   b.innerHTML = '<span class="ub-ico" aria-hidden="true">&#8635;</span>' +
-    '<span class="ub-msg"><b>Update available</b> — Build ' + newBuild + '<br>Tap to reload</span>' +
+    '<span class="ub-msg"><b>Update available</b> Build ' + newBuild + '<br>Tap to reload</span>' +
     '<span id="updateDismiss" role="button" aria-label="Not now">✕</span>';
-  b.addEventListener('click', (e)=>{
+  b.addEventListener('click', async (e)=>{
     if(e.target && e.target.id === 'updateDismiss'){ b.remove(); return; }
+    /* The service worker serves the page from its shell cache, so a plain reload
+       could hand back the very copy the pill is offering to replace. Pull the live
+       page into that cache first (same cache name sw.js uses), then reload; any
+       failure just falls through to the old reload behaviour. */
+    try{
+      if('caches' in window){
+        const res = await fetch(location.href.split(/[?#]/)[0], { cache:'no-store', credentials:'omit' });
+        if(res && res.ok){
+          const c = await caches.open('wtf-shell-v1');
+          await c.put('./index.html', res);
+        }
+      }
+    }catch(_){}
     location.reload();
   });
   document.body.appendChild(b);
@@ -3223,7 +3261,18 @@ document.addEventListener('visibilitychange', ()=>{
   }
   sp.addEventListener('click', drop);
   sp.addEventListener('touchstart', drop, {passive:true});
-  setTimeout(drop, 1700);
+  /* v219: the old fixed 1700ms drop could land on a map that was still a grey grid,
+     so the splash now holds — fish swimming — until the first base tiles have
+     actually drawn, checked every 150ms after the same minimum showing. Capped at
+     4.2s total so a dead tile server can never trap the user at the splash, and a
+     tap still cuts it short at any moment. */
+  const t0 = Date.now();
+  setTimeout(function check(){
+    if(done) return;
+    const tilesIn = (typeof everLoadedATile !== 'undefined') && everLoadedATile;
+    if(tilesIn || Date.now() - t0 >= 4200) drop();
+    else setTimeout(check, 150);
+  }, 1700);
 })();
 
 const map = L.map('map', { zoomControl:false, attributionControl:true, minZoom:1 }).setView([29.07783,-80.91022],11);
@@ -7376,15 +7425,20 @@ function compassLabelForms(brg, nm, recipBrg){
   if(recipBrg != null) forms.push({ html: hdg, w: compassTextWidth(hdg) });
   forms.forEach(f=>{
     f.halfLen = f.w/2 + COMPASS_GAP_PAD_PX;
-    f.halfH = COMPASS_LABEL_HALF_H_WIDE;
+    f.halfH = COMPASS_LABEL_HALF_H_WIDE * compassTextScale();
   });
   return { forms };
 }
 
-/* Measured, not guessed — the gap carved in the line has to match the text actually drawn. */
+/* Measured, not guessed — the gap carved in the line has to match the text actually drawn.
+   v219: the labels scale with the A control at the buttons' half strength, so the
+   measuring font (and the label half-height below) carry the same factor. */
+function compassTextScale(){
+  try{ return 1 + (TEXT_STEPS[textStepIdx] - 1) * .5; }catch(e){ return 1; }
+}
 const _compassMeasure = document.createElement('canvas').getContext('2d');
 function compassTextWidth(txt){
-  _compassMeasure.font = "800 12px 'Space Grotesk', system-ui, sans-serif";
+  _compassMeasure.font = "800 " + (12 * compassTextScale()) + "px 'Space Grotesk', system-ui, sans-serif";
   return _compassMeasure.measureText(txt).width;
 }
 /* The spot name tooltip is drawn in a different font from the bearing labels (see .spot-label),
@@ -10089,6 +10143,11 @@ function applyTextScale(idx){
   if(b) b.title = 'Text size ' + Math.round(v * 100) + '%';
   // An open popup keeps its old box until Leaflet re-measures it.
   if(typeof map !== 'undefined' && map._popup) map._popup.update();
+  // The compass labels resize with --tsb instantly, but the gaps carved in the lines and
+  // the collision corridors are computed in px at draw time — redraw so they match.
+  if(typeof compassOn !== 'undefined' && compassOn && typeof redrawCompass === 'function'){
+    try{ redrawCompass(); }catch(e){}
+  }
 }
 document.getElementById('sizeBtn').addEventListener('click', async ()=>{
   applyTextScale(textStepIdx + 1);
@@ -10176,9 +10235,13 @@ themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); 
 
 loadAll();
 
-// Register the service worker (needed for Chrome/Android to offer
-// "Install app" as a standalone window instead of a plain browser shortcut).
-// It does no caching of its own, so this has no effect on how updates show up.
+// Register the service worker. Two jobs: it lets Chrome/Android offer
+// "Install app" as a standalone window, and (since v219 — the file itself
+// didn't exist before, so this registration 404'd silently every launch) it
+// keeps the last good copy of this page in Cache Storage and serves it
+// instantly on every open, re-fetching the live page in the background for
+// next time. Updates still surface through the pill: its check bypasses the
+// worker, and its tap refreshes the worker's cache before reloading.
 if('serviceWorker' in navigator){
   window.addEventListener('load', function(){
     navigator.serviceWorker.register('sw.js').catch(function(){ /* ignore */ });
