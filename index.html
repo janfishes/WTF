@@ -716,11 +716,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
        hyperlinks (deliberately blue and separate from --emph), --accent-lite is the accent
        lightened for use as TEXT on the black filter chips. All clear 4.5:1 on their ground. */
     --brass:#d9a955; --emph:#f0b95e; --link:#5ab4ff; --accent-lite:#19cec0;
-    /* Reader text scale — 1 / 1.15 / 1.3, set by the A control in the header. Applies to the
-       text-heavy surfaces only (sheets, popups, tide panel); map furniture keeps fixed sizes
-       because chips and cluster circles have no room to grow. */
+    /* Reader text scale — 1 / 1.15 / 1.3, set by the A control in the header. Applies in
+       full to the text-heavy surfaces (sheets, popups, tide panel); since v208 the map
+       buttons follow too, at HALF strength via --tsb below. */
     --ts:1;
   }
+  /* Button text scale: --ts damped to half strength, so 130% reading text means ~115%
+     button text — enough to matter, small enough for the pills to absorb by growing a
+     little (none has a fixed width or height; boxes size from their content) instead of
+     wrapping. Declared on body, not :root: the A control writes --ts onto body's inline
+     style, and a custom property resolves its var()s on the element that DECLARES it, so
+     a :root declaration would only ever see :root's untouched --ts of 1. */
+  body{ --tsb: calc(1 + (var(--ts) - 1) * .5); }
   body[data-theme="purplehaze"]{
     --navy-950:#05060a; --navy-900:#0d1017; --navy-800:#171b26; --navy-700:#242a3a;
     --line:#606a8f; --fog:#eef0f5; --muted:#9298ac; --teal:#9484ff; --map-bg:#141826;
@@ -921,10 +928,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     flex:0 0 auto; width:29px; height:29px; border-radius:50%; padding:0;
     display:inline-flex; align-items:center; justify-content:center;
     background:var(--navy-800); border:1px solid var(--line); color:var(--teal);
-    font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; cursor:pointer; line-height:1;
+    font-family:'Space Grotesk',sans-serif; font-size:calc(16px * var(--tsb)); font-weight:700; cursor:pointer; line-height:1;
   }
-  #searchBtn{font-size:13px;}
-  #themeBtn{font-size:15px;}
+  #searchBtn{font-size:calc(13px * var(--tsb));}
+  #themeBtn{font-size:calc(15px * var(--tsb));}
   .help-btn:active{background:var(--navy-700);}
   .credit{
     font-family:'JetBrains Mono',monospace; font-size:17px; font-weight:700; color:var(--teal);
@@ -979,7 +986,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #speciesCol::-webkit-scrollbar{ display:none; }
 
-  #speciesCol .chip{padding:4px 8px; font-size:12px; font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
+  #speciesCol .chip{padding:4px 8px; font-size:calc(12px * var(--tsb)); font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
   #speciesCol .chip .dot{width:6px; height:6px; border-radius:1px; transform:rotate(45deg);}
 
   /* ---------- Map ---------- */
@@ -1219,7 +1226,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
        dead-even 6.5/6.5 would overshoot slightly. */
     padding:7px 9px 6px;
     border-radius:100px; background:rgba(11,28,43,.88); border:1px solid var(--line);
-    color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600;
+    color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:calc(13.5px * var(--tsb)); font-weight:600;
     cursor:pointer; backdrop-filter:blur(6px); user-select:none; white-space:nowrap;
     transition:border-color .15s, color .15s, background .15s; line-height:1;
     box-shadow:0 3px 8px rgba(0,0,0,.35);
@@ -1228,7 +1235,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* The 4 map filter pills with a live total (Catches, Inshore, Offshore, Launches) show
      the number right after the name on the same line. Labels has no total. */
   .chip.filter-count .chip-total{
-    display:inline; margin-left:6px; font-size:12.5px; font-weight:700; letter-spacing:0;
+    display:inline; margin-left:6px; font-size:calc(12.5px * var(--tsb)); font-weight:700; letter-spacing:0;
   }
   .chip.active:not(.sp){color:var(--fog); background:rgba(20,42,61,.95);}
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
@@ -1344,15 +1351,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .fab{
     display:flex; align-items:center; padding:2px 8px; border-radius:100px;
     background:rgba(11,28,43,.92); border:1px solid var(--line); color:var(--fog);
-    font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:600;
+    font-family:'Space Grotesk',sans-serif; font-size:calc(12.5px * var(--tsb)); font-weight:600;
     cursor:pointer; backdrop-filter:blur(6px); box-shadow:0 4px 14px rgba(0,0,0,.35);
     margin-bottom:7px;
   }
   .fab-col > .fab:last-child{margin-bottom:0;}
   .fab svg{margin-right:5px;}
-  .fab svg{width:13px; height:13px; flex:0 0 auto;}
+  .fab svg{width:calc(13px * var(--tsb)); height:calc(13px * var(--tsb)); flex:0 0 auto;}
   .fab.primary{background:#fff; border-color:#fff; color:#000;}
-  .fab svg{width:13px; height:13px; flex:0 0 auto;}
+  .fab svg{width:calc(13px * var(--tsb)); height:calc(13px * var(--tsb)); flex:0 0 auto;}
 
   /* ---------- Bottom sheets ---------- */
   .scrim{position:absolute; inset:0; background:rgba(3,9,15,.55); z-index:1200; opacity:0; pointer-events:none; transition:opacity .2s;}
@@ -1483,7 +1490,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* Let the top pills shrink a little rather than wrap out of order */
     #metaRow .chip{flex:0 1 auto; min-width:0;}
     .chip-break{display:block; flex-basis:100%; height:0;}
-    .chip{padding:6px 8px 5px; font-size:13px;}   /* same 1px-top bias as the base rule; 11px total, unchanged */
+    .chip{padding:6px 8px 5px; font-size:calc(13px * var(--tsb));}   /* same 1px-top bias as the base rule; 11px total, unchanged */
     #metaRow #labelsToggle{padding:5px 8px 6px;}
     #speciesCol{top:8px;}
   }
@@ -1516,7 +1523,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     .logo-mini{width:56px;}
     .logo-wtf{font-size:9.8px; letter-spacing:2.12px; margin-left:1.06px; -webkit-text-stroke:.34px currentColor;}
     #filterWrap{left:86px;}
-    #metaRow .chip{padding:4px 6px 6px; font-size:12px;}
+    #metaRow .chip{padding:4px 6px 6px; font-size:calc(12px * var(--tsb));}
     #metaRow #labelsToggle{padding:5px 6px 5px;}
   }
 
@@ -1574,7 +1581,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   select{appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%); background-position:calc(100% - 16px) center, calc(100% - 11px) center; background-size:5px 5px; background-repeat:no-repeat;}
   .loc-btns{display:flex; gap:8px; margin-top:8px;}
   .mini-btn{
-    flex:1; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600;
+    flex:1; font-family:'Space Grotesk',sans-serif; font-size:calc(12px * var(--tsb)); font-weight:600;
     background:var(--navy-800); border:1px solid var(--line); color:var(--fog);
     border-radius:8px; padding:9px 8px; cursor:pointer; text-align:center;
   }
@@ -2314,7 +2321,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap <b>🎨</b> to pick a color theme — four dark options (<b>Parrot Head</b>, <b>Green-Eyed Lady</b>, <b>Purple Haze</b>, <b>Tequila Sunrise</b>) and <b>Blue Suede Shoes</b> and <b>Brown Sugar</b>, designed for reading in bright sun through polarized lenses. Saved on your device.</p>
 
       <div class="subhead">Text Size</div>
-      <p class="sheet-note">Tap <b>A</b> to set the reading text size (100%, 115% or 130%) for the panels and popups. The size is saved on your device.</p>
+      <p class="sheet-note">Tap <b>A</b> to set the reading text size (100%, 115% or 130%) for the panels and popups. The buttons follow along at half strength — at the 130% setting the map buttons, filter pills and species switches print about 15% bigger, growing their pills a little to fit rather than wrapping. The size is saved on your device.</p>
       <p class="sheet-note">Tap the <b>Eye</b> to clear the map furniture out of the way — it hides the whole column of buttons down the right, the species pills, and any <b>tide gauge pins</b> <b>Tides</b> has up, leaving the chart, your fishing pins and the filter row. The gauges go hit area and all, so a hidden pin cannot be tapped by accident; a gauge popup left open closes on the way out.
       An <b>open eye</b> means they are showing; a <b>closed eye</b> means they are hidden, so the cookie always reads as the state of the map rather than as the action. Nothing is reset or unloaded:
       your filters, species switches and any compass route stay exactly as they were and reappear untouched. Like the theme and the text size, the setting is remembered on your device.</p>
@@ -2343,6 +2350,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v208</b> · <b>The A button now grows the buttons too.</b> The text-size control has always scaled the reading surfaces — panels, popups, the tide panel — while the map buttons stayed fixed, because their tight pill boxes would wrap at 130%. They now follow at <b>half strength</b>: at the 130% setting the FAB pills, filter pills, species switches and header cookies print about 15% bigger, and each pill grows a little to fit its larger text instead of wrapping. One tap, one setting, saved on your device as before.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v207</b> · <b>Help opens with a TL;DR and can be printed.</b> A ten-second summary of the whole app now sits at the top of this panel, and above it a <b>Print this help</b> button sends just this panel to the printer — full text, black on white, no map — for a paper copy in the boat bag. On the chart, the <b>Ponce DeLeon Inlet</b> name moved off the north jetty into the middle of the channel: it now sits on the centreline of the marked cut, halfway along the open reach between Buoy 5 and Lighted Buoy 8, where it covers no red or green mark.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v206</b> · <b>The chart writes on its own boundary — so the blue now steps just past the line instead of slicing that writing lengthwise.</b> The county names are printed <i>along</i> the state-waters lines (<span class="g-emph">Levy County · Citrus County</span> down the Gulf's 9-mile line, <span class="g-emph">Brevard County</span> and the rest along the Atlantic's 3-mile line), and the boundary dashes are the line itself — starting the flat blue exactly at the line cut all of it in half. Zoomed in past the 1-mile scale the blue now begins about a half-mile <i>seaward</i> of the limit, so the charted dashes, the junctions where county lines meet the boundary, and every name riding the line read whole. (If Crystal Bay, its power-plant channel, or the waters above Anclote Key still look cut off, that is the previous build lingering in the cache — the update pill or a reload brings this one in.)</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v205</b> · <b>Zoomed in, the chart comes back: from the 1-mile scale the blue pulls back to the state-waters line.</b> The tight one-mile cut that cures the blocky water at wide zooms was, up close, painting over real chart content — the <b>Circumnavigational Paddling Trail</b> down Biscayne Bay and Card Sound and along the whole Gulf, the <b>Intracoastal's course</b> through the sounds, <b>county boundary lines</b> (Broward/Dade, Pasco/Pinellas, Levy/Citrus and the rest), airport and base names like <span class="g-emph">Patrick SFB</span> and <span class="g-emph">Fort Lauderdale</span>, bay names (<span class="g-emph">Gullivan Bay</span>, <span class="g-emph">Crystal Bay</span>), <span class="g-emph">Marjory Stoneman Douglas</span>, and the small keys of the island chains around Islamorada, Marathon, Key West, Anclote Key, Cape Romano. So the cut is now <b>zoom-aware</b>: out wide (through the 2-mile scale) the ocean is clean flat blue from a mile off the beach, exactly as before; from the <b>1-mile scale in</b>, the photo opens out to the <b>state-waters limit</b> — everything between the beach and the dashed line is the chart itself, trails and boundaries and islands included, and the flat blue takes over only past the line, where there is genuinely nothing charted to lose.</p>
@@ -3105,7 +3113,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 207;
+const BUILD_NUM  = 208;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -9849,9 +9857,11 @@ THEMES.forEach(t=>{
   themeGrid.appendChild(opt);
 });
 /* ---------- Reader text size ----------
-   Only the text-heavy surfaces scale: sheets, popups, the tide panel, My Log. Map furniture
-   (chips, cluster circles, FAB pills, labels) is deliberately left fixed — those sit in
-   tight boxes and would wrap or overflow well before 130%. */
+   The text-heavy surfaces (sheets, popups, the tide panel, My Log) scale in full. Since
+   v208 the buttons — FAB pills, filter and species chips, header cookies, mini-btns —
+   follow at HALF strength through --tsb (see its declaration in the CSS): 130% reading
+   text means ~115% button text, which the pills absorb by growing a little rather than
+   wrapping. Cluster circles and map labels stay fixed — those really have no room. */
 const TEXT_SCALE_KEY = 'text-scale';
 const TEXT_STEPS = [1, 1.15, 1.3];
 let textStepIdx = 0;
