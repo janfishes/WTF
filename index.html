@@ -1200,11 +1200,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Floating filter bar ---------- */
   #filterWrap{
-    /* The left inset clears the species column, whose chips grow with --tsb — so the
-       inset must grow with it too, or at 130% the Catches pill lands on the species
-       buttons. Scaling the full inset by --tsb overshoots slightly (chip padding is
-       fixed, only the text scales), which is the right side to err on. */
-    position:absolute; top:10px; left:calc(150px * var(--tsb)); right:10px; z-index:1100;
+    /* v211: the row owns the full top edge of the map — the species column no longer
+       shares the strip, it starts BELOW the row (top set from the row's measured height
+       in JS, since the row wraps to a second line only when the width demands it). */
+    position:absolute; top:10px; left:10px; right:10px; z-index:1100;
     display:flex; flex-direction:column; gap:6px; pointer-events:none;
   }
   /* The row spans the map's full width but only the chips should catch taps —
@@ -1440,10 +1439,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      another emphasised phrase. */
   .sheet-note{font-size:calc(12.5px * var(--ts)); color:var(--fog); line-height:1.6; margin:0 0 14px;}
   .sheet-note b{color:var(--emph); font-weight:700;}
+  /* v211: button NAMES in Help print the way the buttons themselves do — all caps and a
+     step larger. The class is put on by script (see the tagger by the Help print button),
+     which matches <b> text against the roster of real button labels, rather than being
+     typed into hundreds of tags by hand. */
+  #panel-help .sheet-note b.bn{ text-transform:uppercase; font-size:1.12em; letter-spacing:.03em; }
   .sheet-note a, .pop a, .sheet-body a{color:var(--link); font-weight:700; text-decoration:underline;}
   @media (min-width:720px){
     .sheet{max-width:480px; left:auto; right:14px; bottom:40px; border-radius:16px; max-height:88vh;}
-    #filterWrap{max-width:680px;}
   }
   .chip-break{display:none;}
   @media (max-width:600px){
@@ -1489,11 +1492,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
        centered between the species column (left) and the zoom buttons (right) */
     /* The row runs the full width so the filter pills keep one line where possible; the row
        itself is pointer-events:none so only the chips take taps. */
-    #filterWrap{left:calc(92px * var(--tsb)); right:8px; top:8px; gap:4px; max-width:none;}
+    #filterWrap{left:8px; right:8px; top:8px; gap:4px; max-width:none;}
     #filterWrap .chiprow{justify-content:center; flex-wrap:wrap;}
     /* Let the top pills shrink a little rather than wrap out of order */
     #metaRow .chip{flex:0 1 auto; min-width:0;}
-    .chip-break{display:block; flex-basis:100%; height:0;}
+    /* v211: no forced break — with the full width the row wraps naturally, and only
+       when it has to. The .chip-break element stays in the DOM but never displays. */
     .chip{padding:6px 8px 5px; font-size:calc(13px * var(--tsb));}   /* same 1px-top bias as the base rule; 11px total, unchanged */
     #metaRow #labelsToggle{padding:5px 8px 6px;}
     #speciesCol{top:8px;}
@@ -1526,12 +1530,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
        proportioned one. */
     .logo-mini{width:56px;}
     .logo-wtf{font-size:9.8px; letter-spacing:2.12px; margin-left:1.06px; -webkit-text-stroke:.34px currentColor;}
-    /* Steeper than the plain --tsb scaling used at the wider breakpoints: this row is
-       CENTERED, so its leftmost pill only moves half of any inset change, and at 400px
-       there is no spare width — proportional scaling left the Catches pill grazing the
-       species chips at the 115% step. 170px/step of --ts keeps the base layout untouched
-       at 100% and clears the column at both larger steps. */
-    #filterWrap{left:calc(86px + 170px * (var(--tsb) - 1));}
+    #filterWrap{left:8px;}
     #metaRow .chip{padding:4px 6px 6px; font-size:calc(12px * var(--tsb));}
     #metaRow #labelsToggle{padding:5px 6px 5px;}
   }
@@ -2264,9 +2263,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="catchListBody"></div>
     </div>
     <div id="panel-help" style="display:none;">
-      <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 10px;">&#128424;&#xFE0E; Print this help</button>
+      <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 10px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">&#128424;&#xFE0E; Print this help</button>
       <div class="subhead" style="margin-top:0;">TL;DR</div>
-      <p class="sheet-note"><b>Tap any pin</b> for a spot's story, coordinates and best months. <b>+ Catch</b> logs a fish right where you caught it — photo, species, size — and <b>My Log</b> reads it all back. <b>Spot</b> saves a place of your own. With <b>Tides</b> on, tap anywhere on the water for a 3-day tide forecast at that exact point; <b>Solunar</b> gives today's bite windows and <b>Waves</b> reads the offshore buoy. The <b>map button</b> cycles Topo Satellite → Hi Res &amp; ICW (with the charted red and green markers) → Street Map. Everything is kept <b>on your device</b> — download the offline map once on wifi and the whole app works with no signal. <b>Not for navigation.</b> The rest of this panel is the detail.</p>
+      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish where you caught it and details. <b>My Log</b> shows all your catches' info. Tap any <b>Species</b> button to filter your total number of catches. <b>+ Spot</b> saves your position or any place you tap on the map. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Bite</b> shows 3-day feeding times. <b>Waves</b> provide NOAA's offshore buoy data. The <b>map button</b> cycles <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map once on wifi so the app works with no signal, and other features. <b>Not for navigation.</b></p>
       <div class="subhead">Shape Guide</div>
       <p class="sheet-note"><b>Cookies</b> (round buttons, top-right of the header) are Search <span style="vertical-align:-2px;">🔍</span>, Help <b>?</b>, Themes <span style="vertical-align:-2px;">🎨</span>, Text Size <b>A</b>, and the <b>Eye</b>, which hides the buttons and species pills.</p>
       <p class="sheet-note"><b>Chips</b> (larger round shapes on the map) are the tide stations <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> and the USCG wave buoy 41070 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg>.</p>
@@ -2336,7 +2335,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       your filters, species switches and any compass route stay exactly as they were and reappear untouched. Like the theme and the text size, the setting is remembered on your device.</p>
 
       <div class="subhead">Search</div>
-      <p class="sheet-note">Tap the <b>🔍</b> button next to Help and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched on automatically.</p>
+      <p class="sheet-note">Tap the <b>🔍</b> button next to Help and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched on automatically. Search also looks through <b>this Help</b>: type a topic (e.g. "tide station" or "offline") and matching Help sections are listed under their own heading — tap one to open Help at that section.</p>
 
       <div class="subhead" style="margin-top:2px;">Reading the Season Month Bars</div>
       <p class="sheet-note">Every colored bar row you see — in a pin's popup or the Season Guide — is a calendar: 12 cells, January on the left through December on the right. Brighter cells = better months for that species at that spot. In popups, the letters above the bars mark the months.</p>
@@ -2359,6 +2358,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v211</b> · <b>The filter pills own the top of the map.</b> The species column now starts below the filter row instead of sharing the strip, so the row runs the full width, stays on one line wherever it fits, and wraps to a second only when the window or the biggest text size demands it — never three. The column's top is measured off the live row, since the row's height is not a constant. <b>Help:</b> the TL;DR was rewritten, button names throughout print as the buttons do — ALL CAPS and a step larger — and <b>Search now covers Help</b>: type a topic and matching sections are listed; tap one to open Help right at that section.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v210</b> · <b>The ICW Channel view is now called Hi Res &amp; ICW</b> — on the map button and everywhere this help mentions it — since the view is as much about the hi-res aerial photo it rides on as the channel drawn over it. Nothing about the view itself changed. Earlier build notes below keep the old name; they describe the builds as they shipped.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v209</b> · <b>Fix: at the bigger text sizes the Catches pill could land on the species buttons.</b> The filter row starts at a fixed distance from the left edge to clear the species column — but v208 grew the species chips with the text size and left that distance alone. It now grows in step, and steeper on narrow phones, where the centred filter row only moves half of any change and there is no spare width. Checked at three window widths × all three text sizes: no button touches another anywhere.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v208</b> · <b>The A button now grows the buttons too.</b> The text-size control has always scaled the reading surfaces — panels, popups, the tide panel — while the map buttons stayed fixed, because their tight pill boxes would wrap at 130%. They now follow at <b>half strength</b>: at the 130% setting the FAB pills, filter pills, species switches and header cookies print about 15% bigger, and each pill grows a little to fit its larger text instead of wrapping. One tap, one setting, saved on your device as before.</p>
@@ -2460,8 +2460,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="searchClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body">
-    <input type="search" id="searchInput" placeholder="Location name or species…" autocomplete="off">
-    <div id="searchResults"><p class="empty-note">Type at least 2 letters to search spot names, launches, species, and your catch log.</p></div>
+    <input type="search" id="searchInput" placeholder="Location, species, or help topic…" autocomplete="off">
+    <div id="searchResults"><p class="empty-note">Type at least 2 letters to search spot names, launches, species, your catch log, and Help.</p></div>
   </div>
 </div>
 
@@ -3124,7 +3124,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 210;
+const BUILD_NUM  = 211;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5573,6 +5573,20 @@ labelsToggle.id = 'labelsToggle';
 labelsToggle.textContent = 'Labels';
 metaRow.appendChild(labelsToggle);
 
+/* v211: the species column starts below the filter row, which owns the full top edge.
+   The row's height can't be a constant — it wraps to a second line only when the window
+   is narrow or the text size is up — so the column's top is measured off the live row,
+   and re-measured whenever the row's size changes (resize, text size, count updates). */
+(function(){
+  const fw = document.getElementById('filterWrap');
+  function placeSpeciesCol(){
+    speciesCol.style.top = (fw.offsetTop + fw.offsetHeight + 2) + 'px';
+  }
+  if(window.ResizeObserver) new ResizeObserver(placeSpeciesCol).observe(fw);
+  window.addEventListener('resize', placeSpeciesCol);
+  placeSpeciesCol();
+})();
+
 Object.entries(SPECIES).forEach(([key,sp])=>{
   const chip = document.createElement('div');
   chip.className = 'chip sp';
@@ -5828,6 +5842,21 @@ document.getElementById('helpBtn').addEventListener('click', ()=>{
     document.body.classList.add('print-help');
     // A beat for the class to land in the render tree before the print snapshot is taken.
     setTimeout(()=> window.print(), 60);
+  });
+})();
+/* v211: tag every <b> in Help whose text is exactly a real button's label with .bn, which
+   styles it all caps and a step larger (see the .bn rule in the CSS). Matching by text
+   keeps new help copy covered for free and leaves emphasis-only bolds alone. */
+(function(){
+  const NAMES = new Set([
+    '+ catch', '+catch', 'catch', '+ spot', '+spot', 'spot', 'bite', 'tides', 'waves',
+    'my log', 'seasons', 'compass', 'locate me', 'topo satellite', 'hi res & icw',
+    'street map', 'catches', 'inshore', 'offshore', 'launches', 'labels', 'species',
+    'search', 'help', 'themes', 'a', 'accept', 'cancel', 'close', 'edit', 'delete',
+    'print this help'
+  ]);
+  document.querySelectorAll('#panel-help .sheet-note b').forEach(b=>{
+    if(NAMES.has(b.textContent.trim().toLowerCase().replace(/\s+/g,' '))) b.classList.add('bn');
   });
 })();
 
@@ -8373,7 +8402,7 @@ function goToCatch(id){
 searchInput.addEventListener('input', ()=>{
   const q = searchInput.value.trim().toLowerCase();
   if(q.length < 2){
-    searchResults.innerHTML = '<p class="empty-note">Type at least 2 letters to search spot names, launches, species, and your catch log.</p>';
+    searchResults.innerHTML = '<p class="empty-note">Type at least 2 letters to search spot names, launches, species, your catch log, and Help.</p>';
     return;
   }
   let html = '';
@@ -8433,14 +8462,76 @@ searchInput.addEventListener('input', ()=>{
     }).join('');
   }
 
-  searchResults.innerHTML = html || '<p class="empty-note">No matches in locations, species, or your catch log.</p>';
+  /* Help sections (v211). Matched on the section title and its body text; the row shows
+     the title with a snippet around the first hit, and a tap opens Help scrolled to that
+     section. Build-note paragraphs (the only ones with an inline font-size) are excluded
+     — eighteen builds of history matching every other word is noise, not help. */
+  const helpHits = helpSections().map((sec, i)=>{
+    const inTitle = sec.title.toLowerCase().includes(q);
+    const at = sec.text.toLowerCase().indexOf(q);
+    if(!inTitle && at < 0) return null;
+    let snip = '';
+    if(at >= 0){
+      const from = Math.max(0, at - 30);
+      snip = (from > 0 ? '…' : '') + sec.text.slice(from, at + 50).trim() + '…';
+    }
+    return { i, title: sec.title, snip };
+  }).filter(Boolean).slice(0, 10);
+  if(helpHits.length){
+    html += '<div class="subhead">Help</div>';
+    html += helpHits.map(h=>`<div class="search-row" data-go="help" data-id="${h.i}">
+      <div style="display:flex; align-items:center; gap:8px; min-width:0;"><span class="nm">${escapeHTML(h.title)}</span></div>
+      <div class="mt">${escapeHTML(h.snip)}</div>
+    </div>`).join('');
+  }
+
+  searchResults.innerHTML = html || '<p class="empty-note">No matches in locations, species, your catch log, or Help.</p>';
   searchResults.querySelectorAll('.search-row').forEach(row=>{
     row.addEventListener('click', ()=>{
       if(row.dataset.go === 'spot') goToSpot(row.dataset.id);
+      else if(row.dataset.go === 'help') goToHelpSection(+row.dataset.id);
       else goToCatch(row.dataset.id);
     });
   });
 });
+
+/* ---- Help in Search (v211) ----
+   The help panel indexed as sections: each .subhead plus every element until the next one.
+   Read once and cached — the help is static markup. Icons inside a subhead contribute no
+   text, so titles come out clean ("Tide Gauges"). */
+let _helpSecCache = null;
+function helpSections(){
+  if(_helpSecCache) return _helpSecCache;
+  const out = [];
+  let cur = null;
+  document.querySelectorAll('#panel-help > *').forEach(el=>{
+    if(el.classList.contains('subhead')){
+      cur = { title: el.textContent.trim(), el, text: '' };
+      out.push(cur);
+    } else if(cur && !el.style.fontSize){   // skips the build-note paragraphs
+      cur.text += ' ' + (el.textContent || '');
+    }
+  });
+  out.forEach(s=> s.text = s.text.replace(/\s+/g, ' ').trim());
+  return _helpSecCache = out;
+}
+function goToHelpSection(i){
+  const sec = helpSections()[i];
+  if(!sec) return;
+  closeSearch();
+  closeAllOverlays('infoSheet');
+  setInfoMode('help');
+  infoSheet.classList.add('open');
+  infoScrim.classList.add('open');
+  /* The tab switcher zeroes the sheet's scroll inside its own rAF, so the jump to the
+     section has to land after that — hence the timeout rather than a plain call. */
+  setTimeout(()=>{
+    const body = infoSheet.querySelector('.sheet-body');
+    if(!body) return;
+    const d = sec.el.getBoundingClientRect().top - body.getBoundingClientRect().top;
+    body.scrollTop = Math.max(0, body.scrollTop + d - 10);
+  }, 80);
+}
 
 /* ===================== OFFLINE TIDE FORECAST ===================== */
 
