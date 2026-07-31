@@ -2340,7 +2340,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button id="mobClearBtn" type="button">CLEAR</button>
   </div>
   <div class="mob-nav"><span id="mobBrg">&mdash;</span><span id="mobDist">waiting for GPS&hellip;</span></div>
-  <div class="mob-foot">Bearing is <b>magnetic</b> &mdash; steer it on your compass. The mark is where the phone was at the press; the person <b>drifts</b> from it. Tap this banner to see boat and mark together.</div>
+  <div class="mob-foot">Steer to the MOB mark using the <b>magnetic bearing</b> on your compass or plotter. <b>Tap this banner</b> to see your position and MOB mark. Zoom in if you don't see both pins simultaneously.</div>
 </div>
 
 <!-- ===================== INFO SHEET ===================== -->
@@ -2405,7 +2405,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="panel-help" style="display:none;">
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 10px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">&#128424;&#xFE0E; Print this help</button>
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
-      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. The <b>map button</b> cycles <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b> Tight Lines! 🎣</p>
+      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b> Tight Lines! 🎣</p>
       <div class="subhead">Shape Guide</div>
       <p class="sheet-note"><b>Cookies</b> (round buttons, top-right of the header) are Search <span style="vertical-align:-2px;">🔍</span>, Help <b>?</b>, Themes <span style="vertical-align:-2px;">🎨</span>, Text Size <b>A</b>, and the <b>Eye</b>, which hides the buttons and species pills.</p>
       <p class="sheet-note"><b>Chips</b> (larger round shapes on the map) are the tide stations <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> and the USCG wave buoy 41070 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg>.</p>
@@ -2501,6 +2501,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v231</b> · Banner wording</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v230</b> · MOB declutter</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v229</b> · MOB in caps</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v228</b> · MOB help wording</p>
@@ -3287,7 +3288,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 230;
+const BUILD_NUM  = 231;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -8422,7 +8423,7 @@ function mobUpdate(){
   const b = [mobFix.coords.latitude, mobFix.coords.longitude], mk = [mob.lat, mob.lng];
   const brg = toMagnetic(bearingDeg(b[0], b[1], mk[0], mk[1]));
   const m = map.distance(b, mk), ft = m*3.28084, sm = m/1609.344;
-  brgEl.innerHTML = String(Math.round(brg)).padStart(3,'0') + '\u00b0<span class="u">&thinsp;M</span>';
+  brgEl.innerHTML = String(Math.round(brg)).padStart(3,'0') + '\u00b0<span class="u">&thinsp;Mag</span>';
   distEl.innerHTML = ft < 1000 ? Math.round(ft) + '<span class="u">&thinsp;ft</span>'
                                : sm.toFixed(sm < 10 ? 2 : 1) + '<span class="u">&thinsp;sm</span>';
   if(mobLine) mobLine.setLatLngs([b, mk]);

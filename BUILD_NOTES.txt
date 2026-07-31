@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 5:47 PM EDT · v231 · Banner wording
+------------------------------------------------------------------------------
+The MOB banner's bearing unit reads "Mag" instead of a lone "M", and the
+caution line now says: "Steer to the MOB mark using the magnetic bearing
+on your compass or plotter. Tap this banner to see your position and MOB
+mark. Zoom in if you don't see both pins simultaneously." The help
+quick-tour's map-view sentence is trimmed to just the cycle itself —
+TOPO SATELLITE → HI RES & ICW → STREET MAP.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 5:31 PM EDT · v230 · MOB declutter
 ------------------------------------------------------------------------------
 While MOB is active the chart clears for the one job: the species pills,
