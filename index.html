@@ -882,12 +882,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   header > .logo-wrap:active{opacity:.75;}
   .hdr-left{display:inline-flex; flex-direction:column; align-items:stretch; justify-content:flex-start;}
+  /* v217: the name and tagline ride the A control at the buttons' half-strength scale
+     (--tsb), so the header grows with the rest of the furniture without bursting the bar.
+     Line heights are unitless for the same reason — a px line height would clip the
+     scaled type. */
   .hdr-left .kicker{
-    font-family:var(--comic); font-size:15px; font-weight:700; font-style:normal;
-    color:var(--teal); text-transform:none; margin-top:1px; letter-spacing:.12em; line-height:20px;
+    font-family:var(--comic); font-size:calc(15px * var(--tsb)); font-weight:700; font-style:normal;
+    color:var(--teal); text-transform:none; margin-top:1px; letter-spacing:.12em; line-height:1.33;
     width:100%; display:block; white-space:nowrap;
   }
-  .hdr-left h1{font-family:var(--comic); font-size:23px; line-height:25px; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap;}
+  .hdr-left h1{font-family:var(--comic); font-size:calc(23px * var(--tsb)); line-height:1.09; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap;}
   /* align-self overrides the header's own align-items:flex-end. The header bottom-aligns
      its children because the TITLE BLOCK wants that -- the tagline sits on the baseline of
      the bar and the name stacks above it -- but the cookies are a free-standing group of
@@ -967,9 +971,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Trademark notice on the mark. Sized in em rather than px so the one rule serves
      both the header kicker and the much larger splash lock-up. The glyph is already
      drawn at cap height in the face here, so it takes no vertical-align nudge on top
-     of that - raising an already-raised glyph puts it off the top of the line. */
+     of that - raising an already-raised glyph puts it off the top of the line.
+     v217: raised from .55em — the mark was reading as a speck; being em-based it also
+     rides the tagline's A scaling on top of this bump. */
   .mark-tm{
-    font-size:.55em; font-weight:700; color:inherit;
+    font-size:.75em; font-weight:700; color:inherit;
     vertical-align:baseline; line-height:0; margin-left:2px; letter-spacing:0;
   }
   #speciesCol{
@@ -1455,8 +1461,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 height:70dvh; border-radius:16px; }
     /* Header: shrink so title, tagline, name, logo, and all three buttons fit on-screen */
     header{padding:3px 8px 4px; gap:5px;}
-    .hdr-left h1{font-size:17px; line-height:19px;}
-    .hdr-left .kicker{font-size:10px; letter-spacing:.05em; line-height:16px; margin-top:1px;}
+    .hdr-left h1{font-size:calc(17px * var(--tsb)); line-height:1.12;}
+    .hdr-left .kicker{font-size:calc(10px * var(--tsb)); letter-spacing:.05em; line-height:1.6; margin-top:1px;}
     /* Move the name out of the button row: bottom-center of the header, same line as the tagline */
     header{position:relative;}
     .credit{position:absolute; left:50%; transform:translateX(-50%); bottom:6px;
@@ -1930,13 +1936,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .build-stamp{position:absolute; left:18px; bottom:7px; z-index:1002; pointer-events:none;
     font:600 9px/1.2 'JetBrains Mono',monospace; letter-spacing:.03em; color:var(--fog);
     opacity:.55; text-shadow:0 1px 2px rgba(0,0,0,.8); white-space:nowrap;}
+  /* v217: redesigned — the message is optically centred between two equal round
+     adornments (reload glyph left, dismiss right) and set bold throughout; the old
+     one-line string just hung left of the ✕. */
   #updateBanner{position:fixed; left:50%; transform:translateX(-50%); bottom:34px; z-index:12000;
-    display:flex; align-items:center; gap:10px; padding:10px 16px; border-radius:999px;
-    background:var(--navy-800); color:var(--fog); border:1px solid var(--teal);
-    font-family:'Space Grotesk',sans-serif; font-size:13px; cursor:pointer;
-    box-shadow:0 4px 18px rgba(0,0,0,.5); max-width:88vw;}
+    display:flex; align-items:center; gap:12px; padding:9px 12px; border-radius:999px;
+    background:var(--navy-800); color:var(--fog); border:1.5px solid var(--teal);
+    font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; cursor:pointer;
+    box-shadow:0 6px 22px rgba(0,0,0,.55), 0 0 0 4px rgba(0,0,0,.18); max-width:88vw;}
   #updateBanner b{color:var(--teal);}
-  #updateBanner #updateDismiss{padding:2px 6px; opacity:.6; font-weight:700;}
+  #updateBanner .ub-ico, #updateBanner #updateDismiss{
+    flex:0 0 auto; width:28px; height:28px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); background:rgba(0,0,0,.28); font-weight:700;}
+  #updateBanner .ub-ico{color:var(--teal); font-size:16px; border-color:var(--teal);}
+  #updateBanner .ub-msg{flex:1 1 auto; text-align:center; line-height:1.35; white-space:nowrap;}
+  #updateBanner #updateDismiss{opacity:.75; font-size:13px;}
+  #updateBanner #updateDismiss:active{opacity:1; background:rgba(0,0,0,.45);}
   #themeGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
   .theme-opt{
     display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:11px;
@@ -2358,6 +2374,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v217</b> · <b>The update pill was redesigned</b> — its message is now bold and properly centred, sitting between a teal reload glyph and a round dismiss button instead of hanging left of a bare ✕. And the header now grows with the <b>A</b> control: <b>WTF Log</b> and the tagline scale at the same half-strength rate as the buttons, and the <b>™</b> mark was raised from a speck to a readable size — riding the tagline's scaling on top of that.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v216</b> · The opening section of this help is now titled <b>Read This Paragraph to Get Hooked</b>.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v215</b> · <b>The compass prints the way home on a single-pin run.</b> Tap one offshore pin (or hover one on a computer) and the label now carries the to/from pair — <b>156°/336°&nbsp;&nbsp;4.3 sm</b> — course out, then the reciprocal course back to the inlet, which with one pin is the same track reversed. On a route of several legs the second number stays off, where it would read as the way back along the route rather than home. On a line too crowded for the pair, the outbound course alone is the fallback, as before.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v214</b> · <b>Fix: printing the help from the home-screen app was refused</b> ("this site does not allow printing"). An app opened from the home screen runs in a shell that has no print dialog at all, so asking it to print could only fail. <b>Print this help</b> now opens the help as its own black-on-white page in a real browser window — from the home screen that means Safari, where printing works — and the print dialog is called there. If the new window is blocked, the old in-place path still runs as the fallback.</p>
@@ -3129,7 +3146,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 216;
+const BUILD_NUM  = 217;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -3166,8 +3183,9 @@ function showUpdateBanner(newBuild){
   if(document.getElementById('updateBanner')) return;
   const b = document.createElement('div');
   b.id = 'updateBanner';
-  b.innerHTML = '<b>Update available</b> — Build ' + newBuild + '. Tap to reload.' +
-    '<span id="updateDismiss" aria-label="Not now">✕</span>';
+  b.innerHTML = '<span class="ub-ico" aria-hidden="true">&#8635;</span>' +
+    '<span class="ub-msg"><b>Update available</b> — Build ' + newBuild + '<br>Tap to reload</span>' +
+    '<span id="updateDismiss" role="button" aria-label="Not now">✕</span>';
   b.addEventListener('click', (e)=>{
     if(e.target && e.target.id === 'updateDismiss'){ b.remove(); return; }
     location.reload();
