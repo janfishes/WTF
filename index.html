@@ -1200,7 +1200,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Floating filter bar ---------- */
   #filterWrap{
-    position:absolute; top:10px; left:150px; right:10px; z-index:1100;
+    /* The left inset clears the species column, whose chips grow with --tsb — so the
+       inset must grow with it too, or at 130% the Catches pill lands on the species
+       buttons. Scaling the full inset by --tsb overshoots slightly (chip padding is
+       fixed, only the text scales), which is the right side to err on. */
+    position:absolute; top:10px; left:calc(150px * var(--tsb)); right:10px; z-index:1100;
     display:flex; flex-direction:column; gap:6px; pointer-events:none;
   }
   /* The row spans the map's full width but only the chips should catch taps —
@@ -1485,7 +1489,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
        centered between the species column (left) and the zoom buttons (right) */
     /* The row runs the full width so the filter pills keep one line where possible; the row
        itself is pointer-events:none so only the chips take taps. */
-    #filterWrap{left:92px; right:8px; top:8px; gap:4px; max-width:none;}
+    #filterWrap{left:calc(92px * var(--tsb)); right:8px; top:8px; gap:4px; max-width:none;}
     #filterWrap .chiprow{justify-content:center; flex-wrap:wrap;}
     /* Let the top pills shrink a little rather than wrap out of order */
     #metaRow .chip{flex:0 1 auto; min-width:0;}
@@ -1522,7 +1526,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
        proportioned one. */
     .logo-mini{width:56px;}
     .logo-wtf{font-size:9.8px; letter-spacing:2.12px; margin-left:1.06px; -webkit-text-stroke:.34px currentColor;}
-    #filterWrap{left:86px;}
+    /* Steeper than the plain --tsb scaling used at the wider breakpoints: this row is
+       CENTERED, so its leftmost pill only moves half of any inset change, and at 400px
+       there is no spare width — proportional scaling left the Catches pill grazing the
+       species chips at the 115% step. 170px/step of --ts keeps the base layout untouched
+       at 100% and clears the column at both larger steps. */
+    #filterWrap{left:calc(86px + 170px * (var(--tsb) - 1));}
     #metaRow .chip{padding:4px 6px 6px; font-size:calc(12px * var(--tsb));}
     #metaRow #labelsToggle{padding:5px 6px 5px;}
   }
@@ -2350,6 +2359,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v209</b> · <b>Fix: at the bigger text sizes the Catches pill could land on the species buttons.</b> The filter row starts at a fixed distance from the left edge to clear the species column — but v208 grew the species chips with the text size and left that distance alone. It now grows in step, and steeper on narrow phones, where the centred filter row only moves half of any change and there is no spare width. Checked at three window widths × all three text sizes: no button touches another anywhere.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v208</b> · <b>The A button now grows the buttons too.</b> The text-size control has always scaled the reading surfaces — panels, popups, the tide panel — while the map buttons stayed fixed, because their tight pill boxes would wrap at 130%. They now follow at <b>half strength</b>: at the 130% setting the FAB pills, filter pills, species switches and header cookies print about 15% bigger, and each pill grows a little to fit its larger text instead of wrapping. One tap, one setting, saved on your device as before.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v207</b> · <b>Help opens with a TL;DR and can be printed.</b> A ten-second summary of the whole app now sits at the top of this panel, and above it a <b>Print this help</b> button sends just this panel to the printer — full text, black on white, no map — for a paper copy in the boat bag. On the chart, the <b>Ponce DeLeon Inlet</b> name moved off the north jetty into the middle of the channel: it now sits on the centreline of the marked cut, halfway along the open reach between Buoy 5 and Lighted Buoy 8, where it covers no red or green mark.</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin-top:6px;">Build 2026-07-31 · <b>v206</b> · <b>The chart writes on its own boundary — so the blue now steps just past the line instead of slicing that writing lengthwise.</b> The county names are printed <i>along</i> the state-waters lines (<span class="g-emph">Levy County · Citrus County</span> down the Gulf's 9-mile line, <span class="g-emph">Brevard County</span> and the rest along the Atlantic's 3-mile line), and the boundary dashes are the line itself — starting the flat blue exactly at the line cut all of it in half. Zoomed in past the 1-mile scale the blue now begins about a half-mile <i>seaward</i> of the limit, so the charted dashes, the junctions where county lines meet the boundary, and every name riding the line read whole. (If Crystal Bay, its power-plant channel, or the waters above Anclote Key still look cut off, that is the previous build lingering in the cache — the update pill or a reload brings this one in.)</p>
@@ -3113,7 +3123,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 208;
+const BUILD_NUM  = 209;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
