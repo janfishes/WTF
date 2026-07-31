@@ -7,6 +7,30 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 5:31 PM EDT · v230 · MOB declutter
+------------------------------------------------------------------------------
+While MOB is active the chart clears for the one job: the species pills,
+the whole action stack except Locate Me, and every pin on the map — spots,
+catches, launches, gauges, town names — step aside, leaving only the MOB
+mark, the boat, and the dashed line between them. Any open popup or sheet
+is closed at activation. Everything returns the moment MOB is CLEARed.
+(Under the hood: a body.mob-active class; the marker pane hides wholesale
+with :has() exceptions for the MOB pin and the boat dot.)
+
+The MOB figure got longer arms and legs — at pill-badge size the limbs
+read better thrown wide.
+
+Help reordered to match the action stack, top to bottom: Catch, Spot,
+Bite, Tides, Waves, My Log, Seasons, Compass, Topo Satellite, Locate Me.
+The quick-tour sentences now run in that order (Species, which lives on
+the left edge rather than in the stack, follows Locate Me; the map-button
+sentence sits in Topo Satellite's slot), and in the Actions section the
+My Log and Guide paragraphs moved down between Waves and Compass while
+Topo Satellite moved up ahead of Locate Me, so reading the help top to
+bottom walks the stack top to bottom. The MOB help note gained a line on
+the self-clearing chart.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 5:23 PM EDT · v229 · MOB in caps
 ------------------------------------------------------------------------------
 Help quick-tour, one sentence polished: "MOB" now gets the same big-caps
