@@ -1717,8 +1717,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .cc-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
   .cc-species{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:#04141e; padding:2px 8px; border-radius:5px; text-transform:uppercase; letter-spacing:.03em;}
   .cc-actions{display:flex; gap:4px;}
-  .cc-edit, .cc-del{background:none; border:none; color:var(--muted); font-size:13px; cursor:pointer; padding:2px 5px;}
+  .cc-edit, .cc-del, .cc-undo{background:none; border:none; color:var(--muted); font-size:10.5px; font-weight:700; letter-spacing:.3px; cursor:pointer; padding:2px 4px; white-space:nowrap;}
   .cc-edit:hover{color:var(--teal);}
+  .cc-undo:hover{color:var(--brass);}
   .cc-del:hover{color:var(--rust);}
   .cc-meta{font-size:calc(12px * var(--ts)); color:var(--fog); margin-top:6px; font-family:'JetBrains Mono',monospace; line-height:1.6;}
   .cc-size{font-size:calc(12px * var(--ts)); color:var(--teal); margin-top:3px;}
@@ -2427,7 +2428,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tapping <b>Catches</b> shows/hides your catch diamonds. <b>Inshore</b> and <b>Offshore</b> are on/off switches for their zone's fishing pins — turn one off to hide that zone entirely; each shows its total. <b>Launches</b> shows/hides the boat ramp and kayak launch pins, independently of everything else, with its own total. <b>Labels</b> turns the pill names on or off for whatever pins are showing — off means no labels, but pins stay. Totals reflect every built-in and user-added spot, at any zoom level. All coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N). Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕ button.</p>
 
       <p class="sheet-note"><b>Map credits.</b> The bottom-right corner carries a small <b>ⓘ</b> cookie. Tap it and the credits for whatever chart is currently drawn open above it — <b>USGS</b>, <b>USDA NAIP</b> and <b>Sentinel-2/EOX</b> on the satellite views, <b>OpenStreetMap</b> on the street map — and tapping it again, or tapping open water, puts them away. They used to sit on the map permanently, wrapped over two or three lines, and on a smaller phone the Satellite pill covered them. They have to be <b>on the map</b> rather than on a credits page — that is a condition of the licences the imagery comes under — but one tap behind an obvious control satisfies that, which is how every other mapping app does it. The <b>Eye</b> deliberately does not hide the ⓘ: a credit you can switch off is not a credit.</p>
-      <p class="sheet-note"><b>Updates.</b> Phones cache this app hard enough that a new build can hide behind an old copy for days. The app now checks quietly for a newer build — every time it opens, and when it comes back to the foreground (those paced to once every 10 minutes) — and if one is out, a small pill appears above the build stamp: <span class="g-emph">Update available — tap to reload</span>. One tap brings the new build in; the ✕ puts it off until next time. No connection, no check — it never interrupts you on the water.</p>
+      <p class="sheet-note"><b>Updates.</b> Phones cache this app hard enough that a new build can hide behind an old copy for days. The app now checks quietly for a newer build — every time it opens, and when it comes back to the foreground (those paced to once every 10 minutes) — and if one is out, a small pill appears above the build stamp: <span class="g-emph">UPDATE AVAILABLE — Tap to Reload</span>. One tap brings the new build in; the ✕ puts it off until next time. No connection, no check — it never interrupts you on the water.</p>
 
       <div class="subhead">Species Switches</div>
       <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>Catches</b> is off. If you've never logged that fish, you'll get a note saying so.</p>
@@ -2454,7 +2455,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">You can add gauges of your own. Open <b>⚙ Create &amp; Calibrate Tide Stations</b> in Help and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away. A saved station gets a pin of its own, up whenever <b>Tides</b> is.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create &amp; Calibrate Tide Stations</button></div>
       <p class="sheet-note" style="margin-top:10px;"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to a National Data Buoy Center (NDBC) buoy pin and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled straight from NOAA's National Data Buoy Center, each with its observation time. Needs internet to <b>refresh</b>, but no longer to be useful: the last reading is <b>kept on the device</b>, so if the fetch fails you still get the numbers with <b>how old they are</b> written on them — <i>Last reading 3h ago</i>. Three-hour-old figures still tell you whether it is building or laying down. When it can’t refresh it also says <b>why</b>, since the three causes are not the same problem: <b>no internet</b> (nothing to retry until you have signal), <b>couldn’t reach NDBC</b> (the relay, which goes down more often than the buoy — worth another try in a minute), or <b>the station isn’t reporting</b> (NDBC answered and sent nothing, so it is the buoy rather than your connection, and it will not clear up in a minute). Whichever it says, there is a <b>Try again</b> button under it, and the proxy-and-error detail is folded away under <b>Details</b> for the rare day it needs diagnosing. The buoy is <b>41070</b>, <b>13.8 nm</b> north-north-east of Ponce Inlet, off Daytona — measured from the compass rose, at 023° true. Its position is printed on the pin’s own popup in <b>both forms</b>: <b>29°17.340&#8242;N 80°48.180&#8242;W</b>, the deg-and-decimal-minutes every other pin here uses and what you would key into the plotter, with the decimal degrees in brackets after it, <b>(29.289 N 80.803 W)</b>, which is how NDBC’s own station listing writes it.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later, but that happened earlier, drops into place by its own date. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses, so it fills in automatically for every catch, old and new.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later, but that happened earlier, drops into place by its own date. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses, so it fills in automatically for every catch, old and new. Every catch card and spot popup carries <b>EDIT</b>, <b>UNDO</b> and <b>DELETE</b> buttons: UNDO reverses your most recent change — an edit or a delete, on a catch or a spot — stepping back through up to your last 20 changes. The undo history clears when the app is closed or reloaded.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Guide</b> opens the Season Guide — month-by-month tables for every species (see <b>Reading the Season Month Bars</b> below), plus map-zone and offshore notes.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> <b>Compass</b> puts a chart-style compass rose on the water just off the inlet mouth and gives you the run out to any offshore mark. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose out to that pin. Every leg is labelled the same way: the <b>heading to steer</b> and the <b>run in statute miles</b>, on one row centred on the line and running along it — <b>156°&nbsp;&nbsp;4.3 sm</b>. With a <b>single pin</b> up, the heading carries its <b>reciprocal</b> as well — <b>156°/336°&nbsp;&nbsp;4.3 sm</b> — read like any to/from pair: the first number is the course out, the second is the course home to the inlet, since with one pin the line out and the line home are the same track. On a route of several legs the reciprocal stays off — there it would be the way back along the route, not home, and the trip home is the route reversed. With one bearing on the row nothing can be confused with anything, so the words <i>To</i> and <i>From</i> are gone too. The gap between the heading and the run <b>opens up as you zoom in</b> and closes again as you zoom out, where every pixel of label crowds something. The line is cut away behind the text, so nothing is drawn through the numbers, and on a leg too short for both the <b>heading stands alone</b>. String a <b>second leg</b> on and the <b>From</b> comes off: a route is one-way, and its return is the route read backwards. The <b>To</b> stays on the leg out of the inlet, where there is a heading home to tell it apart from; on every leg after that the bearing stands on its own, since there is nothing to distinguish it from. In place of the word <i>To</i> the heading carries a small <b>needle</b>, the same solid needle the rose draws on its cardinal points, pointing the way you would travel; it flips end for end where the label has been turned to keep its digits upright, so it always points along the leg rather than back down it. Headings are <b>magnetic</b>, so they read the same as your chartplotter and your steering compass. Rather than hang an <b>M</b> off every number, the rose says it once for the whole overlay: <b>MAGNETIC · VAR 7.3°W 2026</b> is printed beneath it, which is how a paper chart declares the variation on its own rose. Offshore popups say <i>(magnetic)</i> once beside their to/from figures, and a drop list carries one note at its head rather than an M on all nineteen rows. On a route of several legs the reciprocal is not printed — a second number on every line is clutter, and the run home is the route read backwards; the single-pin run is where the pair lives. The label slides itself along the line to wherever it won't be covered by the rose, the pin, or any other site's name tag (the site's popup and its drop list carry the distance as well, in both units, along with the reciprocal if you want it).</p>
       <p class="sheet-note">It works on <b>offshore sites only</b> — the county reef Sites, the wrecks and ledges, any offshore site you've added yourself, and your own logged catches out there. Inshore spots, launches, and inshore catches are left alone, since a bearing from the inlet is no use for a creek or a bridge. While the compass is switched on, <b>tapping an offshore pin shows its bearing instead of opening its details</b> — the popup would sit right on top of the line you asked for. Switch the compass off and pins open normally again.</p>
@@ -2509,6 +2510,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v242</b> · Undo everywhere</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v241</b> · Log labels fixed</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v240</b> · Clearer log cards</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v239</b> · Moon phase logged</p>
@@ -2627,7 +2629,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2>Active Feeding Times</h2>
-    <button class="close" id="biteClose">CLOSE X</button>
+    <button class="close" id="biteClose">CLOSE ✕</button>
   </div>
   <div class="sheet-body" id="biteBody"></div>
 </div>
@@ -3310,7 +3312,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 241;
+const BUILD_NUM  = 242;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -3350,7 +3352,7 @@ function showUpdateBanner(newBuild){
   /* Two centred lines, no build number: which build it is means nothing in the moment —
      the only decision on offer is reload now or not. (newBuild still gates the caller.) */
   b.innerHTML = '<span class="ub-ico" aria-hidden="true">&#8635;</span>' +
-    '<span class="ub-msg"><b>Update available</b><br>Tap to Reload</span>' +
+    '<span class="ub-msg"><b>UPDATE AVAILABLE</b><br>Tap to Reload</span>' +
     '<span id="updateDismiss" role="button" aria-label="Not now">✕</span>';
   b.addEventListener('click', async (e)=>{
     if(e.target && e.target.id === 'updateDismiss'){ b.remove(); return; }
@@ -4813,8 +4815,9 @@ function popupHTML(s){
     <div class="note-area">${note? `<div class="pop-tip" style="border-left-color:var(--teal); margin-top:9px; margin-bottom:0;"><b>My note:</b> ${escapeHTML(note)}</div>`:''}</div>
     <button class="mini-btn note-edit-btn" style="width:100%; margin-top:8px;">${note? '\u270e Edit my note' : '\uff0b Add my note'}</button>
     <div class="loc-btns" style="margin-top:8px;">
-      <button class="mini-btn" onclick="editBuiltinSpot('${s.id}')">\u270e Edit spot</button>
-      <button class="mini-btn" onclick="deleteBuiltinSpot('${s.id}')">Delete spot</button>
+      <button class="mini-btn" onclick="editBuiltinSpot('${s.id}')">EDIT \u270e</button>
+      <button class="mini-btn" onclick="appUndo()">UNDO \u21ba</button>
+      <button class="mini-btn" onclick="deleteBuiltinSpot('${s.id}')">DELETE \u2715</button>
     </div>
   </div>`;
 }
@@ -5152,6 +5155,9 @@ async function addCatch(entry){
 async function updateCatch(id, fields){
   const c = catches.find(x=>x.id===id);
   if(!c) return;
+  const before = {};
+  Object.keys(fields).forEach(k=>{ before[k] = c[k]; });
+  pushUndo({kind:'catch-edit', id, before});
   Object.assign(c, fields);
   await persistCatches();
   renderCatchMarkers();
@@ -5159,6 +5165,8 @@ async function updateCatch(id, fields){
   updateCatchCount();
 }
 async function deleteCatch(id){
+  const rec = catches.find(c=>c.id===id);
+  if(rec) pushUndo({kind:'catch-del', record:rec});
   catches = catches.filter(c=>c.id!==id);
   await persistCatches();
   renderCatchMarkers();
@@ -5166,6 +5174,74 @@ async function deleteCatch(id){
   updateCatchCount();
   map.closePopup();
 }
+
+/* ===================== UNDO (last 20 changes) =====================
+   Every destructive change — a catch edit or delete, a spot edit or delete,
+   built-in or custom — pushes its inverse here, and every UNDO button in the
+   app calls appUndo(), which pops the most recent change and puts things back.
+   The stack lives in memory only, so it empties on reload; undoing a built-in
+   spot's DELETE reloads the page, because a fresh load is the one safe way to
+   rebuild that spot's marker (same approach as "Restore built-in spots"). */
+const undoStack = [];
+function pushUndo(a){ undoStack.push(a); if(undoStack.length > 20) undoStack.shift(); }
+window.appUndo = async function(){
+  const a = undoStack.pop();
+  if(!a){ showToast('Nothing to undo yet.'); return; }
+  if(a.kind === 'catch-edit'){
+    const c = catches.find(x=>x.id===a.id);
+    if(c) Object.assign(c, a.before);
+    await persistCatches();
+    renderCatchMarkers(); renderCatchList(); updateCatchCount();
+    map.closePopup();
+    showToast('Catch edit undone ✓');
+  } else if(a.kind === 'catch-del'){
+    catches.push(a.record);
+    await persistCatches();
+    renderCatchMarkers(); renderCatchList(); updateCatchCount();
+    showToast('Deleted catch restored ✓');
+  } else if(a.kind === 'cspot-edit'){
+    const s = customSpots.find(x=>x.id===a.id);
+    if(s){
+      Object.assign(s, a.before);
+      const old = customSpotMarkers[a.id];
+      if(old){ map.removeLayer(old); const i = markers.indexOf(old); if(i>=0) markers.splice(i,1); delete customSpotMarkers[a.id]; }
+      addCustomSpotMarker(s);
+    }
+    await saveCustomSpots();
+    refreshCustomSpotSelect(); updateCustomSpotList();
+    if(typeof applyFilter === 'function') applyFilter();
+    if(typeof applySpotLabels === 'function') applySpotLabels();
+    map.closePopup();
+    showToast('Spot edit undone ✓');
+  } else if(a.kind === 'cspot-del'){
+    customSpots.push(a.record);
+    addCustomSpotMarker(a.record);
+    await saveCustomSpots();
+    refreshCustomSpotSelect(); updateCustomSpotList();
+    if(typeof applyFilter === 'function') applyFilter();
+    if(typeof applySpotLabels === 'function') applySpotLabels();
+    showToast('Deleted spot restored ✓');
+  } else if(a.kind === 'bspot-edit'){
+    if(a.prevOv) spotOverrides[a.id] = a.prevOv; else delete spotOverrides[a.id];
+    await saveSpotOverrides();
+    const s = SPOTS.find(x=>x.id===a.id);
+    if(s){
+      Object.assign(s, a.prevFields);
+      const m = builtinMarkerById[a.id];
+      if(m){ m.setLatLng([s.lat, s.lng]); m.setIcon(builtinSpotIcon(s)); }
+    }
+    rebuildSpotSelect();
+    if(typeof applyFilter === 'function') applyFilter();
+    if(typeof applySpotLabels === 'function') applySpotLabels();
+    map.closePopup();
+    showToast('Spot edit undone ✓');
+  } else if(a.kind === 'bspot-del'){
+    if(a.prevOv) spotOverrides[a.id] = a.prevOv; else delete spotOverrides[a.id];
+    await saveSpotOverrides();
+    showToast('Spot restored — reloading…');
+    setTimeout(()=> location.reload(), 600);
+  }
+};
 // Last-resort safety net: if the tab is being hidden/closed with a write still
 // pending (e.g. Save tapped, then the app switched away immediately after), make one
 // more synchronous-as-possible attempt so the edit isn't silently dropped.
@@ -5296,8 +5372,9 @@ function catchPopupHTML(c){
     <div class="pop-desc">${escapeHTML(c.locationLabel)}${sizeBits.length? ' \u00b7 '+sizeBits.join(' \u00b7 '):''}</div>
     ${c.notes? `<div class="pop-tip">${escapeHTML(c.notes)}</div>`:''}
     <div class="loc-btns" style="margin-top:2px;">
-      <button class="mini-btn edit-catch-btn" data-id="${c.id}">\u270e Edit</button>
-      <button class="mini-btn del-catch-btn" data-id="${c.id}">Delete</button>
+      <button class="mini-btn edit-catch-btn" data-id="${c.id}">EDIT \u270e</button>
+      <button class="mini-btn" onclick="appUndo()">UNDO \u21ba</button>
+      <button class="mini-btn del-catch-btn" data-id="${c.id}">DELETE \u2715</button>
     </div>
   </div>`;
 }
@@ -5841,8 +5918,9 @@ function catchCardHTML(c, showCoords){
       <div class="cc-top">
         <span class="cc-species" style="background:${sp.color}">${sp.label}</span>
         <div class="cc-actions">
-          <button class="cc-edit" data-id="${c.id}" title="Edit">\u270e</button>
-          <button class="cc-del" data-id="${c.id}" title="Delete">\u2715</button>
+          <button class="cc-edit" data-id="${c.id}" title="Edit">EDIT \u270e</button>
+          <button class="cc-undo" onclick="appUndo()" title="Undo last change">UNDO \u21ba</button>
+          <button class="cc-del" data-id="${c.id}" title="Delete">DELETE \u2715</button>
         </div>
       </div>
       <div class="cc-meta">${fmtDateShort(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''} \u00b7 ${loc}${showCoords? ' \u00b7 '+toDMS(c.lat, c.lng):''}${line2? '<br>'+line2:''}</div>
@@ -6510,6 +6588,7 @@ window.editBuiltinSpot = function(id){
   openAddSpot();
 };
 window.deleteBuiltinSpot = function(id){
+  pushUndo({kind:'bspot-del', id, prevOv: spotOverrides[id] ? Object.assign({}, spotOverrides[id]) : null});
   spotOverrides[id] = Object.assign({}, spotOverrides[id], {deleted:true});
   saveSpotOverrides();
   const s = SPOTS.find(x=>x.id===id); if(s) s._deleted = true;
@@ -6523,7 +6602,7 @@ window.deleteBuiltinSpot = function(id){
   if(typeof applyFilter === 'function') applyFilter();
   if(typeof applySpotLabels === 'function') applySpotLabels();
   map.closePopup();
-  showToast('Spot deleted. (Use "Restore built-in spots" in Add-a-spot to bring them back.)');
+  showToast('Spot deleted — UNDO on any spot brings it back (or "Restore built-in spots" in Add-a-spot).');
 };
 function restoreBuiltinSpots(){
   spotOverrides = {};
@@ -6584,12 +6663,15 @@ function customSpotPopup(s){
     ${offshoreInfo}
     ${note}
     <div class="loc-btns" style="margin-top:9px;">
-      <button class="mini-btn" onclick="editCustomSpot('${s.id}')">✎ Edit</button>
-      <button class="mini-btn" onclick="removeCustomSpot('${s.id}')">Delete</button>
+      <button class="mini-btn" onclick="editCustomSpot('${s.id}')">EDIT ✎</button>
+      <button class="mini-btn" onclick="appUndo()">UNDO ↺</button>
+      <button class="mini-btn" onclick="removeCustomSpot('${s.id}')">DELETE ✕</button>
     </div>
   </div>`;
 }
 window.removeCustomSpot = function(id){
+  const rec = customSpots.find(s=>s.id===id);
+  if(rec) pushUndo({kind:'cspot-del', record:rec});
   customSpots = customSpots.filter(s=>s.id!==id);
   const m = customSpotMarkers[id];
   if(m){ map.removeLayer(m); const idx = markers.indexOf(m); if(idx>=0) markers.splice(idx,1); delete customSpotMarkers[id]; }
@@ -6616,8 +6698,8 @@ function updateCustomSpotList(){
     `<div class="loc-preview set" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:6px;">
       <span>${s.name} · ${customSpotTypeLabel(s)}</span>
       <span style="display:flex; gap:6px;">
-        <button class="mini-btn" style="padding:2px 8px;" onclick="editCustomSpot('${s.id}')">✎</button>
-        <button class="mini-btn" style="padding:2px 8px;" onclick="removeCustomSpot('${s.id}')">✕</button>
+        <button class="mini-btn" style="padding:2px 8px;" onclick="editCustomSpot('${s.id}')">EDIT ✎</button>
+        <button class="mini-btn" style="padding:2px 8px;" onclick="removeCustomSpot('${s.id}')">DELETE ✕</button>
       </span>
     </div>`).join('');
 }
@@ -6758,6 +6840,9 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
   if(editingBuiltinId){
     const s = SPOTS.find(x=>x.id===editingBuiltinId);
     if(s){
+      pushUndo({kind:'bspot-edit', id:editingBuiltinId,
+        prevOv: spotOverrides[editingBuiltinId] ? Object.assign({}, spotOverrides[editingBuiltinId]) : null,
+        prevFields:{name:s.name, zone:s.zone, lat:s.lat, lng:s.lng, ramp:s.ramp}});
       s.name = name; s.zone = addSpotZone; s.lat = addSpotLoc.lat; s.lng = addSpotLoc.lng; s.ramp = (addSpotZone==='launch');
       spotOverrides[editingBuiltinId] = Object.assign({}, spotOverrides[editingBuiltinId], {name, zone:addSpotZone, lat:addSpotLoc.lat, lng:addSpotLoc.lng});
       delete spotOverrides[editingBuiltinId].deleted;
@@ -6781,6 +6866,7 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
   if(editingSpotId){
     const s = customSpots.find(x=>x.id===editingSpotId);
     if(s){
+      pushUndo({kind:'cspot-edit', id:editingSpotId, before:{name:s.name, zone:s.zone, lat:s.lat, lng:s.lng, meta:s.meta}});
       s.name = name; s.zone = addSpotZone; s.lat = addSpotLoc.lat; s.lng = addSpotLoc.lng; s.meta = meta;
       const old = customSpotMarkers[editingSpotId];
       if(old){ map.removeLayer(old); const idx = markers.indexOf(old); if(idx>=0) markers.splice(idx,1); delete customSpotMarkers[editingSpotId]; }
@@ -10282,7 +10368,7 @@ function refreshUserTsList(){
       <div class="cc-top">
         <span class="cc-species" style="background:#f2c200">${escapeHTML(s.name)}</span>
         <div class="cc-actions">
-          <button class="cc-del" onclick="removeUserTideStation('${s.id}')" title="Delete">\u2715</button>
+          <button class="cc-del" onclick="removeUserTideStation('${s.id}')" title="Delete">DELETE \u2715</button>
         </div>
       </div>
       <div class="cc-meta">${toDMS(s.lat, s.lng)}<br>High ${sign(s.h)} min \u00b7 Low ${sign(s.l)} min after Ponce Inlet</div>

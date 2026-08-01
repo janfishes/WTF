@@ -7,6 +7,28 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 8:54 PM EDT · v242 · Undo everywhere
+------------------------------------------------------------------------------
+UNDO, and labeled all-caps action buttons across the app.
+
+- New UNDO button between EDIT and DELETE on: catch cards (My Log and the
+  stacked-pin popup), the single-catch map popup, built-in spot popups,
+  custom spot popups. All call one appUndo(): every catch edit/delete and
+  spot edit/delete (built-in or custom) pushes its inverse onto an
+  in-memory stack (last 20), and UNDO steps back through them, newest
+  first, with a toast saying what came back. The stack clears on reload;
+  undoing a built-in spot's DELETE reloads the page (a fresh load is the
+  one safe way to rebuild that marker — same approach as Restore built-in
+  spots). Tapping UNDO with nothing to undo says so.
+- Buttons now carry words next to their icons, all caps: EDIT (pencil),
+  UNDO (reverse arrow), DELETE (X). "Edit spot"/"Delete spot" dropped the
+  word "spot". The Add-a-spot list rows and the user tide-station rows are
+  labeled too. Bite sheet's CLOSE X normalized to CLOSE (all closes were
+  already caps).
+- Update pill now reads UPDATE AVAILABLE / Tap to Reload; help matches.
+- Help (My Log section) explains the UNDO behavior.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 8:39 PM EDT · v241 · Log labels fixed
 ------------------------------------------------------------------------------
 Corrections to v240's card labels, applied to the map popup too via a shared
