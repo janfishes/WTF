@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 10:28 PM EDT · v253 · Ramsey pin moved
+------------------------------------------------------------------------------
+The Ramsey Pass waypoint pin moved into the middle of the channel, about
+100 m north of where it sat (29.072118 → 29.073018, longitude unchanged at
+-80.928475). The old spot was right at the water's edge off the sand spit's
+north beach; the new spot is centered in the deep water between the beach
+and the shoal drop-off on the north side, verified against NAIP aerial
+imagery at the pin's longitude.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 10:14 PM EDT · v252 · Fab icons first
 ------------------------------------------------------------------------------
 The fab stack's teal icons moved back to the LEFT of the labels (Catch, Spot,
