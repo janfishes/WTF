@@ -2509,6 +2509,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v241</b> · Log labels fixed</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v240</b> · Clearer log cards</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v239</b> · Moon phase logged</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v238</b> · Location before tide</p>
@@ -3309,7 +3310,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 240;
+const BUILD_NUM  = 241;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5225,7 +5226,32 @@ let showLaunches = false;
 const SPECIES_UNKNOWN = { label:'Unknown', short:'??', color:'#9aa4ac', months:[0,0,0,0,0,0,0,0,0,0,0,0] };
 function speciesOf(key){ return SPECIES[key] || SPECIES_UNKNOWN; }
 
-function catchTideStr(c){ return c.tideDetail ? c.tideDetail : (c.tide ? (TIDE_LABELS[c.tide] || c.tide) + ' tide' : ''); }
+function catchTideStr(c){
+  let t = c.tideDetail ? c.tideDetail : (c.tide ? (TIDE_LABELS[c.tide] || c.tide) + ' tide' : '');
+  // Records saved before v241 store "Rising · 1h 20m to high"; reshape at render to
+  // the current time-first form "1h 20m rising to high tide" so both eras read alike.
+  const m = t.match(/^(Rising|Falling) · (.+) to (high|low)$/);
+  if(m) t = m[2]+' '+m[1].toLowerCase()+' to '+m[3]+' tide';
+  return t;
+}
+
+/* Length in inches -> "9 inches" / "1 ft" / "2 ft 3.5 inches". Fish are logged in
+   inches; past a foot the ft-and-inches reading is easier to picture. */
+function fmtFtIn(len){
+  const n = Number(len);
+  const inchWord = w => w === 1 ? 'inch' : 'inches';
+  if(!isFinite(n) || n <= 0) return len + ' inches';
+  const ft = Math.floor(n/12), rem = Math.round((n - ft*12)*10)/10;
+  if(ft > 0) return rem ? ft+' ft '+rem+' '+inchWord(rem) : ft+' ft';
+  return n+' '+inchWord(n);
+}
+// Labeled size line, shared by the My Log card and the map popup so they can't drift.
+function catchSizeBits(c){
+  const bits = [];
+  if(c.length) bits.push('Length ' + fmtFtIn(c.length));
+  if(c.weight) bits.push('Weight ' + c.weight + ' lb');
+  return bits;
+}
 
 /* Moon phase for a catch, from the same on-device astronomy the Bite sheet uses.
    Nothing is stored on the record — the phase is recomputed from date+time each
@@ -5260,16 +5286,14 @@ const BROKEN_PHOTO_NOTE =
 
 function catchPopupHTML(c){
   const sp = speciesOf(c.species);
-  const sizeBits = [];
-  if(c.length) sizeBits.push(c.length+'"');
-  if(c.weight) sizeBits.push(c.weight+' lb');
+  const sizeBits = catchSizeBits(c);
   const tide = catchTideStr(c);
   const moon = catchMoonStr(c);
   return `<div class="pop">
     ${c.photo? (photoIsDrawable(c.photo) ? `<img class="pop-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
     <div class="pop-top"><div class="pop-name">${sp.label}</div><div class="pop-zone" style="background:${sp.color}; color:#04141e;">Catch</div></div>
     <div class="pop-meta"><span>${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}</span>${tide? `<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> ${tide}</span>`:''}${moon? `<span>${moon}</span>`:''}<span>${toDMS(c.lat, c.lng)}</span></div>
-    <div class="pop-desc">${escapeHTML(c.locationLabel)}${sizeBits.length? ' \u00b7 '+sizeBits.join(', '):''}</div>
+    <div class="pop-desc">${escapeHTML(c.locationLabel)}${sizeBits.length? ' \u00b7 '+sizeBits.join(' \u00b7 '):''}</div>
     ${c.notes? `<div class="pop-tip">${escapeHTML(c.notes)}</div>`:''}
     <div class="loc-btns" style="margin-top:2px;">
       <button class="mini-btn edit-catch-btn" data-id="${c.id}">\u270e Edit</button>
@@ -5805,14 +5829,13 @@ function wirePopup(popup){
    is at the same spot and the coordinates are already in the header. */
 function catchCardHTML(c, showCoords){
   const sp = speciesOf(c.species);
-  const sizeBits = [];
-  if(c.length) sizeBits.push('Length '+c.length+'"');
-  if(c.weight) sizeBits.push('Pounds '+c.weight);
+  const sizeBits = catchSizeBits(c);
   const tide = catchTideStr(c);
   const moon = catchMoonStr(c);
   const wave = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>`;
-  // "Photo location" (the label photo-GPS catches carry) reads as clutter here \u2014 show just "Location".
-  const loc = escapeHTML((c.locationLabel||'').replace(/^photo location$/i,'Location'));
+  // Generic labels ("Photo location" from photo GPS, "Custom pin" from Drop pin)
+  // read as clutter here \u2014 show just "Location" ahead of the coordinates.
+  const loc = escapeHTML((c.locationLabel||'').replace(/^(photo location|custom pin)$/i,'Location'));
   const line2 = [tide? wave+' '+tide:'', moon].filter(Boolean).join(' \u00b7 ');
   return `<div class="catch-card">
       <div class="cc-top">
@@ -5823,8 +5846,8 @@ function catchCardHTML(c, showCoords){
         </div>
       </div>
       <div class="cc-meta">${fmtDateShort(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''} \u00b7 ${loc}${showCoords? ' \u00b7 '+toDMS(c.lat, c.lng):''}${line2? '<br>'+line2:''}</div>
-      ${sizeBits.length? `<div class="cc-size">${sizeBits.join(', ')}</div>`:''}
-      ${c.notes? `<div class="cc-notes">${escapeHTML(c.notes)}</div>`:''}
+      ${sizeBits.length? `<div class="cc-size">${sizeBits.join(' · ')}</div>`:''}
+      ${c.notes? `<div class="cc-notes">Note: ${escapeHTML(c.notes)}</div>`:''}
       ${c.photo? (photoIsDrawable(c.photo) ? `<img class="cc-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
     </div>`;
 }
@@ -6277,10 +6300,10 @@ async function fetchTideState(lat, lng, dateStr, timeStr){
     detail = `${TIDE_LABELS[state]} tide`;
   } else if(next.type === 'H'){
     state = 'rising';
-    detail = `Rising \u00b7 ${fmtDur(toNext)} to high`;
+    detail = `${fmtDur(toNext)} rising to high tide`;
   } else {
     state = 'falling';
-    detail = `Falling \u00b7 ${fmtDur(toNext)} to low`;
+    detail = `${fmtDur(toNext)} falling to low tide`;
   }
   return { state, detail, station: st.name };
 }

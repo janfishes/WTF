@@ -7,6 +7,23 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 8:39 PM EDT · v241 · Log labels fixed
+------------------------------------------------------------------------------
+Corrections to v240's card labels, applied to the map popup too via a shared
+catchSizeBits() so the two surfaces can't drift:
+
+- Weight, not Pounds, with lb after the number: "Weight 5.5 lb".
+- Length spells out inches and switches to ft-and-inches past a foot
+  (fmtFtIn): "8 inches", "2 ft", "2 ft 6.5 inches"; "1 inch" singular.
+- Notes are labeled: "Note: live shrimp under a popping cork".
+- NOAA tide detail is time-first: "1h 20m rising to high tide" instead of
+  "Rising · 1h 20m to high" (near-extreme "High/Low tide" unchanged).
+  Records saved in the old form are reshaped at render by catchTideStr(),
+  so every era reads alike. Tide stays before the moon on the same line.
+- "Custom pin" (the Drop-pin label) also renders as just "Location" ahead
+  of the GPS coordinates, same as "Photo location".
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 8:20 PM EDT · v240 · Clearer log cards
 ------------------------------------------------------------------------------
 My Log card cleanup so every number has context:
