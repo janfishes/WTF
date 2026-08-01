@@ -7,6 +7,22 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 4:35 PM EDT · v281 · Last-updated stamp
+------------------------------------------------------------------------------
+Two wording changes in the Season Guide, at Jan's word.
+
+The limits paragraph now ends "(Last updated 08/01/26)" instead of
+"summarized as of August 2026" — the same MM/DD/YY form as the build stamp,
+still printed from REGS_ASOF so the date and the numbers can't drift apart.
+REGS_ASOF now holds that date form; bump it whenever a line in the REGS table
+is touched.
+
+Deleted the sentence "Many species have closed seasons and size, bag, and
+gear limits." The guide now shows those limits itself, so it was telling the
+reader something the page beneath it already answers. The Fish Rules pointer
+that followed it stays, bolded as before.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 4:20 PM EDT · v280 · Inch marks & capped names
 ------------------------------------------------------------------------------
 Typography pass over the Season Guide's new limit lines, at Jan's word.
