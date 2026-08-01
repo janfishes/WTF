@@ -1388,7 +1388,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     margin-bottom:7px;
   }
   .fab-col > .fab:last-child{margin-bottom:0;}
-  .fab svg{margin-left:5px;}
+  .fab svg{margin-right:5px;} /* icons sit LEFT of the labels on the fab stack (back since v252) */
   .fab svg{width:calc(15px * var(--tsb)); height:calc(15px * var(--tsb)); flex:0 0 auto;}
   .fab.primary{background:#fff; border-color:#fff; color:#000;}
   /* Trailing icons: every command in the app reads word-then-icon (EDIT ✎, Drop pin 📍,
@@ -2289,44 +2289,44 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <div class="fab-col">
     <button class="fab primary" id="logCatchFab">
-      Catch
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+      Catch
     </button>
     <button class="fab" id="addSpotBtn">
-      Spot
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+      Spot
     </button>
     <button class="fab" id="biteFab">
-      Bite
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg>
+      Bite
     </button>
     <button class="fab" id="tidePinBtn">
-      Tides
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
+      Tides
     </button>
     <button class="fab" id="waveBtn">
-      Waves
       <svg viewBox="0 0 24 24" fill="currentColor"><use href="#waveArt"></use></svg>
+      Waves
     </button>
     <button class="fab" id="myLogBtn">
-      My Log
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 21 12 12 21 3 12Z"></path></svg>
+      My Log
     </button>
     <button class="fab" id="guideBtn">
-      Seasons
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg>
+      Seasons
     </button>
     <button class="fab" id="compassFab" title="Bearings from Ponce Inlet to the offshore sites">
-      Compass
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg>
+      Compass
     </button>
     <button class="fab" id="mapModeBtn">
-      Topo Satellite
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
+      Topo Satellite
     </button>
     <button class="fab" id="locateBtn" title="Tap: drop your GPS position. Press and HOLD: mark man overboard.">
-      Locate Me
       <svg viewBox="0 0 24 28" width="15" height="17" style="vertical-align:-3px;"><use href="#locatePin"></use></svg>
+      Locate Me
       <svg class="mob-hint" viewBox="0 0 24 24" aria-hidden="true"><use href="#mobFig"></use></svg><span class="mob-bang" aria-hidden="true">!</span>
     </button>
   </div>
@@ -2505,6 +2505,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v252</b> · Fab icons first</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v251</b> · Gentler wag</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v250</b> · Left-right wag</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v249</b> · Map button label</p>
@@ -3320,7 +3321,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 251;
+const BUILD_NUM  = 252;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -4516,7 +4517,7 @@ document.getElementById('mapModeBtn').addEventListener('click', function(){
   setIcwVisible(m.icw);
   setAidsVisible(m.icw);          // the marks belong to the channel; they come and go with it
   updateSeaOverlays();            // state-waters dashes + coastal names ride the topo view only
-  this.childNodes[0].textContent = m.label; // label is the FIRST text node since v243 put words before icons
+  this.lastChild.textContent = m.label; // v252 put fab icons back in front, so the label is the LAST text node again
   this.classList.toggle('street-on', m.streetClass);
   this.classList.toggle('icw-on', m.icw);
 });

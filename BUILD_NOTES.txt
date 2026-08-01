@@ -7,6 +7,21 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 10:14 PM EDT · v252 · Fab icons first
+------------------------------------------------------------------------------
+The fab stack's teal icons moved back to the LEFT of the labels (Catch, Spot,
+Bite, Tides, Waves, My Log, Seasons, Compass, Topo Satellite, Locate Me),
+partially undoing v243's app-wide word-then-icon pass at Jan's request. The
+.fab svg margin flipped from margin-left to margin-right; the Locate Me
+button keeps its red MOB figure and "!" trailing after the label (their own
+margin rule already overrides the generic one). The map-mode button's label
+writer moved with the markup: the label is the last text node again, so it
+now writes this.lastChild (v249 note applies in reverse — that writer must
+follow the icon/word order). Startup zoom stays at the 500 ft scale: a "land
+at 20 mi instead" request was made and then withdrawn ("nix 20 mi / leave at
+500") in the same session.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 10:08 PM EDT · v251 · Gentler wag
 ------------------------------------------------------------------------------
 The splash tail wag is calmer: the beat slowed from 1.9s to 3s, the sweep
