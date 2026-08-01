@@ -7,6 +7,38 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 6:20 PM EDT · v285 · Limits update themselves
+------------------------------------------------------------------------------
+The Season Guide's limits now come from regs.json and can change WITHOUT a
+new build.
+
+WHY NOT FETCH FWC DIRECTLY: myfwc.com sends no Access-Control-Allow-Origin
+(verified 2026-08-01) and X-Frame-Options: SAMEORIGIN, so a browser at
+janfishes.github.io can neither fetch nor frame it -- and there is no FWC
+regulations API; the numbers live inside Umbraco-rendered tab panels. Server
+side there is no such wall, which is how Build 283's audit was done. So the
+scraping stays on a schedule off-device and the app reads its OWN origin.
+
+HOW IT WORKS: regs.json sits beside index.html (GitHub Pages, same origin --
+and it also serves Access-Control-Allow-Origin: * , so a future native
+wrapper can read it too). The REGS table baked into the build is the offline
+fallback. On open the app applies the last copy it cached in localStorage,
+then fetches regs.json cache-busted and applies THAT if its `updated` date is
+newer. Comparison is on a parsed MM/DD/YY date, never string order. A file
+that fails to parse, arrives with fewer than 10 species, or carries an older
+date is IGNORED -- a bad file must never blank the limits. Failure is silent
+by design: offline you keep the baked-in table, not an error.
+
+The chart is now built by renderSeasonChart(), called again whenever the
+table is replaced, so nothing may hoist REGS values into a const at parse
+time. BUILD_REGS_ASOF holds what the build shipped with; when the live file
+is newer the panel prints a teal line saying the limits were refreshed after
+the build, which is the one thing a reader cannot tell by looking.
+
+REGS_CHANGELOG.md added: one entry per publish of regs.json, old value, new
+value, and the FWC page it was read off.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 5:50 PM EDT · v284 · Guide trimmed to the fish
 ------------------------------------------------------------------------------
 The Season Guide is now only about the fish, at Jan's word.

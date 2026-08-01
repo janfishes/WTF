@@ -2460,6 +2460,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>Possession.</b> A bag limit is a <b>daily</b> limit and, on the water, a <b>possession</b> limit — what you may have aboard at any one time, however many days you have been out. Limits are <b>per person</b> unless the line names a vessel limit, and a vessel limit caps the whole boat no matter how many are aboard. You cannot keep a fish for someone who is not fishing, and on a for-hire trip the captain and crew may not keep a bag of many species. Fish must stay <b>whole</b> — head and tail attached — until they are ashore, so they can be measured; a filleted fish on the boat is a violation even if it was legal when you caught it. A few federal fisheries allow a two-day possession on a documented multi-day trip; nothing in state water does.</p>
       <p class="sheet-note backup-warn">⚠ <b>Internet is required to update the app for the current FWC regulations.</b> <b>(Last updated <span id="regsAsOf">—</span>.)</b> Every line was read off FWC’s own pages on that date. They are stored in the app and travel offline with it, but they only change when a new build downloads — and the <b>FWC ↗</b> links on each row need a signal to open. Open the app with a connection now and then — when a newer build is live you'll get a tap-to-reload pill. <b>Trust But Verify!</b> <span style="font-size:1.25em; vertical-align:-2px;">🔍</span></p>
       <p class="sheet-note" style="margin-bottom:2px;"><b>The season bars and the size and bag limits below are for the Northeast zone</b> — the water north of the NSB South Causeway. South of it, in the Indian River Lagoon zone that takes in Mosquito Lagoon, redfish, seatrout and a few others read differently; each row’s note says how.</p>
+      <p class="sheet-note" id="regsFresh" style="display:none; color:var(--teal); margin:-4px 0 8px;"></p>
       <div id="seasonChart"></div>
       <div class="legend-key">
         <div class="lk-label">Abundance</div>
@@ -2554,7 +2555,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-seasons"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-seasons">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Seasons</b> opens the Season Guide — a month-by-month table for every species the app knows, for the Northeast zone — the water north of the NSB South Causeway. Each row also carries its <b>Size</b> and <b>Bag Limit</b> for Atlantic waters off Volusia, and <b>black cells mark the months closed to harvest</b> (a season that turns over mid-month blacks out the whole month). Each row also says which water its limits govern — <b>Inside 3 mi</b> (Florida state water, the dashed line the map draws off the beach) or <b>Inside &amp; beyond 3 mi</b> — and a <b>Possession</b> note covers what you may have aboard, per person against per vessel, and keeping fish whole until you are ashore. Every row also carries an <b>FWC ↗</b> link to FWC’s own page for that fish — tap it whenever you have a signal and read the rule from the source. The limits themselves ship inside the app and work offline, but <b>Internet is required to update the app for the current FWC regulations</b> — open it with a connection now and then and take the reload pill when it appears. FWC and Fish Rules (fishrulesapp.com) are always the live word. <b>Trust But Verify!</b></p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Seasons</b> opens the Season Guide — a month-by-month table for every species the app knows, for the Northeast zone — the water north of the NSB South Causeway. Each row also carries its <b>Size</b> and <b>Bag Limit</b> for Atlantic waters off Volusia, and <b>black cells mark the months closed to harvest</b> (a season that turns over mid-month blacks out the whole month). Each row also says which water its limits govern — <b>Inside 3 mi</b> (Florida state water, the dashed line the map draws off the beach) or <b>Inside &amp; beyond 3 mi</b> — and a <b>Possession</b> note covers what you may have aboard, per person against per vessel, and keeping fish whole until you are ashore. Every row also carries an <b>FWC ↗</b> link to FWC’s own page for that fish — tap it whenever you have a signal and read the rule from the source. The limits themselves also refresh on their own: they live in a small <b>regs.json</b> file beside the app, so a changed limit reaches you the next time you open it with a signal — no new build, no download — and the guide says so when they are fresher than the app around them. A scheduled job re-reads FWC’s pages and publishes that file. They still work offline, but <b>Internet is required to update the app for the current FWC regulations</b> — open it with a connection now and then and take the reload pill when it appears. FWC and Fish Rules (fishrulesapp.com) are always the live word. <b>Trust But Verify!</b></p>
       <p class="sheet-note"><b>Reading the season month bars.</b> Every colored bar row you see — in the Season Guide, in a pin’s popup, on a My Log card, or under Your saved spots — is a calendar: <b>12 cells, January on the left through December on the right</b>. Brighter cells are the better months for that species; dim cells are the slow season. Only the Season Guide's bars add black cells for closed harvest months; the bars on popups, catch cards and saved spots show the bite alone. In popups, the letters above the bars mark the months. A catch shows a bar for every species on it, and a spot shows one for every fish you have named in its <b>Details</b> box.</p>
       <p class="sheet-note"><b>Map zones.</b> The guide also carries the zone key the whole map is colored by. <b>Inshore</b> is creeks, rivers, cuts, streams, flats, jetties, docks and ramps. <b>Offshore</b> is the natural reefs, the artificial sites and the wrecks, 3.5–39.1 sm out. Every catch and every spot is filed under one zone or the other — that is what the <b>Inshore</b> and <b>Offshore</b> map filter buttons switch, and what the <b>+ Catch</b> and <b>+ Spot</b> zone pills set.</p>
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Every county site leads with its number. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 19.6–39.1 sm (17–34 nm) out and are outside the default view; pan/zoom to find them.</p>
@@ -2696,6 +2697,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v285</b> · Limits update themselves</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v284</b> · Guide trimmed to the fish</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v283</b> · Checked against FWC</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v282</b> · State or federal water</p>
@@ -3243,9 +3245,12 @@ const TIDE_LABELS = { high:"High", low:"Low", falling:"Falling", rising:"Rising"
    carries the Northeast numbers and its note carries the lagoon's.
    REGS_ASOF is the "(Last updated MM/DD/YY)" the panel prints -- same date form as
    the build stamp. Bump it whenever a line in this table is touched. */
-const REGS_ASOF = '08/01/26';
+let REGS_ASOF = '08/01/26';
+/* What THIS build shipped with. REGS_ASOF moves when regs.json lands; this doesn't,
+   so the panel can say when the limits are fresher than the app around them. */
+const BUILD_REGS_ASOF = REGS_ASOF;
 const FWC_BASE = 'https://myfwc.com/fishing/saltwater/recreational/';
-const REGS = {
+let REGS = {
   amberjack:  { size:'28" fork min (Greater)', bag:'1', closed:[3], waters:'both', fwc:'amberjack',
                 note:'Atlantic season is Jan-Mar and May-Dec; closed all April. Lesser Amberjack and Banded Rudderfish 14" to 22" fork, 5 per person aggregate. Almaco is unregulated.' },
   bass:       { size:'13" min', bag:'7', closed:[], waters:'both', fwc:'black-sea-bass' },
@@ -3765,7 +3770,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 284;
+const BUILD_NUM  = 285;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6805,52 +6810,119 @@ updateClustering();
 
 const seasonChart = document.getElementById('seasonChart');
 const MONTH_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const moHead = document.createElement('div');
-moHead.className = 'mo-head';
-moHead.innerHTML = MONTH_ABBR.map(m=>`<span>${m}</span>`).join("");
-seasonChart.appendChild(moHead);
-Object.entries(SPECIES).forEach(([key,sp])=>{
-  if(key === 'other') return;
-  const row = document.createElement('div');
-  row.className = 'season-row';
-  /* The Season Guide is the ONE place the bars carry harvest rules: closed months go
-     black here, and the size/bag line rides beside the name. The bars in popups, on
-     catch cards and under saved spots stay pure bite-quality — a black cell out there
-     would have no legend next to it to explain itself. */
-  const reg = REGS[key];
-  const shut = reg && reg.closed ? reg.closed : [];
-  const cells = sp.months.map((v,i)=>`<div style="${monthCell(v, sp.color, shut.indexOf(i) >= 0)}"></div>`).join("");
-  /* Only the Season Guide spells the varieties out: the app's own name for the row is
-     the generic one (Snapper, Mackerel), and the guide is where a reader is asking
-     which fish that actually covers. Everywhere else — the filter buttons, the
-     + Catch picker, the popups — stays on the short label. */
-  const vars = sp.varieties ? ` <span class="var">(${sp.varieties})</span>` : '';
-  /* "Size 18 to 27 · Bag Limit: 1" — but a row whose limit is a sentence rather than a
-     number ("No size limit", "Catch and release only") drops the label, since
-     "Size No size limit" is not English. */
-  const regLine = reg
-    ? ` <span class="reg">${/^\d/.test(reg.size) ? 'Size ' + reg.size : reg.size} · ${/^\d/.test(reg.bag) ? 'Bag Limit: ' + reg.bag : reg.bag}</span>`
-    : '';
-  /* Which water the line governs, since a limit that is right inside the 3-mile line
-     can be the wrong one beyond it. */
-  const WATERS_LBL = { state:'Inside 3 mi', both:'Inside &amp; beyond 3 mi' };
-  const wtr = reg && WATERS_LBL[reg.waters] ? ` <span class="wtr">${WATERS_LBL[reg.waters]}</span>` : '';
-  /* FWC's own page for the fish, so the reader can check the live rule the moment they
-     have a signal. One link, or a labelled pair where a row covers two managed fish. */
-  const fwcLink = (slug, label) => `<a class="fwc-lnk" href="${FWC_BASE}${slug}/" target="_blank" rel="noopener">${label}</a>`;
-  let fwc = '';
-  if(reg && reg.fwc){
-    fwc = Array.isArray(reg.fwc)
-      ? ' <span class="fwc-wrap">FWC: ' + reg.fwc.map(pair=> fwcLink(pair[1], pair[0] + ' \u2197')).join(' · ') + '</span>'
-      : ' <span class="fwc-wrap">' + fwcLink(reg.fwc, 'FWC \u2197') + '</span>';
+
+/* Built as a function, not straight-line code, because REGS can be REPLACED after load:
+   the app ships with the baked-in table, then fetches regs.json off its own origin and
+   redraws if that file is newer. Everything the chart reads must come off the current
+   REGS, so nothing here may be hoisted into a const at parse time. */
+function renderSeasonChart(){
+  seasonChart.innerHTML = '';
+  const moHead = document.createElement('div');
+  moHead.className = 'mo-head';
+  moHead.innerHTML = MONTH_ABBR.map(m=>`<span>${m}</span>`).join("");
+  seasonChart.appendChild(moHead);
+  Object.entries(SPECIES).forEach(([key,sp])=>{
+    if(key === 'other') return;
+    const row = document.createElement('div');
+    row.className = 'season-row';
+    /* The Season Guide is the ONE place the bars carry harvest rules: closed months go
+       black here, and the size/bag line rides beside the name. The bars in popups, on
+       catch cards and under saved spots stay pure bite-quality — a black cell out there
+       would have no legend next to it to explain itself. */
+    const reg = REGS[key];
+    const shut = reg && reg.closed ? reg.closed : [];
+    const cells = sp.months.map((v,i)=>`<div style="${monthCell(v, sp.color, shut.indexOf(i) >= 0)}"></div>`).join("");
+    /* Only the Season Guide spells the varieties out: the app's own name for the row is
+       the generic one (Snapper, Mackerel), and the guide is where a reader is asking
+       which fish that actually covers. Everywhere else — the filter buttons, the
+       + Catch picker, the popups — stays on the short label. */
+    const vars = sp.varieties ? ` <span class="var">(${sp.varieties})</span>` : '';
+    /* "Size 18 to 27 · Bag Limit: 1" — but a row whose limit is a sentence rather than a
+       number ("No size limit", "Catch and release only") drops the label, since
+       "Size No size limit" is not English. */
+    const regLine = reg
+      ? ` <span class="reg">${/^\d/.test(reg.size) ? 'Size ' + reg.size : reg.size} · ${/^\d/.test(reg.bag) ? 'Bag Limit: ' + reg.bag : reg.bag}</span>`
+      : '';
+    /* Which water the line governs, since a limit that is right inside the 3-mile line
+       can be the wrong one beyond it. */
+    const WATERS_LBL = { state:'Inside 3 mi', both:'Inside &amp; beyond 3 mi' };
+    const wtr = reg && WATERS_LBL[reg.waters] ? ` <span class="wtr">${WATERS_LBL[reg.waters]}</span>` : '';
+    /* FWC's own page for the fish, so the reader can check the live rule the moment they
+       have a signal. One link, or a labelled pair where a row covers two managed fish. */
+    const fwcLink = (slug, label) => `<a class="fwc-lnk" href="${FWC_BASE}${slug}/" target="_blank" rel="noopener">${label}</a>`;
+    let fwc = '';
+    if(reg && reg.fwc){
+      fwc = Array.isArray(reg.fwc)
+        ? ' <span class="fwc-wrap">FWC: ' + reg.fwc.map(pair=> fwcLink(pair[1], pair[0] + ' \u2197')).join(' · ') + '</span>'
+        : ' <span class="fwc-wrap">' + fwcLink(reg.fwc, 'FWC \u2197') + '</span>';
+    }
+    const regNote = reg && reg.note ? `<div class="reg-note">${reg.note}${fwc}</div>` : `<div class="reg-note">${fwc}</div>`;
+    row.innerHTML = `<div class="months">${cells}</div><div class="lbl"><span class="sw" style="background:${sp.color}"></span>${sp.label}${vars}${regLine}${wtr}</div>${regNote}`;
+    seasonChart.appendChild(row);
+  });
+  // The "(Last updated)" stamp lives with the table, not in the markup, so the date and
+  // the numbers can never drift apart.
+  const el = document.getElementById('regsAsOf');
+  if(el) el.textContent = REGS_ASOF;
+  /* Only says anything when the limits have moved since this build shipped -- which is
+     the whole point of regs.json, and the one thing the reader can't tell by looking. */
+  const fresh = document.getElementById('regsFresh');
+  if(fresh){
+    const moved = regsStamp(REGS_ASOF) > regsStamp(BUILD_REGS_ASOF);
+    fresh.style.display = moved ? 'block' : 'none';
+    if(moved) fresh.innerHTML = '\u27f3 <b>Limits refreshed ' + REGS_ASOF + '</b> \u2014 newer than this build (' + BUILD_REGS_ASOF + '). They came straight from FWC\u2019s pages, no app update needed.';
   }
-  const regNote = reg && reg.note ? `<div class="reg-note">${reg.note}${fwc}</div>` : `<div class="reg-note">${fwc}</div>`;
-  row.innerHTML = `<div class="months">${cells}</div><div class="lbl"><span class="sw" style="background:${sp.color}"></span>${sp.label}${vars}${regLine}${wtr}</div>${regNote}`;
-  seasonChart.appendChild(row);
-});
-// The "summarized as of" date lives with the REGS table, not in the markup, so the
-// date and the numbers can never drift apart.
-(function(){ const el = document.getElementById('regsAsOf'); if(el) el.textContent = REGS_ASOF; })();
+}
+renderSeasonChart();
+
+/* ---------- Live limits: regs.json ----------
+   The limits are the one part of this app that goes WRONG rather than merely stale when
+   FWC changes a rule, and a 1 MB rebuild is a heavy way to move four characters. So the
+   table also lives in regs.json beside index.html -- SAME ORIGIN, which is the whole
+   trick: myfwc.com sends no Access-Control-Allow-Origin, so the page can never read FWC
+   directly, but it can always read its own folder.
+
+   Order of trust, newest first: regs.json off the network > the last copy this device
+   saw (localStorage) > the table baked into this build. `updated` is a plain MM/DD/YY
+   string, so the comparison is on a parsed date, never on string order.
+
+   A scheduled job re-reads FWC's pages and pushes regs.json when a limit moves; this
+   side just has to notice. Failure is silent ON PURPOSE -- offline, or a garbled file,
+   leaves the baked-in table on screen rather than an error where the numbers were. */
+const REGS_STORE_KEY = 'regs-cache';
+function regsStamp(s){
+  const m = /^(\d{2})\/(\d{2})\/(\d{2})$/.exec(String(s||''));
+  return m ? new Date(2000 + (+m[3]), (+m[1]) - 1, +m[2]).getTime() : 0;
+}
+function applyRegs(data, why){
+  if(!data || typeof data !== 'object' || !data.species || typeof data.species !== 'object') return false;
+  const keys = Object.keys(data.species);
+  // A file that has lost most of its rows is a broken file, not an update.
+  if(keys.length < 10) return false;
+  if(regsStamp(data.updated) <= regsStamp(REGS_ASOF)) return false;
+  REGS = data.species;
+  REGS_ASOF = data.updated;
+  renderSeasonChart();
+  if(window.console && console.log) console.log('[regs] ' + why + ' -> ' + data.updated);
+  return true;
+}
+(function loadLiveRegs(){
+  try{
+    const cached = localStorage.getItem(REGS_STORE_KEY);
+    if(cached) applyRegs(JSON.parse(cached), 'cached');
+  }catch(e){}
+  // Cache-busted: this file is small, and a stale CDN copy of it is exactly the failure
+  // the whole mechanism exists to avoid.
+  fetch('./regs.json?v=' + Date.now(), {cache:'no-store'})
+    .then(r=> r.ok ? r.json() : null)
+    .then(data=>{
+      if(!data) return;
+      if(applyRegs(data, 'fetched')){
+        try{ localStorage.setItem(REGS_STORE_KEY, JSON.stringify(data)); }catch(e){}
+      }
+    })
+    .catch(()=>{});
+})();
 
 /* ===================== INFO SHEET ===================== */
 
