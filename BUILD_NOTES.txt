@@ -7,8 +7,22 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-01 · 10:47 AM EDT · v260 · Details & seasons
+Build 2026-08-01 · 11:02 AM EDT · v261 · Multi-species catch
 ------------------------------------------------------------------------------
++ Catch now takes more than one species per entry: the species pills toggle
+instead of switching, so a trip that produced reds, trout and a flounder is
+one log entry. The FIRST species tapped is the primary — it colors the
+catch pin on the map, exactly as before. Every picked species shows: the
+My Log card gets one colored species tag per fish and the season bars for
+all of them (same in the pin popup, whose title lists all the names), the
+species filter switches and the Catches total count an entry under every
+species it carries, and search finds it by any of its names.
+
+Under the hood the record keeps `species` (the first pick — what every
+pre-v261 catch, backup and the marker color already use) and adds
+`speciesList` with the full picked order, so old catches, old backups and
+restored backups behave exactly as before; editing an old single-species
+catch simply shows its one pill selected and lets you add more.
 The + Spot sheet gains a Details box: free text for structure, bait, tide —
 anything worth remembering about the spot. Name the fish you catch there
 and the app recognizes them (all 22 real species, plus common nicknames:
