@@ -7,6 +7,52 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 2:20 PM EDT · v270 · Help by button
+------------------------------------------------------------------------------
+The help is now navigated the way the map is: a directory of the app's own
+buttons, each one opening its writeup under it on tap. Four groups, in the
+order the buttons sit on screen — ACTION BUTTONS (the ten down the right
+edge: Catch, Spot, Bite, Tides, Waves, My Log, Seasons, Compass, the map-view
+cycle, Locate Me), SPECIES BUTTONS (the diamond column down the left edge),
+MAP FILTER BUTTONS (Catches, Inshore, Offshore, Launches, Labels along the
+top), and SEARCH, HELP, VIEW BUTTONS (the five header cookies, in their own
+left-to-right order: Search, Help, Themes, Text Size, Eye). No help text was
+thrown away — the old Button Actions, Map Controls, Species Switches, Themes,
+Text Size, Search, Eye and Tide Gauges sections were moved wholesale into the
+button they belong to. What is left below the directory is the reference
+prose that isn't about one button: Button Shapes, Photos, Typing GPS
+Coordinates, Help & View Tips, Charted Place Names, the season month bars,
+and Tips.
+
+"MAP FILTER BUTTONS" is now the term for the top row throughout the help;
+"filter pills" / "filter row" / "the pills at the top" are gone, and the
+lower-right stack is called the ACTION BUTTONS.
+
+Under the directory sit the three things that DO something rather than
+explain something: PRINT THIS HELP (with a one-line description above it),
+CREATE & CALIBRATE TIDE STATIONS, and DOWNLOAD MAP FOR OFFLINE USE. The two
+tools follow the same tap-to-open pattern as every other row — the writeup
+opens, and the live button that launches the tool sits at the end of it
+(OPEN THE TIDE STATION TOOL, START THE DOWNLOAD), so one tap never both
+explains and fires. The tide station form's save button is now SAVE THIS
+TIDE STATION, in caps, and the help names it that way.
+
+WARNING & DISCLAIMER became a button of its own (warning first, then the
+compass caveat, then the liability line). COPYRIGHT keeps no button: the
+copyright line now leads with "© 2026 Jan G. Neal. All rights reserved."
+followed by the developed-for sentence, and the cartoon credit moved to its
+own paragraph opening "Cartoon Copyright ©". The sign-off under the opening
+paragraph changed from "Tight Lines!" to "Now go have reel fun with this
+app!".
+
+Print: paper has nothing to tap, so the print clone opens every writeup,
+strips the carets and the two live tool buttons, and turns each button row
+into a heading — the printout is the whole help as plain text. The in-place
+@media print fallback does the same with CSS. Search: jumping to a help
+section from the search sheet now opens the writeups inside that section,
+so the words that matched are actually on screen when you land.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 1:52 PM EDT · v269 · Harbor Oaks pin spaced
 ------------------------------------------------------------------------------
 The Harbor Oaks city pin moved 280 m south, 29.108039/-80.968944 →
