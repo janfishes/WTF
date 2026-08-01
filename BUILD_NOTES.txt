@@ -7,6 +7,31 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 6:33 PM EDT · v289 · Limits notes tucked away
+------------------------------------------------------------------------------
+The Season Guide opened with four paragraphs of regulation prose before the
+first month bar. Two of them are reference material you read once: how the
+Size and Bag Limit numbers are written, and what possession means on the
+water. They are now behind their own buttons beside REGULATION CHANGES --
+SIZE & BAG LIMITS and POSSESSION -- collapsed by default, same caret toggle.
+
+Every remaining paragraph was rewritten to what a person fishing needs to
+act on. Dropped: the regs.json filename and the weekly scheduled job (the
+user cannot do anything with either -- "limits refresh when you open with a
+signal" is the whole fact), the for-hire crew-bag rule, the federal two-day
+possession trip, the "filleted fish is a violation" restatement, and the
+mid-year federal season note. Kept in the size/bag panel: inches of total
+length unless the row says fork, per person per day, Inside 3 mi vs Inside &
+beyond 3 mi, the FWC link, and the Fish Rules App pointer.
+
+The help sheet's Seasons topic was cut to match and now names the three
+buttons.
+
+Toggle wiring: wireRegsLog() became wireSeasonToggles(), a table of
+[button, box, caret] id triples -- add a row to it for any future
+collapsible note in the guide.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 7:45 PM EDT · v288 · Internet note rewritten
 ------------------------------------------------------------------------------
 The boxed Internet warning had gone STALE against its own app. It still said
