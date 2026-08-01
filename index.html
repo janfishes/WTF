@@ -2528,7 +2528,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       your filters, species switches and any compass route stay exactly as they were and reappear untouched. Like the theme and the text size, the setting is remembered on your device.</p>
 
       <div class="subhead">Charted Place Names</div>
-      <p class="sheet-note">Every <b>waterway and island the Topo Satellite view names</b> inside our water — from Tomoka Basin south to the Haulover Canal — carries its own inshore pin, <b>84</b> of them: creeks, coves, bays, cuts, sloughs, flats, points, canals and islands, named exactly as the chart prints them. Names and positions come from the <b>USGS Geographic Names Information System</b>, the gazetteer the topo tiles label themselves from, so a pin sits where the map's own label sits, and searching a name you read off the chart finds it. Creek pins land at the creek's <b>mouth</b>, which is the point USGS files a stream under. Where a charted name and a spot name disagreed, the chart won: <b>Tenmile Creek</b> is one word, and the cut is <b>Ponce de Leon Cut</b>, spelled as its ICW daybeacons are. Two pins that had drifted off their namesakes were put back on them — <b>Haulover Canal</b> and <b>Mosquito Lagoon</b>. One name is repeated because the chart repeats it: two different <b>Turnbull Creeks</b>, the second noted as such on its pin.</p>
+      <p class="sheet-note">Every <b>waterway and island the Topo Satellite view names</b> inside our water — from Tomoka Basin south to the <b>Volusia County line</b> — carries its own inshore pin, <b>62</b> of them: creeks, coves, bays, cuts, sloughs, flats, points, canals and islands, named exactly as the chart prints them. Names and positions come from the <b>USGS Geographic Names Information System</b>, the gazetteer the topo tiles label themselves from, so a pin sits where the map's own label sits, and searching a name you read off the chart finds it. Creek pins land at the creek's <b>mouth</b>, which is the point USGS files a stream under. Where a charted name and a spot name disagreed, the chart won: <b>Tenmile Creek</b> is one word, and the cut is <b>Ponce de Leon Cut</b>, spelled as its ICW daybeacons are. The <b>Mosquito Lagoon</b> waypoint, which had drifted 4½ miles west into the marsh, was put back under the name the map prints. The map stops at the county line: the Brevard end of the lagoon, the Haulover and Merritt Island are off it. The chart names two different <b>Turnbull Creeks</b>, so the southern one is pinned as <b>Turnbull Creek Mosquito Lagoon W</b>.</p>
 
       <div class="subhead">Search</div>
       <p class="sheet-note">Tap the <b>🔍</b> button next to Help and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched on automatically. Search also looks through <b>this Help</b>: type a topic (e.g. "tide station" or "offline") and matching Help sections are listed under their own heading — tap one to open Help at that section.</p>
@@ -2556,6 +2556,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA; charted place names and their positions come from the USGS Geographic Names Information System. This app is not affiliated with or endorsed by any of those agencies.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v267</b> · Volusia line only</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v266</b> · Charted place names</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v265</b> · Popup close ✕ uniform</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v264</b> · Deletes kept 14 days</p>
@@ -3090,7 +3091,6 @@ const SPOTS = [
   { id:"blue-hole", name:"Blue Hole", zone:"inshore", lat:28.93615, lng:-80.86655, meta:"Hole", species:[] },
   { id:"brickhouse-cove", name:"Brickhouse Cove", zone:"inshore", lat:28.923217, lng:-80.860917, meta:"Cove", species:[] },
   { id:"bissitte-bay", name:"Bissitte Bay", zone:"inshore", lat:28.897717, lng:-80.846133, meta:"Bay", species:[] },
-  { id:"haulover-canal", name:"Haulover Canal", zone:"inshore", lat:28.736659, lng:-80.754495, meta:"Canal", species:[] },
   { id:"reef-flagler", name:"Site 14 Flagler Ave Reef", alt:["Site 14", "Flagler Ave Reef", "Flagler"], zone:"offshore", lat:29.0428, lng:-80.8819, meta:"37–40ft · 4.3 sm/3.7 nm from Inlet · 12 drops",
     desc:"A shallow culvert-and-barrier complex just south of the Flagler County line — the shallowest permitted structure in the county system.",
     tip:"An easy, quick run for snapper and flounder without having to run all the way out to the numbered offshore sites.",
@@ -3195,7 +3195,7 @@ const SPOTS = [
 
   /* ---- Charted place names (v266) — every waterway and island the built-in Topo
      Satellite view prints inside the app's water, from Tomoka Basin south to the
-     Haulover Canal, as plain waypoint pins. Names and coordinates come from the
+     Volusia County line at 28.7917 N, as plain waypoint pins. Names and coordinates come from the
      USGS Geographic Names Information System (Domestic Names, Florida, read
      2026-08-01) — the same gazetteer the topo tiles label themselves from — and
      were read back off the tiles at z13-z16 to confirm each label sits where GNIS
@@ -3204,11 +3204,15 @@ const SPOTS = [
      Creek, Rose Bay, Turnbull Bay, Strickland Bay, Spruce Creek, Inlet Harbor,
      Callalisa Creek, Blue Hole, Browns Bay, Brickhouse Cove, Bissitte Bay, Tomoka
      Basin/River, Rockhouse Creek, Smith/Bulow Creek, Halifax River, Indian River
-     North, Mosquito Lagoon, Haulover Canal, Ponce de Leon Cut) — and Ponce de Leon
+     North, Mosquito Lagoon, Ponce de Leon Cut) — and Ponce de Leon
      Inlet, which the map already prints its own permanent label for. GNIS points a
      stream at its MOUTH, which is why the creek pins sit where the creek meets
-     open water. One deliberate name repeat: Turnbull Creek, which the topo prints
-     twice for two different creeks — the second one is marked in its meta line.
+     open water. The topo prints Turnbull Creek twice, for two different creeks; the
+     southern one carries "Mosquito Lagoon W" in its own name to tell them apart.
+     Nothing goes south of the county line (v267) — the Brevard end of the lagoon,
+     the Haulover and Merritt Island's water are off this app's map, which is why
+     Griffis Bay, the Duckroosts, Bairs/Granny/Dummit Cove, Pattillo Creek and the
+     rest of that GNIS run are absent on purpose. Do not re-add them.
      Note for later: the topo labels the ICW channel itself "Bulow Creek" at both
      29.345/-81.078 and 29.117/-80.959, an NHD reach name carried 20 miles down
      from the real Bulow Creek at High Bridge; no pins were added for those.
@@ -3273,30 +3277,8 @@ const SPOTS = [
   { id:"wp-vanns-slough", name:"Vanns Slough", zone:"inshore", lat:28.811676, lng:-80.762660, meta:"Waypoint · Slough", wp:true, species:[] },
   { id:"wp-vanns-island", name:"Vanns Island", zone:"inshore", lat:28.810824, lng:-80.764773, meta:"Waypoint · Island", wp:true, species:[] },
   { id:"wp-coot-creek", name:"Coot Creek", zone:"inshore", lat:28.801935, lng:-80.853387, meta:"Waypoint · Creek", wp:true, species:[] },
-  { id:"wp-turnbull-creek", name:"Turnbull Creek", zone:"inshore", lat:28.798324, lng:-80.850331, meta:"Waypoint · Creek · Mosquito Lagoon W shore", wp:true, species:[] },
+  { id:"wp-turnbull-creek", name:"Turnbull Creek Mosquito Lagoon W", zone:"inshore", lat:28.798324, lng:-80.850331, meta:"Waypoint · Creek", wp:true, species:[] },
   { id:"wp-preachers-island", name:"Preachers Island", zone:"inshore", lat:28.798324, lng:-80.758106, meta:"Waypoint · Island", wp:true, species:[] },
-  { id:"wp-three-cabbage-island", name:"Three Cabbage Island", zone:"inshore", lat:28.788324, lng:-80.746161, meta:"Waypoint · Island", wp:true, species:[] },
-  { id:"wp-boathouse-point", name:"Boathouse Point", zone:"inshore", lat:28.783880, lng:-80.836164, meta:"Waypoint · Point", wp:true, species:[] },
-  { id:"wp-onion-farm-island", name:"Onion Farm Island", zone:"inshore", lat:28.781658, lng:-80.821164, meta:"Waypoint · Island", wp:true, species:[] },
-  { id:"wp-pardon-slough", name:"Pardon Slough", zone:"inshore", lat:28.777909, lng:-80.730828, meta:"Waypoint · Slough", wp:true, species:[] },
-  { id:"wp-griffis-bay", name:"Griffis Bay", zone:"inshore", lat:28.769606, lng:-80.797752, meta:"Waypoint · Bay", wp:true, species:[] },
-  { id:"wp-hole-in-the-wall", name:"Hole in the Wall", zone:"inshore", lat:28.763325, lng:-80.807552, meta:"Waypoint · Channel", wp:true, species:[] },
-  { id:"wp-pardon-island", name:"Pardon Island", zone:"inshore", lat:28.763047, lng:-80.730328, meta:"Waypoint · Island", wp:true, species:[] },
-  { id:"wp-grassy-point", name:"Grassy Point", zone:"inshore", lat:28.762214, lng:-80.812275, meta:"Waypoint · Point", wp:true, species:[] },
-  { id:"wp-pattillo-creek", name:"Pattillo Creek", zone:"inshore", lat:28.760269, lng:-80.790607, meta:"Waypoint · Creek", wp:true, species:[] },
-  { id:"wp-georges-flats", name:"Georges Flats", zone:"inshore", lat:28.759436, lng:-80.803386, meta:"Waypoint · Flats", wp:true, species:[] },
-  { id:"wp-widgeon-bay", name:"Widgeon Bay", zone:"inshore", lat:28.758115, lng:-80.717734, meta:"Waypoint · Bay", wp:true, species:[] },
-  { id:"wp-big-flounder-creek", name:"Big Flounder Creek", zone:"inshore", lat:28.755547, lng:-80.843109, meta:"Waypoint · Creek", wp:true, species:[] },
-  { id:"wp-duckroost-cove", name:"Duckroost Cove", zone:"inshore", lat:28.743364, lng:-80.766502, meta:"Waypoint · Cove", wp:true, species:[] },
-  { id:"wp-duckroost-point", name:"Duckroost Point", zone:"inshore", lat:28.742770, lng:-80.771162, meta:"Waypoint · Point", wp:true, species:[] },
-  { id:"wp-bairs-cove", name:"Bairs Cove", zone:"inshore", lat:28.729647, lng:-80.756991, meta:"Waypoint · Cove", wp:true, species:[] },
-  { id:"wp-old-canal", name:"Old Canal", zone:"inshore", lat:28.726659, lng:-80.744217, meta:"Waypoint · Canal", wp:true, species:[] },
-  { id:"wp-granny-cove", name:"Granny Cove", zone:"inshore", lat:28.725593, lng:-80.749400, meta:"Waypoint · Cove", wp:true, species:[] },
-  { id:"wp-cucumber-island", name:"Cucumber Island", zone:"inshore", lat:28.722492, lng:-80.698661, meta:"Waypoint · Island", wp:true, species:[] },
-  { id:"wp-cucumber-slough", name:"Cucumber Slough", zone:"inshore", lat:28.719116, lng:-80.692229, meta:"Waypoint · Slough", wp:true, species:[] },
-  { id:"wp-little-flounder-creek", name:"Little Flounder Creek", zone:"inshore", lat:28.718326, lng:-80.836165, meta:"Waypoint · Creek", wp:true, species:[] },
-  { id:"wp-dummit-cove", name:"Dummit Cove", zone:"inshore", lat:28.714160, lng:-80.749450, meta:"Waypoint · Cove", wp:true, species:[] },
-  { id:"wp-turtlepen-point", name:"Turtlepen Point", zone:"inshore", lat:28.710270, lng:-80.691439, meta:"Waypoint · Point", wp:true, species:[] },
 
   /* ---- City waypoints (v254) — one pin per municipality the Halifax / Indian River
      North / Mosquito Lagoon run through, each placed mid-waterway off that city's
@@ -3520,7 +3502,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 266;
+const BUILD_NUM  = 267;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }

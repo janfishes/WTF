@@ -7,6 +7,38 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 1:26 PM EDT · v267 · Volusia line, nothing south
+------------------------------------------------------------------------------
+Twenty-three pins south of the Volusia County line (28.7917 N, the straight
+east-west line the topo draws across the lagoon at Shiloh) are gone: the 22
+v266 charted-name pins that had run on into Brevard's end of Mosquito Lagoon
+— Three Cabbage Island, Boathouse Point, Onion Farm Island, Pardon Slough,
+Griffis Bay, Hole in the Wall, Pardon Island, Grassy Point, Pattillo Creek,
+Georges Flats, Widgeon Bay, Big Flounder Creek, Duckroost Cove, Duckroost
+Point, Bairs Cove, Old Canal, Granny Cove, Cucumber Island, Cucumber Slough,
+Little Flounder Creek, Dummit Cove, Turtlepen Point — and the Haulover Canal
+pin itself, which v266 had just moved onto the canal at Allenhurst, in
+Brevard. County assignment is GNIS's own county_name field, which agrees
+with the tile: Shiloh at 28.7905 is Brevard, Preachers Island at 28.7983 is
+Volusia. Charted place names now run Tomoka Basin to the county line, 62 of
+them; spot total 225 → 202. The southernmost pins left are the Mosquito
+Lagoon waypoint (28.8050) and Coot Creek, Turnbull Creek Mosquito Lagoon W
+and Preachers Island just above the line.
+
+Haulover Canal was one of Jan's own long-standing pins, not a v266 addition
+— it was at 28.712183/-80.778183 out in the Indian River before v266 put it
+on the canal. Both positions are in Brevard, so the pin cannot come back
+without crossing the line it was deleted for.
+
+The repeated Turnbull Creek is now told apart by its NAME rather than a note
+in its meta line: the lagoon's western one is "Turnbull Creek Mosquito Lagoon
+W", Jan's original up at Turnbull Bay keeps the plain name.
+
+The data block's header comment now says the county line is the southern
+limit, and says not to re-add what was cut, so a later pass over GNIS does
+not walk the pins back into Brevard.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 1:12 PM EDT · v266 · Charted place names
 ------------------------------------------------------------------------------
 Every waterway and island the built-in Topo Satellite view names inside the
