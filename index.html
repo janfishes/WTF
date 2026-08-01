@@ -29,7 +29,9 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#060f18">
+<!-- Tequila Sunrise's --navy-950. Static: this tag cannot follow the live theme,
+     so it tracks the DEFAULT one. Was Parrot Head's #060f18 through v292. -->
+<meta name="theme-color" content="#1a0d12">
 <!-- iOS/Safari standalone (kept for existing "Add to Home Screen" behavior) -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -2329,7 +2331,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; padding:10px 20px; border-radius:100px;}
 </style>
 </head>
-<body class="gauges-off">
+<!-- data-theme is on the markup, not applied on load, for the same reason
+     gauges-off is: the theme read from storage is awaited, so a default applied
+     in JS would paint the old Parrot Head teal and snap to orange a frame later.
+     A user who has picked a theme has it written here by applyTheme() when that
+     read resolves - including Parrot Head, which removes the attribute. v293. -->
+<body class="gauges-off" data-theme="tequilasunrise">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="waveArt" viewBox="0 0 24 24"><g transform="translate(-5.839,-10.968) scale(0.064516)"><path d="M447.296,410.25c0,8.33,0,16.67,0,25c-14.39,1.86-27.67-9-42-9c-17.63,0-28.13,11.46-51,9c-11.23-1.21-22.55-8.79-34-9    c-16.85-0.31-28.34,11.52-51,9c-11.72-1.3-23.49-9.05-35-9c-18.54,0.08-33.43,12.87-56,8c-9.81-2.12-18.7-8-29-8    c-14.54,0-26.46,10.81-42,9c0-12.34,0-22.87,0-34c0-10.43-2.9-23.57,0-33c2.3-7.48,14.66-12.72,20-18    c45.67-45.19,73.34-134.06,167-125c44.03,4.26,79.84,36.32,90,77c3.13,12.54,2.16,19-4,20c-8.59,1.4-9.32-12.1-13-19    c-8-15-32.42-30-56-19c-14.79,6.9-26.32,26.11-27,48c-1.21,38.89,40.48,80.54,81,78c12.92-0.81,24.84-8.69,38-9    C420.606,400.85,430.977,409.1,447.296,410.25z"/><path d="M447.296,462.25c0,8.33,0,16.67,0,25c-14.54,0.5-28.51-10.32-43-10c-14.37,0.32-28.24,10-42,10    c-14.32,0-28.68-10.06-43-10c-13.95,0.06-28.08,10.04-42,10c-14.4-0.04-28.77-10.2-43-10c-13.66,0.19-27.95,9.91-42,10    c-14.44,0.09-29-10.3-44-10c-13.92,0.28-27.07,10.84-41,10c-2.22-6.45-0.42-16.92-1-25c13.39-1.37,25.75-9.21,39-10    c17.26-1.03,33.24,11.09,51,9c13.78-1.62,24.91-8.92,37-9c15.12-0.1,26.94,9.74,43,10c14.16,0.23,28.37-9.9,43-10    c13.63-0.09,27.41,9.66,42,10c14.05,0.33,27.39-9.89,43-10C420.676,452.14,430.696,459.85,447.296,462.25z"/></g></symbol>
 <!-- Locate-me pin: teardrop map pin with a crosshair/target glyph inside, filled with
      currentColor so each usage can set the theme accent via CSS. -->
@@ -2681,7 +2688,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-themes"><span class="ht-g">🎨</span>Themes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-themes">
       <p class="sheet-note"><b>Themes</b> is a <b>cookie</b> — one of the round buttons in the top-right corner of the header.</p>
-      <p class="sheet-note">Tap <b>🎨</b> to pick a color theme — four dark options (<b>Parrot Head</b>, <b>Green-Eyed Lady</b>, <b>Purple Haze</b>, <b>Tequila Sunrise</b>) and <b>Blue Suede Shoes</b> and <b>Brown Sugar</b>, designed for reading in bright sun through polarized lenses. Saved on your device.</p>
+      <p class="sheet-note">Tap <b>🎨</b> to pick a color theme — four dark options (<b>Parrot Head</b>, <b>Green-Eyed Lady</b>, <b>Purple Haze</b>, <b>Tequila Sunrise</b>) and <b>Blue Suede Shoes</b> and <b>Brown Sugar</b>, designed for reading in bright sun through polarized lenses. Saved on your device. A fresh copy of the app opens on <b>Tequila Sunrise</b>, the one that matches the icon and the opening screen; pick any other and it opens on yours from then on.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-size"><span class="ht-g">A</span>Text Size<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-size">
@@ -2738,6 +2745,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v293</b> · Opens on Tequila Sunrise</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v292</b> · Orange app icon</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v291</b> · Change log trimmed</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v290</b> · Zone note, CLOSE buttons</p>
@@ -3825,7 +3833,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 292;
+const BUILD_NUM  = 293;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5695,6 +5703,10 @@ async function loadAll(){
       if(canon !== th){ th = canon; try{ await storeSet(THEME_KEY, th); }catch(e){} }
       applyTheme(th);
     }
+    // Nothing stored: the markup is already wearing DEFAULT_THEME, so this repaints
+    // nothing - it is here to light that theme's swatch in the picker, which used to
+    // sit with none selected on a device that had never chosen one. v293.
+    else applyTheme(DEFAULT_THEME);
   }catch(e){}
   try{
     const ts = await storeGet(TEXT_SCALE_KEY);
@@ -11661,9 +11673,12 @@ function closeTideCal(){ tideCalSheet.classList.remove('open'); tideCalScrim.cla
 
 /* The id is what lands in body[data-theme] and what gets stored, so it now matches the name
    the user actually sees instead of the working titles the themes were built under. Parrot
-   Head is the default and carries no data-theme attribute at all - its tokens are the :root
-   ones. Renaming these means every id already saved on a device is stale, so canonThemeId()
-   below translates the old ones; do not drop that map. */
+   Head still owns the :root tokens and carries no data-theme attribute at all, but since
+   v293 it is no longer the DEFAULT - Tequila Sunrise is, because the icon, launch screen
+   and splash all went brand orange in v292 and opening into the teal broke that chain on
+   the one screen the user actually lives in. The default is set in the <body> markup, not
+   here; see DEFAULT_THEME below. Renaming these means every id already saved on a device is
+   stale, so canonThemeId() below translates the old ones; do not drop that map. */
 const THEMES = [
   { id:'parrothead',     name:'Parrot Head',      sw:['#0b1c2b','#2fa39a'] },
   { id:'purplehaze',     name:'Purple Haze',      sw:['#0d1017','#7c6cff'] },
@@ -11683,6 +11698,9 @@ function canonThemeId(id){
   })[id] || id;
 }
 const THEME_KEY = 'theme';
+/* Must match the data-theme on <body> in the markup. Changing one without the other
+   gives a first-run flash in whichever direction they disagree. */
+const DEFAULT_THEME = 'tequilasunrise';
 function applyTheme(id){
   id = canonThemeId(id);                  // a stale id must never reach the attribute
   if(id === 'parrothead') document.body.removeAttribute('data-theme');

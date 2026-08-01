@@ -7,6 +7,43 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 9:55 PM EDT · v293 · Opens on Tequila Sunrise
+------------------------------------------------------------------------------
+A fresh copy of the app now opens on TEQUILA SUNRISE instead of Parrot Head.
+v292 took the icon, the launch screen and the splash to brand orange, and the
+chain then broke at the last step: orange all the way in, and teal on the one
+screen the user actually lives in. Tequila Sunrise's accent is #ff7a3d against
+a #1a0d12 ground, near enough to the #f2660c brand to read as one app.
+
+This only ever touches a device with NO theme stored -- first run, cleared
+website data, a new phone. Anyone who has picked a theme keeps it; that read
+has always been there (storeGet(THEME_KEY) on the startup path) and is
+untouched, including Parrot Head, which is still a normal choice on the picker
+and still owns the :root tokens.
+
+The default is set as data-theme on <body> IN THE MARKUP, not applied in JS.
+The stored theme is awaited, so a default applied on load would paint Parrot
+Head teal and snap to orange a frame later -- the same reason gauges-off starts
+on the body. Measured on a fresh profile: 153 sampled animation frames, one
+distinct (data-theme, --teal) state, orange from the first. DEFAULT_THEME
+beside THEME_KEY must stay equal to that markup attribute; disagree and you
+get a first-run flash in whichever direction they differ.
+
+The startup path gained an `else applyTheme(DEFAULT_THEME)`. It repaints
+nothing -- the markup is already wearing it -- and exists to light the theme's
+swatch in the picker, which used to sit with NONE selected on a device that had
+never chosen one. Nothing is written to storage, so the default stays a default
+and a later change to it would still reach those users.
+
+Also: <meta name="theme-color"> #060f18 -> #1a0d12. It is static and cannot
+follow the live theme, so it tracks the DEFAULT one; it was Parrot Head's
+darkest token and is now Tequila Sunrise's.
+
+Help, Themes: says which theme a fresh copy opens on and that your own pick
+sticks. No launch PNGs regenerated -- since v292 the splash is brand orange
+independent of theme, so they were already correct.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 9:10 PM EDT · v292 · Orange app icon
 ------------------------------------------------------------------------------
 Help, "Search, Help & View Buttons": the five topic buttons in that section
