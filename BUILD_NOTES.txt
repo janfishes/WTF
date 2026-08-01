@@ -7,6 +7,21 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 9:48 PM EDT · v246 · Installable app
+------------------------------------------------------------------------------
+manifest.json, icon-192.png, icon-512.png and apple-touch-icon.png are now in
+the repo. The page has referenced all four since the head was written, but
+the files only ever lived in ~/Desktop/WTF Files/WTF-Splash-Logo-files/ and
+never made it into the repo — so every load 404'd on them (the console noise
+noted in v245) and Add to Home Screen fell back to a page snapshot instead of
+the redfish icon. Installed from that folder as-is: the manifest declares
+standalone display, ./index.html start URL scoped to ./ (right for the
+GitHub Pages subpath), and the 512 icon doubles as maskable. One fix along
+the way: the apple-touch-icon link pointed at icon-192.png; it now uses the
+purpose-made 180x180 apple-touch-icon.png. The app now installs to a home
+screen with the proper redfish tile on both platforms.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 9:43 PM EDT · v245 · Tail wags
 ------------------------------------------------------------------------------
 The splash redfish wags its tail. The artwork is no longer the 11 KB base64

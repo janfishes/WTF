@@ -1,0 +1,31 @@
+{
+  "name": "WTF Log — Where's The Fish?",
+  "short_name": "WTF Log",
+  "description": "Fishing log and chart for the Halifax River, Ponce Inlet and the grounds off Volusia County.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#10867d",
+  "theme_color": "#10867d",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
