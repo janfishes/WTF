@@ -7,6 +7,18 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 10:01 PM EDT · v249 · Map button label
+------------------------------------------------------------------------------
+Tapping the map-mode button showed two mode names at once ("Topo Satellite"
+and "Hi Res & ICW" on either side of the icon). Broken since v243: the
+click handler wrote the new label into the button's LAST text node, which
+was correct when the icon came first, but v243 moved the words in front of
+the icons app-wide — so the write landed in the trailing whitespace after
+the icon and the old label stayed put. The handler now writes the first
+text node. Verified headless: the button cycles Topo Satellite → Hi Res &
+ICW → Street Map → Topo Satellite showing exactly one name each tap.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 9:57 PM EDT · v248 · Sideways wag
 ------------------------------------------------------------------------------
 The splash tail now wags side to side instead of bobbing. v245's motion was
