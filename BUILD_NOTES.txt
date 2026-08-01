@@ -7,6 +7,35 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 8:00 PM EDT · v237 · Popups stay visible
+------------------------------------------------------------------------------
+Fixes the Waves popup opening with its top half buried under the filter row,
+seen on both the Mac and the iPhone. Two separate timing holes, both closed:
+
+1. The Waves button (and the search jumps to a spot or a logged catch) opened
+   the popup on a fixed 600-650 ms timer racing map.flyTo(), whose real
+   duration scales with the distance flown and routinely runs past a second.
+   When the timer won, the popup opened mid-flight: the auto-pan cleared it,
+   then the rest of the flight re-centred the marker underneath it — parking
+   the popup's top edge behind the filter row. All three jumps now open the
+   popup on the map's moveend (the real "flight over" signal), with an
+   arrival check for the degenerate hops that finish inside flyTo() itself
+   and a timer kept only as a backstop (flyThenOpen()).
+
+2. The buoy popup opens around a one-line "Loading…" body and was panned
+   clear for THAT height; the data rows landing a moment later roughly
+   triple it, and a popup grows upward from its anchor — straight back under
+   the filter row. Leaflet only auto-pans at open, so every swap of the buoy
+   popup's body (data, cached data, failure message) now re-runs the pan by
+   hand (repanBuoyPopup()), reusing the furniture padding already measured
+   at open. A popup being dragged has autoPan off, so the re-pan never
+   fights a finger.
+
+Verified headless in Chrome at iPhone (390x844) and Mac (1440x900) sizes:
+after the flight and the content swap, the popup's top edge sits below the
+filter row and the whole popup is inside the map.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 7:40 PM EDT · v236 · Compass self-heals
 ------------------------------------------------------------------------------
 Hardens the compass redraw so it can no longer go dark for a whole session.

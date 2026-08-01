@@ -2509,6 +2509,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v237</b> · Popups stay visible</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v236</b> · Compass self-heals</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v235</b> · Map labels scale</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v234</b> · Help polish</p>
@@ -3301,7 +3302,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 236;
+const BUILD_NUM  = 237;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5654,6 +5655,33 @@ map.on('popupopen', (e)=>{
     requestAnimationFrame(()=>{ if(p.isOpen()) p._adjustPan(); });
   }
 });
+
+/* ---- Fly to a marker, then open its popup on ARRIVAL ----
+   The Waves button and the search jumps used to open their popup on a fixed timer
+   (600-650 ms) racing map.flyTo(), whose real duration scales with the distance flown and
+   routinely runs past a second. When the timer won, the popup opened mid-flight: the
+   padding pan above cleared it, then the rest of the flight re-centred the marker
+   underneath it, parking the popup's top edge behind the filter row -- the buoy popup on
+   a long hop was the reproducible case, Mac and iPhone alike. moveend is the real
+   "flight over" signal, however long the hop. The listener goes on AFTER flyTo() returns,
+   because flyTo starts by stopping any pan already in progress and that stop fires a
+   synchronous moveend, which would open the popup at the start of the flight instead of
+   the end. The degenerate hops (already sitting on the target, animation unavailable)
+   fire their moveend INSIDE flyTo() itself and are caught by the arrival check; the timer
+   survives only as a backstop so no path can strand the popup unopened. */
+function flyThenOpen(mk, latlng, zoom){
+  let done = false;
+  const open = ()=>{
+    if(done) return;
+    done = true;
+    map.off('moveend', open);
+    mk.openPopup();
+  };
+  map.flyTo(latlng, zoom);
+  if(map.getCenter().distanceTo(latlng) < 2 && map.getZoom() === zoom){ open(); return; }
+  map.on('moveend', open);
+  setTimeout(open, 2600);
+}
 
 function wirePopup(popup){
   const node = popup._contentNode;
@@ -8203,6 +8231,21 @@ function renderBuoyFail(el, id, kind, fails){
   el.innerHTML = buoyFailHTML(id, kind, fails);
   const btn = el.querySelector('.buoy-retry');
   if(btn) btn.addEventListener('click', ()=>{ loadBuoyData(id); });
+  repanBuoyPopup(id);
+}
+
+/* The buoy popup opens around a one-line "Loading…" body and gets panned clear of the
+   furniture for THAT height; the data rows that land a moment later roughly triple it,
+   and a popup grows UPWARD from its anchor -- straight back under the filter row.
+   Leaflet only auto-pans at open, so every swap of this popup's body re-runs the pan by
+   hand. The measured padding is already sitting on the popup instance, put there by the
+   popupopen handler; autoPan:false (a popup being dragged) makes _adjustPan a no-op, so
+   this never fights a finger. */
+function repanBuoyPopup(id){
+  const mk = buoyMarkers[id]; if(!mk) return;
+  const p = mk.getPopup();
+  if(!p || !p.isOpen() || typeof p._adjustPan !== 'function') return;
+  requestAnimationFrame(()=>{ if(p.isOpen()) p._adjustPan(); });
 }
 
 async function loadBuoyData(id){
@@ -8213,7 +8256,7 @@ async function loadBuoyData(id){
   // Re-rendered rather than replayed from stored HTML, so the observed line is current.
   if(c && Date.now()-c.at < 5*60000){
     const h = buoyRowsHTML(c.f, c.obsTime, id);
-    if(h){ el.innerHTML = h; return; }
+    if(h){ el.innerHTML = h; repanBuoyPopup(id); return; }
   }
   buoyInFlight[id] = true;
   el.textContent = 'Loading latest buoy data\u2026 ('+BUILD_TAG+')';
@@ -8237,7 +8280,7 @@ async function loadBuoyData(id){
           buoyCache[id] = {f:got.f, obsTime:got.obsTime, at:Date.now()};
           saveBuoyReading(id, got.f, got.obsTime);
           const h = buoyRowsHTML(got.f, got.obsTime, id);
-          if(h){ el.innerHTML = h; return; }
+          if(h){ el.innerHTML = h; repanBuoyPopup(id); return; }
         }
         empties++; fails.push(src.name+': empty');
       }catch(err){ errors++; fails.push(src.name+': '+(err && err.message ? err.message : 'failed')); }
@@ -8256,8 +8299,7 @@ async function loadBuoyData(id){
 document.getElementById('waveBtn').addEventListener('click', ()=>{
   const b = BUOYS.find(x=>x.id===WAVES_PRIMARY) || BUOYS[0];
   const mk = buoyMarkers[b.id];
-  map.flyTo([b.lat, b.lng], Math.max(map.getZoom(), 10));
-  setTimeout(()=> mk.openPopup(), 650);
+  flyThenOpen(mk, [b.lat, b.lng], Math.max(map.getZoom(), 10));
 });
 
 /* ===================== LOCATE ===================== */
@@ -8964,16 +9006,14 @@ function goToSpot(id){
   if(!m) return;
   closeSearch();
   ensureSpotVisible(m.spotRef);
-  map.flyTo([m.spotRef.lat, m.spotRef.lng], Math.max(map.getZoom(), 14));
-  setTimeout(()=> m.openPopup(), 600);
+  flyThenOpen(m, [m.spotRef.lat, m.spotRef.lng], Math.max(map.getZoom(), 14));
 }
 function goToCatch(id){
   const m = catchMarkers.find(x=>x.catchRef.id===id);
   if(!m) return;
   closeSearch();
   if(!showCatches){ showCatches = true; document.getElementById('catchToggle').classList.add('active'); applyFilter(); }
-  map.flyTo([m.catchRef.lat, m.catchRef.lng], Math.max(map.getZoom(), 14));
-  setTimeout(()=> m.openPopup(), 600);
+  flyThenOpen(m, [m.catchRef.lat, m.catchRef.lng], Math.max(map.getZoom(), 14));
 }
 
 searchInput.addEventListener('input', ()=>{
