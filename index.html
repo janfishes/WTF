@@ -2509,6 +2509,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v240</b> · Clearer log cards</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v239</b> · Moon phase logged</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v238</b> · Location before tide</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v237</b> · Popups stay visible</p>
@@ -3184,6 +3185,10 @@ function fmtDate(dstr){
   const d = new Date(dstr+'T00:00:00');
   return d.toLocaleDateString('en-US',{month:'short', day:'numeric', year:'numeric'});
 }
+function fmtDateShort(dstr){ // "2026-07-31" -> "07/31/26" (catch-log cards)
+  const m = (dstr||'').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? m[2]+'/'+m[3]+'/'+m[1].slice(2) : dstr;
+}
 function fmtTime(t){ // "14:30" -> "2:30 PM"
   if(!t) return '';
   const m = t.match(/^(\d{1,2}):(\d{2})/);
@@ -3304,7 +3309,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 239;
+const BUILD_NUM  = 240;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5236,7 +5241,7 @@ function catchMoonStr(c){
   const name = moonPhaseName(ill.phase);
   const word = name === 'New Moon' ? 'new' : name === 'Full Moon' ? 'full'
              : (ill.phase < 0.5 ? 'waxing' : 'waning');
-  return moonPhaseGlyph(ill.phase) + ' ' + pct + '% ' + word;
+  return moonPhaseGlyph(ill.phase, 18) + ' ' + pct + '% ' + word;
 }
 
 /* Older versions saved photos the browser couldn't decode (HEIC especially) as raw
@@ -5801,11 +5806,14 @@ function wirePopup(popup){
 function catchCardHTML(c, showCoords){
   const sp = speciesOf(c.species);
   const sizeBits = [];
-  if(c.length) sizeBits.push(c.length+'"');
-  if(c.weight) sizeBits.push(c.weight+' lb');
+  if(c.length) sizeBits.push('Length '+c.length+'"');
+  if(c.weight) sizeBits.push('Pounds '+c.weight);
   const tide = catchTideStr(c);
   const moon = catchMoonStr(c);
   const wave = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>`;
+  // "Photo location" (the label photo-GPS catches carry) reads as clutter here \u2014 show just "Location".
+  const loc = escapeHTML((c.locationLabel||'').replace(/^photo location$/i,'Location'));
+  const line2 = [tide? wave+' '+tide:'', moon].filter(Boolean).join(' \u00b7 ');
   return `<div class="catch-card">
       <div class="cc-top">
         <span class="cc-species" style="background:${sp.color}">${sp.label}</span>
@@ -5814,7 +5822,7 @@ function catchCardHTML(c, showCoords){
           <button class="cc-del" data-id="${c.id}" title="Delete">\u2715</button>
         </div>
       </div>
-      <div class="cc-meta">${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}${tide? ' \u00b7 '+wave+' '+tide:''}${moon? ' \u00b7 '+moon:''}<br>${escapeHTML(c.locationLabel)}${showCoords? ' \u00b7 '+toDMS(c.lat, c.lng):''}</div>
+      <div class="cc-meta">${fmtDateShort(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''} \u00b7 ${loc}${showCoords? ' \u00b7 '+toDMS(c.lat, c.lng):''}${line2? '<br>'+line2:''}</div>
       ${sizeBits.length? `<div class="cc-size">${sizeBits.join(', ')}</div>`:''}
       ${c.notes? `<div class="cc-notes">${escapeHTML(c.notes)}</div>`:''}
       ${c.photo? (photoIsDrawable(c.photo) ? `<img class="cc-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
@@ -10022,14 +10030,21 @@ function moonPhaseParams(phase){
   if(phase < 0.78) return { rx:0, o:0, i:0 }; // Last Quarter
   return { rx:6, o:0, i:1 }; // Waning Crescent
 }
-function moonPhaseGlyph(phase){
+function moonPhaseGlyph(phase, size){
   const p = moonPhaseParams(phase);
+  const s = size || 13;
   const d = `M12,3 A9,9 0 0,${p.o} 12,21 A${p.rx},9 0 0,${p.i} 12,3`;
-  // Two-tone: black disc is the shadowed hemisphere (base layer, always full-circle),
-  // the lit hemisphere is painted on top in the theme's accent color (e.g. purple in
-  // Purple Haze) — so a full moon renders as a solid accent-colored disc and a new moon
-  // renders as solid black.
-  return `<svg viewBox="0 0 24 24" width="13" height="13"><circle cx="12" cy="12" r="9" fill="#0b1420" stroke="var(--teal)" stroke-width="1.1"></circle><path d="${d}" fill="var(--teal)"></path></svg>`;
+  // Realistic gray-and-white moon, no theme colors: dark-gray shadowed hemisphere
+  // (base disc), off-white lit hemisphere on top, and faint translucent craters over
+  // the whole disc — they read as maria on the lit side and vanish into the shadow.
+  return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" style="vertical-align:${-Math.round(s*0.18)}px;">`+
+    `<circle cx="12" cy="12" r="9" fill="#4a4e54" stroke="#9aa0a6" stroke-width="1"></circle>`+
+    `<path d="${d}" fill="#f1f1ec"></path>`+
+    `<circle cx="9" cy="9" r="1.7" fill="rgba(0,0,0,.13)"></circle>`+
+    `<circle cx="14.5" cy="13.5" r="2.3" fill="rgba(0,0,0,.10)"></circle>`+
+    `<circle cx="10" cy="15.5" r="1.2" fill="rgba(0,0,0,.12)"></circle>`+
+    `<circle cx="15" cy="7.5" r="1.1" fill="rgba(0,0,0,.10)"></circle>`+
+    `</svg>`;
 }
 function slrSiderealTime(d, lw){ return SLR_RAD * (280.16 + 360.9856235 * d) - lw; }
 function slrHoursLater(date, h){ return new Date(date.valueOf() + h * 60 * 60000); }

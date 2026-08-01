@@ -7,6 +7,23 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 8:20 PM EDT · v240 · Clearer log cards
+------------------------------------------------------------------------------
+My Log card cleanup so every number has context:
+
+- Size line is labeled: 'Length 24" · Pounds 5.5' instead of bare '24", 5.5 lb'.
+- Date is compact ##/##/## (07/31/26) via new fmtDateShort(); time unchanged.
+- Line order: first line date · time · location (+ coordinates in My Log),
+  second line tide · moon.
+- Catches located from a photo's GPS carried the label "Photo location";
+  the card now shows just "Location" (render-only strip — the stored record
+  and the log form's preview still say Photo location).
+- Moon glyph redrawn realistic: gray shadowed hemisphere, off-white lit
+  hemisphere, faint crater/maria dots, no theme colors (the Bite sheet's
+  glyph changes too). Bigger in the catch log (18 px vs 13 px) via a new
+  size parameter on moonPhaseGlyph().
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 8:07 PM EDT · v239 · Moon phase logged
 ------------------------------------------------------------------------------
 Every catch now shows the moon phase for the moment it was caught: the small
