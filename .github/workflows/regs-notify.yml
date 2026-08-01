@@ -74,7 +74,7 @@ jobs:
           printf '%s' "$BODY" > /tmp/body.md
           gh issue create \
             --repo "${{ github.repository }}" \
-            --title "FWC changes to WTC" \
+            --title "FWC changes to WTF" \
             --assignee janfishes \
             --body-file /tmp/body.md
 
@@ -102,7 +102,7 @@ jobs:
           jq -n \
             --arg from "WTF Log <onboarding@resend.dev>" \
             --arg to "jan@aceshardware.com" \
-            --arg subject "FWC changes to WTC" \
+            --arg subject "FWC changes to WTF" \
             --arg text "$BODY" \
             '{from:$from, to:[$to], subject:$subject, text:$text}' > /tmp/mail.json
           code=$(curl -sS -o /tmp/mail-response.json -w '%{http_code}' \

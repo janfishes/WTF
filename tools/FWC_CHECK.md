@@ -83,7 +83,7 @@ one sentence or two, never a paragraph.
 
 You do not send mail yourself. Pushing `regs.json` to `main` fires
 `.github/workflows/regs-notify.yml`, which opens a GitHub issue titled
-**FWC changes to WTC** carrying the changelog entry and the diff — and GitHub
+**FWC changes to WTF** carrying the changelog entry and the diff — and GitHub
 mails the repo owner. That is the whole notification path, and it needs no
 credentials, so do not try to send email another way.
 
