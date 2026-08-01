@@ -1,0 +1,67 @@
+# Emails Jan when a fishing regulation changes.
+#
+# Fires on any push to main that touches regs.json -- whether the weekly FWC
+# check made it or a person did -- and opens a GitHub issue. GitHub then mails
+# the repo owner, which is the notification: no SMTP server, no API key, no
+# secret stored in a public repo. The issue is the audit trail as well; close it
+# once you have read it.
+#
+# If the mail ever stops arriving, the setting to check is
+# github.com/settings/notifications -> Watching, and that the repo is watched.
+name: Notify on regulation change
+
+on:
+  push:
+    branches: [main]
+    paths: ['regs.json']
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Read what changed
+        id: diff
+        run: |
+          # The newest dated section of the changelog is the human summary of
+          # this push; the raw diff of regs.json is the receipt underneath it.
+          {
+            echo 'body<<REGS_EOF'
+            echo "FWC regulation data changed in the WTF Log app."
+            echo ""
+            echo "**Updated:** $(python3 -c "import json;print(json.load(open('regs.json'))['updated'])")"
+            echo ""
+            echo "## Latest changelog entry"
+            echo ""
+            awk '/^## /{n++} n==1{print} n==2{exit}' REGS_CHANGELOG.md
+            echo ""
+            echo "## regs.json diff"
+            echo ""
+            echo '```diff'
+            git diff HEAD~1 HEAD -- regs.json | head -200
+            echo '```'
+            echo ""
+            echo "These limits are live in the app now — phones pick them up on the next open."
+            echo "Season Guide > REGULATION CHANGES shows the same entry in the app."
+            echo ""
+            echo "Commit: ${{ github.sha }}"
+            echo 'REGS_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open the notification issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BODY: ${{ steps.diff.outputs.body }}
+        run: |
+          printf '%s' "$BODY" > /tmp/body.md
+          gh issue create \
+            --repo "${{ github.repository }}" \
+            --title "FWC changes to WTC" \
+            --body-file /tmp/body.md
