@@ -7,6 +7,15 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 10:22 AM EDT · v259 · North PO ramp
+------------------------------------------------------------------------------
+Added a new inshore waypoint pin: North PO Causeway Ramp at 29° 08.858' N,
+80° 58.738' W (29.147633, -80.978967), on the north side of the Port
+Orange causeway. To match, the existing "PO Causeway Boat Ramps" pin is
+renamed "South PO Causeway Boat Ramps" (same spot, same id, so anything
+saved against it carries over).
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 1:53 AM EDT · v258 · Faster hi res
 ------------------------------------------------------------------------------
 The Hi Res & ICW view's NAIP imagery now loads through USGS's ArcGIS
