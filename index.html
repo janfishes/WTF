@@ -2374,7 +2374,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div class="zk"><div class="dot" style="background:var(--offshore)"></div>Offshore — natural reefs, artificial sites &amp; wrecks 3.5–39.1 sm (3–34 nm) out</div>
       </div>
       <div class="subhead">Offshore Sites</div>
-      <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Every county site leads with its number, including the two that also carry place names — <b>Site 14 Flagler Ave Reef</b> and <b>Site 15 Sunglow Reef</b> — so they sort and read alongside Sites 1–13 rather than off on their own. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 19.6–39.1 sm (17–34 nm) out and are outside the default view; pan/zoom to find them.</p>
+      <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Every county site leads with its number. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 19.6–39.1 sm (17–34 nm) out and are outside the default view; pan/zoom to find them.</p>
     </div>
     <div id="panel-catches" style="display:none;">
       <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later but that happened earlier drops into place by its own date. Use ✎ to edit an entry or ✕ to delete it. Below are two ways to get your data off this device, and one to bring it back.</p>
@@ -2505,6 +2505,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v254</b> · Cities &amp; creeks</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v253</b> · Ramsey pin moved</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v252</b> · Fab icons first</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v251</b> · Gentler wag</p>
@@ -2975,9 +2976,11 @@ const ZONES = {
 
 const SPOTS = [
   { id:"smith-creek", name:"Smith Creek", zone:"inshore", lat:29.421817, lng:-81.106433, meta:"Creek", species:[] },
+  { id:"bulow-creek", name:"Bulow Creek", zone:"inshore", lat:29.414013, lng:-81.125044, meta:"Creek", species:[] },
   { id:"high-bridge", name:"High Bridge", zone:"inshore", lat:29.40855, lng:-81.100983, meta:"Bridge", species:[] },
   { id:"halifax-creek", name:"Halifax Creek", zone:"inshore", lat:29.384183, lng:-81.089183, meta:"Creek", species:[] },
   { id:"tomoka-basin", name:"Tomoka Basin", zone:"inshore", lat:29.359567, lng:-81.091883, meta:"Basin", species:[] },
+  { id:"strickland-creek", name:"Strickland Creek", zone:"inshore", lat:29.317633, lng:-81.079002, meta:"Creek", species:[] },
   { id:"granada-bridge", name:"Granada Bridge", zone:"inshore", lat:29.287317, lng:-81.051383, meta:"Bridge", species:[] },
   { id:"mason-ave-bridge-n", name:"Mason Ave Bridge N", zone:"inshore", lat:29.231867, lng:-81.021383, meta:"Bridge", species:[] },
   { id:"mason-ave-bridge-s", name:"Mason Ave Bridge S", zone:"inshore", lat:29.230517, lng:-81.020733, meta:"Bridge", species:[] },
@@ -2998,11 +3001,13 @@ const SPOTS = [
   { id:"spruce-creek-mouth", name:"Spruce Creek Mouth", zone:"inshore", lat:29.087750, lng:-80.950944, meta:"Creek", species:[] },
   { id:"three-bridges-s", name:"Three Bridges S", zone:"inshore", lat:29.08635, lng:-80.968633, meta:"Bridge", species:[] },
   { id:"three-bridges-se", name:"Three Bridges SE", zone:"inshore", lat:29.084033, lng:-80.967117, meta:"Bridge", species:[] },
+  { id:"strickland-bay", name:"Strickland Bay", zone:"inshore", lat:29.081200, lng:-80.979800, meta:"Bay", species:[] },
   { id:"strickland-bay-train-trestle", name:"Strickland Bay Train Trestle", zone:"inshore", lat:29.080083, lng:-80.983483, meta:"Train trestle", species:[] },
   { id:"turnbull-bay-n", name:"Turnbull Bay N", zone:"inshore", lat:29.07705, lng:-80.9682, meta:"Bay", species:[] },
   { id:"spruce-creek-se", name:"Spruce Creek SE", zone:"inshore", lat:29.072383, lng:-80.991917, meta:"Creek", species:[] },
   { id:"turnbull-bay-s", name:"Turnbull Bay S", zone:"inshore", lat:29.053333, lng:-80.960867, meta:"Bay", species:[] },
   { id:"turnbull-bay-bridge", name:"Turnbull Bay Bridge", zone:"inshore", lat:29.051217, lng:-80.9598, meta:"Bridge", species:[] },
+  { id:"turnbull-creek", name:"Turnbull Creek", zone:"inshore", lat:29.047550, lng:-80.958600, meta:"Creek", species:[] },
   { id:"nsb-north-causeway-bridge", name:"NSB North Causeway Bridge", zone:"inshore", lat:29.038667, lng:-80.906017, meta:"Bridge", species:[] },
   { id:"aqua-ct", name:"Aqua Ct", zone:"inshore", lat:29.032683, lng:-80.947067, meta:"Inshore spot", species:[] },
   { id:"nsb-south-causeway-bridge", name:"NSB South Causeway Bridge", zone:"inshore", lat:29.023583, lng:-80.917483, meta:"Bridge", species:[] },
@@ -3113,6 +3118,20 @@ const SPOTS = [
   { id:"wp-tata-island", name:"Tata Island", zone:"inshore", lat:29.081685, lng:-80.939863, meta:"Waypoint · Island", wp:true, species:[] },
   { id:"wp-halifax-river2", name:"Halifax River", zone:"inshore", lat:29.087089, lng:-80.937208, meta:"Waypoint · River", wp:true, species:[] },
   { id:"wp-tomoka-river", name:"Tomoka River", zone:"inshore", lat:29.338427, lng:-81.087635, meta:"Waypoint · River", wp:true, species:[] },
+
+  /* ---- City waypoints (v254) — one pin per municipality the Halifax / Indian River
+     North / Mosquito Lagoon run through, each placed mid-waterway off that city's
+     waterfront and verified against NAIP aerial imagery. North to south: ---- */
+  { id:"wp-ormond-beach", name:"Ormond Beach", zone:"inshore", lat:29.295500, lng:-81.055500, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-holly-hill", name:"Holly Hill", zone:"inshore", lat:29.245000, lng:-81.033000, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-daytona-beach", name:"Daytona Beach", zone:"inshore", lat:29.205000, lng:-81.007700, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-south-daytona", name:"South Daytona", zone:"inshore", lat:29.166000, lng:-80.991000, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-daytona-beach-shores", name:"Daytona Beach Shores", zone:"inshore", lat:29.156000, lng:-80.980000, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-port-orange", name:"Port Orange", zone:"inshore", lat:29.140600, lng:-80.977900, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-ponce-inlet", name:"Ponce Inlet", zone:"inshore", lat:29.094000, lng:-80.948400, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-new-smyrna-beach", name:"New Smyrna Beach", zone:"inshore", lat:29.010000, lng:-80.910000, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-edgewater", name:"Edgewater", zone:"inshore", lat:28.974700, lng:-80.888300, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-oak-hill", name:"Oak Hill", zone:"inshore", lat:28.880000, lng:-80.835000, meta:"Waypoint · City", wp:true, species:[] },
 
   /* ---- Marinas (v197, trimmed v198) — every saltwater marina in Volusia County, as
      plain inshore spots; the county's St. Johns River (freshwater) side is deliberately
@@ -3322,7 +3341,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 253;
+const BUILD_NUM  = 254;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }

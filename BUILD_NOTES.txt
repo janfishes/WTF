@@ -7,6 +7,31 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 10:43 PM EDT · v254 · Cities & creeks
+------------------------------------------------------------------------------
+Fourteen new inshore pins, every coordinate verified mid-water against NAIP
+aerial imagery (several rounds of crosshair checks; no pin sits on a bank,
+bar, causeway, or marina breakwater).
+
+Four water bodies the map was missing (no duplicates of existing pins):
+Bulow Creek (29.414013, -81.125044; the lower Volusia stretch through Bulow
+Creek State Park, snapped to the OSM creek centerline), Strickland Creek
+(29.317633, -81.079002; likewise snapped to the centerline), Strickland Bay
+(29.081200, -80.979800; mid-bay — only its train trestle was pinned before),
+and Turnbull Creek (29.047550, -80.958600; the wide bend south of the
+Turnbull Bay Bridge). Filed as plain inshore spots in the north-to-south
+list like their neighbors.
+
+Ten "Waypoint · City" pins — one per municipality the Halifax / Indian
+River North / Mosquito Lagoon run through, each placed mid-waterway off
+that city's waterfront, north to south: Ormond Beach, Holly Hill, Daytona
+Beach, South Daytona, Daytona Beach Shores, Port Orange, Ponce Inlet, New
+Smyrna Beach, Edgewater, Oak Hill.
+
+Also rides along: Jan's trim of the reef-sites help note (dropped the
+sentence about Sites 14/15 carrying place names).
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 10:28 PM EDT · v253 · Ramsey pin moved
 ------------------------------------------------------------------------------
 The Ramsey Pass waypoint pin moved into the middle of the channel, about
