@@ -1,6 +1,6 @@
 {
   "updated": "08/01/26",
-  "source": "FWC recreational saltwater regulations (myfwc.com) — Florida Atlantic, Northeast zone, Volusia County",
+  "source": "FWC recreational saltwater regulations (myfwc.com) \u2014 Florida Atlantic, Northeast zone, Volusia County",
   "species": {
     "amberjack": {
       "size": "28\" fork min (Greater)",
@@ -63,7 +63,7 @@
       ],
       "waters": "both",
       "fwc": "groupers",
-      "note": "Atlantic season opens May 1 — Gag through Aug 1, the rest through Dec 31. Nassau and Goliath are prohibited. Gag vessel limit 2."
+      "note": "Atlantic season opens May 1 \u2014 Gag through Aug 1, the rest through Dec 31. Nassau and Goliath are prohibited. Gag vessel limit 2."
     },
     "hogfish": {
       "size": "16\" fork min",
@@ -86,7 +86,7 @@
       "closed": [],
       "waters": "state",
       "fwc": "unregulated",
-      "note": "Jack Crevalle is unregulated — two fish or 100 lb per person, whichever is more. Almaco and Banded Rudderfish carry their own limits."
+      "note": "Jack Crevalle is unregulated \u2014 two fish or 100 lb per person, whichever is more. Almaco and Banded Rudderfish carry their own limits."
     },
     "mackerel": {
       "size": "12\" fork min Spanish, 24\" fork min King",
@@ -134,7 +134,7 @@
       "closed": [],
       "waters": "state",
       "fwc": "red-drum",
-      "note": "Northeast zone. South of the NSB South Causeway — the Indian River Lagoon zone, which takes in Mosquito Lagoon — Redfish are catch and release only."
+      "note": "Northeast zone. South of the NSB South Causeway \u2014 the Indian River Lagoon zone, which takes in Mosquito Lagoon \u2014 Redfish are catch and release only."
     },
     "shark": {
       "size": "Varies by species",
@@ -158,7 +158,7 @@
       "closed": [],
       "waters": "both",
       "fwc": "snappers",
-      "note": "Atlantic Red Snapper 20\", 2 per person — open in state water, closed in federal. Mangrove is 12\" and 10 per person once you are beyond 3 mi."
+      "note": "Atlantic Red Snapper 20\", 2 per person \u2014 open in state water, closed in federal. Mangrove is 12\" and 10 per person once you are beyond 3 mi."
     },
     "snook": {
       "size": "28\" to 32\"",
@@ -196,7 +196,7 @@
       "closed": [],
       "waters": "state",
       "fwc": "spotted-seatrout",
-      "note": "Northeast zone. South of the NSB South Causeway — the Indian River Lagoon zone — the bag is 2 and the season closes Nov 1 - Dec 31."
+      "note": "Northeast zone. South of the NSB South Causeway \u2014 the Indian River Lagoon zone \u2014 the bag is 2 and the season closes Nov 1 - Dec 31."
     },
     "wahoo": {
       "size": "No size limit",
@@ -211,7 +211,16 @@
       "closed": [],
       "waters": "state",
       "fwc": "unregulated",
-      "note": "Gulf Kingfish (whiting) is unregulated — two fish or 100 lb per person, whichever is more."
+      "note": "Gulf Kingfish (whiting) is unregulated \u2014 two fish or 100 lb per person, whichever is more."
     }
-  }
+  },
+  "changes": [
+    {
+      "date": "08/01/26",
+      "lines": [
+        "First published. Every limit read off FWC's own species pages that day.",
+        "Ten values were corrected against what the app had carried since Build 279 \u2014 Triggerfish (bag 1 to 10, and no January\u2013April closure on the Atlantic), Seatrout (3 fish, none over 19\"), Redfish (4 per vessel), Amberjack (April only), King Mackerel (2), Sheepshead (50 per vessel in March and April), Permit (2 over 22\" per vessel), Black Drum (one fish over 24\" allowed), Atlantic Red Snapper (open in state water), and the 2-fish/100-lb default bag on Bonito, Jack Crevalle and Whiting."
+      ]
+    }
+  ]
 }

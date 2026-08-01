@@ -74,17 +74,37 @@ one sentence or two, never a paragraph.
    - Do **not** touch `index.html`, `BUILD_NUM`, or anything else. This job
      publishes data, never a build. The baked-in table in index.html is the
      offline fallback and is allowed to fall behind.
-6. Sanity-check before pushing: `python3 -c "import json;d=json.load(open('regs.json'));print(d['updated'],len(d['species']))"`
-   must print today's date and **23**. The app ignores a file with fewer than 10
+6. Sanity-check before pushing: `python3 -c "import json;d=json.load(open('regs.json'));print(d['updated'],len(d['species']),len(d['changes']))"`
+   must print today's date, **23**, and a changes count one higher than before. The app ignores a file with fewer than 10
    species, so a truncated write would silently strand every phone on the old
    table.
+
+## The notification
+
+You do not send mail yourself. Pushing `regs.json` to `main` fires
+`.github/workflows/regs-notify.yml`, which opens a GitHub issue titled
+**FWC changes to WTC** carrying the changelog entry and the diff — and GitHub
+mails the repo owner. That is the whole notification path, and it needs no
+credentials, so do not try to send email another way.
+
+Two things you owe that workflow:
+
+- Put the human summary in `REGS_CHANGELOG.md` under a `## MM/DD/YY` heading.
+  The workflow lifts the newest dated section verbatim into the issue, so write
+  that section for someone reading it on a phone, not for a diff reader.
+- Add the same summary to the `changes` array at the top of `regs.json`:
+  `{"date": "MM/DD/YY", "lines": ["...", "..."]}`, newest first. That array is
+  what the app shows behind the REGULATION CHANGES button under the season
+  bars, so it is the only version of the story most people will ever see. Keep
+  it to one or two plain sentences per change: which fish, what it was, what it
+  is now.
 
 ## Report back
 
 End your run with a short summary — what you checked, what moved, what you
 skipped and why. If anything changed, lead with it in plain words: which fish,
-old value, new value. That summary is the notification; write it for someone
-reading it on a phone.
+old value, new value. The issue GitHub opens is what actually reaches Jan; this
+summary is what he sees if he opens the run.
 
 ## Watch list
 

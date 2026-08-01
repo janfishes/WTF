@@ -7,6 +7,31 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 6:55 PM EDT · v287 · Regulation changes log
+------------------------------------------------------------------------------
+A REGULATION CHANGES button under the season bars opens the log of every
+limit that has moved -- date, then a plain sentence or two per change. Closed
+by default: interesting the day a limit moves, clutter every other day.
+
+The entries live in a `changes` array in regs.json and are replaced wholesale
+when a newer regs.json lands, exactly like the limits are, so the app's own
+account of what changed always matches the numbers it is showing. The build
+ships the first entry as its offline fallback.
+
+EMAIL ON A REGULATION CHANGE. New workflow .github/workflows/regs-notify.yml
+fires on any push to main that touches regs.json -- the weekly FWC check's or
+a person's -- and opens a GitHub issue titled "FWC changes to WTC" carrying
+the newest changelog section and the regs.json diff. GitHub mails the repo
+owner, so the notification needs NO SMTP server and NO API key in a public
+repo; the issue doubles as the audit trail. If mail ever stops arriving the
+setting to check is github.com/settings/notifications, not this workflow.
+
+tools/FWC_CHECK.md now tells the scheduled agent it must write BOTH the
+changelog section (which the workflow lifts verbatim into the issue) and the
+regs.json `changes` entry (which the app shows), and that it must never try
+to send mail another way.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 6:35 PM EDT · v286 · Update date stands out
 ------------------------------------------------------------------------------
 "(Last updated MM/DD/YY)" in the Internet-required box is now the accent
