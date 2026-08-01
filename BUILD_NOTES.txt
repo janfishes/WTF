@@ -7,6 +7,21 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 3:55 PM EDT · v278 · Gulf flounder & kingfish back
+------------------------------------------------------------------------------
+Reversing half of v277 at Jan's word: both Gulf-named fish ARE caught here, so
+they go back on the Season Guide's variety lists. FLOUNDER reads Southern,
+Gulf again, and WHITING reads Southern, Gulf, Northern — the northern kingfish
+picked up in v277 stays, so the whiting row now names all three of the
+kingfish that show in the surf on this coast.
+
+The other two v277 changes stand: SNOOK (Common, Large-scale & Small-scale
+Fat) and SHARK cut to Bull, Spinner, etc.
+
+Rule for later: a fish is listed by whether it is caught in Volusia water, not
+by what its name says about where it lives.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 3:52 PM EDT · v277 · Atlantic varieties only
 ------------------------------------------------------------------------------
 Corrections to the Season Guide's variety lists, one build after they went in:
