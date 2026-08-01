@@ -7,6 +7,28 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 7:45 PM EDT · v288 · Internet note rewritten
+------------------------------------------------------------------------------
+The boxed Internet warning had gone STALE against its own app. It still said
+the limits "only change when a new build downloads" and told the reader to
+watch for the tap-to-reload pill -- true up to v284, wrong from v285, when the
+limits moved into regs.json and started arriving on their own. A warning that
+misdescribes the thing it is warning about is worse than no warning.
+
+It now says what actually happens: the limits ride in a small file beside the
+app, a correction reaches you the next time you open with a signal (no new
+build, no download), REGULATION CHANGES below says what moved, a scheduled job
+re-reads FWC weekly, and offline you keep the last set your phone saw. The
+FWC links still need a signal. Jan's original headline sentence is untouched.
+
+"Trust But Verify!" is now teal, the same accent as the (Last updated) stamp
+it sits beside -- the two are the same instruction: check how old this is,
+then go check the source.
+
+Verified today, live: pushing regs.json fired regs-notify.yml, which opened
+issue #1 "FWC changes to WTC" carrying the changelog entry and the diff.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 6:55 PM EDT · v287 · Regulation changes log
 ------------------------------------------------------------------------------
 A REGULATION CHANGES button under the season bars opens the log of every

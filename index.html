@@ -1681,6 +1681,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .regs-log-entry:last-child{margin-bottom:2px;}
   .regs-log-date{font-family:'JetBrains Mono',monospace; font-size:calc(11px * var(--ts)); color:var(--teal); font-weight:700; letter-spacing:.02em;}
   #panel-season .regs-stamp{color:var(--teal); letter-spacing:.01em;}
+  /* The sign-off carries the same accent as the date it sits beside — the two are the
+     same instruction: check how old this is, then go check the source. */
+  #panel-season .tbv{color:var(--teal);}
   .season-row .fwc-lnk{color:var(--teal); font-weight:600; text-decoration:none; white-space:nowrap;}
   .season-row .fwc-lnk:active{opacity:.6;}
   .months{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:2px;}
@@ -2467,7 +2470,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Each species row shows the 12 months of the year, January through December. Brighter cells mean a better bite that month; dim cells are the slow season. <b>Black cells are months closed to harvest</b> — a season that opens or closes mid-month blacks out the whole month, so check the exact dates before you keep a fish. These are general patterns for the Ponce de Leon Inlet region — not a substitute for a fishing report.</p>
       <p class="sheet-note">The <b>Size</b> and <b>Bag Limit</b> beside each name are recreational limits for Florida <b>Atlantic</b> waters off Volusia County, in inches (") of total length unless the line says fork, and fish per person per day unless it says otherwise. Each row also says which water its limits govern: <b>Inside 3 mi</b> is Florida state water — the dashed line the map draws off the beach is that boundary — and <b>Inside &amp; beyond 3 mi</b> means the same limits hold out in federal water as well. Volusia is split by zone lines for redfish and seatrout — both at the <b>NSB South Causeway</b>, with the lagoon rule in the row’s own note — and federal seasons move mid-year. Every row carries an <b>FWC ↗</b> link straight to FWC’s page for that fish; those open only with a connection. <b>Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
       <p class="sheet-note"><b>Possession.</b> A bag limit is a <b>daily</b> limit and, on the water, a <b>possession</b> limit — what you may have aboard at any one time, however many days you have been out. Limits are <b>per person</b> unless the line names a vessel limit, and a vessel limit caps the whole boat no matter how many are aboard. You cannot keep a fish for someone who is not fishing, and on a for-hire trip the captain and crew may not keep a bag of many species. Fish must stay <b>whole</b> — head and tail attached — until they are ashore, so they can be measured; a filleted fish on the boat is a violation even if it was legal when you caught it. A few federal fisheries allow a two-day possession on a documented multi-day trip; nothing in state water does.</p>
-      <p class="sheet-note backup-warn">⚠ <b>Internet is required to update the app for the current FWC regulations.</b> <b class="regs-stamp">(Last updated <span id="regsAsOf">—</span>.)</b> Every line was read off FWC’s own pages on that date. They are stored in the app and travel offline with it, but they only change when a new build downloads — and the <b>FWC ↗</b> links on each row need a signal to open. Open the app with a connection now and then — when a newer build is live you'll get a tap-to-reload pill. <b>Trust But Verify!</b> <span style="font-size:1.25em; vertical-align:-2px;">🔍</span></p>
+      <p class="sheet-note backup-warn">⚠ <b>Internet is required to update the app for the current FWC regulations.</b> <b class="regs-stamp">(Last updated <span id="regsAsOf">—</span>.)</b> Every line was read off FWC’s own pages on that date. The limits ride in a small file beside the app, so when FWC moves one the correction reaches you the next time you open with a signal — <b>no new build, no download</b> — and <b>REGULATION CHANGES</b> below says what moved. A scheduled job re-reads FWC’s pages every week. Offline you keep the last set your phone saw, and the <b>FWC ↗</b> links need a signal to open. <b class="tbv">Trust But Verify!</b> <span style="font-size:1.25em; vertical-align:-2px;">🔍</span></p>
       <p class="sheet-note" style="margin-bottom:2px;"><b>The season bars and the size and bag limits below are for the Northeast zone</b> — the water north of the NSB South Causeway. South of it, in the Indian River Lagoon zone that takes in Mosquito Lagoon, redfish, seatrout and a few others read differently; each row’s note says how.</p>
       <p class="sheet-note" id="regsFresh" style="display:none; color:var(--teal); margin:-4px 0 8px;"></p>
       <div id="seasonChart"></div>
@@ -2710,6 +2713,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v288</b> · Internet note rewritten</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v287</b> · Regulation changes log</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v286</b> · Update date stands out</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v285</b> · Limits update themselves</p>
@@ -3792,7 +3796,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 287;
+const BUILD_NUM  = 288;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
