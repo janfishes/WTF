@@ -7,6 +7,23 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 1:52 PM EDT · v269 · Harbor Oaks pin spaced
+------------------------------------------------------------------------------
+The Harbor Oaks city pin moved 280 m south, 29.108039/-80.968944 →
+29.105500/-80.968800, to open the gap to the Rose Bay Kayak Launch (US-1)
+pin from 127 m to 409 m. It stays in the same lead off the neighbourhood's
+own waterfront, alongside the peninsula's southern half, and stays over
+water — checked on the z15 topo tile, 7 of 9 sample points blue.
+
+The two candidate positions further north (29.1065 and 29.1060) both read
+olive marsh on the tile, not water, so south was the only direction with
+room. Going further south than 29.1055 trades one crowded pair for another:
+the Rose Bay bridge pin is 360 m away at this position and closes fast.
+
+The pin no longer sits under the topo's printed "Harbor Oaks" label, which
+is the one thing given up here — the label is 280 m north of the pin now.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 1:44 PM EDT · v268 · Harbor Oaks and Rose Bay
 ------------------------------------------------------------------------------
 Two pins added on request. Spot total 202 → 204.
