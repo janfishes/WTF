@@ -7,6 +7,27 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 9:07 PM EDT · v243 · Consistent buttons
+------------------------------------------------------------------------------
+Every command in the app now reads word-then-icon, and icons grew a touch.
+
+- Action-stack pills (Catch, Spot, Bite, Tides, Waves, My Log, Seasons,
+  Compass, map mode, Locate Me): icon moved to the right of the word, icon
+  size 13 -> 15 px (scales with the A control as before).
+- All labeled mini buttons follow suit: Drop pin, My location, Clear, the
+  NOAA tide auto-detect, backups (Save/Share/Import), Print this help,
+  Create & Calibrate Tide Stations, offline-map buttons, street-map/retry,
+  Restore built-in spots, Upload file, Crop/Revert. Trailing emoji/glyph
+  icons render ~25% larger via a shared .bi span; EDIT/UNDO/DELETE glyphs
+  got the same bump.
+- + Catch sheet's Inshore/Offshore pills fixed twice over. Their colors
+  were deliberately reversed (selected = hollow black); now they match the
+  map's top-row pills — bright zone fill = selected, black = deselected.
+  And the tap logic was "solo" (tapping one changed the OTHER pill), which
+  looked broken; they are now plain independent on/off toggles. Both off
+  simply empties the known-spot list until one is re-lit.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 8:54 PM EDT · v242 · Undo everywhere
 ------------------------------------------------------------------------------
 UNDO, and labeled all-caps action buttons across the app.
