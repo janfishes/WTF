@@ -7,6 +7,62 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 9:10 PM EDT · v292 · Orange app icon
+------------------------------------------------------------------------------
+Help, "Search, Help & View Buttons": the five topic buttons in that section
+carried their glyph AFTER the word -- Search 🔍, Help ?, Themes 🎨, Text Size A,
+Map Credits ⓘ -- while every topic button above them (Catch, Spot, Bite, ...)
+already led with its icon. The glyph now sits to the LEFT of the label on all
+of them, wrapped in a .ht-g span that carries the same 6px right margin the
+inline-SVG glyphs get, so the whole help page reads on one left edge. Eye was
+already icon-first and is untouched.
+
+THE APP IS ORANGE NOW. #f2660c, declared once as --brand on body and NOT
+themed. Jan's brief was the most visible colour: a saturated warm hue advances
+against the photo wallpapers phones carry, and orange is rare on a home screen
+where blue is everywhere -- and it is the one hue that survives amber polarized
+lenses, which is the app's whole working environment. It replaces the purple
+that was drawn earlier the same evening and never pushed.
+
+  * Icons. icon-512.png, icon-192.png and apple-touch-icon.png rebuilt by the
+    new tools/build_icon.py: orange ground, WTF lettering above a solid white
+    redfish. The artwork is the app's OWN geometry, not a redraw -- <path
+    id="fishP"> in index.html is a pure polygon trace, so the generator reads
+    its four subpaths straight out of the page (outline, W, T, F), fills the
+    outline solid instead of knocking the letters out of it, sets the lettering
+    above, and adds the eye. Rendered 4x and downsampled: no font or SVG
+    renderer in the dependency chain. Content sits inside the central 80% for
+    Android's maskable crop; the files are full-bleed squares because iOS and
+    Android round the corners themselves.
+
+  * Splash. The ground was color-mix(var(--teal) 65%, #000) -- derived, so every
+    theme got its own deepened splash. It is now color-mix(var(--brand) 80%,
+    #000) = #c2520a, fixed. That reads like a loss and is not: the 11 launch
+    PNGs are screenshots of this element and iOS bakes ONE of them in at
+    Add-to-Home-Screen time, so a themed splash could only ever match the
+    DEFAULT theme's launch image -- every other theme got a teal launch screen
+    handing off to a differently coloured splash (the mismatch v256 accepted).
+    Pinned to the brand, launch -> splash is seamless on every theme, and it
+    matches the icon. The mix is 80% where the teal wanted 65% because orange
+    sits far higher in luminance: at 65% the black app name falls to 3.2:1. At
+    80% the two lines land at 4.66:1 (white tagline) and 4.51:1 (black name),
+    the same balance the teal splash had.
+
+  * Launch screens. All 11 PNGs in launch/ regenerated from the live splash by
+    the new tools/build_launch.js (puppeteer-core + Chrome, 128-colour quantize,
+    ~33-68 KB each). It freezes the splash by handing the splash IIFE a null
+    #splash so its own `if(!sp) return;` fires, rather than racing the 1.7-4.2s
+    drop. The device table in that script and the <link rel=
+    "apple-touch-startup-image"> table in the head must stay in step.
+
+  * manifest.json background_color and theme_color: #10867d -> #c2520a, keeping
+    the standing convention that they equal the splash ground.
+
+iPhones read the icon and the launch images at Add-to-Home-Screen time. Neither
+changes on a phone until the old home-screen icon is deleted and the app re-
+added.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 7:05 PM EDT · v291 · Change log trimmed
 ------------------------------------------------------------------------------
 REGULATION CHANGES entries no longer cite build numbers -- a reader has no
