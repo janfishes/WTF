@@ -7,6 +7,33 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 8:07 PM EDT · v239 · Moon phase logged
+------------------------------------------------------------------------------
+Every catch now shows the moon phase for the moment it was caught: the small
+line-art moon glyph (the same one the Bite sheet draws), the % lit, and
+whether the moon was waxing or waning — e.g. "82% waxing". It appears on the
+date/tide line of the My Log cards (and the stacked-diamond popup that reuses
+them) and in the single-catch map popup's meta row.
+
+Nothing new is stored on the catch record. The phase is recomputed at render
+time from the catch's date and time with the on-device lunar astronomy the
+Bite forecast already uses (catchMoonStr), so it fills in for every existing
+catch, imports included, and stays correct if a date is edited. A catch
+without a time is read at noon — the lit fraction moves ~0.4% per hour, so
+the worst case is off by a couple of percent. New Moon and Full Moon say
+"new"/"full" instead of a direction. Works fully offline.
+
+------------------------------------------------------------------------------
+Build 2026-07-31 · 8:02 PM EDT · v238 · Location before tide
+------------------------------------------------------------------------------
+In the Log a Catch form the Location section (Inshore/Offshore switches, the
+known-spot list, Drop pin / My location / Clear, and the location preview)
+now sits ABOVE the Tide section instead of below it. Tide auto-detect needs a
+location already set, so the form now reads in the order you actually fill it
+in: species, date & time, location, then tide. The help's + Catch walkthrough
+was reworded to match.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 8:00 PM EDT · v237 · Popups stay visible
 ------------------------------------------------------------------------------
 Fixes the Waves popup opening with its top half buried under the filter row,

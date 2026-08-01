@@ -2434,7 +2434,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Button Actions</div>
       <p class="sheet-note">The pills on the right are shortcuts to the app's main actions.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). Set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> switches just above the location list enable you to narrow the options down according to where you are fishing.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> switches just above the location list enable you to narrow the options down according to where you are fishing.</p>
       <div class="subhead">Photos</div>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and CLOSE ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
@@ -2454,7 +2454,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">You can add gauges of your own. Open <b>⚙ Create &amp; Calibrate Tide Stations</b> in Help and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away. A saved station gets a pin of its own, up whenever <b>Tides</b> is.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">⚙ Create &amp; Calibrate Tide Stations</button></div>
       <p class="sheet-note" style="margin-top:10px;"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to a National Data Buoy Center (NDBC) buoy pin and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled straight from NOAA's National Data Buoy Center, each with its observation time. Needs internet to <b>refresh</b>, but no longer to be useful: the last reading is <b>kept on the device</b>, so if the fetch fails you still get the numbers with <b>how old they are</b> written on them — <i>Last reading 3h ago</i>. Three-hour-old figures still tell you whether it is building or laying down. When it can’t refresh it also says <b>why</b>, since the three causes are not the same problem: <b>no internet</b> (nothing to retry until you have signal), <b>couldn’t reach NDBC</b> (the relay, which goes down more often than the buoy — worth another try in a minute), or <b>the station isn’t reporting</b> (NDBC answered and sent nothing, so it is the buoy rather than your connection, and it will not clear up in a minute). Whichever it says, there is a <b>Try again</b> button under it, and the proxy-and-error detail is folded away under <b>Details</b> for the rare day it needs diagnosing. The buoy is <b>41070</b>, <b>13.8 nm</b> north-north-east of Ponce Inlet, off Daytona — measured from the compass rose, at 023° true. Its position is printed on the pin’s own popup in <b>both forms</b>: <b>29°17.340&#8242;N 80°48.180&#8242;W</b>, the deg-and-decimal-minutes every other pin here uses and what you would key into the plotter, with the decimal degrees in brackets after it, <b>(29.289 N 80.803 W)</b>, which is how NDBC’s own station listing writes it.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later, but that happened earlier, drops into place by its own date.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later, but that happened earlier, drops into place by its own date. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses, so it fills in automatically for every catch, old and new.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Guide</b> opens the Season Guide — month-by-month tables for every species (see <b>Reading the Season Month Bars</b> below), plus map-zone and offshore notes.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> <b>Compass</b> puts a chart-style compass rose on the water just off the inlet mouth and gives you the run out to any offshore mark. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose out to that pin. Every leg is labelled the same way: the <b>heading to steer</b> and the <b>run in statute miles</b>, on one row centred on the line and running along it — <b>156°&nbsp;&nbsp;4.3 sm</b>. With a <b>single pin</b> up, the heading carries its <b>reciprocal</b> as well — <b>156°/336°&nbsp;&nbsp;4.3 sm</b> — read like any to/from pair: the first number is the course out, the second is the course home to the inlet, since with one pin the line out and the line home are the same track. On a route of several legs the reciprocal stays off — there it would be the way back along the route, not home, and the trip home is the route reversed. With one bearing on the row nothing can be confused with anything, so the words <i>To</i> and <i>From</i> are gone too. The gap between the heading and the run <b>opens up as you zoom in</b> and closes again as you zoom out, where every pixel of label crowds something. The line is cut away behind the text, so nothing is drawn through the numbers, and on a leg too short for both the <b>heading stands alone</b>. String a <b>second leg</b> on and the <b>From</b> comes off: a route is one-way, and its return is the route read backwards. The <b>To</b> stays on the leg out of the inlet, where there is a heading home to tell it apart from; on every leg after that the bearing stands on its own, since there is nothing to distinguish it from. In place of the word <i>To</i> the heading carries a small <b>needle</b>, the same solid needle the rose draws on its cardinal points, pointing the way you would travel; it flips end for end where the label has been turned to keep its digits upright, so it always points along the leg rather than back down it. Headings are <b>magnetic</b>, so they read the same as your chartplotter and your steering compass. Rather than hang an <b>M</b> off every number, the rose says it once for the whole overlay: <b>MAGNETIC · VAR 7.3°W 2026</b> is printed beneath it, which is how a paper chart declares the variation on its own rose. Offshore popups say <i>(magnetic)</i> once beside their to/from figures, and a drop list carries one note at its head rather than an M on all nineteen rows. On a route of several legs the reciprocal is not printed — a second number on every line is clutter, and the run home is the route read backwards; the single-pin run is where the pair lives. The label slides itself along the line to wherever it won't be covered by the rose, the pin, or any other site's name tag (the site's popup and its drop list carry the distance as well, in both units, along with the reciprocal if you want it).</p>
       <p class="sheet-note">It works on <b>offshore sites only</b> — the county reef Sites, the wrecks and ledges, any offshore site you've added yourself, and your own logged catches out there. Inshore spots, launches, and inshore catches are left alone, since a bearing from the inlet is no use for a creek or a bridge. While the compass is switched on, <b>tapping an offshore pin shows its bearing instead of opening its details</b> — the popup would sit right on top of the line you asked for. Switch the compass off and pins open normally again.</p>
@@ -2509,6 +2509,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v239</b> · Moon phase logged</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v238</b> · Location before tide</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v237</b> · Popups stay visible</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v236</b> · Compass self-heals</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v235</b> · Map labels scale</p>
@@ -2583,13 +2585,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <input type="time" id="logTime">
     </div>
 
-    <label class="field-label">Tide (optional)</label>
-    <div class="chiprow wrap" id="tideRow"></div>
-    <div class="loc-btns">
-      <button class="mini-btn" id="tideAuto"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Auto-detect from NOAA (needs location + date/time)</button>
-    </div>
-    <p class="storage-note" style="text-align:left; margin-top:7px;" id="tideStatus"></p>
-
     <label class="field-label">Location</label>
     <div class="chiprow wrap" id="logZoneRow" style="margin-bottom:8px;">
       <div class="chip active" data-zone="inshore">Inshore</div>
@@ -2602,6 +2597,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="clearLoc">✕ Clear</button>
     </div>
     <div class="loc-preview" id="locPreview">No location set yet.</div>
+
+    <label class="field-label">Tide (optional)</label>
+    <div class="chiprow wrap" id="tideRow"></div>
+    <div class="loc-btns">
+      <button class="mini-btn" id="tideAuto"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Auto-detect from NOAA (needs location + date/time)</button>
+    </div>
+    <p class="storage-note" style="text-align:left; margin-top:7px;" id="tideStatus"></p>
 
     <label class="field-label">Size (optional)</label>
     <div class="field-row">
@@ -3302,7 +3304,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 237;
+const BUILD_NUM  = 239;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5220,6 +5222,23 @@ function speciesOf(key){ return SPECIES[key] || SPECIES_UNKNOWN; }
 
 function catchTideStr(c){ return c.tideDetail ? c.tideDetail : (c.tide ? (TIDE_LABELS[c.tide] || c.tide) + ' tide' : ''); }
 
+/* Moon phase for a catch, from the same on-device astronomy the Bite sheet uses.
+   Nothing is stored on the record — the phase is recomputed from date+time each
+   render, so it's always right even for imported or edited catches. A catch with
+   no time is read at noon; the moon moves ~0.4%/hour of lit fraction, so the
+   worst-case error from that is a couple of percent. */
+function catchMoonStr(c){
+  if(!c.date) return '';
+  const d = new Date(c.date + 'T' + (c.time || '12:00'));
+  if(isNaN(d)) return '';
+  const ill = moonIllumination(d);
+  const pct = Math.round(ill.fraction * 100);
+  const name = moonPhaseName(ill.phase);
+  const word = name === 'New Moon' ? 'new' : name === 'Full Moon' ? 'full'
+             : (ill.phase < 0.5 ? 'waxing' : 'waning');
+  return moonPhaseGlyph(ill.phase) + ' ' + pct + '% ' + word;
+}
+
 /* Older versions saved photos the browser couldn't decode (HEIC especially) as raw
    data URLs, which then render as a black rectangle. Spot those and show a note
    instead of a black box, so it's obvious the photo needs re-adding. */
@@ -5240,10 +5259,11 @@ function catchPopupHTML(c){
   if(c.length) sizeBits.push(c.length+'"');
   if(c.weight) sizeBits.push(c.weight+' lb');
   const tide = catchTideStr(c);
+  const moon = catchMoonStr(c);
   return `<div class="pop">
     ${c.photo? (photoIsDrawable(c.photo) ? `<img class="pop-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
     <div class="pop-top"><div class="pop-name">${sp.label}</div><div class="pop-zone" style="background:${sp.color}; color:#04141e;">Catch</div></div>
-    <div class="pop-meta"><span>${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}</span>${tide? `<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> ${tide}</span>`:''}<span>${toDMS(c.lat, c.lng)}</span></div>
+    <div class="pop-meta"><span>${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}</span>${tide? `<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> ${tide}</span>`:''}${moon? `<span>${moon}</span>`:''}<span>${toDMS(c.lat, c.lng)}</span></div>
     <div class="pop-desc">${escapeHTML(c.locationLabel)}${sizeBits.length? ' \u00b7 '+sizeBits.join(', '):''}</div>
     ${c.notes? `<div class="pop-tip">${escapeHTML(c.notes)}</div>`:''}
     <div class="loc-btns" style="margin-top:2px;">
@@ -5784,6 +5804,7 @@ function catchCardHTML(c, showCoords){
   if(c.length) sizeBits.push(c.length+'"');
   if(c.weight) sizeBits.push(c.weight+' lb');
   const tide = catchTideStr(c);
+  const moon = catchMoonStr(c);
   const wave = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>`;
   return `<div class="catch-card">
       <div class="cc-top">
@@ -5793,7 +5814,7 @@ function catchCardHTML(c, showCoords){
           <button class="cc-del" data-id="${c.id}" title="Delete">\u2715</button>
         </div>
       </div>
-      <div class="cc-meta">${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}${tide? ' \u00b7 '+wave+' '+tide:''}<br>${escapeHTML(c.locationLabel)}${showCoords? ' \u00b7 '+toDMS(c.lat, c.lng):''}</div>
+      <div class="cc-meta">${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}${tide? ' \u00b7 '+wave+' '+tide:''}${moon? ' \u00b7 '+moon:''}<br>${escapeHTML(c.locationLabel)}${showCoords? ' \u00b7 '+toDMS(c.lat, c.lng):''}</div>
       ${sizeBits.length? `<div class="cc-size">${sizeBits.join(', ')}</div>`:''}
       ${c.notes? `<div class="cc-notes">${escapeHTML(c.notes)}</div>`:''}
       ${c.photo? (photoIsDrawable(c.photo) ? `<img class="cc-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
