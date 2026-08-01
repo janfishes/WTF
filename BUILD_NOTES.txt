@@ -7,6 +7,22 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 6:35 PM EDT · v286 · Update date stands out
+------------------------------------------------------------------------------
+"(Last updated MM/DD/YY)" in the Internet-required box is now the accent
+colour (--teal) instead of the gold/rust emphasis the rest of that box is set
+in, at Jan's word. It is the one fact in the box a reader comes back to
+check, and in gold it read as more warning prose. Follows the theme accent,
+so it stays distinct on every theme rather than being pinned to one hex.
+
+Also added tools/FWC_CHECK.md — the standing instructions for the weekly FWC
+check: which numbers to read (Atlantic, Northeast zone, never Gulf), what
+each regs.json field means, when to skip a species rather than guess, and the
+23-species sanity check to run before pushing. The scheduled agent is pointed
+at that file rather than carrying the spec in its prompt, so the rules live
+in the repo and can be edited like anything else.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 6:20 PM EDT · v285 · Limits update themselves
 ------------------------------------------------------------------------------
 The Season Guide's limits now come from regs.json and can change WITHOUT a
