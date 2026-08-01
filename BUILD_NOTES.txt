@@ -7,6 +7,24 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 3:52 PM EDT · v277 · Atlantic varieties only
+------------------------------------------------------------------------------
+Corrections to the Season Guide's variety lists, one build after they went in:
+
+  * SNOOK now carries its own list — Common, Large-scale & Small-scale Fat.
+  * SHARK cut to the two most commonly caught here — Bull, Spinner, etc. —
+    rather than reading as a field guide (Blacktip and Bonnethead are out).
+  * The Gulf-named fish are off the lists, since this app's water is the
+    Atlantic side: FLOUNDER is now Southern alone, and WHITING reads
+    Southern, Northern.
+
+Worth a second look if a Volusia beach catch says otherwise: Gulf flounder
+(Paralichthys albigutta) and Gulf kingfish (Menticirrhus littoralis) both DO
+turn up in the Atlantic surf here despite their names — gulf kingfish is a
+common surf whiting on this coast. They were cut because the names read as
+Gulf-only in the guide; say the word and either goes back.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 3:46 PM EDT · v276 · Varieties in the guide
 ------------------------------------------------------------------------------
 Every generic row in the Season Guide now names the fish it actually covers,
