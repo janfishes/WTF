@@ -7,6 +7,22 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 10:03 PM EDT · v250 · Left-right wag
+------------------------------------------------------------------------------
+The splash tail's two sweeps now read as different sides. v248's pure
+foreshortening compressed the tail identically on both halves of the beat,
+so in silhouette it looked like the tail only ever flapped toward the
+viewer. A side-on silhouette genuinely cannot tell left from right by shape
+alone, so the two half-beats now carry the two classic perspective cues:
+the near-side sweep scales up 6% (closer looks bigger) and holds full
+white; the far-side sweep scales down 7% and dims a touch toward the
+ground color (farther looks smaller and hazier). The tail's fill animates
+independently of the body's — the shared path's fill moved onto each <use>
+so the tail's copy could take keyframes; the spot's black is now set
+explicitly so it stops inheriting. Same joint, same overlap, same
+reduced-motion opt-out (now covering both animations).
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 10:01 PM EDT · v249 · Map button label
 ------------------------------------------------------------------------------
 Tapping the map-mode button showed two mode names at once ("Topo Satellite"
