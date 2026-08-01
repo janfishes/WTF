@@ -63,7 +63,7 @@
       ],
       "waters": "both",
       "fwc": "groupers",
-      "note": "Atlantic season opens May 1 \u2014 Gag through Aug 1, the rest through Dec 31. Nassau and Goliath are prohibited. Gag vessel limit 2."
+      "note": "Atlantic season opens May 1 \u2014 Gag through Aug 1, the rest through Dec 31. Nassau and Goliath are prohibited. Gag vessel limit 2. A State Reef Fish Angler designation is required to fish for Grouper from a private vessel."
     },
     "hogfish": {
       "size": "16\" fork min",
@@ -215,6 +215,13 @@
     }
   },
   "changes": [
+    {
+      "date": "08/01/26",
+      "lines": [
+        "Test of the change-notification path \u2014 no limit moved.",
+        "Added FWC's State Reef Fish Angler requirement to the Grouper note: that designation is required to fish for Grouper, Snapper, Amberjack, Triggerfish or Hogfish from a private vessel, and it renews annually."
+      ]
+    },
     {
       "date": "08/01/26",
       "lines": [
