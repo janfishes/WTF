@@ -7,6 +7,51 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 4:05 PM EDT · v279 · Size, bag & closed seasons
+------------------------------------------------------------------------------
+The Season Guide now carries the harvest rules alongside the bite.
+
+Every row prints its recreational limits beside the name — "Size 18 to 27 ·
+Bag Limit: 1" — in inches and fish per person per day for Florida ATLANTIC
+waters off Volusia County. Rows whose limit is a sentence rather than a number
+drop the label and just read "No size limit · No bag limit". Rows that need a
+caveat carry a quiet line under them: the Mosquito Lagoon redfish zone is
+catch-and-release, snook need a permit, Atlantic red snapper opens only a few
+days each summer, most sharks are prohibited, sheepshead have a March vessel
+limit, seatrout limits differ by zone.
+
+MONTHS CLOSED TO HARVEST are drawn as BLACK boxes on the Season Guide's bars,
+over the top of the bite color, with "Closed to harvest" added to the legend.
+A season that opens or closes mid-month (flounder Oct 15 - Nov 30, snook
+Dec 15 - Jan 31) blacks out the WHOLE month — a bar cell is the smallest thing
+the chart can draw — and both the panel note and the help say so. Black boxes
+appear ONLY in the Season Guide: the same bars on popups, catch cards and
+saved spots stay pure bite-quality, since out there no legend sits next to
+them to explain a black cell.
+
+The rules live in a new REGS table beside SPECIES, keyed the same way, with a
+REGS_ASOF date that the panel prints ("summarized as of August 2026") so the
+numbers and their vintage can't drift apart. Bump REGS_ASOF whenever a line in
+the table is touched.
+
+AMBERJACK's April cell goes back to bright. It had been forced dark since the
+beginning as a hint that greater amberjack are closed that month; now that
+closures have their own black boxes, the months array is free to say what it
+should — the bite, which is good in April. That also fixes the popup and card
+bars, which never had a way to show the closure and were simply reading April
+wrong.
+
+A boxed warning at the top of the panel: "Internet is required to update the
+app for the current FWC regulations." The limits ship inside the app and work
+offline, but they only change when a new build downloads. The panel and the
+help both still point at Fish Rules (fishrulesapp.com) as the live word, and
+the panel names the two things most likely to go stale — Volusia's redfish and
+seatrout zone splits, and federal seasons that move mid-year.
+
+The REGS table is hand-entered from FWC and South Atlantic rules and is a
+SUMMARY, not the regulation. Verify it against Fish Rules before each season.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 3:55 PM EDT · v278 · Gulf flounder & kingfish back
 ------------------------------------------------------------------------------
 Reversing half of v277 at Jan's word: both Gulf-named fish ARE caught here, so
