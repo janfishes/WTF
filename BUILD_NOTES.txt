@@ -7,8 +7,29 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-01 · 10:22 AM EDT · v259 · North PO ramp
+Build 2026-08-01 · 10:47 AM EDT · v260 · Details & seasons
 ------------------------------------------------------------------------------
+The + Spot sheet gains a Details box: free text for structure, bait, tide —
+anything worth remembering about the spot. Name the fish you catch there
+and the app recognizes them (all 22 real species, plus common nicknames:
+reds/red drum, specks/sea trout, king mackerel, crevalle, mahi/dorado/
+dolphin, AJs, sheephead, triggers and so on — longest name wins, so "king
+mackerel" is a kingfish, not a mackerel, and "red drum" a redfish, not a
+drum) and gives the spot their season month-bars, exactly the bars the
+built-in offshore spots carry. They show in the spot pin's popup and beside
+the entry under "Your saved spots" (the details text shows in both places
+too). Editing a spot re-reads the details, so adding "flounder" later adds
+its bar. The Details box applies to your own spots; editing a built-in spot
+hides it (built-ins keep their curated descriptions — the popup's "My note"
+covers the personal stuff there).
+
+Season bars come to the catch side as well: every catch now shows its
+species' 12-month season bar — in its pin popup and on each My Log card
+(also the stacked cards in a merged catches-here popup). "Other" catches
+show no bar, same as the Season Guide skips that catch-all row.
+
+Details and matched species ride in the custom-spots record, so they travel
+in both backup files and survive edits/undo like every other spot field.
 Added a new inshore waypoint pin: North PO Causeway Ramp at 29° 08.858' N,
 80° 58.738' W (29.147633, -80.978967), on the north side of the Port
 Orange causeway. To match, the existing "PO Causeway Boat Ramps" pin is

@@ -2440,7 +2440,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="panel-help" style="display:none;">
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 10px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
-      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b></p>
+      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b></p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b>Tight Lines!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <div class="subhead">Button Shapes</div>
       <p class="sheet-note"><b>Cookies</b> (round buttons, top-right of the header) are Search <span style="vertical-align:-2px;">🔍</span>, Help <b>?</b>, Themes <span style="vertical-align:-2px;">🎨</span>, Text Size <b>A</b>, and the <b>Eye</b>, which hides the buttons and species pills.</p>
@@ -2466,7 +2466,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead">Photos</div>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and CLOSE ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Spot</b> saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. You can <b>add and delete</b> both fishing spots and launches, and the same goes for the ones that came with the app: tap any pin and use <b>✎ Edit</b> to rename or move it, or <b>Delete</b> to take it off the map. The Inshore, Offshore and Launches totals in the pills at the top update the moment you add or delete one, either way. Deleting a built-in spot only hides it on this device — <b>↺ Restore built-in spots</b> in the Add-a-spot sheet brings every one of them back. Your own spots, your edits to built-in ones, and your drop labels all travel in either backup file. Cleared <b>MOB marks land in this same list</b> — red pins named MOB with their date and time — and are deleted the same way, with the ✕ beside the entry under <b>Your saved spots</b>.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Spot</b> saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. A <b>Details</b> box takes anything worth remembering — structure, bait, tide — and if you <b>name the fish you catch there</b> (redfish, trout, snook, any species the app knows, by common nicknames too), the spot gets their <b>season bars</b>: on its pin's popup and beside its entry under <b>Your saved spots</b>. Every catch shows its species' season bar too, in its pin popup and on its My Log card. You can <b>add and delete</b> both fishing spots and launches, and the same goes for the ones that came with the app: tap any pin and use <b>✎ Edit</b> to rename or move it, or <b>Delete</b> to take it off the map. The Inshore, Offshore and Launches totals in the pills at the top update the moment you add or delete one, either way. Deleting a built-in spot only hides it on this device — <b>↺ Restore built-in spots</b> in the Add-a-spot sheet brings every one of them back. Your own spots, your edits to built-in ones, and your drop labels all travel in either backup file. Cleared <b>MOB marks land in this same list</b> — red pins named MOB with their date and time — and are deleted the same way, with the ✕ beside the entry under <b>Your saved spots</b>.</p>
       <p class="sheet-note"><b>The type sets itself.</b> You no longer have to pick inshore, offshore or launch before you save — drop the pin and the app reads the position and lights the matching pill. It works in three steps. If the pin lands within a couple of hundred yards of a spot that is already on the map, it takes that spot's type, so a pin at a known ramp comes up <b>Launch</b> and a pin on a known reef comes up <b>Offshore</b>. Failing that, if the pin is east of the beach it is <b>Offshore</b>. Failing that, if it sits on one of the waterways the app already follows for tide timing — the Halifax, the Indian River and the lagoon, Spruce Creek, Rose Bay, Turnbull Bay — it is <b>Inshore</b>. Anything left over is inland but off the water, which is what a ramp or a bank access looks like, so it comes up <b>Launch</b>. The line under the pills always says which of those decided it.</p>
       <p class="sheet-note"><b>Check it before you save.</b> The app carries a coarse beach line and channel centrelines, not a real shoreline, so the water's edge is the one place the guess goes wrong: a ramp right at the water can read Inshore, and a spot a few hundred yards up a narrow creek can read Launch. Every guess is only a suggestion — tap the right pill and your choice is what gets saved. Your own corrections also feed the first step above, so a ramp you save yourself will be recognised the next time you drop a pin near it. Exactly one pill is ever lit; the other two sit black and dimmed.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> <b>Bite</b> opens a 3-day solunar feeding forecast — the moon phase and % lit at the top, then Major and Minor feeding windows for that day, in the order they occur. Majors center on the moon overhead or underfoot; minors center on moonrise and moonset. Computed fully offline from moon-position astronomy, no internet is needed.</p>
@@ -2515,7 +2515,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap the <b>🔍</b> button next to Help and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched on automatically. Search also looks through <b>this Help</b>: type a topic (e.g. "tide station" or "offline") and matching Help sections are listed under their own heading — tap one to open Help at that section.</p>
 
       <div class="subhead" style="margin-top:2px;">Reading the Season Month Bars</div>
-      <p class="sheet-note">Every colored bar row you see — in a pin's popup or the Season Guide — is a calendar: 12 cells, January on the left through December on the right. Brighter cells = better months for that species at that spot. In popups, the letters above the bars mark the months.</p>
+      <p class="sheet-note">Every colored bar row you see — in a pin's popup, on a My Log card, under Your saved spots, or in the Season Guide — is a calendar: 12 cells, January on the left through December on the right. Brighter cells = better months for that species at that spot. In popups, the letters above the bars mark the months.</p>
 
       <div class="subhead">Using the App Offline</div>
       <p class="sheet-note">The app itself — all your spots, launches, reefs, catch log, notes, tide forecasts, search, and themes — works with <b>no internet</b>. The <b>map imagery</b> normally streams from map servers, but you can now <b>download it for your fishing area</b> so even the satellite view works with the signal off — do it once on wifi <b>before hitting the water</b> and the tiles are stored on your device. Add the app to your home screen for the most reliable offline launch.</p>
@@ -2537,6 +2537,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v260</b> · Details &amp; seasons</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v259</b> · North PO ramp</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v258</b> · Faster hi res</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v257</b> · Reef note trimmed</p>
@@ -2760,6 +2761,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="loc-preview" id="addSpotPreview">No location set yet.</div>
     <input type="text" id="addSpotCoord" placeholder="or type coordinates — 29 04.902 N, 80 56.202 W" style="width:100%; box-sizing:border-box; margin-top:8px;">
     <p class="sheet-note" style="margin:4px 0 0;">Decimal, degrees-minutes, or full degrees/minutes/seconds all work — paste whatever your plotter or chart gives you.</p>
+    <div id="addSpotDetailsWrap">
+      <label class="field-label">Details</label>
+      <textarea id="addSpotDetails" rows="2" placeholder="Structure, bait, tide — and the fish you catch here" spellcheck="true" autocapitalize="sentences" autocorrect="on" style="width:100%; box-sizing:border-box;"></textarea>
+      <p class="sheet-note" style="margin:4px 0 0;">Name the fish in your details — any species the app knows (redfish, trout, snook…) gets its <b>season bars</b> on the spot's pin and under <b>Your saved spots</b> below.</p>
+    </div>
     <div class="loc-btns" style="margin-top:12px;">
       <button class="mini-btn" id="addSpotSave" style="font-weight:700;">Save spot</button>
     </div>
@@ -3379,7 +3385,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 259;
+const BUILD_NUM  = 260;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -4892,14 +4898,69 @@ const inletLabelMarker = L.marker([29.07783, -80.91022], {
 let userNotes = {};
 let labelsOn = false;
 
-function popupHTML(s){
-  const rows = (s.species||[]).filter(k=>SPECIES[k]).map(k=>{
+/* One builder for every species month-bar block in the app — built-in spot popups,
+   custom-spot popups, the saved-spots list, catch popups and My Log cards. `other`
+   (and any future all-zero row) is skipped for the same reason the Season Guide
+   skips it: a blank bar says nothing. Pass cap:'' to drop the caption line where
+   it would repeat card after card. */
+function speciesSeasonBlock(keys, cap){
+  const rows = (keys||[]).filter(k=>SPECIES[k] && SPECIES[k].months.some(v=>v>0)).map(k=>{
     const sp = SPECIES[k];
     const bars = sp.months.map(v=>`<div style="${monthCell(v, sp.color)}"></div>`).join("");
     return `<div class="ps-row"><div class="ps-tag" style="background:${sp.color}">${sp.short}</div><div class="ps-bar">${bars}</div></div>`;
   }).join("");
+  if(!rows) return '';
   const monthHeader = `<div class="ps-row"><div class="ps-tag" style="background:none;"></div><div class="ps-bar">${MONTH_LBL.map(m=>`<div class="mo">${m}</div>`).join("")}</div></div>`;
-  const speciesBlock = rows ? `<div class="pop-species"><div class="ps-cap">Best months (Jan–Dec) — brighter = better</div>${monthHeader}${rows}</div>` : '';
+  const capLine = (cap === '') ? '' : `<div class="ps-cap">${cap || 'Best months (Jan–Dec) — brighter = better'}</div>`;
+  return `<div class="pop-species">${capLine}${monthHeader}${rows}</div>`;
+}
+
+/* + Spot "Details" → season bars. Fish named in the free-text details are matched
+   against these aliases; matches fill the spot's `species` list, which draws the
+   bars. Longest alias wins first AND is consumed from the text, so "king mackerel"
+   lands on kingfish without also lighting mackerel, and "red drum" on redfish
+   without lighting drum. Word-bounded with an optional plural, so "amberjack"
+   never lights jack and "snappers" still lights snapper. */
+const SPECIES_TEXT_ALIASES = {
+  amberjack:['amberjack','aj'],
+  bonito:['bonito','bonita','false albacore','albie'],
+  cobia:['cobia','ling'],
+  blackdrum:['black drum','drum'],
+  flounder:['flounder','fluke'],
+  grouper:['grouper','gag'],
+  jack:['jack crevalle','crevalle jack','crevalle','jack'],
+  kingfish:['king mackerel','kingfish','kings'],
+  mackerel:['spanish mackerel','mackerel'],
+  mahi:['mahi mahi','mahi','dorado','dolphinfish','dolphin'],
+  permit:['permit'],
+  pompano:['pompano'],
+  redfish:['red drum','redfish','red fish','reds'],
+  shark:['shark'],
+  sheepshead:['sheepshead','sheephead'],
+  snapper:['snapper'],
+  snook:['snook'],
+  tarpon:['tarpon'],
+  triggerfish:['triggerfish','trigger fish','trigger'],
+  trout:['speckled trout','sea trout','seatrout','trout','speck'],
+  wahoo:['wahoo'],
+  whiting:['whiting']
+};
+function parseSpeciesFromText(text){
+  if(!text) return [];
+  let work = ' ' + String(text).toLowerCase() + ' ';
+  const found = new Set();
+  const terms = [];
+  Object.keys(SPECIES_TEXT_ALIASES).forEach(k=> SPECIES_TEXT_ALIASES[k].forEach(t=> terms.push([t,k])));
+  terms.sort((a,b)=> b[0].length - a[0].length);
+  terms.forEach(pair=>{
+    const re = new RegExp('\\b' + pair[0].replace(/[-\s]+/g,'[-\\s]+') + '(?:e?s)?\\b', 'g');
+    if(re.test(work)){ found.add(pair[1]); work = work.replace(re, ' '); }
+  });
+  return Object.keys(SPECIES).filter(k=> found.has(k));   // canonical A-Z order
+}
+
+function popupHTML(s){
+  const speciesBlock = speciesSeasonBlock(s.species);
   /* Round 43: the county-reef popups carry the headline paragraph, the numbers and the
      drop list only -- no tip paragraph, no best-months guide. `s.species` is deliberately
      LEFT in place: it still drives the species switches and species search, which would
@@ -5482,6 +5543,7 @@ function catchPopupHTML(c){
     <div class="pop-top"><div class="pop-name">${sp.label}</div><div class="pop-zone" style="background:${sp.color}; color:#04141e;">Catch</div></div>
     <div class="pop-meta"><span>${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}</span>${tide? `<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> ${tide}</span>`:''}${moon? `<span>${moon}</span>`:''}<span>${toDMS(c.lat, c.lng)}</span></div>
     <div class="pop-desc">${escapeHTML(c.locationLabel)}${sizeBits.length? ' \u00b7 '+sizeBits.join(' \u00b7 '):''}</div>
+    ${(seasonBar => seasonBar ? `<div style="margin:2px 0 8px;">${seasonBar}</div>` : '')(speciesSeasonBlock([c.species]))}
     ${c.notes? `<div class="pop-tip">${escapeHTML(c.notes)}</div>`:''}
     <div class="loc-btns" style="margin-top:2px;">
       <button class="mini-btn edit-catch-btn" data-id="${c.id}">EDIT \u270e</button>
@@ -6037,6 +6099,7 @@ function catchCardHTML(c, showCoords){
       </div>
       <div class="cc-meta">${fmtDateShort(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''} \u00b7 ${loc}${showCoords? ' \u00b7 '+toDMS(c.lat, c.lng):''}${line2? '<br>'+line2:''}</div>
       ${sizeBits.length? `<div class="cc-size">${sizeBits.join(' · ')}</div>`:''}
+      ${(seasonBar => seasonBar ? `<div style="margin-top:6px;">${seasonBar}</div>` : '')(speciesSeasonBlock([c.species], ''))}
       ${c.notes? `<div class="cc-notes">Note: ${escapeHTML(c.notes)}</div>`:''}
       ${c.photo? (photoIsDrawable(c.photo) ? `<img class="cc-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
     </div>`;
@@ -6681,6 +6744,13 @@ function applySpotOverrides(){
   if(typeof applyFilter === 'function') applyFilter();
   if(typeof applySpotLabels === 'function') applySpotLabels();
 }
+/* Built-in spots carry curated descriptions and species lists, so the free-text
+   Details field only applies to the user's own spots — hide it when a built-in
+   is being edited (its "My note" popup button covers personal notes). */
+function showSpotDetailsField(show){
+  const w = document.getElementById('addSpotDetailsWrap');
+  if(w) w.style.display = show ? '' : 'none';
+}
 window.editBuiltinSpot = function(id){
   const s = SPOTS.find(x=>x.id===id); if(!s) return;
   editingBuiltinId = id; editingSpotId = null;
@@ -6688,6 +6758,7 @@ window.editBuiltinSpot = function(id){
   addSpotZoneManual = true;   // editing an existing spot: keep the type it already has
   addSpotLoc = {lat:s.lat, lng:s.lng};
   document.getElementById('addSpotName').value = s.name;
+  showSpotDetailsField(false);
   paintSpotZone('Existing type \u2014 <b>'+customSpotTypeLabel({zone:addSpotZone})+'</b>. Tap a pill to change it.');
   showAddSpotPreview(s.lat, s.lng);
   updateAddSpotPreview();
@@ -6765,10 +6836,14 @@ function customSpotPopup(s){
   const offshoreInfo = (s.zone === 'offshore')
     ? `<div class="pop-meta" style="margin-top:2px;"><span>${(nmFromInlet(s.lat, s.lng)*1.15078).toFixed(1)}sm/${nmFromInlet(s.lat, s.lng)}nm from Inlet &middot; ${bearingPairFromInlet(s.lat, s.lng)} to/from Inlet (magnetic)</span></div>`
     : '';
+  const details = s.details ? `<div class="pop-desc" style="margin:6px 0 0;">${escapeHTML(s.details)}</div>` : '';
+  const seasons = speciesSeasonBlock(s.species);
   return `<div class="pop">
     <div class="pop-top"><div class="pop-name">${s.name}</div></div>
     <div class="pop-meta"><span>${customSpotTypeLabel(s)} · My spot</span><span>${toDMS(s.lat, s.lng)}</span></div>
     ${offshoreInfo}
+    ${details}
+    ${seasons ? `<div style="margin-top:8px;">${seasons}</div>` : ''}
     ${note}
     <div class="loc-btns" style="margin-top:9px;">
       <button class="mini-btn" onclick="editCustomSpot('${s.id}')">EDIT <span class="bi">✎</span></button>
@@ -6802,14 +6877,20 @@ function updateCustomSpotList(){
   if(cnt) cnt.textContent = customSpots.length;
   const list = document.getElementById('customSpotList');
   if(!list) return;
-  list.innerHTML = customSpots.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(s=>
-    `<div class="loc-preview set" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:6px;">
-      <span>${s.name} · ${customSpotTypeLabel(s)}</span>
-      <span style="display:flex; gap:6px;">
-        <button class="mini-btn" style="padding:2px 8px;" onclick="editCustomSpot('${s.id}')">EDIT <span class="bi">✎</span></button>
-        <button class="mini-btn" style="padding:2px 8px;" onclick="removeCustomSpot('${s.id}')">DELETE <span class="bi">✕</span></button>
-      </span>
-    </div>`).join('');
+  list.innerHTML = customSpots.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(s=>{
+    const det = s.details ? `<div style="font-size:calc(11.5px * var(--ts)); color:var(--fog); line-height:1.45; margin-top:5px;">${escapeHTML(s.details)}</div>` : '';
+    const seasons = speciesSeasonBlock(s.species, 'Season (Jan–Dec) — brighter = better');
+    return `<div class="loc-preview set" style="margin-top:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <span>${s.name} · ${customSpotTypeLabel(s)}</span>
+        <span style="display:flex; gap:6px;">
+          <button class="mini-btn" style="padding:2px 8px;" onclick="editCustomSpot('${s.id}')">EDIT <span class="bi">✎</span></button>
+          <button class="mini-btn" style="padding:2px 8px;" onclick="removeCustomSpot('${s.id}')">DELETE <span class="bi">✕</span></button>
+        </span>
+      </div>
+      ${det}
+      ${seasons ? `<div style="margin-top:7px;">${seasons}</div>` : ''}
+    </div>`;}).join('');
 }
 
 /* ---- Add-spot modal flow ---- */
@@ -6874,6 +6955,8 @@ document.getElementById('addSpotCoord').addEventListener('input', function(){
 document.getElementById('addSpotBtn').addEventListener('click', ()=>{
   addSpotLoc=null; addSpotZone=null; addSpotZoneManual=false;
   const box = document.getElementById('addSpotCoord'); if(box) box.value='';
+  document.getElementById('addSpotDetails').value = '';
+  showSpotDetailsField(true);
   paintSpotZone(null);
   updateAddSpotPreview(); openAddSpot();
 });
@@ -6932,6 +7015,8 @@ window.editCustomSpot = function(id){
   addSpotZoneManual = true;   // editing an existing spot: keep the type it already has
   addSpotLoc = {lat:s.lat, lng:s.lng};
   document.getElementById('addSpotName').value = s.name;
+  document.getElementById('addSpotDetails').value = s.details || '';
+  showSpotDetailsField(true);
   paintSpotZone('Existing type \u2014 <b>'+customSpotTypeLabel({zone:addSpotZone})+'</b>. Tap a pill to change it.');
   showAddSpotPreview(s.lat, s.lng);
   updateAddSpotPreview();
@@ -6945,6 +7030,8 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
   if(!addSpotLoc){ showToast('Set a location — drop a pin or use My location.'); return; }
   if(!addSpotZone) addSpotZone = autoSpotZone(addSpotLoc.lat, addSpotLoc.lng).zone;
   const meta = customSpotTypeLabel({zone:addSpotZone})+' · My spot';
+  const details = (document.getElementById('addSpotDetails').value || '').trim();
+  const detSpecies = parseSpeciesFromText(details);
   if(editingBuiltinId){
     const s = SPOTS.find(x=>x.id===editingBuiltinId);
     if(s){
@@ -6974,8 +7061,9 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
   if(editingSpotId){
     const s = customSpots.find(x=>x.id===editingSpotId);
     if(s){
-      pushUndo({kind:'cspot-edit', id:editingSpotId, before:{name:s.name, zone:s.zone, lat:s.lat, lng:s.lng, meta:s.meta}});
+      pushUndo({kind:'cspot-edit', id:editingSpotId, before:{name:s.name, zone:s.zone, lat:s.lat, lng:s.lng, meta:s.meta, details:s.details, species:(s.species||[]).slice()}});
       s.name = name; s.zone = addSpotZone; s.lat = addSpotLoc.lat; s.lng = addSpotLoc.lng; s.meta = meta;
+      s.details = details; s.species = detSpecies;
       const old = customSpotMarkers[editingSpotId];
       if(old){ map.removeLayer(old); const idx = markers.indexOf(old); if(idx>=0) markers.splice(idx,1); delete customSpotMarkers[editingSpotId]; }
       addCustomSpotMarker(s);
@@ -6983,7 +7071,7 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
     editingSpotId = null;
     document.getElementById('addSpotSave').textContent = 'Save spot';
   } else {
-    const s = { id:'custom-'+Date.now(), name, zone:addSpotZone, lat:addSpotLoc.lat, lng:addSpotLoc.lng, meta, custom:true, species:[], ramp:(addSpotZone==='launch') };
+    const s = { id:'custom-'+Date.now(), name, zone:addSpotZone, lat:addSpotLoc.lat, lng:addSpotLoc.lng, meta, custom:true, details, species:detSpecies, ramp:(addSpotZone==='launch') };
     customSpots.push(s);
     addCustomSpotMarker(s);
   }
@@ -6996,6 +7084,7 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
   if(typeof applySpotLabels === 'function') applySpotLabels();
   const savedLat = addSpotLoc.lat, savedLng = addSpotLoc.lng;
   document.getElementById('addSpotName').value = '';
+  document.getElementById('addSpotDetails').value = '';
   addSpotLoc = null; clearAddSpotPreview(); updateAddSpotPreview();
   closeAddSpot();
   showToast('Spot saved: '+name);
