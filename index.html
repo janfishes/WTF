@@ -1425,7 +1425,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .fab.primary{background:#fff; border-color:#fff; color:#000;}
   /* Trailing icons: every command in the app reads word-then-icon (EDIT ✎, Drop pin 📍,
      Catch +) — .bi wraps a trailing emoji/glyph icon so it renders a touch larger. */
-  .mini-btn .bi, .cc-edit .bi, .cc-del .bi, .cc-undo .bi{font-size:1.25em; line-height:1;}
+  .mini-btn .bi, .cc-edit .bi, .cc-del .bi{font-size:1.25em; line-height:1;}
+  /* The ↺ glyph's ink runs ~72% the size of ✕'s at the same em — 1.75em brings the
+     two to visual parity. line-height:0 keeps the bigger glyph from growing the button. */
+  .mini-btn .bi-undo{font-size:1.75em; line-height:0; vertical-align:-0.14em;}
 
   /* ---------- Bottom sheets ---------- */
   .scrim{position:absolute; inset:0; background:rgba(3,9,15,.55); z-index:1200; opacity:0; pointer-events:none; transition:opacity .2s;}
@@ -1744,9 +1747,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .cc-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
   .cc-species{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:#04141e; padding:2px 8px; border-radius:5px; text-transform:uppercase; letter-spacing:.03em;}
   .cc-actions{display:flex; gap:4px;}
-  .cc-edit, .cc-del, .cc-undo{background:none; border:none; color:var(--muted); font-size:10.5px; font-weight:700; letter-spacing:.3px; cursor:pointer; padding:2px 4px; white-space:nowrap;}
+  .cc-edit, .cc-del{background:none; border:none; color:var(--muted); font-size:10.5px; font-weight:700; letter-spacing:.3px; cursor:pointer; padding:2px 4px; white-space:nowrap;}
   .cc-edit:hover{color:var(--teal);}
-  .cc-undo:hover{color:var(--brass);}
   .cc-del:hover{color:var(--rust);}
   .cc-meta{font-size:calc(12px * var(--ts)); color:var(--fog); margin-top:6px; font-family:'JetBrains Mono',monospace; line-height:1.6;}
   .cc-size{font-size:calc(12px * var(--ts)); color:var(--teal); margin-top:3px;}
@@ -2409,7 +2411,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Every county site leads with its number. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 19.6–39.1 sm (17–34 nm) out and are outside the default view; pan/zoom to find them.</p>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use ✎ to edit an entry or ✕ to delete it. Scroll to the bottom of your log to see the two ways to export/import your log.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use ✎ to edit an entry or ✕ to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Scroll to the bottom of your log to see the two ways to export/import your log.</p>
+      <div class="loc-btns" style="margin:0 0 10px;">
+        <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, catch or spot">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
+      </div>
       <div id="catchListBody"></div>
       <div style="height:12px;"></div>
 
@@ -2466,7 +2471,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead">Photos</div>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and CLOSE ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Spot</b> saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. A <b>Details</b> box takes anything worth remembering — structure, bait, tide — and if you <b>name the fish you catch there</b> (redfish, trout, snook, any species the app knows, by common nicknames too), the spot gets their <b>season bars</b>: on its pin's popup and beside its entry under <b>Your saved spots</b>. Every catch shows its species' season bar too, in its pin popup and on its My Log card. You can <b>add and delete</b> both fishing spots and launches, and the same goes for the ones that came with the app: tap any pin and use <b>✎ Edit</b> to rename or move it, or <b>Delete</b> to take it off the map. The Inshore, Offshore and Launches totals in the pills at the top update the moment you add or delete one, either way. Deleting a built-in spot only hides it on this device — <b>↺ Restore built-in spots</b> in the Add-a-spot sheet brings every one of them back. Your own spots, your edits to built-in ones, and your drop labels all travel in either backup file. Cleared <b>MOB marks land in this same list</b> — red pins named MOB with their date and time — and are deleted the same way, with the ✕ beside the entry under <b>Your saved spots</b>.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Spot</b> saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. A <b>Details</b> box takes anything worth remembering — structure, bait, tide — and if you <b>name the fish you catch there</b> (redfish, trout, snook, any species the app knows, by common nicknames too), the spot gets their <b>season bars</b>: on its pin's popup and beside its entry under <b>Your saved spots</b>. Every catch shows its species' season bar too, in its pin popup and on its My Log card. You can <b>add and delete</b> both fishing spots and launches, and the same goes for the ones that came with the app: tap any pin and use <b>✎ Edit</b> to rename or move it, or <b>Delete</b> to take it off the map. The Inshore, Offshore and Launches totals in the pills at the top update the moment you add or delete one, either way. Deleting a built-in spot only hides it on this device — <b>↺ Restore built-in spots</b> in the Add-a-spot sheet brings every one of them back. Deleted the wrong thing? <b>UNDO</b> above <b>Your saved spots</b> (or at the top of My Log) steps back through your last 20 changes, one per tap. Your own spots, your edits to built-in ones, and your drop labels all travel in either backup file. Cleared <b>MOB marks land in this same list</b> — red pins named MOB with their date and time — and are deleted the same way, with the ✕ beside the entry under <b>Your saved spots</b>.</p>
       <p class="sheet-note"><b>The type sets itself.</b> You no longer have to pick inshore, offshore or launch before you save — drop the pin and the app reads the position and lights the matching pill. It works in three steps. If the pin lands within a couple of hundred yards of a spot that is already on the map, it takes that spot's type, so a pin at a known ramp comes up <b>Launch</b> and a pin on a known reef comes up <b>Offshore</b>. Failing that, if the pin is east of the beach it is <b>Offshore</b>. Failing that, if it sits on one of the waterways the app already follows for tide timing — the Halifax, the Indian River and the lagoon, Spruce Creek, Rose Bay, Turnbull Bay — it is <b>Inshore</b>. Anything left over is inland but off the water, which is what a ramp or a bank access looks like, so it comes up <b>Launch</b>. The line under the pills always says which of those decided it.</p>
       <p class="sheet-note"><b>Check it before you save.</b> The app carries a coarse beach line and channel centrelines, not a real shoreline, so the water's edge is the one place the guess goes wrong: a ramp right at the water can read Inshore, and a spot a few hundred yards up a narrow creek can read Launch. Every guess is only a suggestion — tap the right pill and your choice is what gets saved. Your own corrections also feed the first step above, so a ramp you save yourself will be recognised the next time you drop a pin near it. Exactly one pill is ever lit; the other two sit black and dimmed.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg> <b>Bite</b> opens a 3-day solunar feeding forecast — the moon phase and % lit at the top, then Major and Minor feeding windows for that day, in the order they occur. Majors center on the moon overhead or underfoot; minors center on moonrise and moonset. Computed fully offline from moon-position astronomy, no internet is needed.</p>
@@ -2482,7 +2487,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">You can add gauges of your own. Open <b>⚙ Create &amp; Calibrate Tide Stations</b> in Help and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away. A saved station gets a pin of its own, up whenever <b>Tides</b> is.</p>
       <div class="loc-btns" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">Create &amp; Calibrate Tide Stations <span class="bi">⚙</span></button></div>
       <p class="sheet-note" style="margin-top:10px;"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to a National Data Buoy Center (NDBC) buoy pin and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled straight from NOAA's National Data Buoy Center, each with its observation time. Needs internet to <b>refresh</b>, but no longer to be useful: the last reading is <b>kept on the device</b>, so if the fetch fails you still get the numbers with <b>how old they are</b> written on them — <i>Last reading 3h ago</i>. Three-hour-old figures still tell you whether it is building or laying down. When it can’t refresh it also says <b>why</b>, since the three causes are not the same problem: <b>no internet</b> (nothing to retry until you have signal), <b>couldn’t reach NDBC</b> (the relay, which goes down more often than the buoy — worth another try in a minute), or <b>the station isn’t reporting</b> (NDBC answered and sent nothing, so it is the buoy rather than your connection, and it will not clear up in a minute). Whichever it says, there is a <b>Try again</b> button under it, and the proxy-and-error detail is folded away under <b>Details</b> for the rare day it needs diagnosing. The buoy is <b>41070</b>, <b>13.8 nm</b> north-north-east of Ponce Inlet, off Daytona — measured from the compass rose, at 023° true. Its position is printed on the pin’s own popup in <b>both forms</b>: <b>29°17.340&#8242;N 80°48.180&#8242;W</b>, the deg-and-decimal-minutes every other pin here uses and what you would key into the plotter, with the decimal degrees in brackets after it, <b>(29.289 N 80.803 W)</b>, which is how NDBC’s own station listing writes it.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later, but that happened earlier, drops into place by its own date. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses, so it fills in automatically for every catch, old and new. Every catch card and spot popup carries <b>EDIT</b>, <b>UNDO</b> and <b>DELETE</b> buttons: UNDO reverses your most recent change — an edit or a delete, on a catch or a spot — stepping back through up to your last 20 changes. The undo history clears when the app is closed or reloaded.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later, but that happened earlier, drops into place by its own date. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses, so it fills in automatically for every catch, old and new. Every catch card and spot popup carries <b>EDIT</b> and <b>DELETE</b> buttons, and one <b>UNDO</b> button sits at the top of the log — always there, even after you delete your last catch. It reverses your most recent change — an edit or a delete, on a catch or a spot, whichever came last — stepping back through up to your last 20 changes, one per tap. The same button sits above <b>Your saved spots</b> in the + Spot sheet; both work the identical history. The undo history clears when the app is closed or reloaded.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Guide</b> opens the Season Guide — month-by-month tables for every species (see <b>Reading the Season Month Bars</b> below), plus map-zone and offshore notes.</p>
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg> <b>Compass</b> puts a chart-style compass rose on the water just off the inlet mouth and gives you the run out to any offshore mark. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose out to that pin. Every leg is labelled the same way: the <b>heading to steer</b> and the <b>run in statute miles</b>, on one row centred on the line and running along it — <b>156°&nbsp;&nbsp;4.3 sm</b>. With a <b>single pin</b> up, the heading carries its <b>reciprocal</b> as well — <b>156°/336°&nbsp;&nbsp;4.3 sm</b> — read like any to/from pair: the first number is the course out, the second is the course home to the inlet, since with one pin the line out and the line home are the same track. On a route of several legs the reciprocal stays off — there it would be the way back along the route, not home, and the trip home is the route reversed. With one bearing on the row nothing can be confused with anything, so the words <i>To</i> and <i>From</i> are gone too. The gap between the heading and the run <b>opens up as you zoom in</b> and closes again as you zoom out, where every pixel of label crowds something. The line is cut away behind the text, so nothing is drawn through the numbers, and on a leg too short for both the <b>heading stands alone</b>. String a <b>second leg</b> on and the <b>From</b> comes off: a route is one-way, and its return is the route read backwards. The <b>To</b> stays on the leg out of the inlet, where there is a heading home to tell it apart from; on every leg after that the bearing stands on its own, since there is nothing to distinguish it from. In place of the word <i>To</i> the heading carries a small <b>needle</b>, the same solid needle the rose draws on its cardinal points, pointing the way you would travel; it flips end for end where the label has been turned to keep its digits upright, so it always points along the leg rather than back down it. Headings are <b>magnetic</b>, so they read the same as your chartplotter and your steering compass. Rather than hang an <b>M</b> off every number, the rose says it once for the whole overlay: <b>MAGNETIC · VAR 7.3°W 2026</b> is printed beneath it, which is how a paper chart declares the variation on its own rose. Offshore popups say <i>(magnetic)</i> once beside their to/from figures, and a drop list carries one note at its head rather than an M on all nineteen rows. On a route of several legs the reciprocal is not printed — a second number on every line is clutter, and the run home is the route read backwards; the single-pin run is where the pair lives. The label slides itself along the line to wherever it won't be covered by the rose, the pin, or any other site's name tag (the site's popup and its drop list carry the distance as well, in both units, along with the reciprocal if you want it).</p>
       <p class="sheet-note">It works on <b>offshore sites only</b> — the county reef Sites, the wrecks and ledges, any offshore site you've added yourself, and your own logged catches out there. Inshore spots, launches, and inshore catches are left alone, since a bearing from the inlet is no use for a creek or a bridge. While the compass is switched on, <b>tapping an offshore pin shows its bearing instead of opening its details</b> — the popup would sit right on top of the line you asked for. Switch the compass off and pins open normally again.</p>
@@ -2537,6 +2542,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v263</b> · Undo moved up</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v262</b> · Log backups moved down</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v261</b> · Multi-species catch</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v260</b> · Details &amp; seasons</p>
@@ -2774,6 +2780,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <p class="sheet-note" style="margin-top:8px;"><b>Check the type before you save.</b> The app guesses it from the coordinates, and the guess is only as good as the coastline and channel lines it carries. Close to a bank, a jetty, or a ramp it can land on the wrong side. If the lit pill is wrong, tap the right one; your choice sticks and is what gets saved.</p>
     <p class="sheet-note" style="margin-top:14px;">Your saved spots: <span id="customSpotCount">0</span>.</p>
+    <div class="loc-btns" style="margin:6px 0 4px;">
+      <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, spot or catch">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
+    </div>
     <div id="customSpotList"></div>
     <div class="loc-btns" style="margin-top:14px;">
       <button class="mini-btn" id="restoreBuiltinBtn">Restore built-in spots <span class="bi">↺</span></button>
@@ -3388,7 +3397,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 262;
+const BUILD_NUM  = 263;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -4984,7 +4993,6 @@ function popupHTML(s){
     <button class="mini-btn note-edit-btn" style="width:100%; margin-top:8px;">${note? '\u270e Edit my note' : '\uff0b Add my note'}</button>
     <div class="loc-btns" style="margin-top:8px;">
       <button class="mini-btn" onclick="editBuiltinSpot('${s.id}')">EDIT \u270e</button>
-      <button class="mini-btn" onclick="appUndo()">UNDO \u21ba</button>
       <button class="mini-btn" onclick="deleteBuiltinSpot('${s.id}')">DELETE \u2715</button>
     </div>
   </div>`;
@@ -5341,6 +5349,7 @@ async function deleteCatch(id){
   renderCatchList();
   updateCatchCount();
   map.closePopup();
+  showToast('Catch deleted — UNDO at the top of My Log brings it back.');
 }
 
 /* ===================== UNDO (last 20 changes) =====================
@@ -5559,7 +5568,6 @@ function catchPopupHTML(c){
     ${c.notes? `<div class="pop-tip">${escapeHTML(c.notes)}</div>`:''}
     <div class="loc-btns" style="margin-top:2px;">
       <button class="mini-btn edit-catch-btn" data-id="${c.id}">EDIT \u270e</button>
-      <button class="mini-btn" onclick="appUndo()">UNDO \u21ba</button>
       <button class="mini-btn del-catch-btn" data-id="${c.id}">DELETE \u2715</button>
     </div>
   </div>`;
@@ -6108,7 +6116,6 @@ function catchCardHTML(c, showCoords){
         <span style="display:flex; flex-wrap:wrap; gap:4px; min-width:0;">${spTags}</span>
         <div class="cc-actions">
           <button class="cc-edit" data-id="${c.id}" title="Edit">EDIT \u270e</button>
-          <button class="cc-undo" onclick="appUndo()" title="Undo last change">UNDO \u21ba</button>
           <button class="cc-del" data-id="${c.id}" title="Delete">DELETE \u2715</button>
         </div>
       </div>
@@ -6798,7 +6805,7 @@ window.deleteBuiltinSpot = function(id){
   if(typeof applyFilter === 'function') applyFilter();
   if(typeof applySpotLabels === 'function') applySpotLabels();
   map.closePopup();
-  showToast('Spot deleted — UNDO on any spot brings it back (or "Restore built-in spots" in Add-a-spot).');
+  showToast('Spot deleted — UNDO atop Your saved spots in + Spot brings it back (or "Restore built-in spots" there).');
 };
 function restoreBuiltinSpots(){
   spotOverrides = {};
@@ -6864,7 +6871,6 @@ function customSpotPopup(s){
     ${note}
     <div class="loc-btns" style="margin-top:9px;">
       <button class="mini-btn" onclick="editCustomSpot('${s.id}')">EDIT <span class="bi">✎</span></button>
-      <button class="mini-btn" onclick="appUndo()">UNDO <span class="bi">↺</span></button>
       <button class="mini-btn" onclick="removeCustomSpot('${s.id}')">DELETE <span class="bi">✕</span></button>
     </div>
   </div>`;
@@ -6883,6 +6889,7 @@ window.removeCustomSpot = function(id){
   if(typeof applyFilter === 'function') applyFilter();
   if(typeof applySpotLabels === 'function') applySpotLabels();
   map.closePopup();
+  showToast('Spot deleted — UNDO atop Your saved spots in + Spot brings it back.');
 };
 function refreshCustomSpotSelect(){
   // User-added spots now appear in the + Catch list alongside the built-ins,

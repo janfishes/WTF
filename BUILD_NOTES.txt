@@ -7,6 +7,21 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:34 AM EDT · v263 · Undo moved up
+------------------------------------------------------------------------------
+UNDO is now a single button at the top of the catch list in My Log and
+another above Your saved spots in + Spot, instead of a button on every
+catch card and pin popup. Every UNDO button always worked one shared
+last-20-changes history — the per-card placement wrongly implied each one
+undid that card's own change, and after deleting the only catch the log had
+no UNDO button left at all. Cards and popups keep EDIT and DELETE. Deleting
+a catch or spot now shows a toast saying where UNDO lives. The undo history
+still clears when the app is closed or reloaded; the help's My Log and Spot
+sections were reworded to match. The buttons' ↺ glyph is drawn at 1.75em —
+its ink runs ~72% the size of ✕'s at the same em, so this brings the two to
+visual parity.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:16 AM EDT · v262 · Log backups moved down
 ------------------------------------------------------------------------------
 My Log now opens straight onto the catch list. The Full backup, Log only and
