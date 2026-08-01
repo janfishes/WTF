@@ -7,7 +7,28 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-01 · 11:34 AM EDT · v263 · Undo moved up
+Build 2026-08-01 · 12:05 PM EDT · v264 · Deletes kept 14 days
+------------------------------------------------------------------------------
+Deleting a catch or one of your own spots now MOVES the record into a
+Recently-deleted bin (its own storage key, never read at startup, so launch
+cost is zero) capped at 14 days / the last 10 deletions. UNDO works the
+in-memory stack first as before; with the stack empty — say, after a reload
+— it restores the newest bin record instead, so an accidental delete now
+survives closing the app. The in-memory undo history was cut from 20 to 10
+to match. A "Recently deleted: 2 catches · 1 spot" line sits under the UNDO
+button in both My Log and Your saved spots (filled in when the sheet opens,
+kept current as deletes and restores happen). Built-in spot deletes stay
+out of the bin — "Restore built-in spots" already recovers those.
+
+Also an app-wide glyph pass: every command glyph now carries its command
+word (the My Log intro, Edit-or-delete help, MOB and broken-photo notes,
+the zoom-hint DISMISS, and the note button, now "Edit my note ✎" in
+word-then-icon order), and every glyph is sized to visual ink parity with
+the DELETE ✕ — measured per glyph with canvas TextMetrics: ↺↻ 1.75em,
+⚙⤓＋ 1.5em, ✉ 2em, ■ 2.2em, while the emoji-style ⬇⬆⇪📍📄🗑🗺 shrink
+slightly (0.9–1.05em) because they rendered LARGER than the ✕. The .bi
+class is now global (was scoped to three button types) so CLOSE ✕ buttons
+and popup EDIT/DELETE buttons share the same sizing.
 ------------------------------------------------------------------------------
 UNDO is now a single button at the top of the catch list in My Log and
 another above Your saved spots in + Spot, instead of a button on every
