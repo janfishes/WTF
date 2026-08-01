@@ -7,6 +7,21 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 3:44 PM EDT · v275 · Eye icon added
+------------------------------------------------------------------------------
+The EYE row in the help's Search, Help & View group now carries the open-eye
+icon, drawn from the same path as the #uiEyeBtn cookie in the header, so every
+row in that group is identified by its own glyph rather than by the word alone.
+
+Deleted the paragraph at the head of the CATCH writeup that listed the action
+buttons in stack order ("The action buttons are pills (hot-dog shapes) stacked
+along the lower right edge of the map, top to bottom: Catch, Spot, Bite,
+Tides, Waves, My Log, Seasons, Compass, the map-view button, and Locate Me").
+The help now opens straight into what + Catch does; the ACTION BUTTONS heading
+already says there are ten of them down the right side, and each has its own
+row here.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 3:34 PM EDT · v274 · Bass added
 ------------------------------------------------------------------------------
 Bass -- black sea bass -- is a new species, bringing the list to 24. It files
