@@ -7,6 +7,37 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 4:55 PM EDT · v282 · State or federal water
+------------------------------------------------------------------------------
+Four changes to the Season Guide, at Jan's word.
+
+WHICH WATER EACH LIMIT GOVERNS. Every row now ends with "Inside 3 mi" or
+"Inside & beyond 3 mi", from a new `waters` field on the REGS table. 'state'
+= inside Florida's 3-mile Atlantic boundary only, which is where the inshore
+fish are caught; 'both' = the same limits hold beyond it in federal water,
+which is how the offshore fish read, since FWC matches the South Atlantic
+federal rules inside the line. The intro says the dashed line the map already
+draws off the beach IS that boundary.
+
+POSSESSION note added under the limits paragraph: a bag limit is a daily AND
+an on-the-water possession limit however long the trip; per person unless a
+vessel limit is named, and a vessel limit caps the whole boat; no keeping a
+fish for someone who isn't fishing; captain and crew on a for-hire trip don't
+get a bag of many species; fish stay whole, head and tail on, until ashore,
+so a filleted fish on the boat is a violation even if it was legal when it
+was caught; the two-day multi-day-trip possession exists only in a few
+federal fisheries, never in state water.
+
+The bar legend now opens with the word ABUNDANCE, so the row doesn't start on
+a bare "Peak" with nothing saying peak of what.
+
+(Last updated 08/01/26) moved out of the limits paragraph and into the boxed
+Internet-required warning, where the rest of the how-fresh-is-this story is.
+
+Also dropped the "(3-34 nm)" from the offshore zone key, in the guide and in
+the help — it now reads 3.5-39.1 sm out.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 4:35 PM EDT · v281 · Last-updated stamp
 ------------------------------------------------------------------------------
 Two wording changes in the Season Guide, at Jan's word.
