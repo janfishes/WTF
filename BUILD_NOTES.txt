@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 12:26 PM EDT · v265 · Popup close ✕ uniform
+------------------------------------------------------------------------------
+The map-popup corner CLOSE button was the one close control still drawn
+with a letter X — CSS content 'CLOSE X' at the button's plain 11px, no .bi
+treatment. It now renders the same ✕ glyph as the eleven sheet CLOSE
+buttons, at the same 1.25em .bi size, via two pseudo-elements: ::before
+carries CLOSE at the button size, ::after carries the ✕ boosted. Same
+glyph, same ink, everywhere.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 12:05 PM EDT · v264 · Deletes kept 14 days
 ------------------------------------------------------------------------------
 Deleting a catch or one of your own spots now MOVES the record into a
