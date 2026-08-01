@@ -7,6 +7,29 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 11:15 PM EDT · v256 · iPhone launch fixes
+------------------------------------------------------------------------------
+Two iPhone fixes. First, the white screen on launch: tapping the home-screen
+icon used to show a plain white system screen until the page's first paint.
+iOS fills that gap with an apple-touch-startup-image when one matches the
+device exactly, so the head now lists eleven of them — real screenshots of
+the splash (default theme) at each iPhone's exact pixel size, from the SE's
+750x1334 up to the Pro Max's 1320x2868 — and launch now flows seamlessly
+into the live splash. The PNGs live in launch/. Unlisted device sizes fall
+back to white; extend the table when a new iPhone size appears. iOS reads
+these at Add-to-Home-Screen time, so re-add the icon to pick up changes.
+
+Second, the tail wag never moved on iPhones. The fish was an <img> with an
+SVG data URI carrying its own animation, and iOS treats animation inside an
+image document as an "animated image" — paused by Low Power Mode and the
+Auto-Play Animated Images accessibility switch, and deaf to the page's
+styles. The fish is now one inline <svg> shared by the splash and the About
+sheet (the splash hands its node over when it drops), the wag keyframes
+moved into the page stylesheet, and the reduced-motion opt-out now
+genuinely follows the device setting. Both fish images also carry an
+explicit aspect-ratio so nothing shifts while fonts load.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 11:05 PM EDT · v255 · Marker clearance
 ------------------------------------------------------------------------------
 Six mid-water pins moved so no pin graphic sits on top of a charted aid to
