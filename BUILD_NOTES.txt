@@ -7,6 +7,21 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 9:57 PM EDT · v248 · Sideways wag
+------------------------------------------------------------------------------
+The splash tail now wags side to side instead of bobbing. v245's motion was
+an in-plane rotation, which on a fish drawn in profile reads as the tail
+flapping up and down; a real tail sweeps toward and away from the viewer.
+In profile that shows as foreshortening, so the rotation is replaced with a
+scaleX pulse about the same joint: the tail compresses to 70% of its length
+at each side of the sweep (twice per 1.9s beat) and stretches back to full
+as it crosses the body plane, with a whisper of skewY (±2.2°) in opposite
+directions on the two half-beats so near-side and far-side sweeps read
+differently. Same articulated SVG, same 10px overlap at the joint (scaleX
+pulls the tail's cut edge INTO the overlap, so no seam), same
+reduced-motion opt-out. The About sheet copy inherits it as before.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 9:57 PM EDT · v247 · 500 ft start
 ------------------------------------------------------------------------------
 The app now opens zoomed in on Ponce DeLeon Inlet instead of the wide county
