@@ -728,7 +728,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --rose-halo:rgba(0,0,0,.85);
     --amberjack:#e8a33a; --triggerfish:#7d8cff;
     --blackdrum:#8a7a9b; --bonito:#7c8b96; --cobia:#c98a6a; --flounder:#ffe14d; --grouper:#bb594a;
-    --jack:#c9c14b; --kingfish:#e8639f; --mackerel:#63b8aa; --mahi:#a8d05a;
+    --hogfish:#e8639f; --jack:#c9c14b; --mackerel:#63b8aa; --mahi:#a8d05a;
     --permit:#8ab0c4; --pompano:#c9a876; --redfish:#ff3b30; --shark:#c1652f; --sheepshead:#467ba1;
     --snapper:#4f9268; --snook:#ff9f1c; --tarpon:#a970d8; --trout:#5fa8c7; --wahoo:#2b8fa8; --whiting:#93a25a;
     /* Theme-driven UI surface (defaults = Parrot Head) */
@@ -2491,14 +2491,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="storage-note" id="backupStatus"></p>
     </div>
     <div id="panel-help" style="display:none;">
-      <p class="sheet-note" style="margin-top:0;">Every part of this help sits behind a button. <b>Tap a button</b> to read it, and tap it again to close it — while one is open the rest of the page steps out of the way, and the app remembers which one you were reading.</p>
-      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-hooked">Read This Paragraph to Get Hooked<span class="ht-caret">▸</span></button>
-      <div class="help-body" id="hb-hooked">
+      <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
       <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish — one species or several — where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b></p>
-      <p class="sheet-note" style="text-align:center; margin-top:4px;"><b>Now go have reel fun with this app!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
-      </div>
+      <p class="sheet-note" style="text-align:center; margin-top:4px;"><b>Now get out on the water and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <p class="sheet-note" style="margin:14px 0 6px;">Prints this entire help as plain text — every button’s writeup opened out — so it can be read offline or carried on paper.</p>
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 14px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
+
+      <p class="sheet-note">Every part of this help sits behind a button. <b>Tap a button</b> to read it, and tap the button title again to close it. If you tap <b>CLOSE</b> <span class="bi">✕</span> to exit Help and then return, Help will reopen to your last button view.</p>
 
       <div class="subhead">Action Buttons</div>
       <p class="sheet-note">Ten buttons along the right side of the map are the app’s actions. Tap any button below to read what it does and tap again to close.</p>
@@ -2573,7 +2572,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
 
       <div class="subhead">Species Buttons</div>
-      <p class="sheet-note">The colored diamonds down the <b>left edge of the map</b> — one for each of the 23 species the app knows. <b>Tap the button below</b> to read what they do.</p>
+      <p class="sheet-note">The colored diamonds down the <b>left edge of the map</b> — one for each of the 23 species the app knows.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-species">Species<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-species">
       <p class="sheet-note">The species buttons are the 23 colored <b>diamonds</b> down the left edge of the map — one per species the app knows.</p>
@@ -2582,7 +2581,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
 
       <div class="subhead">Map Filter Buttons</div>
-      <p class="sheet-note">The row of buttons across the <b>top of the map</b>, under the header, are the <b>map filter buttons</b> — they decide which pins the chart is showing. Each carries its own total, and the totals count every built-in and user-added spot at any zoom level. <b>Tap any button below</b> to read what it does.</p>
+      <p class="sheet-note">The row of buttons across the <b>top of the map</b>, under the header, are the <b>map filter buttons</b> — they decide which pins the chart is showing. Each carries its own total, and the totals count every built-in and user-added spot at any zoom level.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-catches">Catches<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-catches">
       <p class="sheet-note">The map filter buttons are <b>pills</b> (hot-dog shapes) in the row across the top of the map, under the header — Catches, Inshore, Offshore, Launches and Labels. The number on each of the first four is a total count.</p>
@@ -2611,7 +2610,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
 
       <div class="subhead">Search, Help &amp; View Buttons</div>
-      <p class="sheet-note">Five round <b>cookies</b> sit in the top-right corner of the header, in the order they are listed here, and a sixth — the map credits <b>ⓘ</b> — sits in the bottom-right corner of the map. <b>Tap any button below</b> to read what it does.</p>
+      <p class="sheet-note">Five round <b>cookies</b> sit in the top-right corner of the header, in the order they are listed here, and a sixth — the map credits <b>ⓘ</b> — sits in the bottom-right corner of the map.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-search">Search 🔍<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-search">
       <p class="sheet-note"><b>Search</b> is a <b>cookie</b> — one of the round buttons in the top-right corner of the header.</p>
@@ -2651,7 +2650,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
 
       <div class="subhead">Tide Stations &amp; Offline Maps</div>
-      <p class="sheet-note">Two jobs worth doing at home, on wifi, before a trip. <b>Tap either button below</b> to read what it does.</p>
+      <p class="sheet-note">Two jobs worth doing at home, on wifi, before a trip.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-tidecal">Create &amp; Calibrate Tide Stations<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-tidecal">
       <p class="sheet-note">You can add gauges of your own. Tap <b>OPEN THE TIDE STATION TOOL</b> below, and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away. A saved station gets a pin of its own, up whenever <b>Tides</b> is.</p>
@@ -2665,15 +2664,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="loc-btns help-print-hide" style="margin-top:8px;"><button class="mini-btn" id="offlineBtn">START THE DOWNLOAD <span class="bi bi-lg">⤓</span></button></div>
       </div>
 
+      <div class="subhead">Warning</div>
+      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
+
       <div class="subhead">Disclaimer</div>
-      <p class="sheet-note">Read this one before you take the app on the water. <b>Tap the button below</b> to open it.</p>
+      <p class="sheet-note">Read this one before you take the app on the water.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-warn">Disclaimer<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-warn">
       <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. A boater reads a bearing once clear of the inlet, not before, so the rose is anchored just offshore of the inlet mouth rather than at the same point each site's popup measures its nm/bearing figures from. For the closest sites — <b>Lighthouse Point Reef</b>, <b>Site 14 Flagler Ave Reef</b>, and <b>Site 15 Sunglow Reef</b> — that difference in reference point can swing the rose's bearing 15–30° from the number shown in the site's own popup; farther-out sites agree within a few degrees. Bear in mind those three popups are quoting <b>FWC's</b> figures, taken from 29°04.500&#8242;N 80°55.500&#8242;W in the inlet mouth channel — not this app's own reference inside the end of the north jetty, and not the rose. Close in, that choice of origin moves the bearing more than the run itself does. The distance printed on the line is measured from the rose as well, for the same reason and with the same caveat. A <b>site-to-site leg</b> sidesteps all three origins — it is measured between the two marks themselves. All of these figures are <b>magnetic</b>, 7.3° west of true — as the caption under the rose states; FWC published theirs in true degrees, so this app's rendering of a county reef's bearing is its own conversion of FWC's number, not FWC's wording.</p>
       <p class="sheet-note">No liability is assumed by the developer or owners of this app for any use of this app.</p>
       </div>
-
-      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots.</p>
 
       <div class="subhead">Copyright</div>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for use by saltwater enthusiasts in Volusia County, Florida.</p>
@@ -2681,10 +2681,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA; charted place names and their positions come from the USGS Geographic Names Information System. This app is not affiliated with or endorsed by any of those agencies.</p>
 
       <div class="subhead">Build Notes</div>
-      <p class="sheet-note">Two or three words per build. <b>Tap the button below</b> to read the list.</p>
+      <p class="sheet-note">Two or three words per build.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v272</b> · Intro always open</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v271</b> · One writeup at a time</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v270</b> · Help by button</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v269</b> · Harbor Oaks pin spaced</p>
@@ -3153,8 +3154,11 @@ const SPECIES = {
   blackdrum: { label:"Drum",       short:"BD", color:"var(--blackdrum)", months:[1,2,2,2,1,0,0,0,0,1,1,1] },
   flounder:  { label:"Flounder",   short:"FL", color:"var(--flounder)",  months:[0,0,1,1,0,0,0,0,2,2,2,1] },
   grouper:   { label:"Grouper",    short:"GR", color:"var(--grouper)",   months:[2,2,2,1,0,0,0,0,1,2,2,2] },
+  /* Hogfish are a nearshore/offshore reef fish here. Atlantic (FL Keys/East Florida)
+     harvest season runs May 1 - Oct 31, but the bite itself is a cool-water one:
+     November through June, best in March and April. */
+  hogfish:   { label:"Hogfish",    short:"HG", color:"var(--hogfish)",   months:[1,1,2,2,1,1,0,0,0,0,1,1] },
   jack:      { label:"Jack",       short:"JK", color:"var(--jack)",      months:[0,1,1,2,2,2,2,2,2,2,1,0] },
-  kingfish:  { label:"Kingfish",   short:"KG", color:"var(--kingfish)",  months:[0,0,1,2,2,1,1,1,2,2,1,0] },
   mackerel:  { label:"Mackerel",   short:"MK", color:"var(--mackerel)",  months:[0,0,2,2,1,1,1,1,2,2,1,0] },
   mahi:      { label:"Mahi",       short:"MH", color:"var(--mahi)",      months:[0,0,0,1,2,2,2,1,1,0,0,0] },
   other:     { label:"Other",      short:"OT", color:"#22c7e8",          months:[0,0,0,0,0,0,0,0,0,0,0,0] },
@@ -3648,7 +3652,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 271;
+const BUILD_NUM  = 272;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5181,7 +5185,7 @@ function speciesSeasonBlock(keys, cap){
 /* + Spot "Details" → season bars. Fish named in the free-text details are matched
    against these aliases; matches fill the spot's `species` list, which draws the
    bars. Longest alias wins first AND is consumed from the text, so "king mackerel"
-   lands on kingfish without also lighting mackerel, and "red drum" on redfish
+   lands on hogfish without also lighting snapper, and "red drum" on redfish
    without lighting drum. Word-bounded with an optional plural, so "amberjack"
    never lights jack and "snappers" still lights snapper. */
 const SPECIES_TEXT_ALIASES = {
@@ -5191,8 +5195,8 @@ const SPECIES_TEXT_ALIASES = {
   blackdrum:['black drum','drum'],
   flounder:['flounder','fluke'],
   grouper:['grouper','gag'],
+  hogfish:['hog snapper','hogfish','hog fish','hoggie','hogs'],
   jack:['jack crevalle','crevalle jack','crevalle','jack'],
-  kingfish:['king mackerel','kingfish','kings'],
   mackerel:['spanish mackerel','mackerel'],
   mahi:['mahi mahi','mahi','dorado','dolphinfish','dolphin'],
   permit:['permit'],

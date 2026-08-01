@@ -7,6 +7,37 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 3:25 PM EDT · v272 · Intro always open
+------------------------------------------------------------------------------
+The "Read This Paragraph to Get Hooked" writeup is no longer behind a button.
+It is now a plain teal heading with its paragraph printed under it, so the
+first thing Help shows is the paragraph itself rather than a row of closed
+buttons. Its closing line reads "Now get out on the water and have some REEL
+FUN!".
+
+The "Every part of this help sits behind a button" line moved down out of the
+top of the panel to sit directly above ACTION BUTTONS, where the first row of
+buttons actually starts, and was reworded to say what happens on leaving:
+tap a button to read it, tap the button title again to close it, and if you
+tap CLOSE X to exit Help and come back, Help re-opens to your last button
+view.
+
+The same "tap any button below" instruction was repeated under six headings;
+it is now said once, under ACTION BUTTONS. Dropped from SPECIES BUTTONS, MAP
+FILTER BUTTONS, SEARCH HELP & VIEW BUTTONS, TIDE STATIONS & OFFLINE MAPS,
+DISCLAIMER and BUILD NOTES — each of those keeps its own descriptive line.
+
+The "Do not use this site for navigation" paragraph, which had been sitting
+loose under the Disclaimer button with no label of its own, now has a WARNING
+heading and sits ABOVE the DISCLAIMER heading.
+
+Notes for later: the hooked writeup's old body id (hb-hooked) is gone, so a
+device that had it stored as its last-read topic simply opens Help at the
+directory (restoreHelpTopic already handles a missing body). The search index
+(helpSections) picks the paragraph up under its new WARNING/heading owners
+automatically — subheads collect their own loose lines.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 3:10 PM EDT · v271 · One writeup at a time
 ------------------------------------------------------------------------------
 The help now reads one page at a time, and every word of it lives inside a
