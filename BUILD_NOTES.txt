@@ -7,6 +7,23 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 4:20 PM EDT · v280 · Inch marks & capped names
+------------------------------------------------------------------------------
+Typography pass over the Season Guide's new limit lines, at Jan's word.
+
+Every length in the REGS table now carries the INCH MARK — Size 18" to 27",
+28" fork min, 1 over 19" — instead of a bare number. The panel note says the
+mark means inches of total length unless the line says fork.
+
+Fish named INSIDE a limit line are Title Case, matching the varieties list
+beside them: 12" fork min Spanish, 24" fork min King · 15 Spanish, 3 King.
+Same for Mangrove, Mutton and Lane on Snapper; Gag, Black and Red on Grouper;
+Crevalle on Jack; Almaco and Banded Rudderfish, Gray Triggerfish, Atlantic
+Red Snapper, Lesser Amberjack and Tarpon in the caveat lines.
+
+Also capped the v278 build-note line in the help: Gulf Flounder & Kingfish.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 4:05 PM EDT · v279 · Size, bag & closed seasons
 ------------------------------------------------------------------------------
 The Season Guide now carries the harvest rules alongside the bite.

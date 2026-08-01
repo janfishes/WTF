@@ -2450,7 +2450,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-body">
     <div id="panel-season">
       <p class="sheet-note">Each species row shows the 12 months of the year, January through December. Brighter cells mean a better bite that month; dim cells are the slow season. <b>Black cells are months closed to harvest</b> — a season that opens or closes mid-month blacks out the whole month, so check the exact dates before you keep a fish. These are general patterns for the Ponce de Leon Inlet region — not a substitute for a fishing report.</p>
-      <p class="sheet-note">The <b>Size</b> and <b>Bag Limit</b> beside each name are recreational limits for Florida <b>Atlantic</b> waters off Volusia County, in inches and fish per person per day unless the line says otherwise, summarized as of <b id="regsAsOf">—</b>. Volusia is split by zone lines for redfish and seatrout, and federal seasons move mid-year. <b>Many species have closed seasons and size, bag, and gear limits. Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
+      <p class="sheet-note">The <b>Size</b> and <b>Bag Limit</b> beside each name are recreational limits for Florida <b>Atlantic</b> waters off Volusia County, in inches (") of total length unless the line says fork, and fish per person per day unless it says otherwise, summarized as of <b id="regsAsOf">—</b>. Volusia is split by zone lines for redfish and seatrout, and federal seasons move mid-year. <b>Many species have closed seasons and size, bag, and gear limits. Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
       <p class="sheet-note backup-warn">⚠ <b>Internet is required to update the app for the current FWC regulations.</b> These limits are stored in the app and travel offline with it, but they only change when a new build downloads. Open the app with a connection now and then — when a newer build is live you'll get a tap-to-reload pill.</p>
       <div id="seasonChart"></div>
       <div class="legend-key">
@@ -2694,8 +2694,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v280</b> · Inch marks &amp; capped names</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v279</b> · Size, bag &amp; closed seasons</p>
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v278</b> · Gulf flounder &amp; kingfish back</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v278</b> · Gulf Flounder &amp; Kingfish back</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v277</b> · Atlantic varieties only</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v276</b> · Varieties in the guide</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v275</b> · Eye icon added</p>
@@ -3210,8 +3211,9 @@ const TIDE_LABELS = { high:"High", low:"Low", falling:"Falling", rising:"Rising"
    Florida ATLANTIC state waters off Volusia County, plus the South Atlantic federal
    rules for the fish people run offshore for. Keyed by SPECIES key.
 
-     size    short size-limit line ("Size 18 to 27" reads as inches, total length,
-             unless the line says fork)
+     size    short size-limit line ("Size 18" to 27""). Lengths carry the inch mark
+             and are total length unless the line says fork. Fish named inside a
+             line (King, Mangrove, Gag) are Title Case, matching the varieties.
      bag     daily bag limit per harvester unless it says otherwise
      closed  month indexes (0 = Jan) with ANY harvest closure -- a closure that runs
              mid-month (flounder Oct 15 - Nov 30, snook Dec 15 - Jan 31) blacks out
@@ -3225,27 +3227,27 @@ const TIDE_LABELS = { high:"High", low:"Low", falling:"Falling", rising:"Rising"
    REGS_ASOF is printed in the panel; bump it whenever a line here is touched. */
 const REGS_ASOF = 'August 2026';
 const REGS = {
-  amberjack:  { size:'28 fork min (greater)', bag:'1', closed:[3,4], note:'Lesser amberjack 14 fork min, 5 per person.' },
-  bass:       { size:'13 min', bag:'7', closed:[] },
+  amberjack:  { size:'28" fork min (Greater)', bag:'1', closed:[3,4], note:'Lesser Amberjack 14" fork min, 5 per person.' },
+  bass:       { size:'13" min', bag:'7', closed:[] },
   bonito:     { size:'No size limit', bag:'No bag limit', closed:[] },
-  cobia:      { size:'36 fork min', bag:'1 (2 per vessel)', closed:[] },
-  blackdrum:  { size:'14 to 24', bag:'5', closed:[] },
-  flounder:   { size:'14 min', bag:'5', closed:[9,10], note:'Closed Oct 15 - Nov 30 statewide.' },
-  grouper:    { size:'24 min gag &amp; black, 20 min red', bag:'3 aggregate', closed:[0,1,2,3], note:'Shallow-water grouper closed Jan 1 - Apr 30 in Atlantic waters.' },
-  hogfish:    { size:'16 fork min', bag:'1', closed:[10,11,0,1,2,3], note:'Atlantic season May 1 - Oct 31 only.' },
-  jack:       { size:'No size limit', bag:'No bag limit (crevalle)', closed:[], note:'Almaco and banded rudderfish have their own limits.' },
-  mackerel:   { size:'12 fork min Spanish, 24 fork min king', bag:'15 Spanish, 3 king', closed:[] },
-  mahi:       { size:'20 fork min', bag:'5 (30 per vessel)', closed:[] },
-  permit:     { size:'11 to 22 fork', bag:'2 (1 over 22 per vessel)', closed:[] },
-  pompano:    { size:'11 fork min', bag:'6', closed:[] },
-  redfish:    { size:'18 to 27', bag:'1 (2 per vessel)', closed:[], note:'Mosquito Lagoon is in the Indian River Lagoon zone -- catch and release only.' },
-  shark:      { size:'54 fork min (most species)', bag:'1 (2 per vessel)', closed:[], note:'Many sharks are prohibited outright; check before you keep one.' },
-  sheepshead: { size:'12 min', bag:'8', closed:[], note:'Vessel limit of 8 during March.' },
-  snapper:    { size:'10 min mangrove, 18 min mutton, 8 min lane', bag:'10 aggregate', closed:[], note:'Atlantic red snapper open only a few days each summer.' },
-  snook:      { size:'28 to 32', bag:'1', closed:[11,0,5,6,7], note:'Snook permit required. Atlantic closed Dec 15 - Jan 31 and Jun 1 - Aug 31.' },
-  tarpon:     { size:'Catch and release only', bag:'No harvest', closed:[], note:'A tarpon over 40 inches must stay in the water. Harvest only with a state tarpon tag.' },
-  triggerfish:{ size:'12 fork min', bag:'1', closed:[0,1,2,3], note:'Gray triggerfish closed Jan 1 - Apr 30 in Atlantic waters.' },
-  trout:      { size:'15 to 19', bag:'5 (1 over 19)', closed:[], note:'Northeast zone limits; the Indian River Lagoon zone allows 3.' },
+  cobia:      { size:'36" fork min', bag:'1 (2 per vessel)', closed:[] },
+  blackdrum:  { size:'14" to 24"', bag:'5', closed:[] },
+  flounder:   { size:'14" min', bag:'5', closed:[9,10], note:'Closed Oct 15 - Nov 30 statewide.' },
+  grouper:    { size:'24" min Gag &amp; Black, 20" min Red', bag:'3 aggregate', closed:[0,1,2,3], note:'Shallow-water Grouper closed Jan 1 - Apr 30 in Atlantic waters.' },
+  hogfish:    { size:'16" fork min', bag:'1', closed:[10,11,0,1,2,3], note:'Atlantic season May 1 - Oct 31 only.' },
+  jack:       { size:'No size limit', bag:'No bag limit (Crevalle)', closed:[], note:'Almaco and Banded Rudderfish have their own limits.' },
+  mackerel:   { size:'12" fork min Spanish, 24" fork min King', bag:'15 Spanish, 3 King', closed:[] },
+  mahi:       { size:'20" fork min', bag:'5 (30 per vessel)', closed:[] },
+  permit:     { size:'11" to 22" fork', bag:'2 (1 over 22" per vessel)', closed:[] },
+  pompano:    { size:'11" fork min', bag:'6', closed:[] },
+  redfish:    { size:'18" to 27"', bag:'1 (2 per vessel)', closed:[], note:'Mosquito Lagoon is in the Indian River Lagoon zone -- catch and release only.' },
+  shark:      { size:'54" fork min (most species)', bag:'1 (2 per vessel)', closed:[], note:'Many sharks are prohibited outright; check before you keep one.' },
+  sheepshead: { size:'12" min', bag:'8', closed:[], note:'Vessel limit of 8 during March.' },
+  snapper:    { size:'10" min Mangrove, 18" min Mutton, 8" min Lane', bag:'10 aggregate', closed:[], note:'Atlantic Red Snapper open only a few days each summer.' },
+  snook:      { size:'28" to 32"', bag:'1', closed:[11,0,5,6,7], note:'Snook permit required. Atlantic closed Dec 15 - Jan 31 and Jun 1 - Aug 31.' },
+  tarpon:     { size:'Catch and release only', bag:'No harvest', closed:[], note:'A Tarpon over 40" must stay in the water. Harvest only with a state tarpon tag.' },
+  triggerfish:{ size:'12" fork min', bag:'1', closed:[0,1,2,3], note:'Gray Triggerfish closed Jan 1 - Apr 30 in Atlantic waters.' },
+  trout:      { size:'15" to 19"', bag:'5 (1 over 19")', closed:[], note:'Northeast zone limits; the Indian River Lagoon zone allows 3.' },
   wahoo:      { size:'No size limit', bag:'2', closed:[] },
   whiting:    { size:'No size limit', bag:'No bag limit', closed:[] }
 };
@@ -3725,7 +3727,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 279;
+const BUILD_NUM  = 280;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
