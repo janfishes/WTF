@@ -7,6 +7,18 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 7:05 PM EDT · v291 · Change log trimmed
+------------------------------------------------------------------------------
+REGULATION CHANGES entries no longer cite build numbers -- a reader has no
+way to date "since Build 279", and the entry's own day heading already says
+when. Both entries were cut to the fact and the fish: the first-publish note
+lost its second sentence's framing, and the ten corrections now read as a
+plain list rather than a comparison against a prior build.
+
+Edited in BOTH places, since regs.json wins over the baked table whenever a
+device has seen it: index.html's REGS_CHANGES and regs.json's changes array.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 6:50 PM EDT · v290 · Zone note, CLOSE buttons
 ------------------------------------------------------------------------------
 The Northeast-zone paragraph moved off the guide's opening screen and into

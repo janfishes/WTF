@@ -218,15 +218,15 @@
     {
       "date": "08/01/26",
       "lines": [
-        "Test of the change-notification path \u2014 no limit moved.",
-        "Added FWC's State Reef Fish Angler requirement to the Grouper note: that designation is required to fish for Grouper, Snapper, Amberjack, Triggerfish or Hogfish from a private vessel, and it renews annually."
+        "Test of the update path \u2014 no limit moved.",
+        "Grouper note now carries FWC's State Reef Fish Angler requirement \u2014 needed to fish for Grouper, Snapper, Amberjack, Triggerfish or Hogfish from a private vessel, and it renews yearly."
       ]
     },
     {
       "date": "08/01/26",
       "lines": [
-        "First published. Every limit read off FWC's own species pages that day.",
-        "Ten values were corrected against what the app had carried since Build 279 \u2014 Triggerfish (bag 1 to 10, and no January\u2013April closure on the Atlantic), Seatrout (3 fish, none over 19\"), Redfish (4 per vessel), Amberjack (April only), King Mackerel (2), Sheepshead (50 per vessel in March and April), Permit (2 over 22\" per vessel), Black Drum (one fish over 24\" allowed), Atlantic Red Snapper (open in state water), and the 2-fish/100-lb default bag on Bonito, Jack Crevalle and Whiting."
+        "First published \u2014 every limit read off FWC's own pages that day.",
+        "Ten limits corrected: Triggerfish (bag 10, no Atlantic winter closure), Seatrout (3, none over 19\"), Redfish (4 per vessel), Amberjack (closed April only), King Mackerel (2), Sheepshead (50 per vessel in March and April), Permit (2 over 22\" per vessel), Black Drum (one over 24\" allowed), Atlantic Red Snapper (open in state water), and the 2-fish/100-lb bag on Bonito, Jack Crevalle and Whiting."
       ]
     }
   ]
