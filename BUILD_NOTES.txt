@@ -7,6 +7,13 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 11:20 PM EDT · v257 · Reef note trimmed
+------------------------------------------------------------------------------
+The offshore reef sheet-note no longer calls out Site 14 Flagler Ave Reef
+and Site 15 Sunglow Reef by name; it now simply says every county site
+leads with its number.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 11:15 PM EDT · v256 · iPhone launch fixes
 ------------------------------------------------------------------------------
 Two iPhone fixes. First, the white screen on launch: tapping the home-screen
