@@ -7,6 +7,30 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 1:44 PM EDT · v268 · Harbor Oaks and Rose Bay
+------------------------------------------------------------------------------
+Two pins added on request. Spot total 202 → 204.
+
+Harbor Oaks, 29.108039/-80.968944, as a city pin (Waypoint · City) with the
+ten municipalities. It is the one entry in that group that is not a
+municipality — GNIS files it as a Populated Place, a named Port Orange
+community on the peninsula between Rose Bay and the Mill Creek marsh — and
+it is the one that needed no nudging off its GNIS point, because that point
+already falls in the water off its own waterfront rather than inland: read
+off the z15 tile, the label and its dot sit in the lead between the
+neighbourhood and the marsh, which is exactly where the v254 convention
+would have put it by hand.
+
+Rose Bay, 29.099722/-80.965697, mid-bay at the chart's own point for it.
+v266 held this name back because three pins already sat on the bay's edges
+(Rose Bay NW, Rose Bay Bridge, the US-1 kayak launch); the bay itself now
+has its own pin among them, 574 m from the nearest. The data block's
+held-back list no longer names Rose Bay, and says why it came in, so a later
+pass does not read it as an accident and pull it back out.
+
+Charted place names now number 63.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 1:26 PM EDT · v267 · Volusia line, nothing south
 ------------------------------------------------------------------------------
 Twenty-three pins south of the Volusia County line (28.7917 N, the straight
