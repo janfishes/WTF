@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:16 AM EDT · v262 · Log backups moved down
+------------------------------------------------------------------------------
+My Log now opens straight onto the catch list. The Full backup, Log only and
+Import sections moved from the top of the sheet to the end, below the log,
+with the what-each-file-carries warning and the status line going with them.
+The opening paragraph now says to scroll to the bottom of the log for the
+two ways to export/import it, and dropped the aside about a late-entered
+catch sorting by its own date.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:02 AM EDT · v261 · Multi-species catch
 ------------------------------------------------------------------------------
 + Catch now takes more than one species per entry: the species pills toggle

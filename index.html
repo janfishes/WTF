@@ -2409,7 +2409,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Every county site leads with its number. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 19.6–39.1 sm (17–34 nm) out and are outside the default view; pan/zoom to find them.</p>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later but that happened earlier drops into place by its own date. Use ✎ to edit an entry or ✕ to delete it. Below are two ways to get your data off this device, and one to bring it back.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use ✎ to edit an entry or ✕ to delete it. Scroll to the bottom of your log to see the two ways to export/import your log.</p>
+      <div id="catchListBody"></div>
+      <div style="height:12px;"></div>
 
       <div class="backup-head">Full backup — everything, photos included</div>
       <p class="backup-sub">Your catch log with its <b>photos</b>, your spot notes, the <b>spots and launches you added yourself</b>, any <b>edits or deletions</b> you made to built-in spots, and your <b>drop labels</b>. This is the file to keep. Photos make it large — often tens of megabytes — so it usually will <b>not</b> go through email. Use <b>Share</b> → AirDrop, Save to Files, or iCloud Drive.</p>
@@ -2434,8 +2436,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <p class="sheet-note backup-warn">⚠ <b>What each file does and doesn't carry.</b> <b>Photos</b> live only inside the full backup; the log-only file drops them on purpose and they cannot be recovered from it. <b>Your catch log</b> — species, date, time, tide, position, notes — is complete in both. <b>Spots</b> are in both as well: the ones you added, the built-in ones you renamed, moved or deleted, and the names you gave individual reef drops. Everything lives on this device only — clearing the browser's website data, or deleting the app from your home screen, takes it with it. Export something before you change phones.</p>
       <p class="storage-note" id="backupStatus"></p>
-      <div style="height:12px;"></div>
-      <div id="catchListBody"></div>
     </div>
     <div id="panel-help" style="display:none;">
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 10px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
@@ -2537,6 +2537,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v262</b> · Log backups moved down</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v261</b> · Multi-species catch</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v260</b> · Details &amp; seasons</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v259</b> · North PO ramp</p>
@@ -3387,7 +3388,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 261;
+const BUILD_NUM  = 262;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
