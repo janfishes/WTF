@@ -7,6 +7,24 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 9:43 PM EDT · v245 · Tail wags
+------------------------------------------------------------------------------
+The splash redfish wags its tail. The artwork is no longer the 11 KB base64
+PNG — it is an SVG traced off that PNG's own pixels (silhouette, the knocked-
+out WTF lettering, and the tail spot as a fitted circle), about half the
+bytes, and crisp at any size. The tail is its own group inside the SVG,
+rotating ±2.4° at the caudal peduncle (the narrow point ahead of the fin,
+found by scanning the PNG's alpha for the thinnest column). Two copies of the
+one fish path are clipped either side of the joint with a 10 px overlap, so
+the wag never opens a seam. The wag's keyframes and its
+prefers-reduced-motion opt-out live inside the SVG itself, so anywhere the
+src is reused wags too — the About sheet picks it up automatically. The
+header's small logo keeps its own separate PNG and does not wag. The v219
+whole-fish swim (bob + roll) is retired in this build — with the tail
+beating, the bob on top read as two motions fighting — so the wag is now the
+splash's only movement. Net effect on the file: about 5 KB smaller.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 9:13 PM EDT · v244 · Ft-in lb-oz entry
 ------------------------------------------------------------------------------
 The + Catch Size boxes now take measurements the way a fish is measured:
