@@ -2474,12 +2474,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <div id="sizeBagBox" style="display:none;">
         <p class="sheet-note">Recreational limits for Atlantic waters off Volusia County. <b>Size</b> is inches (") of total length unless the row says fork. <b>Bag Limit</b> is fish per person per day unless the row says otherwise. Each row says where its limits apply — <b>Inside 3 mi</b> is Florida state water, the dashed line on the map; <b>Inside &amp; beyond 3 mi</b> means the same limits hold in federal water too. Tap a row’s <b>FWC ↗</b> for FWC’s page on that fish (needs a signal). <b>Use the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank">fishrulesapp.com</a>) to identify fish and confirm current state and federal rules.</b></p>
+        <p class="sheet-note"><b>Season bars and regulations are for the Northeast zone</b> — north of the NSB South Causeway. South of it, in the Indian River Lagoon zone including Mosquito Lagoon, redfish, seatrout and a few others differ; each row’s note says how.</p>
+        <div class="loc-btns" style="margin:2px 0 10px;"><button class="mini-btn" type="button" data-close-box="sizeBagBox">CLOSE <span class="bi">✕</span></button></div>
       </div>
       <div id="possessionBox" style="display:none;">
         <p class="sheet-note">A bag limit is also a <b>possession</b> limit — the most you may have aboard at any one time, however many days you have been out. Limits are <b>per person</b> unless the row names a vessel limit, which caps the whole boat. Do not keep a fish for someone who is not fishing. Keep fish <b>whole</b> — head and tail attached — until you are ashore, so they can be measured.</p>
+        <div class="loc-btns" style="margin:2px 0 10px;"><button class="mini-btn" type="button" data-close-box="possessionBox">CLOSE <span class="bi">✕</span></button></div>
       </div>
       <p class="sheet-note backup-warn">⚠ <b>Internet is required to update the app for the current FWC regulations.</b> <b class="regs-stamp">(Last updated <span id="regsAsOf">—</span>.)</b> Limits refresh on their own whenever you open the app with a signal — no download — and <b>REGULATION CHANGES</b> below lists what moved. Offline you keep the last set your phone saw. <b class="tbv">Trust But Verify!</b> <span style="font-size:1.25em; vertical-align:-2px;">🔍</span></p>
-      <p class="sheet-note" style="margin-bottom:2px;"><b>Bars and limits below are for the Northeast zone</b> — north of the NSB South Causeway. South of it, in the Indian River Lagoon zone including Mosquito Lagoon, redfish, seatrout and a few others differ; each row’s note says how.</p>
       <p class="sheet-note" id="regsFresh" style="display:none; color:var(--teal); margin:-4px 0 8px;"></p>
       <div id="seasonChart"></div>
       <div class="legend-key">
@@ -2579,7 +2581,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-seasons"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-seasons">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Seasons</b> opens the Season Guide — a month-by-month table for every species the app knows, for the Northeast zone (north of the NSB South Causeway). Each row carries its <b>Size</b> and <b>Bag Limit</b> for Atlantic waters off Volusia, an <b>FWC ↗</b> link to FWC’s page for that fish, and <b>black cells marking months closed to harvest</b> (a season that turns over mid-month blacks out the whole month). Three buttons open the details: <b>SIZE &amp; BAG LIMITS</b> for how to read the numbers, <b>POSSESSION</b> for what you may have aboard, and <b>REGULATION CHANGES</b> for every limit that has moved, newest first. Limits refresh on their own whenever you open the app with a signal — no download — so <b>Internet is required to update the app for the current FWC regulations</b>. FWC and Fish Rules (fishrulesapp.com) are always the live word. <b>Trust But Verify!</b></p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Seasons</b> opens the Season Guide — a month-by-month table for every species the app knows, for the Northeast zone (north of the NSB South Causeway). Each row carries its <b>Size</b> and <b>Bag Limit</b> for Atlantic waters off Volusia, an <b>FWC ↗</b> link to FWC’s page for that fish, and <b>black cells marking months closed to harvest</b> (a season that turns over mid-month blacks out the whole month). Three buttons open the details, each closing again with <b>CLOSE ✕</b>: <b>SIZE &amp; BAG LIMITS</b> for how to read the numbers and which zone they cover, <b>POSSESSION</b> for what you may have aboard, and <b>REGULATION CHANGES</b> for every limit that has moved, newest first. Limits refresh on their own whenever you open the app with a signal — no download — so <b>Internet is required to update the app for the current FWC regulations</b>. FWC and Fish Rules (fishrulesapp.com) are always the live word. <b>Trust But Verify!</b></p>
       <p class="sheet-note"><b>Reading the season month bars.</b> Every colored bar row you see — in the Season Guide, in a pin’s popup, on a My Log card, or under Your saved spots — is a calendar: <b>12 cells, January on the left through December on the right</b>. Brighter cells are the better months for that species; dim cells are the slow season. Only the Season Guide's bars add black cells for closed harvest months; the bars on popups, catch cards and saved spots show the bite alone. In popups, the letters above the bars mark the months. A catch shows a bar for every species on it, and a spot shows one for every fish you have named in its <b>Details</b> box.</p>
       <p class="sheet-note"><b>Map zones.</b> The guide also carries the zone key the whole map is colored by. <b>Inshore</b> is creeks, rivers, cuts, streams, flats, jetties, docks and ramps. <b>Offshore</b> is the natural reefs, the artificial sites and the wrecks, 3.5–39.1 sm out. Every catch and every spot is filed under one zone or the other — that is what the <b>Inshore</b> and <b>Offshore</b> map filter buttons switch, and what the <b>+ Catch</b> and <b>+ Spot</b> zone pills set.</p>
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Every county site leads with its number. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 19.6–39.1 sm (17–34 nm) out and are outside the default view; pan/zoom to find them.</p>
@@ -2721,6 +2723,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v290</b> · Zone note, CLOSE buttons</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v289</b> · Limits notes tucked away</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v288</b> · Internet note rewritten</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v287</b> · Regulation changes log</p>
@@ -3805,7 +3808,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 289;
+const BUILD_NUM  = 290;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6921,6 +6924,10 @@ function renderRegsLog(){
         (e.lines||[]).map(l=>'<p class="sheet-note" style="margin:2px 0 0;">' + l + '</p>').join('') +
         '</div>').join('')
     : '<p class="sheet-note" style="margin:2px 0 0;">No changes recorded yet.</p>';
+  /* Same CLOSE ✕ the other two collapsibles carry -- this one is appended here because
+     the box's contents are rebuilt from REGS_CHANGES rather than written in the markup. */
+  box.innerHTML += '<div class="loc-btns" style="margin:8px 0 10px;">' +
+    '<button class="mini-btn" type="button" data-close-box="regsLog">CLOSE <span class="bi">✕</span></button></div>';
 }
 /* Collapsible notes in the Season Guide: REGULATION CHANGES plus the SIZE & BAG LIMITS
    and POSSESSION explainers, which used to sit open as walls of text above the bars. */
@@ -6932,11 +6939,18 @@ function renderRegsLog(){
     const box = document.getElementById(boxId);
     const caret = document.getElementById(cId);
     if(!btn || !box) return;
-    btn.addEventListener('click', ()=>{
-      const open = box.style.display !== 'none';
-      box.style.display = open ? 'none' : 'block';
-      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
-      if(caret) caret.textContent = open ? '▸' : '▾';
+    const set = open=>{
+      box.style.display = open ? 'block' : 'none';
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(caret) caret.textContent = open ? '▾' : '▸';
+    };
+    btn.addEventListener('click', ()=> set(box.style.display === 'none'));
+    /* CLOSE ✕ inside the box collapses it and scrolls its own button back into view --
+       delegated, so the regs log's rebuilt-every-render close button works too. */
+    box.addEventListener('click', e=>{
+      if(!e.target.closest('[data-close-box="' + boxId + '"]')) return;
+      set(false);
+      btn.scrollIntoView({block:'nearest'});
     });
   });
 })();

@@ -7,6 +7,21 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 6:50 PM EDT · v290 · Zone note, CLOSE buttons
+------------------------------------------------------------------------------
+The Northeast-zone paragraph moved off the guide's opening screen and into
+the SIZE & BAG LIMITS panel, where the limits it qualifies are, and now
+leads with the plain statement: "Season bars and regulations are for the
+Northeast zone."
+
+Each of the three collapsibles -- SIZE & BAG LIMITS, POSSESSION, REGULATION
+CHANGES -- ends with a CLOSE X that collapses it and scrolls its own button
+back into view, so a long panel does not have to be scrolled back up to be
+shut. The regs log's copy is appended in renderRegsLog() because that box's
+contents are rebuilt from REGS_CHANGES; the handler is delegated on the box
+and keyed to [data-close-box="<boxId>"], so a rebuild cannot orphan it.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 6:33 PM EDT · v289 · Limits notes tucked away
 ------------------------------------------------------------------------------
 The Season Guide opened with four paragraphs of regulation prose before the
