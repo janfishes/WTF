@@ -7,6 +7,22 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 9:13 PM EDT · v244 · Ft-in lb-oz entry
+------------------------------------------------------------------------------
+The + Catch Size boxes now take measurements the way a fish is measured:
+Length as ft + inches, Weight as lb + ounces (two number boxes per pair —
+typing "2 ft" as words never worked, because the old single boxes wanted
+total inches / decimal pounds). Either box of a pair works alone: 30 in
+the inches box records the same fish as 2 ft + 6.
+
+Storage is unchanged — the record still keeps one length (total inches)
+and one weight (decimal pounds), so old catches, backups and imports are
+untouched; setSizeInputs()/readSizeInputs() convert both ways, and editing
+an old catch shows its size split into the new boxes. Card display now
+matches the entry style: "Weight 5 lb 8 oz" via fmtLbOz() (a clean-pound
+fish still reads "5 lb"). Help's + Catch section explains the boxes.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 9:07 PM EDT · v243 · Consistent buttons
 ------------------------------------------------------------------------------
 Every command in the app now reads word-then-icon, and icons grew a touch.

@@ -2433,7 +2433,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Button Actions</div>
       <p class="sheet-note">The pills on the right are shortcuts to the app's main actions.</p>
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> switches just above the location list enable you to narrow the options down according to where you are fishing.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> switches just above the location list enable you to narrow the options down according to where you are fishing. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
       <div class="subhead">Photos</div>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>✎ Edit</b> or <b>Delete</b> in its popup — or use the ✎ and CLOSE ✕ buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
@@ -2508,6 +2508,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v244</b> · Ft-in lb-oz entry</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v243</b> · Consistent buttons</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v242</b> · Undo everywhere</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v241</b> · Log labels fixed</p>
@@ -2610,8 +2611,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     <label class="field-label">Size (optional)</label>
     <div class="field-row">
-      <input type="number" id="logLength" placeholder="Length (in)" min="0" step="0.5">
-      <input type="number" id="logWeight" placeholder="Weight (lb)" min="0" step="0.1">
+      <input type="number" id="logLenFt" placeholder="Length: ft" min="0" step="1">
+      <input type="number" id="logLenIn" placeholder="+ inches" min="0" step="0.5">
+    </div>
+    <div class="field-row" style="margin-top:6px;">
+      <input type="number" id="logWtLb" placeholder="Weight: lb" min="0" step="1">
+      <input type="number" id="logWtOz" placeholder="+ ounces" min="0" step="1">
     </div>
 
     <label class="field-label">Notes (optional)</label>
@@ -3311,7 +3316,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 243;
+const BUILD_NUM  = 244;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5320,11 +5325,19 @@ function fmtFtIn(len){
   if(ft > 0) return rem ? ft+' ft '+rem+' '+inchWord(rem) : ft+' ft';
   return n+' '+inchWord(n);
 }
+/* Weight in decimal pounds -> "8 oz" / "5 lb" / "5 lb 8 oz", mirroring fmtFtIn. */
+function fmtLbOz(w){
+  const n = Number(w);
+  if(!isFinite(n) || n <= 0) return w + ' lb';
+  const lb = Math.floor(n), oz = Math.round((n - lb)*16*10)/10;
+  if(!lb) return oz + ' oz';
+  return oz ? lb + ' lb ' + oz + ' oz' : lb + ' lb';
+}
 // Labeled size line, shared by the My Log card and the map popup so they can't drift.
 function catchSizeBits(c){
   const bits = [];
   if(c.length) bits.push('Length ' + fmtFtIn(c.length));
-  if(c.weight) bits.push('Weight ' + c.weight + ' lb');
+  if(c.weight) bits.push('Weight ' + fmtLbOz(c.weight));
   return bits;
 }
 
@@ -6945,6 +6958,27 @@ document.getElementById('useMyLoc').addEventListener('click', ()=>{
   }, err=>{ showToast(geoErrorMessage(err), 9000); }, 20000);
 });
 
+/* Size boxes: the record still stores one number for length (total inches) and one
+   for weight (decimal pounds) — the same fields as every earlier build — but the form
+   shows ft+inches and lb+ounces boxes, because that's how a fish gets measured.
+   Either box of a pair works alone (30 inches, or 2 ft 6 in — same thing). */
+function setSizeInputs(length, weight){
+  let ft='', inch='', lb='', oz='';
+  if(length){ ft = Math.floor(length/12) || ''; inch = +(length - (ft||0)*12).toFixed(1) || ''; }
+  if(weight){ lb = Math.floor(weight) || ''; oz = +((weight - (lb||0))*16).toFixed(1) || ''; }
+  document.getElementById('logLenFt').value = ft;
+  document.getElementById('logLenIn').value = inch;
+  document.getElementById('logWtLb').value = lb;
+  document.getElementById('logWtOz').value = oz;
+}
+function readSizeInputs(){
+  const v = id => document.getElementById(id).value;
+  const num = id => Math.max(0, Number(v(id)) || 0);
+  const length = (v('logLenFt')==='' && v('logLenIn')==='') ? null : +(num('logLenFt')*12 + num('logLenIn')).toFixed(1);
+  const weight = (v('logWtLb')==='' && v('logWtOz')==='') ? null : +(num('logWtLb') + num('logWtOz')/16).toFixed(2);
+  return { length, weight };
+}
+
 function resetLogForm(){
   editingCatchId = null;
   activeLogSpecies = null;
@@ -6954,8 +6988,7 @@ function resetLogForm(){
   document.getElementById('tideStatus').textContent = '';
   document.getElementById('logDate').value = todayStr();
   document.getElementById('logTime').value = nowStr();
-  document.getElementById('logLength').value = '';
-  document.getElementById('logWeight').value = '';
+  setSizeInputs(null, null);
   document.getElementById('logNotes').value = '';
   spotSelect.value = '';
   pendingLoc = null;
@@ -6978,8 +7011,7 @@ function openLogSheet(editCatch){
     tideDetail = editCatch.tideDetail || null;
     document.getElementById('logDate').value = editCatch.date || todayStr();
     document.getElementById('logTime').value = editCatch.time || '';
-    document.getElementById('logLength').value = editCatch.length || '';
-    document.getElementById('logWeight').value = editCatch.weight || '';
+    setSizeInputs(editCatch.length || null, editCatch.weight || null);
     document.getElementById('logNotes').value = editCatch.notes || '';
     pendingLoc = {lat:editCatch.lat, lng:editCatch.lng, label:editCatch.locationLabel};
     updateLocPreview();
@@ -7029,8 +7061,8 @@ document.getElementById('saveCatch').addEventListener('click', async ()=>{
     tide: activeTide,
     tideDetail: tideDetail,
     lat: pendingLoc.lat, lng: pendingLoc.lng, locationLabel: pendingLoc.label,
-    length: document.getElementById('logLength').value ? Number(document.getElementById('logLength').value) : null,
-    weight: document.getElementById('logWeight').value ? Number(document.getElementById('logWeight').value) : null,
+    length: readSizeInputs().length,
+    weight: readSizeInputs().weight,
     notes: document.getElementById('logNotes').value.trim() || '',
     photo: pendingPhotoThumb || null
   };
