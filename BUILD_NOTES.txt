@@ -7,6 +7,57 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 3:10 PM EDT · v271 · One writeup at a time
+------------------------------------------------------------------------------
+The help now reads one page at a time, and every word of it lives inside a
+button. Opening a writeup hides every other button and every loose line in the
+panel, and the writeup itself is boxed in a teal border, so the sheet holds
+exactly the one thing being read; tapping the open button again brings the
+directory back. The open writeup is remembered (localStorage 'wtf:helpTopic'),
+so Help re-opens where it was left rather than at the top of the directory.
+
+What moved:
+  * ACTION BUTTONS intro reworded to Jan's line — "Ten buttons along the right
+    side of the map are the app's actions. Tap any button below to read what it
+    does and tap again to close."
+  * PRINT THIS HELP (and its one-line blurb) moved up under the first
+    paragraph; the group it used to head is now just TIDE STATIONS & OFFLINE
+    MAPS.
+  * CATCH absorbed the whole Photos section (photo GPS/timestamp autofill,
+    HEIC caveat, edit/delete) plus a new "Entering the GPS position" note —
+    all coordinates display in degrees and decimal minutes (29°04.902′ N), the
+    three ways a catch takes a position, and that typed/pasted numbers go in
+    through + Spot, which is the only form with a coordinate box.
+  * SPOT absorbed the whole Typing GPS Coordinates section, opening with "All
+    coordinates display in degrees and decimal minutes (e.g. 29°04.902′ N) but
+    can be entered several ways", and the "Add my note" tip.
+  * SEASONS absorbed Reading the Season Month Bars, the map-zone key (what
+    Inshore and Offshore mean for catches and spots), and the offshore-sites
+    note from the Season Guide.
+  * BUTTON SHAPES was dissolved into the buttons it describes: pills into
+    Catch (action stack) and Catches (filter row), chips into Tides and Waves,
+    cookies into each of the five header buttons, diamonds into Species, and
+    the numbered-pin note into Catches and Offshore.
+  * HELP & VIEW TIPS was dissolved the same way: popup placement into Eye,
+    dragging/tap-to-close/update pill into Help, browser zoom reset into Text
+    Size, Show drops into Offshore, Charted Place Names into Inshore, the
+    export/backup tips into My Log.
+  * MAP CREDITS is a new button of its own in the SEARCH, HELP & VIEW group
+    (the ⓘ cookie at the bottom-right of the map), which is where the old
+    dangling credits paragraph went.
+  * WARNING & DISCLAIMER is now just DISCLAIMER, and its "Do not use this site
+    for navigation" paragraph sits loose above the copyright rather than
+    inside the button — one of only three things not behind a button, with the
+    one-sentence button previews and the copyright itself.
+  * READ THIS PARAGRAPH TO GET HOOKED and BUILD NOTES became buttons too.
+
+Search into help was re-cut to match: every writeup button is its own indexed
+section now, so a hit opens the exact writeup that matched instead of the
+first button of whatever group it sat in. Print is unaffected — the print
+clone still forces every writeup open, and the one-at-a-time hiding is undone
+inside @media print.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 2:20 PM EDT · v270 · Help by button
 ------------------------------------------------------------------------------
 The help is now navigated the way the map is: a directory of the app's own
