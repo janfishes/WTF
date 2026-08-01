@@ -7,6 +7,35 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 3:46 PM EDT · v276 · Varieties in the guide
+------------------------------------------------------------------------------
+Every generic row in the Season Guide now names the fish it actually covers,
+in parentheses after the name and in the muted grey at 92% size, so the row
+reads "Snapper (Mangrove, Mutton, Lane, etc.)". Jan asked for Bass (Sea Bass)
+and Drum (Black Drum) by name; the rest follow the same pattern:
+
+  Amberjack (Greater, Lesser)        Mahi (Dolphin, Dorado)
+  Bass (Sea Bass)                    Pompano (Florida, African)
+  Bonito (Little Tunny, False        Redfish (Red Drum)
+    Albacore)                        Shark (Blacktip, Spinner,
+  Drum (Black Drum)                    Bonnethead, etc.)
+  Flounder (Southern, Gulf)          Snapper (Mangrove, Mutton, Lane, etc.)
+  Grouper (Gag, Red, Black,          Triggerfish (Gray, Queen)
+    Scamp, etc.)                     Trout (Spotted Seatrout)
+  Jack (Crevalle, Almaco, Bar,       Whiting (Southern, Gulf)
+    etc.)                            Mackerel (Spanish, King, Cero)
+
+Cobia, Hogfish, Permit, Sheepshead, Snook, Tarpon and Wahoo carry no
+parenthesis — one fish, one name, nothing to disambiguate.
+
+Implementation: a new optional `varieties` field on the SPECIES rows, rendered
+ONLY by the Season Chart's row label (.season-row .lbl .var). The species
+label itself is untouched, so the filter buttons, the + Catch picker, the pin
+popups, the My Log cards and every backup file keep the short generic name.
+The label row is now flex-wrap so a long parenthesis drops to its own line on
+a narrow phone instead of widening the row.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 3:44 PM EDT · v275 · Eye icon added
 ------------------------------------------------------------------------------
 The EYE row in the help's Search, Help & View group now carries the open-eye

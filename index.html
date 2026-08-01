@@ -1659,8 +1659,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Season chart ---------- */
   .season-row{margin-bottom:14px;}
-  .season-row .lbl{display:flex; align-items:center; gap:7px; margin-top:5px; font-family:'Space Grotesk',sans-serif; font-size:calc(13px * var(--ts)); font-weight:600;}
+  .season-row .lbl{display:flex; align-items:center; flex-wrap:wrap; gap:2px 7px; margin-top:5px; font-family:'Space Grotesk',sans-serif; font-size:calc(13px * var(--ts)); font-weight:600;}
   .season-row .lbl .sw{width:10px; height:10px; border-radius:3px;}
+  /* The varieties a generic row covers — quieter than the name itself, and allowed to
+     wrap under it on a narrow phone rather than pushing the row wide. */
+  .season-row .lbl .var{color:var(--muted); font-weight:500; font-size:.92em;}
   .months{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:2px;}
   .months div{height:16px; border-radius:2px; background:var(--navy-800); border:1px solid var(--line);}
   .mo-head{
@@ -2684,6 +2687,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v276</b> · Varieties in the guide</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v275</b> · Eye icon added</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v274</b> · Bass added</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v273</b> · Hogfish replaces Kingfish</p>
@@ -3150,40 +3154,40 @@ svg.leaflet-image-layer.leaflet-interactive path {
    Mahi and Permit; it is the catch-all bucket and is skipped in the Season Guide,
    since an all-zero month row would say nothing. 24 species. */
 const SPECIES = {
-  amberjack: { label:"Amberjack",  short:"AJ", color:"var(--amberjack)", months:[1,1,2,0,2,1,1,2,2,2,1,1] },
+  amberjack: { label:"Amberjack",  short:"AJ", color:"var(--amberjack)", months:[1,1,2,0,2,1,1,2,2,2,1,1], varieties:"Greater, Lesser" },
   /* Black sea bass, filed under B as the app shows it. Year-round fish on the
      nearshore reefs and ledges, so every month reads bright — the bar is saying
      "any month", not "peak all year". Harvest has its own open/closed dates;
      the Fish Rules note at the top of the Season Guide covers that. */
-  bass:      { label:"Bass",       short:"BS", color:"var(--bass)",      months:[2,2,2,2,2,2,2,2,2,2,2,2] },
-  bonito:    { label:"Bonito",     short:"BN", color:"var(--bonito)",    months:[0,0,1,2,2,2,1,1,1,1,0,0] },
+  bass:      { label:"Bass",       short:"BS", color:"var(--bass)",      months:[2,2,2,2,2,2,2,2,2,2,2,2], varieties:"Sea Bass" },
+  bonito:    { label:"Bonito",     short:"BN", color:"var(--bonito)",    months:[0,0,1,2,2,2,1,1,1,1,0,0], varieties:"Little Tunny, False Albacore" },
   cobia:     { label:"Cobia",      short:"CB", color:"var(--cobia)",     months:[0,0,2,2,2,0,0,0,1,1,1,0] },
-  blackdrum: { label:"Drum",       short:"BD", color:"var(--blackdrum)", months:[1,2,2,2,1,0,0,0,0,1,1,1] },
-  flounder:  { label:"Flounder",   short:"FL", color:"var(--flounder)",  months:[0,0,1,1,0,0,0,0,2,2,2,1] },
-  grouper:   { label:"Grouper",    short:"GR", color:"var(--grouper)",   months:[2,2,2,1,0,0,0,0,1,2,2,2] },
+  blackdrum: { label:"Drum",       short:"BD", color:"var(--blackdrum)", months:[1,2,2,2,1,0,0,0,0,1,1,1], varieties:"Black Drum" },
+  flounder:  { label:"Flounder",   short:"FL", color:"var(--flounder)",  months:[0,0,1,1,0,0,0,0,2,2,2,1], varieties:"Southern, Gulf" },
+  grouper:   { label:"Grouper",    short:"GR", color:"var(--grouper)",   months:[2,2,2,1,0,0,0,0,1,2,2,2], varieties:"Gag, Red, Black, Scamp, etc." },
   /* Hogfish are a nearshore/offshore reef fish here. Atlantic (FL Keys/East Florida)
      harvest season runs May 1 - Oct 31, but the bite itself is a cool-water one:
      November through June, best in March and April. */
   hogfish:   { label:"Hogfish",    short:"HG", color:"var(--hogfish)",   months:[1,1,2,2,1,1,0,0,0,0,1,1] },
-  jack:      { label:"Jack",       short:"JK", color:"var(--jack)",      months:[0,1,1,2,2,2,2,2,2,2,1,0] },
-  mackerel:  { label:"Mackerel",   short:"MK", color:"var(--mackerel)",  months:[0,0,2,2,1,1,1,1,2,2,1,0] },
-  mahi:      { label:"Mahi",       short:"MH", color:"var(--mahi)",      months:[0,0,0,1,2,2,2,1,1,0,0,0] },
+  jack:      { label:"Jack",       short:"JK", color:"var(--jack)",      months:[0,1,1,2,2,2,2,2,2,2,1,0], varieties:"Crevalle, Almaco, Bar, etc." },
+  mackerel:  { label:"Mackerel",   short:"MK", color:"var(--mackerel)",  months:[0,0,2,2,1,1,1,1,2,2,1,0], varieties:"Spanish, King, Cero" },
+  mahi:      { label:"Mahi",       short:"MH", color:"var(--mahi)",      months:[0,0,0,1,2,2,2,1,1,0,0,0], varieties:"Dolphin, Dorado" },
   other:     { label:"Other",      short:"OT", color:"#22c7e8",          months:[0,0,0,0,0,0,0,0,0,0,0,0] },
   permit:    { label:"Permit",     short:"PM", color:"var(--permit)",    months:[0,0,1,2,2,2,2,2,1,1,0,0] },
-  pompano:   { label:"Pompano",    short:"PO", color:"var(--pompano)",   months:[1,1,2,2,1,0,0,0,0,2,2,1] },
-  redfish:   { label:"Redfish",    short:"RD", color:"var(--redfish)",   months:[1,1,1,1,1,0,0,0,2,2,2,1] },
-  shark:     { label:"Shark",      short:"SK", color:"var(--shark)",     months:[0,0,1,1,2,2,2,2,2,1,1,0] },
+  pompano:   { label:"Pompano",    short:"PO", color:"var(--pompano)",   months:[1,1,2,2,1,0,0,0,0,2,2,1], varieties:"Florida, African" },
+  redfish:   { label:"Redfish",    short:"RD", color:"var(--redfish)",   months:[1,1,1,1,1,0,0,0,2,2,2,1], varieties:"Red Drum" },
+  shark:     { label:"Shark",      short:"SK", color:"var(--shark)",     months:[0,0,1,1,2,2,2,2,2,1,1,0], varieties:"Blacktip, Spinner, Bonnethead, etc." },
   sheepshead:{ label:"Sheepshead", short:"SH", color:"var(--sheepshead)",months:[2,2,2,1,0,0,0,0,0,0,1,2] },
-  snapper:   { label:"Snapper",    short:"MS", color:"var(--snapper)",   months:[0,0,0,0,1,2,2,2,2,1,1,0] },
+  snapper:   { label:"Snapper",    short:"MS", color:"var(--snapper)",   months:[0,0,0,0,1,2,2,2,2,1,1,0], varieties:"Mangrove, Mutton, Lane, etc." },
   snook:     { label:"Snook",      short:"SN", color:"var(--snook)",     months:[0,0,0,1,1,2,2,2,2,1,1,0] },
   tarpon:    { label:"Tarpon",     short:"TP", color:"var(--tarpon)",    months:[0,0,0,1,1,2,2,2,2,1,0,0] },
   /* Triggerfish are a reef fish here, so the slow months are as much about being
      able to get out to the bottom as about the fish. Best April-May and again
      August-October; they still bite through the winter when the weather allows. */
-  triggerfish:{label:"Triggerfish",short:"TF", color:"var(--triggerfish)",months:[0,0,1,2,2,1,1,2,2,2,1,0] },
-  trout:     { label:"Trout",      short:"TR", color:"var(--trout)",     months:[2,2,2,1,1,0,0,0,1,1,2,2] },
+  triggerfish:{label:"Triggerfish",short:"TF", color:"var(--triggerfish)",months:[0,0,1,2,2,1,1,2,2,2,1,0], varieties:"Gray, Queen" },
+  trout:     { label:"Trout",      short:"TR", color:"var(--trout)",     months:[2,2,2,1,1,0,0,0,1,1,2,2], varieties:"Spotted Seatrout" },
   wahoo:     { label:"Wahoo",      short:"WA", color:"var(--wahoo)",     months:[2,2,1,1,1,1,1,1,1,2,2,2] },
-  whiting:   { label:"Whiting",    short:"WH", color:"var(--whiting)",   months:[2,2,2,2,1,1,0,0,1,1,2,2] }
+  whiting:   { label:"Whiting",    short:"WH", color:"var(--whiting)",   months:[2,2,2,2,1,1,0,0,1,1,2,2], varieties:"Southern, Gulf" }
 };
 const MONTH_LBL = ["J","F","M","A","M","J","J","A","S","O","N","D"];
 const TIDE_LABELS = { high:"High", low:"Low", falling:"Falling", rising:"Rising" };
@@ -3659,7 +3663,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 275;
+const BUILD_NUM  = 276;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6708,7 +6712,12 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   const row = document.createElement('div');
   row.className = 'season-row';
   const cells = sp.months.map(v=>`<div style="${monthCell(v, sp.color)}"></div>`).join("");
-  row.innerHTML = `<div class="months">${cells}</div><div class="lbl"><span class="sw" style="background:${sp.color}"></span>${sp.label}</div>`;
+  /* Only the Season Guide spells the varieties out: the app's own name for the row is
+     the generic one (Snapper, Mackerel), and the guide is where a reader is asking
+     which fish that actually covers. Everywhere else — the filter buttons, the
+     + Catch picker, the popups — stays on the short label. */
+  const vars = sp.varieties ? ` <span class="var">(${sp.varieties})</span>` : '';
+  row.innerHTML = `<div class="months">${cells}</div><div class="lbl"><span class="sw" style="background:${sp.color}"></span>${sp.label}${vars}</div>`;
   seasonChart.appendChild(row);
 });
 
