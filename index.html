@@ -2527,6 +2527,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       An <b>open eye</b> means they are showing; a <b>closed eye</b> means they are hidden, so the cookie always reads as the state of the map rather than as the action. Nothing is reset or unloaded:
       your filters, species switches and any compass route stay exactly as they were and reappear untouched. Like the theme and the text size, the setting is remembered on your device.</p>
 
+      <div class="subhead">Charted Place Names</div>
+      <p class="sheet-note">Every <b>waterway and island the Topo Satellite view names</b> inside our water — from Tomoka Basin south to the Haulover Canal — carries its own inshore pin, <b>84</b> of them: creeks, coves, bays, cuts, sloughs, flats, points, canals and islands, named exactly as the chart prints them. Names and positions come from the <b>USGS Geographic Names Information System</b>, the gazetteer the topo tiles label themselves from, so a pin sits where the map's own label sits, and searching a name you read off the chart finds it. Creek pins land at the creek's <b>mouth</b>, which is the point USGS files a stream under. Where a charted name and a spot name disagreed, the chart won: <b>Tenmile Creek</b> is one word, and the cut is <b>Ponce de Leon Cut</b>, spelled as its ICW daybeacons are. Two pins that had drifted off their namesakes were put back on them — <b>Haulover Canal</b> and <b>Mosquito Lagoon</b>. One name is repeated because the chart repeats it: two different <b>Turnbull Creeks</b>, the second noted as such on its pin.</p>
+
       <div class="subhead">Search</div>
       <p class="sheet-note">Tap the <b>🔍</b> button next to Help and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched on automatically. Search also looks through <b>this Help</b>: type a topic (e.g. "tide station" or "offline") and matching Help sections are listed under their own heading — tap one to open Help at that section.</p>
 
@@ -2550,9 +2553,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead">Copyright</div>
       <p class="sheet-note">This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for the express use of saltwater anglers in Volusia County, Florida.</p>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. The cartoon is © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
-      <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
+      <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA; charted place names and their positions come from the USGS Geographic Names Information System. This app is not affiliated with or endorsed by any of those agencies.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v266</b> · Charted place names</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v265</b> · Popup close ✕ uniform</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v264</b> · Deletes kept 14 days</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v263</b> · Undo moved up</p>
@@ -3059,10 +3063,10 @@ const SPOTS = [
   { id:"dunlawton-bridge", name:"Dunlawton Bridge", zone:"inshore", lat:29.148333, lng:-80.975317, meta:"Bridge", species:[] },
   { id:"mill-creek-ne", name:"Mill Creek NE", zone:"inshore", lat:29.1136, lng:-80.961083, meta:"Creek", species:[] },
   { id:"mill-creek-sw", name:"Mill Creek SW", zone:"inshore", lat:29.11, lng:-80.96615, meta:"Creek", species:[] },
-  { id:"ten-mile-creek-ne", name:"Ten Mile Creek NE", zone:"inshore", lat:29.1098, lng:-80.95785, meta:"Creek", species:[] },
+  { id:"ten-mile-creek-ne", name:"Tenmile Creek NE", zone:"inshore", lat:29.1098, lng:-80.95785, meta:"Creek", species:[] },
   { id:"rose-bay-nw", name:"Rose Bay NW", zone:"inshore", lat:29.104867, lng:-80.977433, meta:"Bay", species:[] },
   { id:"rose-bay-bridge", name:"Rose Bay Bridge", zone:"inshore", lat:29.103667, lng:-80.97185, meta:"Bridge", species:[] },
-  { id:"ten-mile-creek-sw", name:"Ten Mile Creek SW", zone:"inshore", lat:29.100983, lng:-80.959967, meta:"Creek", species:[] },
+  { id:"ten-mile-creek-sw", name:"Tenmile Creek SW", zone:"inshore", lat:29.100983, lng:-80.959967, meta:"Creek", species:[] },
   { id:"spruce-creek-nw", name:"Spruce Creek NW", zone:"inshore", lat:29.09145, lng:-81.02005, meta:"Creek", species:[] },
   { id:"three-bridges-nw", name:"Three Bridges NW", zone:"inshore", lat:29.088617, lng:-80.969867, meta:"Bridge", species:[] },
   /* 29°05'15.9"N 80°57'03.4"W. Sits on the Turnbull Bay tide branch, whose second vertex
@@ -3086,7 +3090,7 @@ const SPOTS = [
   { id:"blue-hole", name:"Blue Hole", zone:"inshore", lat:28.93615, lng:-80.86655, meta:"Hole", species:[] },
   { id:"brickhouse-cove", name:"Brickhouse Cove", zone:"inshore", lat:28.923217, lng:-80.860917, meta:"Cove", species:[] },
   { id:"bissitte-bay", name:"Bissitte Bay", zone:"inshore", lat:28.897717, lng:-80.846133, meta:"Bay", species:[] },
-  { id:"haulover-canal", name:"Haulover Canal", zone:"inshore", lat:28.712183, lng:-80.778183, meta:"Canal", species:[] },
+  { id:"haulover-canal", name:"Haulover Canal", zone:"inshore", lat:28.736659, lng:-80.754495, meta:"Canal", species:[] },
   { id:"reef-flagler", name:"Site 14 Flagler Ave Reef", alt:["Site 14", "Flagler Ave Reef", "Flagler"], zone:"offshore", lat:29.0428, lng:-80.8819, meta:"37–40ft · 4.3 sm/3.7 nm from Inlet · 12 drops",
     desc:"A shallow culvert-and-barrier complex just south of the Flagler County line — the shallowest permitted structure in the county system.",
     tip:"An easy, quick run for snapper and flounder without having to run all the way out to the numbered offshore sites.",
@@ -3181,13 +3185,118 @@ const SPOTS = [
   { id:"ramp-high-bridge-kayak", name:"High Bridge Kayak Launch", zone:"inshore", lat:29.406840, lng:-81.103921, meta:"Kayak launch", wp:true, ramp:true, species:[] },
   { id:"ramp-high-bridge", name:"High Bridge Park Ramps", zone:"inshore", lat:29.408351, lng:-81.100462, meta:"Boat ramp", wp:true, ramp:true, species:[] },
   { id:"ramp-cassen", name:"Cassen Park Boat Ramps", zone:"inshore", lat:29.285346, lng:-81.054216, meta:"Boat ramp", wp:true, ramp:true, species:[] },
-  { id:"wp-mosquito-lagoon", name:"Mosquito Lagoon", zone:"inshore", lat:28.798414, lng:-80.844687, meta:"Waypoint · Lagoon", wp:true, species:[] },
+  { id:"wp-mosquito-lagoon", name:"Mosquito Lagoon", zone:"inshore", lat:28.804981, lng:-80.768484, meta:"Waypoint · Lagoon", wp:true, species:[] },
   { id:"wp-ramsey-pass", name:"Ramsey Pass", zone:"inshore", lat:29.073018, lng:-80.928475, meta:"Waypoint · Pass", wp:true, species:[] },
-  { id:"wp-ponce-cut", name:"Ponce DeLeon Cut", zone:"inshore", lat:29.072500, lng:-80.941200, meta:"Waypoint · Cut", wp:true, species:[] },
+  { id:"wp-ponce-cut", name:"Ponce de Leon Cut", zone:"inshore", lat:29.069985, lng:-80.939221, meta:"Waypoint · Cut", wp:true, species:[] },
   { id:"wp-indian-river-n", name:"Indian River North", zone:"inshore", lat:29.050000, lng:-80.909800, meta:"Waypoint · River", wp:true, species:[] },
   { id:"wp-tata-island", name:"Tata Island", zone:"inshore", lat:29.081685, lng:-80.939863, meta:"Waypoint · Island", wp:true, species:[] },
   { id:"wp-halifax-river2", name:"Halifax River", zone:"inshore", lat:29.090000, lng:-80.940300, meta:"Waypoint · River", wp:true, species:[] },
   { id:"wp-tomoka-river", name:"Tomoka River", zone:"inshore", lat:29.338427, lng:-81.087635, meta:"Waypoint · River", wp:true, species:[] },
+
+  /* ---- Charted place names (v266) — every waterway and island the built-in Topo
+     Satellite view prints inside the app's water, from Tomoka Basin south to the
+     Haulover Canal, as plain waypoint pins. Names and coordinates come from the
+     USGS Geographic Names Information System (Domestic Names, Florida, read
+     2026-08-01) — the same gazetteer the topo tiles label themselves from — and
+     were read back off the tiles at z13-z16 to confirm each label sits where GNIS
+     puts it. Inland freshwater features and everything south of the Haulover are
+     left out, as is any name a pin above already carries (Mill Creek, Tenmile
+     Creek, Rose Bay, Turnbull Bay, Strickland Bay, Spruce Creek, Inlet Harbor,
+     Callalisa Creek, Blue Hole, Browns Bay, Brickhouse Cove, Bissitte Bay, Tomoka
+     Basin/River, Rockhouse Creek, Smith/Bulow Creek, Halifax River, Indian River
+     North, Mosquito Lagoon, Haulover Canal, Ponce de Leon Cut) — and Ponce de Leon
+     Inlet, which the map already prints its own permanent label for. GNIS points a
+     stream at its MOUTH, which is why the creek pins sit where the creek meets
+     open water. One deliberate name repeat: Turnbull Creek, which the topo prints
+     twice for two different creeks — the second one is marked in its meta line.
+     Note for later: the topo labels the ICW channel itself "Bulow Creek" at both
+     29.345/-81.078 and 29.117/-80.959, an NHD reach name carried 20 miles down
+     from the real Bulow Creek at High Bridge; no pins were added for those.
+     North to south: ---- */
+  { id:"wp-tiger-hammock", name:"Tiger Hammock", zone:"inshore", lat:29.381089, lng:-81.097558, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-bryan-island", name:"Bryan Island", zone:"inshore", lat:29.369700, lng:-81.097002, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-pelican-island", name:"Pelican Island", zone:"inshore", lat:29.156372, lng:-80.982832, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-wilbur-bay", name:"Wilbur Bay", zone:"inshore", lat:29.121892, lng:-80.956986, meta:"Waypoint · Bay", wp:true, species:[] },
+  { id:"wp-fozzard-creek", name:"Fozzard Creek", zone:"inshore", lat:29.121343, lng:-80.969373, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-daggett-island", name:"Daggett Island", zone:"inshore", lat:29.104984, lng:-80.950054, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-dead-end-creek", name:"Dead End Creek", zone:"inshore", lat:29.104428, lng:-80.952832, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-live-oak-creek", name:"Live Oak Creek", zone:"inshore", lat:29.096651, lng:-80.946443, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-live-oak-point", name:"Live Oak Point", zone:"inshore", lat:29.093873, lng:-80.946443, meta:"Waypoint · Point", wp:true, species:[] },
+  { id:"wp-lost-creek", name:"Lost Creek", zone:"inshore", lat:29.093040, lng:-80.954776, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-piddler-island", name:"Piddler Island", zone:"inshore", lat:29.087207, lng:-80.940054, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-blind-spruce-creek", name:"Blind Spruce Creek", zone:"inshore", lat:29.086049, lng:-80.944039, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-murray-creek", name:"Murray Creek", zone:"inshore", lat:29.081929, lng:-80.956721, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-braddock-creek", name:"Braddock Creek", zone:"inshore", lat:29.077762, lng:-80.932832, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-redland-canal", name:"Redland Canal", zone:"inshore", lat:29.071651, lng:-80.945054, meta:"Waypoint · Canal", wp:true, species:[] },
+  { id:"wp-bass-flats", name:"Bass Flats", zone:"inshore", lat:29.064707, lng:-80.924498, meta:"Waypoint · Flats", wp:true, species:[] },
+  { id:"wp-smyrna-creek", name:"Smyrna Creek", zone:"inshore", lat:29.057763, lng:-80.928109, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-hunter-creek", name:"Hunter Creek", zone:"inshore", lat:29.054985, lng:-80.928665, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-inlet-creek", name:"Inlet Creek", zone:"inshore", lat:29.049430, lng:-80.921720, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-cook-creek", name:"Cook Creek", zone:"inshore", lat:29.048041, lng:-80.909220, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-chicken-island", name:"Chicken Island", zone:"inshore", lat:29.029985, lng:-80.912554, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-sheephead-cut", name:"Sheephead Cut", zone:"inshore", lat:29.029152, lng:-80.910331, meta:"Waypoint · Cut", wp:true, species:[] },
+  { id:"wp-big-cove", name:"Big Cove", zone:"inshore", lat:29.012653, lng:-80.899208, meta:"Waypoint · Cove", wp:true, species:[] },
+  { id:"wp-big-snapper-cut", name:"Big Snapper Cut", zone:"inshore", lat:29.003875, lng:-80.896720, meta:"Waypoint · Cut", wp:true, species:[] },
+  { id:"wp-little-snapper-cut", name:"Little Snapper Cut", zone:"inshore", lat:29.001375, lng:-80.895609, meta:"Waypoint · Cut", wp:true, species:[] },
+  { id:"wp-snake-creek", name:"Snake Creek", zone:"inshore", lat:28.998590, lng:-80.886897, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-pine-island-bay", name:"Pine Island Bay", zone:"inshore", lat:28.991066, lng:-80.887100, meta:"Waypoint · Bay", wp:true, species:[] },
+  { id:"wp-sand-point", name:"Sand Point", zone:"inshore", lat:28.988875, lng:-80.896998, meta:"Waypoint · Point", wp:true, species:[] },
+  { id:"wp-potts-creek", name:"Potts Creek", zone:"inshore", lat:28.987307, lng:-80.888861, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-webster-creek", name:"Webster Creek", zone:"inshore", lat:28.983947, lng:-80.873853, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-elwinder-creek", name:"Elwinder Creek", zone:"inshore", lat:28.975705, lng:-80.885659, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-botheration-creek", name:"Botheration Creek", zone:"inshore", lat:28.972075, lng:-80.871758, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-bottle-island", name:"Bottle Island", zone:"inshore", lat:28.970265, lng:-80.869219, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-three-sisters-islands", name:"Three Sisters Islands", zone:"inshore", lat:28.965820, lng:-80.871164, meta:"Waypoint · Islands", wp:true, species:[] },
+  { id:"wp-bottle-island-creek", name:"Bottle Island Creek", zone:"inshore", lat:28.964318, lng:-80.869356, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-fox-slip", name:"Fox Slip", zone:"inshore", lat:28.957817, lng:-80.867250, meta:"Waypoint · Bay", wp:true, species:[] },
+  { id:"wp-oyster-bay", name:"Oyster Bay", zone:"inshore", lat:28.957466, lng:-80.861376, meta:"Waypoint · Bay", wp:true, species:[] },
+  { id:"wp-cedar-creek", name:"Cedar Creek", zone:"inshore", lat:28.955222, lng:-80.854979, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-cedar-island", name:"Cedar Island", zone:"inshore", lat:28.948321, lng:-80.848664, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-shipyard-canal", name:"Shipyard Canal", zone:"inshore", lat:28.944987, lng:-80.848386, meta:"Waypoint · Canal", wp:true, species:[] },
+  { id:"wp-turner-flats", name:"Turner Flats", zone:"inshore", lat:28.943541, lng:-80.840422, meta:"Waypoint · Flats", wp:true, species:[] },
+  { id:"wp-shipyard-island", name:"Shipyard Island", zone:"inshore", lat:28.928599, lng:-80.838386, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-orange-island-creek", name:"Orange Island Creek", zone:"inshore", lat:28.915393, lng:-80.832488, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-bittersweet-cove", name:"Bittersweet Cove", zone:"inshore", lat:28.913701, lng:-80.859628, meta:"Waypoint · Cove", wp:true, species:[] },
+  { id:"wp-orange-island", name:"Orange Island", zone:"inshore", lat:28.912488, lng:-80.830608, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-pumpkin-point", name:"Pumpkin Point", zone:"inshore", lat:28.905266, lng:-80.820052, meta:"Waypoint · Point", wp:true, species:[] },
+  { id:"wp-slippery-creek", name:"Slippery Creek", zone:"inshore", lat:28.895071, lng:-80.837035, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-gaines-island", name:"Gaines Island", zone:"inshore", lat:28.890822, lng:-80.826163, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-gaines-slough", name:"Gaines Slough", zone:"inshore", lat:28.885847, lng:-80.821168, meta:"Waypoint · Slough", wp:true, species:[] },
+  { id:"wp-east-channel", name:"East Channel", zone:"inshore", lat:28.874989, lng:-80.799218, meta:"Waypoint · Channel", wp:true, species:[] },
+  { id:"wp-plantation-island", name:"Plantation Island", zone:"inshore", lat:28.871933, lng:-80.800885, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-middle-island", name:"Middle Island", zone:"inshore", lat:28.859434, lng:-80.796440, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-georges-slough", name:"Georges Slough", zone:"inshore", lat:28.844561, lng:-80.772887, meta:"Waypoint · Slough", wp:true, species:[] },
+  { id:"wp-glory-hole", name:"Glory Hole", zone:"inshore", lat:28.819832, lng:-80.762364, meta:"Waypoint · Hole", wp:true, species:[] },
+  { id:"wp-bird-island", name:"Bird Island", zone:"inshore", lat:28.813601, lng:-80.773940, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-cat-hammock", name:"Cat Hammock", zone:"inshore", lat:28.812490, lng:-80.751717, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-tiger-shoal", name:"Tiger Shoal", zone:"inshore", lat:28.812212, lng:-80.785051, meta:"Waypoint · Shoal", wp:true, species:[] },
+  { id:"wp-vanns-slough", name:"Vanns Slough", zone:"inshore", lat:28.811676, lng:-80.762660, meta:"Waypoint · Slough", wp:true, species:[] },
+  { id:"wp-vanns-island", name:"Vanns Island", zone:"inshore", lat:28.810824, lng:-80.764773, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-coot-creek", name:"Coot Creek", zone:"inshore", lat:28.801935, lng:-80.853387, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-turnbull-creek", name:"Turnbull Creek", zone:"inshore", lat:28.798324, lng:-80.850331, meta:"Waypoint · Creek · Mosquito Lagoon W shore", wp:true, species:[] },
+  { id:"wp-preachers-island", name:"Preachers Island", zone:"inshore", lat:28.798324, lng:-80.758106, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-three-cabbage-island", name:"Three Cabbage Island", zone:"inshore", lat:28.788324, lng:-80.746161, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-boathouse-point", name:"Boathouse Point", zone:"inshore", lat:28.783880, lng:-80.836164, meta:"Waypoint · Point", wp:true, species:[] },
+  { id:"wp-onion-farm-island", name:"Onion Farm Island", zone:"inshore", lat:28.781658, lng:-80.821164, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-pardon-slough", name:"Pardon Slough", zone:"inshore", lat:28.777909, lng:-80.730828, meta:"Waypoint · Slough", wp:true, species:[] },
+  { id:"wp-griffis-bay", name:"Griffis Bay", zone:"inshore", lat:28.769606, lng:-80.797752, meta:"Waypoint · Bay", wp:true, species:[] },
+  { id:"wp-hole-in-the-wall", name:"Hole in the Wall", zone:"inshore", lat:28.763325, lng:-80.807552, meta:"Waypoint · Channel", wp:true, species:[] },
+  { id:"wp-pardon-island", name:"Pardon Island", zone:"inshore", lat:28.763047, lng:-80.730328, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-grassy-point", name:"Grassy Point", zone:"inshore", lat:28.762214, lng:-80.812275, meta:"Waypoint · Point", wp:true, species:[] },
+  { id:"wp-pattillo-creek", name:"Pattillo Creek", zone:"inshore", lat:28.760269, lng:-80.790607, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-georges-flats", name:"Georges Flats", zone:"inshore", lat:28.759436, lng:-80.803386, meta:"Waypoint · Flats", wp:true, species:[] },
+  { id:"wp-widgeon-bay", name:"Widgeon Bay", zone:"inshore", lat:28.758115, lng:-80.717734, meta:"Waypoint · Bay", wp:true, species:[] },
+  { id:"wp-big-flounder-creek", name:"Big Flounder Creek", zone:"inshore", lat:28.755547, lng:-80.843109, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-duckroost-cove", name:"Duckroost Cove", zone:"inshore", lat:28.743364, lng:-80.766502, meta:"Waypoint · Cove", wp:true, species:[] },
+  { id:"wp-duckroost-point", name:"Duckroost Point", zone:"inshore", lat:28.742770, lng:-80.771162, meta:"Waypoint · Point", wp:true, species:[] },
+  { id:"wp-bairs-cove", name:"Bairs Cove", zone:"inshore", lat:28.729647, lng:-80.756991, meta:"Waypoint · Cove", wp:true, species:[] },
+  { id:"wp-old-canal", name:"Old Canal", zone:"inshore", lat:28.726659, lng:-80.744217, meta:"Waypoint · Canal", wp:true, species:[] },
+  { id:"wp-granny-cove", name:"Granny Cove", zone:"inshore", lat:28.725593, lng:-80.749400, meta:"Waypoint · Cove", wp:true, species:[] },
+  { id:"wp-cucumber-island", name:"Cucumber Island", zone:"inshore", lat:28.722492, lng:-80.698661, meta:"Waypoint · Island", wp:true, species:[] },
+  { id:"wp-cucumber-slough", name:"Cucumber Slough", zone:"inshore", lat:28.719116, lng:-80.692229, meta:"Waypoint · Slough", wp:true, species:[] },
+  { id:"wp-little-flounder-creek", name:"Little Flounder Creek", zone:"inshore", lat:28.718326, lng:-80.836165, meta:"Waypoint · Creek", wp:true, species:[] },
+  { id:"wp-dummit-cove", name:"Dummit Cove", zone:"inshore", lat:28.714160, lng:-80.749450, meta:"Waypoint · Cove", wp:true, species:[] },
+  { id:"wp-turtlepen-point", name:"Turtlepen Point", zone:"inshore", lat:28.710270, lng:-80.691439, meta:"Waypoint · Point", wp:true, species:[] },
 
   /* ---- City waypoints (v254) — one pin per municipality the Halifax / Indian River
      North / Mosquito Lagoon run through, each placed mid-waterway off that city's
@@ -3411,7 +3520,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 265;
+const BUILD_NUM  = 266;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -4901,7 +5010,7 @@ function aidPointerHit(e){
 map.on('click', aidPointerHit);
 map.on('mousemove', aidPointerHit);
 
-// Launch centred on Ponce DeLeon Inlet (same anchor the inlet label uses, a few
+// Launch centred on Ponce de Leon Inlet (same anchor the inlet label uses, a few
 // lines down) at a wide default zoom, rather than on the geometric centre of
 // every pin — all pins show at this zoom regardless, with per-category totals
 // shown on the filter chips above (see updateFilterCounts()).
@@ -4917,7 +5026,7 @@ map.setView([29.07783, -80.91022], DEFAULT_ZOOM);
 const inletLabelMarker = L.marker([29.07783, -80.91022], {
   icon: L.divIcon({className:'', html:'', iconSize:[0,0]}),
   interactive:false, keyboard:false
-}).addTo(map).bindTooltip('Ponce DeLeon Inlet', {permanent:true, direction:'center', className:'place-label', opacity:1});
+}).addTo(map).bindTooltip('Ponce de Leon Inlet', {permanent:true, direction:'center', className:'place-label', opacity:1});
 
 /* ===================== SPOT MARKERS ===================== */
 

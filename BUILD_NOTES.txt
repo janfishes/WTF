@@ -7,6 +7,75 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 1:12 PM EDT · v266 · Charted place names
+------------------------------------------------------------------------------
+Every waterway and island the built-in Topo Satellite view names inside the
+app's water now carries its own pin: 84 new inshore waypoints from Tomoka
+Basin south to the Haulover Canal — creeks, coves, bays, cuts, sloughs,
+flats, points, canals, hammocks and islands — named and placed exactly as
+the chart has them. Spot total 141 → 225.
+
+Source: the USGS Geographic Names Information System (Domestic Names,
+Florida, downloaded 2026-08-01), which is the same gazetteer the USGS topo
+tiles label themselves from, so a GNIS point and the printed label are the
+same thing. Every name was then read back off real ImageryTopo tiles at
+z13–z16 to confirm it: the Ponce Inlet cluster (Inlet Harbor, Blind Spruce,
+Braddock, Murray, Hunter, Smyrna, Cook, Inlet Creek), the south Halifax
+(Wilbur Bay, Fozzard, Mill, Tenmile, Dead End, Rose Bay), Edgewater/Oak
+Hill (Pine Island Bay, Potts, Webster, Elwinder, Botheration, Bottle Island
+Creek, Fox Slip, Oyster Bay, Cedar Creek, Turner Flats, Bittersweet Cove,
+Slippery Creek, Gaines Slough), mid-lagoon (Glory Hole, Vanns Slough,
+Griffis Bay, Pattillo, Duckroost, Pardon Slough), Haulover (Bairs, Granny,
+Dummit) and Tomoka's marsh hammocks (Tiger Hammock, Bryan Island, which
+only print at z16). GNIS files a stream under its MOUTH, which is why the
+creek pins sit where the creek meets open water rather than mid-creek.
+
+Deliberately NOT added, to avoid duplicating a pin that already carries the
+name: Mill Creek, Tenmile Creek, Rose Bay, Turnbull Bay, Strickland Bay,
+Spruce Creek, Inlet Harbor, Callalisa Creek, Blue Hole, Browns Bay,
+Brickhouse Cove, Bissitte Bay, Tomoka Basin, Tomoka River, Rockhouse Creek,
+Smith Creek, Bulow Creek, Halifax River, Indian River North, Mosquito
+Lagoon, Haulover Canal, Ponce de Leon Cut. Ponce de Leon Inlet is left out
+for the same reason from the other direction — the map already draws its own
+permanent label there, and a pin would have made three copies of that name
+inside half a mile once Labels were on. Also left out: inland
+freshwater names (Lake Ashby Creek, Reed/Halifax/Samsula Canal, Tiger Bay's
+islands, Deep Creek and the rest) and everything south of the Haulover,
+which is Brevard's Indian River and off this app's water. Nothing was
+deleted.
+
+Name and location discrepancies resolved in the chart's favour:
+  · "Ten Mile Creek NE/SW" → "Tenmile Creek NE/SW". The topo prints
+    Tenmile as one word. Pin ids unchanged, so saved catches still match.
+  · "Ponce DeLeon Cut" → "Ponce de Leon Cut", the form both GNIS and the
+    cut's own ICW daybeacons use; moved 339 m to the GNIS point.
+  · Haulover Canal pin was at 28.712183/-80.778183 — 3.5 km SSW of the
+    canal, out in open Indian River. Now 28.736659/-80.754495, on the cut
+    at Allenhurst where the ICW crosses (confirmed on the z13 tile).
+  · Mosquito Lagoon waypoint was at 28.798414/-80.844687, 7.4 km west of
+    the lagoon in the marsh at the mouth of the lagoon's own Turnbull
+    Creek. Now 28.804981/-80.768484, mid-lagoon where the topo prints the
+    name.
+
+One name is repeated on purpose: the topo prints Turnbull Creek twice, for
+two unrelated creeks 33 miles apart. Jan's existing Turnbull Creek (Turnbull
+Bay, 29.05) keeps its name; the new one is marked "Mosquito Lagoon W shore"
+in its meta line.
+
+Noted, no pin added: the topo labels the ICW channel itself "Bulow Creek" at
+both 29.345/-81.078 and 29.117/-80.959. That is an NHD reach name carried
+20-plus miles down the waterway from the real Bulow Creek at High Bridge,
+not a second creek, and pinning it would have put a duplicate Bulow Creek
+in Wilbur-by-the-Sea.
+
+Two stray "Ponce DeLeon" spellings also went to the charted form: the map's
+own inlet label now reads "Ponce de Leon Inlet". (The one left is inside a
+comment quoting NOAA's own station listing.)
+
+Help gained a "Charted Place Names" section; the Copyright note now credits
+GNIS alongside FWC and NOAA.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 12:26 PM EDT · v265 · Popup close ✕ uniform
 ------------------------------------------------------------------------------
 The map-popup corner CLOSE button was the one close control still drawn
