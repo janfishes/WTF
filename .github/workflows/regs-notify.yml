@@ -1,4 +1,7 @@
-# Emails Jan when a fishing regulation changes.
+# Emails Jan when a fishing regulation changes. Two channels, on purpose:
+# a GitHub issue (no credentials, doubles as the audit trail) and a direct
+# email through Resend to jan@aceshardware.com (independent of every GitHub
+# notification setting). Either one arriving is enough.
 #
 # Fires on any push to main that touches regs.json -- whether the weekly FWC
 # check made it or a person did -- and opens a GitHub issue. GitHub then mails
@@ -74,3 +77,42 @@ jobs:
             --title "FWC changes to WTC" \
             --assignee janfishes \
             --body-file /tmp/body.md
+
+      # Direct mail to jan@aceshardware.com, independent of GitHub notification
+      # settings. Skipped silently when RESEND_API_KEY is not set, so the repo
+      # still works for anyone who clones it without the secret.
+      #
+      # Resend with no verified domain may only send FROM onboarding@resend.dev
+      # and TO the address that owns the Resend account -- which is exactly this
+      # one address, so no domain setup is needed. If mail should ever go to a
+      # second recipient, that is when a domain has to be verified at
+      # resend.com/domains.
+      - name: Email Jan
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BODY: ${{ steps.diff.outputs.body }}
+        run: |
+          if [ -z "$RESEND_API_KEY" ]; then
+            echo "RESEND_API_KEY not set — skipping the direct email."
+            echo "The GitHub issue above is still the notification."
+            exit 0
+          fi
+          # jq -Rs builds a correctly escaped JSON string out of the body, so a
+          # quote or a backslash in a regulation note cannot break the payload.
+          jq -n \
+            --arg from "WTF Log <onboarding@resend.dev>" \
+            --arg to "jan@aceshardware.com" \
+            --arg subject "FWC changes to WTC" \
+            --arg text "$BODY" \
+            '{from:$from, to:[$to], subject:$subject, text:$text}' > /tmp/mail.json
+          code=$(curl -sS -o /tmp/mail-response.json -w '%{http_code}' \
+            -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer $RESEND_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d @/tmp/mail.json)
+          echo "Resend HTTP $code"
+          cat /tmp/mail-response.json
+          echo ""
+          # Fail loudly: a silent mail failure is the exact thing this job exists
+          # to prevent, and a failed run is itself a notification.
+          [ "$code" = "200" ] || { echo "Resend rejected the send."; exit 1; }
