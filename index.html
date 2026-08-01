@@ -1670,6 +1670,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Quieter than the numbers it qualifies -- it answers "where", not "how big". */
   .season-row .lbl .wtr{color:var(--muted); font-weight:600; font-size:.82em; font-family:'JetBrains Mono',monospace;}
   .season-row .reg-note{color:var(--muted); font-size:calc(11.5px * var(--ts)); line-height:1.45; margin-top:2px;}
+  /* The row's own link to FWC's page for that fish. Teal like every other link in the
+     app, and it needs a connection -- the note above the chart says so. */
+  .season-row .fwc-lnk{color:var(--teal); font-weight:600; text-decoration:none; white-space:nowrap;}
+  .season-row .fwc-lnk:active{opacity:.6;}
   .months{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:2px;}
   .months div{height:16px; border-radius:2px; background:var(--navy-800); border:1px solid var(--line);}
   .mo-head{
@@ -2454,10 +2458,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <div class="sheet-body">
     <div id="panel-season">
-      <p class="sheet-note">Each species row shows the 12 months of the year, January through December. Brighter cells mean a better bite that month; dim cells are the slow season. <b>Black cells are months closed to harvest</b> — a season that opens or closes mid-month blacks out the whole month, so check the exact dates before you keep a fish. These are general patterns for the Ponce de Leon Inlet region — not a substitute for a fishing report.</p>
-      <p class="sheet-note">The <b>Size</b> and <b>Bag Limit</b> beside each name are recreational limits for Florida <b>Atlantic</b> waters off Volusia County, in inches (") of total length unless the line says fork, and fish per person per day unless it says otherwise. Each row also says which water its limits govern: <b>Inside 3 mi</b> is Florida state water — the dashed line the map draws off the beach is that boundary — and <b>Inside &amp; beyond 3 mi</b> means the same limits hold out in federal water as well. Volusia is split by zone lines for redfish and seatrout, and federal seasons move mid-year. <b>Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
+      <p class="sheet-note">Each species row shows the 12 months of the year, January through December. Brighter cells mean a better bite that month; dim cells are the slow season. <b>Black cells are months closed to harvest</b> — a season that opens or closes mid-month blacks out the whole month, so check the exact dates before you keep a fish. These are general patterns for the Ponce de Leon Inlet region — not a substitute for a fishing report. <b>Trust But Verify!</b> <span style="font-size:1.25em; vertical-align:-2px;">🔍</span></p>
+      <p class="sheet-note">The <b>Size</b> and <b>Bag Limit</b> beside each name are recreational limits for Florida <b>Atlantic</b> waters off Volusia County, in inches (") of total length unless the line says fork, and fish per person per day unless it says otherwise. Each row also says which water its limits govern: <b>Inside 3 mi</b> is Florida state water — the dashed line the map draws off the beach is that boundary — and <b>Inside &amp; beyond 3 mi</b> means the same limits hold out in federal water as well. Volusia is split by zone lines for redfish and seatrout — both at the <b>NSB South Causeway</b>, with the lagoon rule in the row’s own note — and federal seasons move mid-year. Every row carries an <b>FWC ↗</b> link straight to FWC’s page for that fish; those open only with a connection. <b>Refer to the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank">fishrulesapp.com</a>) for current state and federal regulations and help identifying fish.</b></p>
       <p class="sheet-note"><b>Possession.</b> A bag limit is a <b>daily</b> limit and, on the water, a <b>possession</b> limit — what you may have aboard at any one time, however many days you have been out. Limits are <b>per person</b> unless the line names a vessel limit, and a vessel limit caps the whole boat no matter how many are aboard. You cannot keep a fish for someone who is not fishing, and on a for-hire trip the captain and crew may not keep a bag of many species. Fish must stay <b>whole</b> — head and tail attached — until they are ashore, so they can be measured; a filleted fish on the boat is a violation even if it was legal when you caught it. A few federal fisheries allow a two-day possession on a documented multi-day trip; nothing in state water does.</p>
-      <p class="sheet-note backup-warn">⚠ <b>Internet is required to update the app for the current FWC regulations.</b> <b>(Last updated <span id="regsAsOf">—</span>.)</b> These limits are stored in the app and travel offline with it, but they only change when a new build downloads. Open the app with a connection now and then — when a newer build is live you'll get a tap-to-reload pill.</p>
+      <p class="sheet-note backup-warn">⚠ <b>Internet is required to update the app for the current FWC regulations.</b> <b>(Last updated <span id="regsAsOf">—</span>.)</b> Every line was read off FWC’s own pages on that date. They are stored in the app and travel offline with it, but they only change when a new build downloads — and the <b>FWC ↗</b> links on each row need a signal to open. Open the app with a connection now and then — when a newer build is live you'll get a tap-to-reload pill.</p>
       <div id="seasonChart"></div>
       <div class="legend-key">
         <div class="lk-label">Abundance</div>
@@ -2559,7 +2563,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-seasons"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-seasons">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Seasons</b> opens the Season Guide — a month-by-month table for every species the app knows, plus the map-zone key and a note on the offshore sites. Each row also carries its <b>Size</b> and <b>Bag Limit</b> for Atlantic waters off Volusia, and <b>black cells mark the months closed to harvest</b> (a season that turns over mid-month blacks out the whole month). Each row also says which water its limits govern — <b>Inside 3 mi</b> (Florida state water, the dashed line the map draws off the beach) or <b>Inside &amp; beyond 3 mi</b> — and a <b>Possession</b> note covers what you may have aboard, per person against per vessel, and keeping fish whole until you are ashore. Those limits ship inside the app and work offline, but <b>Internet is required to update the app for the current FWC regulations</b> — open it with a connection now and then and take the reload pill when it appears. Fish Rules (fishrulesapp.com) is always the live word.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Seasons</b> opens the Season Guide — a month-by-month table for every species the app knows, plus the map-zone key and a note on the offshore sites. Each row also carries its <b>Size</b> and <b>Bag Limit</b> for Atlantic waters off Volusia, and <b>black cells mark the months closed to harvest</b> (a season that turns over mid-month blacks out the whole month). Each row also says which water its limits govern — <b>Inside 3 mi</b> (Florida state water, the dashed line the map draws off the beach) or <b>Inside &amp; beyond 3 mi</b> — and a <b>Possession</b> note covers what you may have aboard, per person against per vessel, and keeping fish whole until you are ashore. Every row also carries an <b>FWC ↗</b> link to FWC’s own page for that fish — tap it whenever you have a signal and read the rule from the source. The limits themselves ship inside the app and work offline, but <b>Internet is required to update the app for the current FWC regulations</b> — open it with a connection now and then and take the reload pill when it appears. FWC and Fish Rules (fishrulesapp.com) are always the live word. <b>Trust But Verify!</b></p>
       <p class="sheet-note"><b>Reading the season month bars.</b> Every colored bar row you see — in the Season Guide, in a pin’s popup, on a My Log card, or under Your saved spots — is a calendar: <b>12 cells, January on the left through December on the right</b>. Brighter cells are the better months for that species; dim cells are the slow season. Only the Season Guide's bars add black cells for closed harvest months; the bars on popups, catch cards and saved spots show the bite alone. In popups, the letters above the bars mark the months. A catch shows a bar for every species on it, and a spot shows one for every fish you have named in its <b>Details</b> box.</p>
       <p class="sheet-note"><b>Map zones.</b> The guide also carries the zone key the whole map is colored by. <b>Inshore</b> is creeks, rivers, cuts, streams, flats, jetties, docks and ramps. <b>Offshore</b> is the natural reefs, the artificial sites and the wrecks, 3.5–39.1 sm out. Every catch and every spot is filed under one zone or the other — that is what the <b>Inshore</b> and <b>Offshore</b> map filter buttons switch, and what the <b>+ Catch</b> and <b>+ Spot</b> zone pills set.</p>
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Every county site leads with its number. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 19.6–39.1 sm (17–34 nm) out and are outside the default view; pan/zoom to find them.</p>
@@ -2701,6 +2705,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v283</b> · Checked against FWC</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v282</b> · State or federal water</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v281</b> · Last-updated stamp</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v280</b> · Inch marks &amp; capped names</p>
@@ -3236,35 +3241,61 @@ const TIDE_LABELS = { high:"High", low:"Low", falling:"Falling", rising:"Rising"
      note    the one-line caveat that would otherwise make the row a lie -- zone
              splits, tags, mini-seasons.
 
-   These change every year and mid-year, and Volusia is split by two zone boundaries
-   (redfish and seatrout), so the panel points at Fish Rules for the live word.
+     fwc     FWC's own page for that fish -- a slug under FWC_BASE, or [[label,slug],...]
+             where one row covers two managed fish (Spanish and King mackerel). Every
+             row renders it as an FWC link, which needs a connection to open.
+
+   Every line was read off FWC's own species pages on the REGS_ASOF date, not from
+   memory. They change every year and mid-year, and Volusia is split by TWO zone
+   boundaries -- redfish and seatrout, both at the NSB South Causeway -- so the row
+   carries the Northeast numbers and its note carries the lagoon's.
    REGS_ASOF is the "(Last updated MM/DD/YY)" the panel prints -- same date form as
    the build stamp. Bump it whenever a line in this table is touched. */
 const REGS_ASOF = '08/01/26';
+const FWC_BASE = 'https://myfwc.com/fishing/saltwater/recreational/';
 const REGS = {
-  amberjack:  { size:'28" fork min (Greater)', bag:'1', closed:[3,4], note:'Lesser Amberjack 14" fork min, 5 per person.', waters:'both' },
-  bass:       { size:'13" min', bag:'7', closed:[], waters:'both' },
-  bonito:     { size:'No size limit', bag:'No bag limit', closed:[], waters:'both' },
-  cobia:      { size:'36" fork min', bag:'1 (2 per vessel)', closed:[], waters:'both' },
-  blackdrum:  { size:'14" to 24"', bag:'5', closed:[], waters:'state' },
-  flounder:   { size:'14" min', bag:'5', closed:[9,10], note:'Closed Oct 15 - Nov 30 statewide.', waters:'state' },
-  grouper:    { size:'24" min Gag &amp; Black, 20" min Red', bag:'3 aggregate', closed:[0,1,2,3], note:'Shallow-water Grouper closed Jan 1 - Apr 30 in Atlantic waters.', waters:'both' },
-  hogfish:    { size:'16" fork min', bag:'1', closed:[10,11,0,1,2,3], note:'Atlantic season May 1 - Oct 31 only.', waters:'both' },
-  jack:       { size:'No size limit', bag:'No bag limit (Crevalle)', closed:[], note:'Almaco and Banded Rudderfish have their own limits.', waters:'both' },
-  mackerel:   { size:'12" fork min Spanish, 24" fork min King', bag:'15 Spanish, 3 King', closed:[], waters:'both' },
-  mahi:       { size:'20" fork min', bag:'5 (30 per vessel)', closed:[], waters:'both' },
-  permit:     { size:'11" to 22" fork', bag:'2 (1 over 22" per vessel)', closed:[], waters:'both' },
-  pompano:    { size:'11" fork min', bag:'6', closed:[], waters:'state' },
-  redfish:    { size:'18" to 27"', bag:'1 (2 per vessel)', closed:[], note:'Mosquito Lagoon is in the Indian River Lagoon zone -- catch and release only.', waters:'state' },
-  shark:      { size:'54" fork min (most species)', bag:'1 (2 per vessel)', closed:[], note:'Many sharks are prohibited outright; check before you keep one.', waters:'both' },
-  sheepshead: { size:'12" min', bag:'8', closed:[], note:'Vessel limit of 8 during March.', waters:'state' },
-  snapper:    { size:'10" min Mangrove, 18" min Mutton, 8" min Lane', bag:'10 aggregate', closed:[], note:'Atlantic Red Snapper open only a few days each summer.', waters:'both' },
-  snook:      { size:'28" to 32"', bag:'1', closed:[11,0,5,6,7], note:'Snook permit required. Atlantic closed Dec 15 - Jan 31 and Jun 1 - Aug 31.', waters:'state' },
-  tarpon:     { size:'Catch and release only', bag:'No harvest', closed:[], note:'A Tarpon over 40" must stay in the water. Harvest only with a state tarpon tag.', waters:'state' },
-  triggerfish:{ size:'12" fork min', bag:'1', closed:[0,1,2,3], note:'Gray Triggerfish closed Jan 1 - Apr 30 in Atlantic waters.', waters:'both' },
-  trout:      { size:'15" to 19"', bag:'5 (1 over 19")', closed:[], note:'Northeast zone limits; the Indian River Lagoon zone allows 3.', waters:'state' },
-  wahoo:      { size:'No size limit', bag:'2', closed:[], waters:'both' },
-  whiting:    { size:'No size limit', bag:'No bag limit', closed:[], waters:'state' }
+  amberjack:  { size:'28" fork min (Greater)', bag:'1', closed:[3], waters:'both', fwc:'amberjack',
+                note:'Atlantic season is Jan-Mar and May-Dec; closed all April. Lesser Amberjack and Banded Rudderfish 14" to 22" fork, 5 per person aggregate. Almaco is unregulated.' },
+  bass:       { size:'13" min', bag:'7', closed:[], waters:'both', fwc:'black-sea-bass' },
+  bonito:     { size:'No size limit', bag:'2 or 100 lb', closed:[], waters:'state', fwc:'unregulated',
+                note:'Unregulated species: the default bag is two fish or 100 lb per person per day, whichever is more.' },
+  cobia:      { size:'36" fork min', bag:'1 (2 per vessel, whichever is less)', closed:[], waters:'both', fwc:'cobia' },
+  blackdrum:  { size:'14" to 24"', bag:'5 (may include one over 24")', closed:[], waters:'state', fwc:'black-drum' },
+  flounder:   { size:'14" min', bag:'5', closed:[9,10], waters:'both', fwc:'flounder',
+                note:'Closed Oct 15 - Nov 30 statewide, in state and federal water.' },
+  grouper:    { size:'24" min Gag &amp; Black, 20" min Red &amp; Scamp', bag:'3 aggregate (1 Gag or Black)', closed:[0,1,2,3], waters:'both', fwc:'groupers',
+                note:'Atlantic season opens May 1 — Gag through Aug 1, the rest through Dec 31. Nassau and Goliath are prohibited. Gag vessel limit 2.' },
+  hogfish:    { size:'16" fork min', bag:'1', closed:[10,11,0,1,2,3], waters:'both', fwc:'hogfish',
+                note:'Atlantic season May 1 - Oct 31, state and federal water alike.' },
+  jack:       { size:'No size limit', bag:'2 or 100 lb (Crevalle)', closed:[], waters:'state', fwc:'unregulated',
+                note:'Jack Crevalle is unregulated — two fish or 100 lb per person, whichever is more. Almaco and Banded Rudderfish carry their own limits.' },
+  mackerel:   { size:'12" fork min Spanish, 24" fork min King', bag:'15 Spanish, 2 King', closed:[], waters:'both',
+                fwc:[['Spanish','spanish-mackerel'],['King','king-mackerel']],
+                note:'King bag is 2 on the Atlantic coast; the Gulf allows 3. Cero is unregulated.' },
+  mahi:       { size:'20" fork min', bag:'5 (30 per vessel, whichever is less)', closed:[], waters:'both', fwc:'dolphinfish',
+                note:'On a for-hire trip the vessel limit is the bag times the number of paying customers; captain and crew may not keep a bag.' },
+  permit:     { size:'11" to 22" fork', bag:'2 (1 over 22" in your bag)', closed:[], waters:'both', fwc:'permit',
+                note:'No more than 2 fish over 22" per vessel.' },
+  pompano:    { size:'11" fork min', bag:'6', closed:[], waters:'both', fwc:'permit' },
+  redfish:    { size:'18" to 27"', bag:'1 (4 per vessel)', closed:[], waters:'state', fwc:'red-drum',
+                note:'Northeast zone. South of the NSB South Causeway — the Indian River Lagoon zone, which takes in Mosquito Lagoon — Redfish are catch and release only.' },
+  shark:      { size:'Varies by species', bag:'1 (2 per vessel)', closed:[], waters:'both', fwc:'sharks',
+                note:'No minimum on Blacktip, Bonnethead, Atlantic Sharpnose and the rest of Group 1; 54" fork on Bull, Nurse, Spinner and the rest of Group 2. Many species are prohibited outright, and fishing from shore needs a free permit and course.' },
+  sheepshead: { size:'12" min', bag:'8', closed:[], waters:'both', fwc:'sheepshead',
+                note:'Vessel limit 50 per trip during March and April. State limits extend into federal water.' },
+  snapper:    { size:'10" min Mangrove, 18" min Mutton, 8" min Lane', bag:'10 aggregate', closed:[], waters:'both', fwc:'snappers',
+                note:'Atlantic Red Snapper 20", 2 per person — open in state water, closed in federal. Mangrove is 12" and 10 per person once you are beyond 3 mi.' },
+  snook:      { size:'28" to 32"', bag:'1', closed:[11,0,5,6,7], waters:'state', fwc:'snook',
+                note:'Snook permit required. Closed Dec 15 - Jan 31 and Jun 1 - Aug 31 in the Northeast and Indian River Lagoon zones alike.' },
+  tarpon:     { size:'Catch and release only', bag:'No harvest', closed:[], waters:'state', fwc:'tarpon',
+                note:'A Tarpon over 40" must stay in the water. Harvest only with a state tarpon tag, one per person per year.' },
+  triggerfish:{ size:'12" fork min', bag:'10', closed:[], waters:'both', fwc:'triggerfish',
+                note:'Atlantic Gray Triggerfish are open year-round, inside the 20-fish snapper-grouper aggregate. Queen Triggerfish are a marine life species and must be landed alive.' },
+  trout:      { size:'15" to 19"', bag:'3 (none over 19")', closed:[], waters:'state', fwc:'spotted-seatrout',
+                note:'Northeast zone. South of the NSB South Causeway — the Indian River Lagoon zone — the bag is 2 and the season closes Nov 1 - Dec 31.' },
+  wahoo:      { size:'No size limit', bag:'2', closed:[], waters:'both', fwc:'wahoo' },
+  whiting:    { size:'No size limit', bag:'2 or 100 lb', closed:[], waters:'state', fwc:'unregulated',
+                note:'Gulf Kingfish (whiting) is unregulated — two fish or 100 lb per person, whichever is more.' }
 };
 
 const ZONES = {
@@ -3742,7 +3773,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 282;
+const BUILD_NUM  = 283;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6812,7 +6843,16 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
      can be the wrong one beyond it. */
   const WATERS_LBL = { state:'Inside 3 mi', both:'Inside &amp; beyond 3 mi' };
   const wtr = reg && WATERS_LBL[reg.waters] ? ` <span class="wtr">${WATERS_LBL[reg.waters]}</span>` : '';
-  const regNote = reg && reg.note ? `<div class="reg-note">${reg.note}</div>` : '';
+  /* FWC's own page for the fish, so the reader can check the live rule the moment they
+     have a signal. One link, or a labelled pair where a row covers two managed fish. */
+  const fwcLink = (slug, label) => `<a class="fwc-lnk" href="${FWC_BASE}${slug}/" target="_blank" rel="noopener">${label}</a>`;
+  let fwc = '';
+  if(reg && reg.fwc){
+    fwc = Array.isArray(reg.fwc)
+      ? ' <span class="fwc-wrap">FWC: ' + reg.fwc.map(pair=> fwcLink(pair[1], pair[0] + ' \u2197')).join(' · ') + '</span>'
+      : ' <span class="fwc-wrap">' + fwcLink(reg.fwc, 'FWC \u2197') + '</span>';
+  }
+  const regNote = reg && reg.note ? `<div class="reg-note">${reg.note}${fwc}</div>` : `<div class="reg-note">${fwc}</div>`;
   row.innerHTML = `<div class="months">${cells}</div><div class="lbl"><span class="sw" style="background:${sp.color}"></span>${sp.label}${vars}${regLine}${wtr}</div>${regNote}`;
   seasonChart.appendChild(row);
 });

@@ -7,6 +7,51 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 5:30 PM EDT · v283 · Checked against FWC
+------------------------------------------------------------------------------
+Every limit in the REGS table was re-read off FWC's own species pages at
+myfwc.com/fishing/saltwater/recreational/ and corrected. The table was
+hand-entered from memory in v279; this build replaces it with what FWC
+actually publishes today. Ten rows were wrong:
+
+  TRIGGERFISH  bag 1 -> 10, and the Jan-Apr blackout is GONE. Atlantic gray
+               triggerfish are open year-round; the Jan 1 - Apr 30 closure
+               belongs to the Gulf. Worst of the errors -- it blacked out four
+               open months and understated the bag by nine fish.
+  TROUT        bag "5 (1 over 19)" -> "3 (none over 19)". Northeast zone may
+               not possess a fish over 19" at all. The lagoon zone south of
+               the NSB South Causeway is 2 fish and CLOSED Nov 1 - Dec 31.
+  REDFISH      vessel limit 2 -> 4 in the Northeast zone.
+  AMBERJACK    closed Apr-May -> April only. Atlantic season is Jan-Mar and
+               May-Dec.
+  KING MACKEREL bag 3 -> 2. Three is the Gulf number.
+  SHEEPSHEAD   "vessel limit of 8 during March" -> 50 per trip during March
+               AND April.
+  PERMIT       vessel limit is 2 fish over 22", not 1.
+  BLACK DRUM   the slot allows one fish OVER 24" in the bag of 5.
+  SNAPPER      Atlantic red snapper is OPEN in state water (20", 2 per
+               person) and closed in federal -- not a few days each summer.
+               Mangrove is 10"/5 inside 3 mi, 12"/10 beyond.
+  BONITO, JACK CREVALLE, WHITING  "No bag limit" -> 2 fish or 100 lb per
+               person, whichever is more. Unregulated species carry that
+               default bag by Florida Statute.
+
+Sheepshead and flounder also moved from 'state' to 'both' -- FWC says those
+limits extend into federal water.
+
+FWC LINKS. Every row now ends with an FWC link to that fish's own page, from
+a new `fwc` field (a slug, or [[label,slug],...] where one row covers two
+managed fish -- Mackerel links Spanish and King separately). Pompano and
+Permit share FWC's combined page; Bonito, Jack and Whiting point at the
+"unregulated" page that defines the default bag. The links need a signal, and
+both the panel and the help say so.
+
+Also: "Trust But Verify!" with a magnifier closes the opening paragraph, the
+intro names the NSB South Causeway as the zone line for both redfish and
+seatrout, and the Internet-required box now says the limits were read off
+FWC's pages on the stamped date.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 4:55 PM EDT · v282 · State or federal water
 ------------------------------------------------------------------------------
 Four changes to the Season Guide, at Jan's word.
