@@ -7,6 +7,33 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 1:53 AM EDT · v258 · Faster hi res
+------------------------------------------------------------------------------
+The Hi Res & ICW view's NAIP imagery now loads through USGS's ArcGIS
+exportImage REST endpoint instead of the WMS. Same server, same imagery,
+but probed side by side (8 tiles each, overnight 2026-08-01) exportImage
+answered in a median 0.54 s vs 0.81 s with a far tighter spread — and
+format=jpgpng lets the server return ~15 KB JPEGs for opaque photo tiles
+instead of several-hundred-KB PNGs, falling back to transparent PNG
+automatically where NAIP has no coverage (verified: open-ocean tiles come
+back fully transparent, so the Sentinel-2 fill underneath shows through
+unchanged). wmsTileUrl() now builds the exportImage request; the old WMS
+GetMap form is kept in its comment as a fallback recipe. Both NAIP
+provider entries (the topo view's z17+ crisp layer and the ICW base) and
+OFFLINE_ICW_TEMPLATE point at the new endpoint — which also means a
+previously saved offline ICW hi-res tile set is keyed under the old URLs
+and will re-download on its next save.
+
+All raster layers also get keepBuffer:6 (Leaflet default 2), so panning
+holds on to more already-loaded tiles and shows sharp imagery instead of
+upscaled blur while new tiles arrive. Both changes come out of tonight's
+"all blurred" episode, when the USGS WMS served tiles at 3+ seconds each
+with ~15% failures; headless verification after the switch: 35/35 tiles
+loaded at z18 over Inlet Harbor, zero failures, no page errors, and the
+shore-clip/ocean-fill canvas pipeline confirmed working on the JPEG
+responses (no CORS taint).
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 11:20 PM EDT · v257 · Reef note trimmed
 ------------------------------------------------------------------------------
 The offshore reef sheet-note no longer calls out Site 14 Flagler Ave Reef
@@ -37,8 +64,46 @@ genuinely follows the device setting. Both fish images also carry an
 explicit aspect-ratio so nothing shifts while fonts load.
 
 ------------------------------------------------------------------------------
-Build 2026-07-31 · 11:05 PM EDT · v255 · Marker clearance
+Build 2026-07-31 · 11:15 PM EDT · v256 · iPhone launch fixes
 ------------------------------------------------------------------------------
+Two iPhone complaints, one build: a white screen for several seconds before
+the splash appears, and a splash fish whose tail never wags.
+
+The wag: the fish was an <img> whose SVG carried its own keyframes. iOS
+treats animation inside an image document as an "animated image" — paused by
+Low Power Mode and the Auto-Play Animated Images accessibility switch, and
+cut off from the page's styles — so the tail never moved on iPhones (desktop
+Chrome and WebKit run it, which is why every headless check passed). The fish
+is now INLINE svg in the splash markup, its keyframes moved into the page
+stylesheet (selectors .fish-svg .w / .tf; ids renamed fishP/fishClipT/
+fishClipB to stay page-unique), so it animates like any other element and
+prefers-reduced-motion now genuinely follows the device setting. The About
+sheet no longer copies the src at startup: the splash hands its svg NODE to
+the sheet when it drops (class swapped splash-fish → about-fish, replacing
+the #aboutFish placeholder img), so the file still carries exactly one copy
+of the artwork and the About fish keeps wagging.
+
+The white screen: two causes, two fixes. (1) Home-screen launches showed
+iOS's system launch screen, which is plain white without apple-touch-startup-
+image links — manifest background_color is ignored. Added 11 launch PNGs
+(launch/), each a real screenshot of the splash at that device's exact pixel
+size (SE through 16/17 Pro Max, portrait), quantized to 128 colors (~55 KB
+each), plus the media-query link table in the head. Launch now flows
+seamlessly into the live splash. iOS reads these when the icon is added —
+remove and re-add the home-screen app to pick them up. (2) The splash's
+1.7 s minimum hold started at script run, so when first paint lagged (slow
+cellular, cold process) the hold had already burned down before anything was
+visible — the splash flashed and dropped. The clock now starts at the first
+painted frame (double requestAnimationFrame), so the fish always gets its
+full showing; the 4.2 s dead-tile-server cap rides the same clock.
+
+Measured while diagnosing (local, throttled to ~cellular + 6x CPU): the page
+paints its splash in 0.4–1.0 s in both engines even while the 1 MB file is
+still streaming, and the v219 service worker serves repeat opens in ~20 ms —
+so a multi-second white in a Safari TAB means the SW isn't controlling yet
+(it installs on the first open after v219 and serves from the second open;
+the home-screen app has its own storage partition and needs its own two
+opens).
 Six mid-water pins moved so no pin graphic sits on top of a charted aid to
 navigation in the Hi Res & ICW view. Every pin was audited against the
 AIDS table (all 240 marks); anything under 150 m of a mark was moved to
