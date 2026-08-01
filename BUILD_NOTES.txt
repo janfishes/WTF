@@ -7,6 +7,55 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 3:34 PM EDT · v274 · Bass added
+------------------------------------------------------------------------------
+Bass -- black sea bass -- is a new species, bringing the list to 24. It files
+under B, between Amberjack and Bonito, in the species filter buttons, the
++ Catch picker and the Season Guide alike, all three of which are built by
+walking the SPECIES object in order.
+
+Season bars: year round. All twelve cells read bright, which is the bar saying
+"any month", not "peak every month". Harvest has its own open and closed
+dates; the Fish Rules line at the top of the Season Guide still applies.
+
+Short code BS. Its colour is a new spring green, --bass #3fce87, chosen to sit
+clear of the other 23 in perceived colour -- its nearest neighbour is Snapper
+at about 31 Lab units, and it reads at 6.4:1 against the map background.
+
++ Spot Details text recognizes it from "black sea bass", "sea bass", "seabass"
+and plain "bass".
+
+------------------------------------------------------------------------------
+Build 2026-08-01 · 3:31 PM EDT · v273 · Hogfish replaces Kingfish
+------------------------------------------------------------------------------
+Kingfish is out of the species list and Hogfish is in, in its place. The
+species count stays at 23. Because every species list in the app -- the
+species filter buttons, the + Catch picker, the Season Guide -- is built by
+walking the SPECIES object in insertion order, the entry also moved: Hogfish
+files under H, between Grouper and Jack, where Kingfish had been sitting under
+K between Jack and Mackerel.
+
+Season bars: November through June, best in March and April. The bar reads
+bright in Mar-Apr, dim Jan-Feb and May-Jun, dark Jul through Oct. That is the
+bite, not the harvest rule -- Atlantic hogfish are open May 1 - Oct 31 and the
+Fish Rules note at the top of the Season Guide still applies.
+
+Short code KG became HG. The pink swatch carried over unchanged; the CSS
+variable is now --hogfish.
+
++ Spot Details text recognizes hogfish by "hogfish", "hog fish", "hog
+snapper", "hoggie" and "hogs". "Hog snapper" is longer than "snapper", and
+the alias matcher takes the longest alias first and consumes it from the text,
+so naming a hog snapper no longer also lights the Snapper bar. The kingfish
+aliases ("king mackerel", "kingfish", "kings") are gone.
+
+Catches already logged as Kingfish are left alone -- they are not rewritten to
+Hogfish, since a king mackerel is not a hogfish. They keep their record and
+render through the unknown-species fallback: label "Unknown", short "??", grey
+marker, no season bar. Re-log or edit those entries if you want them to carry
+a species the app still knows.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 3:25 PM EDT · v272 · Intro always open
 ------------------------------------------------------------------------------
 The "Read This Paragraph to Get Hooked" writeup is no longer behind a button.
