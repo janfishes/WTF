@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 9:57 PM EDT · v247 · 500 ft start
+------------------------------------------------------------------------------
+The app now opens zoomed in on Ponce DeLeon Inlet instead of the wide county
+view: DEFAULT_ZOOM went from 9 to 15, which is the zoom where the 66px scale
+bar reads exactly 500 ft at the inlet's latitude (z16 would drop it to
+300 ft). The startup center is unchanged — [29.07783, -80.91022], the inlet
+label's anchor, in place since v218. Verified headless: the map settles at
+z15, centered on the inlet, scale bar reading "500 ft".
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 9:48 PM EDT · v246 · Installable app
 ------------------------------------------------------------------------------
 manifest.json, icon-192.png, icon-512.png and apple-touch-icon.png are now in
