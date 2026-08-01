@@ -2505,6 +2505,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA. This app is not affiliated with or endorsed by either agency.</p>
       <div class="subhead">Build Notes</div>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v255</b> · Marker clearance</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v254</b> · Cities &amp; creeks</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v253</b> · Ramsey pin moved</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-07-31 · <b>v252</b> · Fab icons first</p>
@@ -3113,10 +3114,10 @@ const SPOTS = [
   { id:"ramp-cassen", name:"Cassen Park Boat Ramps", zone:"inshore", lat:29.285346, lng:-81.054216, meta:"Boat ramp", wp:true, ramp:true, species:[] },
   { id:"wp-mosquito-lagoon", name:"Mosquito Lagoon", zone:"inshore", lat:28.798414, lng:-80.844687, meta:"Waypoint · Lagoon", wp:true, species:[] },
   { id:"wp-ramsey-pass", name:"Ramsey Pass", zone:"inshore", lat:29.073018, lng:-80.928475, meta:"Waypoint · Pass", wp:true, species:[] },
-  { id:"wp-ponce-cut", name:"Ponce DeLeon Cut", zone:"inshore", lat:29.069384, lng:-80.939482, meta:"Waypoint · Cut", wp:true, species:[] },
-  { id:"wp-indian-river-n", name:"Indian River North", zone:"inshore", lat:29.060134, lng:-80.914909, meta:"Waypoint · River", wp:true, species:[] },
+  { id:"wp-ponce-cut", name:"Ponce DeLeon Cut", zone:"inshore", lat:29.072500, lng:-80.941200, meta:"Waypoint · Cut", wp:true, species:[] },
+  { id:"wp-indian-river-n", name:"Indian River North", zone:"inshore", lat:29.050000, lng:-80.909800, meta:"Waypoint · River", wp:true, species:[] },
   { id:"wp-tata-island", name:"Tata Island", zone:"inshore", lat:29.081685, lng:-80.939863, meta:"Waypoint · Island", wp:true, species:[] },
-  { id:"wp-halifax-river2", name:"Halifax River", zone:"inshore", lat:29.087089, lng:-80.937208, meta:"Waypoint · River", wp:true, species:[] },
+  { id:"wp-halifax-river2", name:"Halifax River", zone:"inshore", lat:29.090000, lng:-80.940300, meta:"Waypoint · River", wp:true, species:[] },
   { id:"wp-tomoka-river", name:"Tomoka River", zone:"inshore", lat:29.338427, lng:-81.087635, meta:"Waypoint · River", wp:true, species:[] },
 
   /* ---- City waypoints (v254) — one pin per municipality the Halifax / Indian River
@@ -3124,11 +3125,11 @@ const SPOTS = [
      waterfront and verified against NAIP aerial imagery. North to south: ---- */
   { id:"wp-ormond-beach", name:"Ormond Beach", zone:"inshore", lat:29.295500, lng:-81.055500, meta:"Waypoint · City", wp:true, species:[] },
   { id:"wp-holly-hill", name:"Holly Hill", zone:"inshore", lat:29.245000, lng:-81.033000, meta:"Waypoint · City", wp:true, species:[] },
-  { id:"wp-daytona-beach", name:"Daytona Beach", zone:"inshore", lat:29.205000, lng:-81.007700, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-daytona-beach", name:"Daytona Beach", zone:"inshore", lat:29.210000, lng:-81.009000, meta:"Waypoint · City", wp:true, species:[] },
   { id:"wp-south-daytona", name:"South Daytona", zone:"inshore", lat:29.166000, lng:-80.991000, meta:"Waypoint · City", wp:true, species:[] },
-  { id:"wp-daytona-beach-shores", name:"Daytona Beach Shores", zone:"inshore", lat:29.156000, lng:-80.980000, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-daytona-beach-shores", name:"Daytona Beach Shores", zone:"inshore", lat:29.153000, lng:-80.983300, meta:"Waypoint · City", wp:true, species:[] },
   { id:"wp-port-orange", name:"Port Orange", zone:"inshore", lat:29.140600, lng:-80.977900, meta:"Waypoint · City", wp:true, species:[] },
-  { id:"wp-ponce-inlet", name:"Ponce Inlet", zone:"inshore", lat:29.094000, lng:-80.948400, meta:"Waypoint · City", wp:true, species:[] },
+  { id:"wp-ponce-inlet", name:"Ponce Inlet", zone:"inshore", lat:29.092000, lng:-80.948000, meta:"Waypoint · City", wp:true, species:[] },
   { id:"wp-new-smyrna-beach", name:"New Smyrna Beach", zone:"inshore", lat:29.010000, lng:-80.910000, meta:"Waypoint · City", wp:true, species:[] },
   { id:"wp-edgewater", name:"Edgewater", zone:"inshore", lat:28.974700, lng:-80.888300, meta:"Waypoint · City", wp:true, species:[] },
   { id:"wp-oak-hill", name:"Oak Hill", zone:"inshore", lat:28.880000, lng:-80.835000, meta:"Waypoint · City", wp:true, species:[] },
@@ -3341,7 +3342,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '07/31/26';                          // map stamp form
-const BUILD_NUM  = 254;
+const BUILD_NUM  = 255;
 const BUILD_TAG  = 'build 2026-07-31 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }

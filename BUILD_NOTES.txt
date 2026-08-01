@@ -7,6 +7,29 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 11:05 PM EDT · v255 · Marker clearance
+------------------------------------------------------------------------------
+Six mid-water pins moved so no pin graphic sits on top of a charted aid to
+navigation in the Hi Res & ICW view. Every pin was audited against the
+AIDS table (all 240 marks); anything under 150 m of a mark was moved to
+open water — new spots re-verified against NAIP imagery — and the whole
+pin set now clears every mark by 150 m or more.
+
+From v254: Daytona Beach (was 28 m off Halifax Harbor Daybeacon 1) moved
+north to 29.210000, -81.009000; Daytona Beach Shores (was 127 m off the
+Mathew Marina daybeacons) moved to the open west channel at 29.153000,
+-80.983300; Ponce Inlet (was 45 m off Ponce de Leon Cut Buoy 3) moved
+south along the channel to 29.092000, -80.948000.
+
+Three older waypoints the audit caught as well: Ponce DeLeon Cut (was
+52 m off Cut Daybeacon 8) re-centered mid-cut between Daybeacons 7 and 8
+at 29.072500, -80.941200; Indian River North (was 47 m off Ponce de Leon
+Inlet Light 12) moved south into the open river off the anchorage at
+29.050000, -80.909800; Halifax River (was 113 m off Inlet Harbor Buoy 2A)
+moved to mid-channel west of the Inlet Harbor marina row at 29.090000,
+-80.940300.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 10:43 PM EDT · v254 · Cities & creeks
 ------------------------------------------------------------------------------
 Fourteen new inshore pins, every coordinate verified mid-water against NAIP
