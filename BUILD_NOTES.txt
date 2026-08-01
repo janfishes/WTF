@@ -7,6 +7,27 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 5:50 PM EDT · v284 · Guide trimmed to the fish
+------------------------------------------------------------------------------
+The Season Guide is now only about the fish, at Jan's word.
+
+DELETED the Map Zones key and the Offshore Sites paragraph from the panel.
+The zone key and the reef-centroid story both still live in the help, which
+is where a reader goes asking what the map's colors mean; in the guide they
+sat between the species table and nothing.  The .zone-legend CSS went with
+them -- nothing else in the app used it.
+
+ADDED a line directly above the bars: the season bars and the size and bag
+limits are for the NORTHEAST ZONE, the water north of the NSB South Causeway,
+with the Indian River Lagoon zone's differences in each row's own note.  That
+is the honest caption for a one-row-per-fish chart in a county the zone line
+runs straight through.
+
+MOVED "Trust But Verify!" and its magnifier off the end of the first
+paragraph and onto the end of the boxed Internet-required warning, so the
+last thing read before the chart is the caveat rather than the bite.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 5:30 PM EDT · v283 · Checked against FWC
 ------------------------------------------------------------------------------
 Every limit in the REGS table was re-read off FWC's own species pages at
