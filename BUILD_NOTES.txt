@@ -7,6 +7,15 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-07-31 · 10:08 PM EDT · v251 · Gentler wag
+------------------------------------------------------------------------------
+The splash tail wag is calmer: the beat slowed from 1.9s to 3s, the sweep
+compression eased from 70% to 82% of full length, the near/far size change
+narrowed (+3.5%/-4% instead of +6%/-7%), the skew halved to ±1.5°, and the
+far-side dim lightened (#e9e9e9 instead of #dfdfdf). Same mechanism as
+v250, just turned down — a lazy cruise instead of a hustle.
+
+------------------------------------------------------------------------------
 Build 2026-07-31 · 10:03 PM EDT · v250 · Left-right wag
 ------------------------------------------------------------------------------
 The splash tail's two sweeps now read as different sides. v248's pure
