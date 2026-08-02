@@ -1718,7 +1718,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
     display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:2px;
     padding:8px 0 8px; margin-bottom:6px; border-bottom:1px solid var(--line);
   }
-  .mo-head span{font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--muted); text-align:center; letter-spacing:-.02em;}
+  /* The month row is the key to every bar under it, and it was set at 8px muted — too
+     small to read on a phone (Jan, 2026-08-01). Bold, brighter, and scaled with the A
+     control; the negative tracking is what keeps three-letter names inside a 1/12 column. */
+  .mo-head span{font-family:'JetBrains Mono',monospace; font-size:calc(11px * var(--ts)); font-weight:700; color:var(--fog); text-align:center; letter-spacing:-.04em;}
+  /* 12 columns of a ~300px sheet is ~22px, and "Sep" at 11px x the A control's 130% step
+     runs past that — the only combination that overflows, so it is the only one held back. */
+  @media (max-width:360px){
+    .mo-head span{font-size:calc(9.5px * var(--ts)); letter-spacing:-.06em;}
+  }
   .legend-key{display:flex; gap:14px; flex-wrap:wrap; margin:14px 0 4px; font-size:10.5px; color:var(--muted); font-family:'JetBrains Mono',monospace;}
   .legend-key .k{display:flex; align-items:center; gap:5px;}
   /* Names what the four swatches are measuring, so the row doesn't open on a bare
@@ -2561,7 +2569,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
-      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish — one species or several — where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b></p>
+      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish — one species or several — where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show feeding times by month and fishing regs. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b></p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b>Get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <p class="sheet-note" style="margin:14px 0 6px;">Prints this entire help as plain text — every button’s writeup opened out — so it can be read offline or carried on paper.</p>
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 14px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
@@ -2752,6 +2760,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v296</b> · Bigger month labels</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v295</b> · Air around the ✕</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v294</b> · Zone pills filter</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v293</b> · Opens on Tequila Sunrise</p>
@@ -3842,7 +3851,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 295;
+const BUILD_NUM  = 296;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }

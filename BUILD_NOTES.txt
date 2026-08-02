@@ -7,6 +7,24 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 8:39 PM EDT · v296 · Bigger month labels
+------------------------------------------------------------------------------
+Two Seasons fixes, both about reading it on a phone.
+
+The Season Guide's month header (.mo-head span) was 8px, muted grey, normal
+weight -- the key to every bar under it, and the hardest line in the sheet to
+read. Now bold, --fog instead of --muted, and 11px scaled by the A control
+(the old rule was fixed px and ignored A entirely). Tracking tightened to
+-.04em so "Sep" still lands inside a 1/12 column. Measured in headless Chrome
+at 320 / 375 / 430 px and at both A steps: the only overflowing combination
+was 320px at 130%, so a max-width:360px rule holds that case to 9.5px /
+-.06em -- still larger than the 8px it replaces.
+
+Help overview line for Seasons now reads "show feeding times by month and
+fishing regs" -- it said "typical feeding times by month" and never mentioned
+that the sheet carries size, bag limits and closed seasons at all.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:05 PM EDT · v295 · Air around the ✕
 ------------------------------------------------------------------------------
 The ✕ on a CLOSE button sat too close to the word. The glyph carries the
