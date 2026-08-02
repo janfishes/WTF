@@ -19,6 +19,12 @@ showing; Inshore off still takes the row away. Jumps from search, My Log or
 Your saved spots still re-light the target's category so the pin can't
 arrive hidden. Help's Inshore dropdown updated to match.
 
+Also in this build: the township waypoints now say what they are — every
+Waypoint · City pin carries "(City)" in its name (Daytona Beach (City),
+Port Orange (City), …) on the map tag, in its popup and in the catch form's
+location list, matching v315's "Ponce Inlet (Town)", which keeps its
+official Town styling. No pin moved.
+
 
 Logging a catch and choosing "Ponce Inlet" put the pin at 29°05.520'N
 80°56.880'W — up the Halifax by the town, not at the inlet. That entry is
