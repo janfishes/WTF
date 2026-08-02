@@ -7,6 +7,23 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 3:56 PM EDT · v329 · Site note cleanups
+------------------------------------------------------------------------------
+Note corrections on the county reef sites, plus a Long Johns fix:
+
+  · Site 14 Flagler Ave Reef — the note now places it where it actually
+    is: about 1.8 miles (1.5 nm) offshore of Flagler Avenue, New Smyrna
+    Beach. The old wording ("just south of the Flagler County line" and
+    "the shallowest permitted structure in the county system") is gone.
+  · Site 10 — dropped the "northernmost numbered site" claim.
+  · Site 9 — dropped the "deepest" claim; it keeps "most remote."
+  · Long Johns — no longer a drops ground. It originally carried two
+    marks; one was deleted earlier, but the pin stayed at the old
+    two-mark midpoint with a "1 spot · Show drops" popup. The pin now
+    sits directly on the one real mark (29°21.959'N 80°27.989'W) as a
+    plain offshore pin, ~33.4 sm/29.0 nm from the inlet.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 3:49 PM EDT · v328 · Cracker Ridge
 ------------------------------------------------------------------------------
 Two more built-in offshore natural sites, filed under the Offshore →
