@@ -2690,7 +2690,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-search"><span class="ht-g">🔍</span>Search<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-search">
       <p class="sheet-note"><b>Search</b> is a <b>cookie</b> — one of the round buttons in the top-right corner of the header.</p>
-      <p class="sheet-note">Tap the <b>🔍</b> button next to Help and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched on automatically. Search also looks through <b>this Help</b>: type a topic (e.g. "tide station" or "offline") and matching Help sections are listed under their own heading — tap one to open Help at that section.</p>
+      <p class="sheet-note">Tap the <b>🔍</b> button next to Help and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches of it. Tap any result to fly to it on the map with its popup open — hidden pins are switched on automatically. Search also looks through <b>this Help</b>: type a topic (e.g. "tide station" or "offline") and matching Help sections are listed under their own heading — tap one to open Help at that section. A writeup opened that way is just a visit: close Help (or leave the app) and it closes with it, so Help comes back to the directory — or to the writeup you last opened by hand — rather than to wherever a search dropped you. Search itself starts empty every time you open it.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-help"><span class="ht-g">?</span>Help<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-help">
@@ -2760,6 +2760,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v297</b> · Search leaves no trace</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v296</b> · Bigger month labels</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v295</b> · Air around the ✕</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v294</b> · Zone pills filter</p>
@@ -3851,7 +3852,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 296;
+const BUILD_NUM  = 297;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -7078,6 +7079,10 @@ function closeAllOverlays(exceptId){
     const se = document.getElementById(s), scr = document.getElementById(sc);
     if(se) se.classList.remove('open');
     if(scr) scr.classList.remove('open');
+    // A force-closed search must forget its query, same as tapping CLOSE, and a
+    // force-closed Help must drop the writeup a search hit left open in it.
+    if(s === 'searchSheet' && typeof resetSearch === 'function') resetSearch();
+    if(s === 'infoSheet' && typeof clearSearchHelpTopic === 'function') clearSearchHelpTopic();
   });
   if(exceptId !== 'tidePanel'){
     const tp = document.getElementById('tidePanel');
@@ -7110,6 +7115,17 @@ infoScrim.addEventListener('click', closeInfoSheet);
 function closeInfoSheet(){
   infoSheet.classList.remove('open'); infoScrim.classList.remove('open');
   INFO_BTNS.forEach(id=>{ const b = document.getElementById(id); if(b) b.classList.remove('pressed'); });
+  clearSearchHelpTopic();
+}
+/* A writeup opened by a search hit is on loan: the moment Help goes away it collapses, so
+   the next visit starts from the directory (or the last hand-opened writeup) instead of
+   dropping the reader back into the search's landing spot. */
+let helpTopicFromSearch = false;
+function clearSearchHelpTopic(){
+  if(!helpTopicFromSearch) return;
+  helpTopicFromSearch = false;
+  if(typeof restoreHelpTopic === 'function') restoreHelpTopic();
+  else if(typeof closeHelpTopics === 'function') closeHelpTopics();
 }
 
 const TAB_TITLES = { season:'Season Guide', catches:'My Catch Log', help:'Help' };
@@ -7238,9 +7254,12 @@ document.addEventListener('click', ev=>{
   if(!b) return;
   const body = b.nextElementSibling;
   if(!body || !body.classList.contains('help-body')) return;
+  const wasFromSearch = helpTopicFromSearch;
+  helpTopicFromSearch = false;   // a hand-tap takes ownership of whatever is open now
   if(body.classList.contains('open')){
     closeHelpTopics();
-    try{ localStorage.removeItem(HELP_TOPIC_KEY); }catch(e){}
+    // Dismissing a writeup search opened must not erase the writeup the reader last chose.
+    if(!wasFromSearch){ try{ localStorage.removeItem(HELP_TOPIC_KEY); }catch(e){} }
   } else {
     openHelpTopic(b, true);
   }
@@ -7269,8 +7288,10 @@ document.addEventListener('click', ev=>{
     if(!btn) return;
     const body = btn.closest('.help-body');
     const topic = body && body.previousElementSibling;
+    const wasFromSearch = helpTopicFromSearch;
+    helpTopicFromSearch = false;
     closeHelpTopics();
-    try{ localStorage.removeItem(HELP_TOPIC_KEY); }catch(e){}
+    if(!wasFromSearch){ try{ localStorage.removeItem(HELP_TOPIC_KEY); }catch(e){} }
     /* The directory is back, so put the row this writeup belongs to under the eye
        instead of leaving the sheet parked at whatever depth the writeup was read to. */
     if(topic && topic.classList.contains('help-topic')) topic.scrollIntoView({block:'center'});
@@ -10132,16 +10153,40 @@ const searchSheet = document.getElementById('searchSheet');
 const searchScrim = document.getElementById('searchScrim');
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
+const SEARCH_EMPTY_NOTE = '<p class="empty-note">Type at least 2 letters to search spot names, launches, species, your catch log, and Help.</p>';
 
 document.getElementById('searchBtn').addEventListener('click', ()=>{
   closeAllOverlays('searchSheet');
+  resetSearch();
   searchSheet.classList.add('open');
   searchScrim.classList.add('open');
   setTimeout(()=> searchInput.focus(), 250);
 });
-function closeSearch(){ searchSheet.classList.remove('open'); searchScrim.classList.remove('open'); }
+/* Search is a fresh start every time: closing it (CLOSE, tap-off, force-close by another
+   overlay, or the app being backgrounded/closed) wipes the query and the result list so
+   relaunching never drops the user back into the last search. */
+function resetSearch(){
+  searchInput.value = '';
+  searchResults.innerHTML = SEARCH_EMPTY_NOTE;
+  searchResults.scrollTop = 0;
+}
+function closeSearch(){
+  searchSheet.classList.remove('open');
+  searchScrim.classList.remove('open');
+  try{ searchInput.blur(); }catch(e){}
+  resetSearch();
+}
 document.getElementById('searchClose').addEventListener('click', closeSearch);
 searchScrim.addEventListener('click', closeSearch);
+// Backgrounding or closing the window ends the search too — iOS in particular can restore a
+// home-screen app mid-session, and it should come back to the map, not to a stale search.
+['pagehide','visibilitychange'].forEach(ev=>{
+  window.addEventListener(ev, ()=>{
+    if(ev === 'visibilitychange' && !document.hidden) return;
+    if(searchSheet.classList.contains('open')) closeSearch();
+    if(typeof clearSearchHelpTopic === 'function') clearSearchHelpTopic();
+  });
+});
 
 /* ===================== BITE (solunar feeding times) ===================== */
 
@@ -10194,7 +10239,7 @@ function goToCatch(id){
 searchInput.addEventListener('input', ()=>{
   const q = searchInput.value.trim().toLowerCase();
   if(q.length < 2){
-    searchResults.innerHTML = '<p class="empty-note">Type at least 2 letters to search spot names, launches, species, your catch log, and Help.</p>';
+    searchResults.innerHTML = SEARCH_EMPTY_NOTE;
     return;
   }
   let html = '';
@@ -10328,7 +10373,11 @@ function goToHelpSection(i){
   /* A hit inside a writeup would otherwise land on a row of closed buttons — the words
      the search matched wouldn't be on screen — so the matching button is opened. A hit on
      a group heading has nothing to open, and leaves the directory as it is. */
-  if(sec.el.classList.contains('help-topic')) openHelpTopic(sec.el, true);
+  /* v297: a search hit's writeup is TRANSIENT — opened without being remembered, and
+     collapsed when Help closes (tap-off, CLOSE, or another overlay taking over). Help
+     re-opens on whatever the reader last opened by hand, never on the search's landing
+     spot. */
+  if(sec.el.classList.contains('help-topic')){ openHelpTopic(sec.el, false); helpTopicFromSearch = true; }
   else closeHelpTopics();
   /* The tab switcher zeroes the sheet's scroll inside its own rAF, so the jump to the
      section has to land after that — hence the timeout rather than a plain call. */

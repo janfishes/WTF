@@ -7,6 +7,42 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 9:12 PM EDT · v297 · Search leaves no trace
+------------------------------------------------------------------------------
+Search now ends when you leave it, and a Help writeup it opens is on loan.
+
+Two halves of the same complaint. First, Search kept its query and its result
+list in the DOM after it closed, so the next tap on the cookie reopened the
+last search instead of an empty box. closeSearch() now blurs the field and
+calls a new resetSearch() that clears the input and puts the "type at least 2
+letters" note back; closeAllOverlays() runs the same reset when another
+overlay force-closes Search, the opener runs it too, and pagehide /
+visibilitychange:hidden close Search outright -- backgrounding a home-screen
+app on iOS should not restore it mid-search.
+
+Second, and the actual report: tapping a Help hit in Search called
+openHelpTopic(sec.el, true), which WROTE that writeup to wtf:helpTopic. That
+key is the "re-open Help where you left it" memory from v271, so a search's
+landing spot then hijacked every later visit to Help -- the reader would open
+Help by hand and be dropped back into whatever the search had opened. A search
+hit is now transient: openHelpTopic(sec.el, false) (not remembered) plus a
+helpTopicFromSearch flag. closeInfoSheet(), closeAllOverlays('infoSheet') and
+the background handlers all call clearSearchHelpTopic(), which collapses the
+borrowed writeup and calls restoreHelpTopic() so Help returns to the writeup
+the reader last opened BY HAND, or to the directory if there isn't one.
+
+Both dismiss paths were taught the difference too: the topic-button toggle and
+the in-writeup CLOSE now skip the localStorage.removeItem when the thing being
+closed came from Search, so closing a borrowed writeup can't erase the
+reader's own bookmark. A hand-tap on any topic clears the flag and takes
+ownership.
+
+Verified in headless Chrome at 430x900: search hit opens hb-catch with nothing
+written to storage; tap-off collapses it; reopening Help lands on hb-bite (the
+hand-opened one) with hb-bite still stored; relaunching Search shows an empty
+box with zero rows. Backgrounding mid-visit behaves the same as tapping off.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 8:39 PM EDT · v296 · Bigger month labels
 ------------------------------------------------------------------------------
 Two Seasons fixes, both about reading it on a phone.
