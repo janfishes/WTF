@@ -1365,16 +1365,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
        dead-even 6.5/6.5 would overshoot slightly. */
     padding:7px 9px 6px;
     border-radius:100px; background:rgba(11,28,43,.88); border:1px solid var(--line);
-    color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:calc(13.5px * var(--tsb)); font-weight:600;
+    color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:calc(15px * var(--tsb)); font-weight:800;
     cursor:pointer; backdrop-filter:blur(6px); user-select:none; white-space:nowrap;
     transition:border-color .15s, color .15s, background .15s; line-height:1;
-    box-shadow:0 3px 8px rgba(0,0,0,.35);
+    box-shadow:none;   /* v305: pills carry no drop shadow - flat on the map */
   }
   .chip .dot{width:8px; height:8px; border-radius:50%; flex:0 0 auto; margin-right:5px;}
   /* The 4 map filter pills with a live total (Catches, Inshore, Offshore, Launches) show
      the number right after the name on the same line. Labels has no total. */
   .chip.filter-count .chip-total{
-    display:inline; margin-left:6px; font-size:calc(12.5px * var(--tsb)); font-weight:700; letter-spacing:0;
+    display:inline; margin-left:6px; font-size:calc(14px * var(--tsb)); font-weight:800; letter-spacing:0;
   }
   .chip.active:not(.sp){color:var(--fog); background:rgba(20,42,61,.95);}
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
@@ -1384,14 +1384,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      every theme. Catches is now WHITE-on-black off, BLACK-on-white on - a straight reversal
      like the zone pills, and the black/white pair matches its own pins. It is the only pill
      with no hue at all, which is exactly what it is switching. */
-  #catchToggle{background:#000 !important; color:#fff !important; font-weight:700; border:1px solid #fff !important; box-shadow:none !important;}
+  #catchToggle{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid #fff !important; box-shadow:none !important;}
   #catchToggle:not(.active){opacity:1; background:#000 !important; color:#fff !important; border-color:#fff !important;}
   /* v304: Labels reverses with state like Launches/Inshore/Offshore - OFF is the colour as
      text and outline on black, ON fills with the colour and takes a white ring. It used to be
      white text and a white border in BOTH states, so only the fill moved. #1636ff is too dark
      to read as text on black (3.01:1), so OFF uses the lifted #6b8cff (6.82:1) exactly the way
      Launches uses #b5713a - same hue, obviously the same button. */
-  #labelsToggle{font-weight:700; background:#000 !important; color:#6b8cff !important; border:1px solid #6b8cff !important; box-shadow:none !important;}
+  #labelsToggle{font-weight:800; background:#000 !important; color:#6b8cff !important; border:1px solid #6b8cff !important; box-shadow:none !important;}
   /* .chip padding is bottom-heavy (5 top / 8 bottom), which lifts the text ~1.5px above centre.
      Invisible on the translucent chips, obvious on Labels-ON because it is the one solid white
      fill. Same total vertical padding, so the pill height and the row layout do not move.
@@ -1414,13 +1414,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background:#000 !important; color:#fff !important;
     border-color:rgba(255,255,255,.38) !important; filter:none;
   }
+  /* v305: the lit species button REVERSES, exactly like Catches — white fill, black
+     lettering. v304 carried the state on the border and a glow alone, which is a thin
+     signal on a column of 25 identical black pills; a filled pill reads as ON at a
+     glance and matches the one other hueless button in the app. The glow stays for the
+     extra separation from the imagery behind it. */
   #speciesCol .chip.active{
-    background:#000 !important; color:#fff !important;
+    background:#fff !important; color:#000 !important;
     border-color:#fff !important; box-shadow:0 0 8px rgba(255,255,255,.45);
-    filter:none;
+    filter:none; text-shadow:none !important;
   }
   #speciesCol .chip .dot{background:currentColor !important;}
-  .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:700; border:1px solid var(--inshore) !important; box-shadow:none !important;}
+  .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:800; border:1px solid var(--inshore) !important; box-shadow:none !important;}
   /* PURE BLACK text on the lit zone fills, not white and not a near-black (v303, Jan could not
      read the pills). White on the old --inshore blue was 6.99:1, but these fills are far
      lighter - white sits at 1.60:1 on the amber - so the text has to be dark. v302 used the
@@ -1443,10 +1448,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
      magenta is 6.83:1 and amber 13.1:1 on black, so both now use the zone colour itself and
      the off state matches the pin exactly. */
   .chip[data-zone="inshore"]:not(.active){opacity:1; color:var(--inshore) !important; border-color:var(--inshore) !important;}
-  .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:700; border:1px solid var(--offshore) !important; box-shadow:none !important;}
+  .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:800; border:1px solid var(--offshore) !important; box-shadow:none !important;}
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:var(--offshore) !important; border-color:var(--offshore) !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#000 !important; border-color:#fff !important; box-shadow:none; text-shadow:none !important;}
-  .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:700; border:1px solid var(--launch) !important; box-shadow:none !important;}
+  .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:800; border:1px solid var(--launch) !important; box-shadow:none !important;}
   .chip[data-zone="launch"]:not(.active){opacity:1; color:#b5713a !important; border-color:#b5713a !important;}
   .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
@@ -1518,7 +1523,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      BLACK chip: #8a4b0f there is only ~3.1:1 and #4f1d0a is far worse. So OFF keeps its own
      lifted brown, #b5713a (~5.5:1 on black), same hue family, obviously the same button.
      (--launch is fixed in :root, not per-theme.) */
-  #launchToggle{background:#000 !important; color:#b5713a !important; font-weight:700; border:1px solid #b5713a !important; box-shadow:none !important;}
+  #launchToggle{background:#000 !important; color:#b5713a !important; font-weight:800; border:1px solid #b5713a !important; box-shadow:none !important;}
   #launchToggle:not(.active){opacity:1; color:#b5713a !important; border-color:#b5713a !important;}
   #launchToggle.active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
 
@@ -1536,7 +1541,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .fab{
     display:flex; align-items:center; padding:2px 8px; border-radius:100px;
     background:rgba(11,28,43,.92); border:1px solid var(--line); color:var(--fog);
-    font-family:'Space Grotesk',sans-serif; font-size:calc(12.5px * var(--tsb)); font-weight:600;
+    font-family:'Space Grotesk',sans-serif; font-size:calc(14px * var(--tsb)); font-weight:800;
     cursor:pointer; backdrop-filter:blur(6px); box-shadow:0 4px 14px rgba(0,0,0,.35);
     margin-bottom:7px;
   }
@@ -1738,7 +1743,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     #metaRow .chip{flex:0 1 auto; min-width:0;}
     /* v211: no forced break — with the full width the row wraps naturally, and only
        when it has to. The .chip-break element stays in the DOM but never displays. */
-    .chip{padding:6px 8px 5px; font-size:calc(13px * var(--tsb));}   /* same 1px-top bias as the base rule; 11px total, unchanged */
+    .chip{padding:6px 8px 5px; font-size:calc(14.5px * var(--tsb));}   /* same 1px-top bias as the base rule; 11px total, unchanged */
     #metaRow #labelsToggle{padding:5px 8px 6px;}
     #speciesCol{top:8px;}
   }
@@ -1772,7 +1777,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     .logo-mini{width:calc(63px * var(--tsb,1));}
     .logo-wtf{font-size:calc(11.1px * var(--tsb,1)); letter-spacing:calc(2.4px * var(--tsb,1)); margin-left:calc(1.2px * var(--tsb,1)); -webkit-text-stroke:.38px currentColor;}
     #filterWrap{left:8px;}
-    #metaRow .chip{padding:4px 6px 6px; font-size:calc(12px * var(--tsb));}
+    #metaRow .chip{padding:4px 6px 6px; font-size:calc(14px * var(--tsb));}
     #metaRow #labelsToggle{padding:5px 6px 5px;}
   }
 
@@ -2762,8 +2767,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">The colored diamonds down the <b>left edge of the map</b> — one for each of the 23 species the app knows.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-species">Species<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-species">
-      <p class="sheet-note">The species buttons are the 23 <b>diamonds</b> down the left edge of the map — one per species the app knows. They carry no colour of their own: the lettering is white on black whether a species is picked or not, and the picked one is marked by a solid white outline and a glow rather than by a coloured fill.</p>
-      <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>Catches</b> is off. If you've never logged that fish, you'll get a note saying so.</p>
+      <p class="sheet-note">The species buttons are the 23 <b>diamonds</b> down the left edge of the map — one per species the app knows. They carry no colour of their own: unpicked they are white lettering on black, and a picked one <b>reverses</b> — black lettering on a white fill — the same on/off language as the <b>Catches</b> pill.</p>
+      <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom. <b>Catches</b> is the master switch over all of it: with Catches off no diamonds show at all, picked species or not, and the spot pins stay on the chart — switch Catches on and your pick takes effect. If you've never logged that fish, you'll get a note saying so.</p>
       <p class="sheet-note">They filter your <b>catch log</b> only, not the fishing spots, and only one species is picked at a time — tap the lit one again to clear it. Their labels follow the <b>Labels</b> map filter button, and the <b>Eye</b> takes the whole column off the chart along with the action buttons.</p>
       </div>
 
@@ -2772,7 +2777,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-catches">Catches<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-catches">
       <p class="sheet-note">The map filter buttons are <b>pills</b> (hot-dog shapes) in the row across the top of the map, under the header — Catches, Inshore, Offshore, Launches and Labels. The number on each of the first four is a total count.</p>
-      <p class="sheet-note">Shows and hides your <b>catch diamonds</b> — every fish in your log. The number beside it is your total number of catches. The pill itself is the one switch with no colour: white lettering on black when the diamonds are hidden, and the reverse — black on white — when they are showing, matching the black-and-white diamonds it switches.</p>
+      <p class="sheet-note">Shows and hides your <b>catch diamonds</b> — every fish in your log. The number beside it is your total number of catches. The pill itself is the one switch with no colour: white lettering on black when the diamonds are hidden, and the reverse — black on white — when they are showing, matching the black-and-white diamonds it switches. It is the <b>master switch</b> for the diamonds: with it off none show, even if a species button down the left edge is lit.</p>
       <p class="sheet-note">Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕ button.</p>
       <p class="sheet-note">Your catches show on the map as small black <b>diamonds</b> with a white edge — the same for every fish, so a diamond always means a catch and the species is named in its popup; the fishing spots, sites and launches show as small colored <b>pins</b>. A diamond or pin carrying a number is more than one thing in the same place — tap it to read them all.</p>
       </div>
@@ -2871,6 +2876,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v305</b> · Catches is the master switch</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v304</b> · Readable name tags</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v303</b> · Black diamonds, orange inshore</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v302</b> · Pins you can see</p>
@@ -3970,7 +3976,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 304;
+const BUILD_NUM  = 305;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6890,6 +6896,10 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
       applyFilter();
       if(!catches.some(c=> catchSpeciesList(c).some(k=>activeSpecies.has(k)))){
         showToast('No ' + sp.label.toLowerCase() + ' in your log yet');
+      } else if(!showCatches){
+        // Catches off means no diamonds, full stop (v305) — say so rather than let the
+        // species button look dead.
+        showToast('Catches is off — switch it on to see them');
       }
     }
   });
@@ -6912,7 +6922,10 @@ speciesCol.addEventListener('wheel', (e)=>{
 /* The single rule for whether a spot pin belongs on screen. applyFilter() and the easter egg
    both read it, so the two cannot drift. */
 function pinVisible(s){
-  if(activeSpecies.size > 0) return false;   // a species pick stands the spot pins down
+  /* A species pick stands the spot pins down so only the diamonds are left — but only
+     while Catches is ON. With Catches off there are no diamonds to clear a view for, so
+     a lingering species pick must not empty the map (v305). */
+  if(showCatches && activeSpecies.size > 0) return false;
   return s.ramp ? showLaunches : activeZones.has(s.zone);
 }
 function offshorePinsVisible(){
@@ -6972,12 +6985,13 @@ function applyFilter(){
     if(!map.hasLayer(m)) m.addTo(map);
   });
   catchMarkers.forEach(m=>{
-    // A species pick shows its diamonds even when Catches is switched off,
-    // otherwise the button looks dead. Each merged marker shows only the catches
-    // that pass the current filter, and its badge/colour track that subset.
+    // Catches is the master switch: off means no diamonds at all, whether or not a
+    // species is picked (v305 — it used to let a species pick force them back on, so
+    // the pill read as broken). The species pick only narrows what shows when it is on.
+    // Each merged marker shows only the catches that pass the filter, badge included.
     const vis = m.group.catches.filter(c=>{
       const spOk = !speciesActive || catchSpeciesList(c).some(k=>activeSpecies.has(k));
-      return spOk && (showCatches || speciesActive);
+      return spOk && showCatches;
     });
     m.visible = vis;
     if(!vis.length){ if(map.hasLayer(m)) map.removeLayer(m); return; }

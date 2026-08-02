@@ -7,6 +7,48 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:05 PM EDT · v305 · Catches is the master switch
+------------------------------------------------------------------------------
+Label text on the map pills and on the FAB stack goes from semibold 600 to
+800, and up in size: filter pills 13.5px → 15px (14.5px at the narrow
+breakpoint, 13px for the compact #metaRow row), their live totals 12.5px →
+14px, FAB labels 12.5px → 14px. 15px is the floor where a short all-caps-ish
+control label stays comfortably readable at arm's length on a phone; 14px is
+about as small as a tappable label should get, and both still ride the A
+text-size control through --tsb, so anyone who needs more has it.
+
+The filter pills also lose their drop shadow (box-shadow:none on .chip) — the
+zone pills had already dropped theirs in v302/v303, so the four remaining
+shadowed pills were the odd ones out. Padding, line-height and the 1px top
+bias are untouched, so the pills grow only by the text itself. The FAB stack
+keeps its shadow — it floats over live imagery and needs the separation.
+
+The species buttons now REVERSE when selected — white fill, black lettering,
+the same on/off language as Catches. v303/v304 had taken all hue off these and
+left the state on a border and a glow, which is a thin signal on a column of
+25 identical black pills. Filled-means-on is instant, and it stays hueless, so
+nothing competes with the zone pills or the pins.
+
+CATCHES is now the master switch for the diamonds. It used to be overridable:
+a lit species button forced its diamonds back onto the map even with Catches
+off (the original reasoning was "otherwise the species button looks dead"),
+which made the Catches pill read as broken — you switched it off and fish
+stayed on the chart. Now the diamond filter is `spOk && showCatches`, full
+stop: off means none show, species pick or not, and the pick only narrows what
+shows once Catches is back on.
+
+Two consequences handled. The spot pins used to stand down whenever a species
+was picked, so leaving a pick set with Catches off would have emptied the map
+entirely — pinVisible() now only stands them down while Catches is ON, so with
+Catches off the chart falls back to the ordinary zone pins. And picking a
+species while Catches is off now says so ("Catches is off — switch it on to
+see them") instead of doing nothing visible, which is the real answer to the
+"looks dead" worry the old override was solving the wrong way.
+
+Search still switches Catches on by itself when a result flies to a catch, so
+tapping a search hit never lands on an invisible diamond.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 12:20 AM EDT · v304 · Readable name tags
 ------------------------------------------------------------------------------
 The pin NAME TAGS were the thing v303 missed. .spot-label sets colour:#fff on
