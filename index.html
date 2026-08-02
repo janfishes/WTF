@@ -716,12 +716,39 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <style>
   :root{
     /* Species + zone colors (fixed across themes) */
-    /* --launch: #8a97a8 gray -> #5a6673 slate (v299) -> #8a4b0f brown (v300, Jan's call -
-       the slate still read too light). #8a4b0f is Brown Sugar's accent, borrowed here as a
-       fixed colour; it is darker than either gray, carries no blue (so it stays itself under
-       amber lenses) and takes white at ~6.8:1. Off-state chip text does NOT use it - see
-       #launchToggle. */
-    --inshore:#1636ff; --offshore:#7a2fd6; --launch:#8a4b0f; --mob:#e02020; --catch:#7a2fd6;
+    /* --inshore and --offshore were picked as UI colours and then failed on the WATER, which
+       is the only ground a pin is ever seen on. Measured against real USGS ImageryTopo tiles
+       (v302): the old --offshore #7a2fd6 scored 1.11:1 on the flat #295890 ocean fill, and the
+       old --inshore #1636ff scored 1.05:1 on the Ponce Inlet ICW (#2a6376) and 1.06:1 on
+       Mosquito Lagoon (#515848) - i.e. invisible, with the 2px white ring doing all the work.
+       Offshore is one uniform ground (#295890) so it takes the straight optimum: amber, the
+       complement, at 4.5:1. Inshore's ground is BIMODAL - near-black river water (L=.06) and
+       white chart/shoal areas (L=1.0) in the same view - so no fill can be high-contrast
+       against both. The crossover sits at luminance .289 and caps out at 3.10:1 either way;
+       #FF3DD0 (L=.292) is that optimum, and magenta is the only high-chroma hue that is never
+       a water colour (cyan/teal/blue all read as water on a chart). Amber vs magenta is also
+       ~270 degrees of hue apart, so the two zones stay distinct at 14px and under CVD.
+       KEEP BOTH OFF THE BLUE CHANNEL-ish reasoning does not apply here; see chip rules below
+       for why these two fills take DARK text where the old blue took white. */
+    /* --launch: #8a97a8 gray -> #5a6673 slate (v299) -> #8a4b0f brown (v300) -> #4f1d0a dark
+       bitter chocolate (v302). v300 borrowed #8a4b0f from Brown Sugar's accent, but that accent
+       is also what #catchToggle.active paints itself with (it uses var(--teal), which Brown
+       Sugar sets to #8a4b0f) - so under Brown Sugar the Catch pill and the Launches pill came
+       out byte identical. #4f1d0a is as far from #8a4b0f as a colour can get and still be
+       brown: 2.05:1 apart, against 1.49:1 for the #6e2f12 that was tried first. It carries no
+       blue (so it stays itself under amber/copper lenses) and takes white at 15.1:1.
+       KNOWN LIMIT: 2.05:1 is the ceiling here. Brown Sugar's accent IS a brown, so any brown
+       launch colour stays somewhat close to it under that one theme; the two pills are
+       distinguishable but not unmistakable. The root fix is to stop painting #catchToggle
+       with the raw theme accent and give Catch a fixed colour of its own - which would also
+       repair its white-on-accent text, currently 1.86:1 to 3.00:1 in five of the six themes.
+       That is Jan's call, not done here. Do NOT set --launch back to any theme's accent.
+       Off-state chip text does NOT use it - see #launchToggle. */
+    --inshore:#FF3DD0; --offshore:#FFC400; --launch:#4f1d0a; --mob:#e02020;
+    /* Not a pin colour: catch pins are filled per SPECIES (see SPECIES below), never with
+       this. --catch only paints the #cropApply button. Left on the old zone purple, which
+       nothing else uses any more. */
+    --catch:#7a2fd6;
     --brass:#c99a4b; --rust:#b5573a;
     /* Ink for the compass rose, its bearing lines and its labels. Its own variable because
        the rose is drawn straight onto the map imagery rather than onto a themed surface, so
@@ -1359,16 +1386,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #speciesCol .chip.active .dot{background:#000 !important;}
   .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:700; border:1px solid var(--inshore) !important; box-shadow:none !important;}
-  .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important;}
+  /* Dark text, not white, on the lit zone fills (v302). White on the old --inshore blue was
+     6.99:1, but on magenta it is 3.07:1 and on amber only 1.60:1 - the fills got much lighter,
+     so the text has to flip. #04141e is the same near-black --on-accent uses for light accents:
+     6.0:1 on magenta, 11.6:1 on amber. The dark text-shadow from #metaRow below is killed on
+     these two, since it was there to lift WHITE text off a bright ground. */
+  .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#04141e !important; border-color:#fff !important; text-shadow:none !important;}
   /* Shadow on the zone/launch chip text (both states) — the states whose text
      sits on the weakest ground (saturated colour on black, or filled colour). */
   #metaRow .chip[data-zone],
   #metaRow #launchToggle{text-shadow:0 2px 3px rgba(0,0,0,.55) !important;}
   #metaRow #labelsToggle.active{text-shadow:0 1px 1px rgba(255,255,255,.9), 0 0 2px rgba(255,255,255,.7);}
-  .chip[data-zone="inshore"]:not(.active){opacity:1; color:#6b8cff !important; border-color:#6b8cff !important;}
+  /* Off-state is text+outline on a BLACK chip, so it needs its own value only when the zone
+     colour is too dark there. The old blue and purple both needed a lift (#6b8cff / #b478ff);
+     magenta is 6.83:1 and amber 13.1:1 on black, so both now use the zone colour itself and
+     the off state matches the pin exactly. */
+  .chip[data-zone="inshore"]:not(.active){opacity:1; color:var(--inshore) !important; border-color:var(--inshore) !important;}
   .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:700; border:1px solid var(--offshore) !important; box-shadow:none !important;}
-  .chip[data-zone="offshore"]:not(.active){opacity:1; color:#b478ff !important; border-color:#b478ff !important;}
-  .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
+  .chip[data-zone="offshore"]:not(.active){opacity:1; color:var(--offshore) !important; border-color:var(--offshore) !important;}
+  .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#04141e !important; border-color:#fff !important; box-shadow:none; text-shadow:none !important;}
   .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:700; border:1px solid var(--launch) !important; box-shadow:none !important;}
   .chip[data-zone="launch"]:not(.active){opacity:1; color:#b5713a !important; border-color:#b5713a !important;}
   .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
@@ -1401,16 +1437,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
      same everywhere — SELECTED = solid zone colour, UNSELECTED = black. (They were
      deliberately reversed until v243, which read backwards next to the map row.) */
   /* Add-a-Spot pills: black/unselected until tapped, then a distinct color per zone
-     (blue/purple/red) so it's obvious which type is currently chosen. */
-  /* SELECTED = solid zone colour, white text, white ring. UNSELECTED = black and dimmed,
+     (magenta/amber/brown) so it's obvious which type is currently chosen. */
+  /* SELECTED = solid zone colour, white ring, and text that is dark on the two light fills
+     (Inshore magenta, Offshore amber) but white on the dark Launch brown - see the contrast
+     note on the map chips above. UNSELECTED = black and dimmed,
      so at a glance exactly one pill reads as lit. The dimming is what tells you the app has
      not yet decided a type; as soon as a location is set, one pill lights up. */
   #addSpotZoneRow .chip{opacity:.55 !important; transition:opacity .15s, background .15s, color .15s;}
-  #addSpotZoneRow .chip[data-zone="inshore"]:not(.active){background:#000 !important; color:#6b8cff !important; border-color:#37497f !important; box-shadow:none !important;}
-  #addSpotZoneRow .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
-  #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:#b478ff !important; border-color:#5c3d80 !important; box-shadow:none !important;}
-  #addSpotZoneRow .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
-  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#b5713a !important; border-color:#5c3a17 !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="inshore"]:not(.active){background:#000 !important; color:var(--inshore) !important; border-color:#7f2f6b !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#04141e !important; border-color:#fff !important; opacity:1 !important; text-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:var(--offshore) !important; border-color:#806013 !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#04141e !important; border-color:#fff !important; opacity:1 !important; text-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#b5713a !important; border-color:#4a2610 !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
   /* The line under the Type pills that says how the type was chosen. */
   #addSpotZoneNote{font-size:11px; line-height:1.35; margin:6px 0 0; color:var(--muted);}
@@ -1422,10 +1460,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #catchToggle.active{background:var(--teal) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;
     text-shadow:0 1px 2px rgba(0,0,0,.7), 0 0 3px rgba(0,0,0,.45);}
   /* Launches filter pill (red until v232, when red was handed to the MOB spots).
-     ON is the flat var(--launch) fill - Brown Sugar's brown since v300. Through v298 OFF
-     used that SAME value, but the deeper the fill got the worse OFF read, since OFF is text
-     and outline on a BLACK chip: #8a4b0f there is only ~3.1:1. So OFF takes its own lifted
-     brown, #b5713a (~5.5:1 on black), same hue family, obviously the same button.
+     ON is the flat var(--launch) fill - Brown Sugar's #8a4b0f from v300, now the dark
+     bitter chocolate #4f1d0a (v302, because #8a4b0f made this pill identical to #catchToggle
+     .active under Brown Sugar - see the --launch note in :root). Through v298 OFF used the same
+     as ON, but the deeper the fill got the worse OFF read, since OFF is text and outline on a
+     BLACK chip: #8a4b0f there is only ~3.1:1 and #4f1d0a is far worse. So OFF keeps its own
+     lifted brown, #b5713a (~5.5:1 on black), same hue family, obviously the same button.
      (--launch is fixed in :root, not per-theme.) */
   #launchToggle{background:#000 !important; color:#b5713a !important; font-weight:700; border:1px solid #b5713a !important; box-shadow:none !important;}
   #launchToggle:not(.active){opacity:1; color:#b5713a !important; border-color:#b5713a !important;}
@@ -1971,7 +2011,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
      colour, plus the drop shadow these pins had been missing — the old inline
      `box-shadow:0 0 0 2px rgba(255,255,255,.5)` replaced the base shadow instead of adding
      to it. Dashed rather than solid so the two rings stay tellable apart through amber
-     polarized lenses, which flatten blue against purple. */
+     polarized lenses, which flattened the old blue against the old purple. Since v302 the
+     zones are magenta and amber, which those lenses separate on their own, but keep the
+     dash - it is what says "you dropped this one" regardless of colour. */
   .mine-ring{
     box-sizing:border-box; border-radius:50%; border:2px dashed var(--ring,#fff);
     display:flex; align-items:center; justify-content:center;
@@ -2243,8 +2285,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   /* Easter egg. Sized against the viewport so it fits a phone screen without scrolling and
      gets more room on a desktop; the artist's credit is part of the artwork itself. */
-  /* Reuses the offshore pin exactly — same 14px, same purple, same white ring — so it reads
-     as one of the offshore pins rather than as a separate kind of marker. */
+  /* Reuses the offshore pin exactly — same 14px, same var(--offshore) fill (amber since
+     v302, purple before it), same white ring — so it reads as one of the offshore pins
+     rather than as a separate kind of marker. Keep it on the var, not a literal. */
   .egg-pin{
     width:14px; height:14px; box-sizing:border-box; border-radius:50%;
     background:var(--offshore); border:2px solid #fff;
@@ -2592,7 +2635,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Ten buttons along the right side of the map are the app’s actions. Tap any button below to read what it does and tap again to close.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list — <b>tap more than one</b> if the trip produced several; the first you tap colors the catch pin on the map, and every one you pick shows its season bar on the entry's My Log card and popup. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> pills just above the location list narrow it down to where you are fishing: they start black with the whole list showing, and tapping <b>Offshore</b> lights it purple and cuts the list to offshore sites only (<b>Inshore</b> does the same in blue). Tapping the lit one again turns it black and brings the whole list back. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list — <b>tap more than one</b> if the trip produced several; the first you tap colors the catch pin on the map, and every one you pick shows its season bar on the entry's My Log card and popup. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> pills just above the location list narrow it down to where you are fishing: they start black with the whole list showing, and tapping <b>Offshore</b> lights it amber and cuts the list to offshore sites only (<b>Inshore</b> does the same in magenta). Tapping the lit one again turns it black and brings the whole list back. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
       <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g. 29°04.902′ N) — the form a chartplotter uses. A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. The line under those buttons prints the position it settled on, so you can check it before saving, and <b>Clear</b> starts over. A photo with embedded GPS fills the position in by itself (see the photo note below). To key or paste numbers in by hand, save them in <b>+ Spot</b> first — its position box reads typed and pasted coordinates in every common form — and the new spot is then in this location list.</p>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>EDIT ✎</b> or <b>DELETE ✕</b> in its popup — or the same buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
@@ -2772,6 +2815,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v302</b> · Pins you can see</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v301</b> · Bolder mark, live updates, fresher shell</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v300</b> · Launches go brown</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v299</b> · Darker launch gray</p>
@@ -3868,7 +3912,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 301;
+const BUILD_NUM  = 302;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -7519,7 +7563,7 @@ function syncLogZoneChips(){
 }
 if(logZoneRow){
   /* v294: these are FILTERS on the location list, not on/off switches for two independent
-     things, so they behave like one — tapping Offshore lights Offshore purple and cuts the
+     things, so they behave like one — tapping Offshore lights Offshore amber and cuts the
      list to offshore sites, tapping Inshore hands the light to Inshore, and tapping the lit
      one again puts both back to black and the whole list back. The plain toggles that lived
      here from v243 read as broken: from the both-on start, a tap on Offshore turned Offshore

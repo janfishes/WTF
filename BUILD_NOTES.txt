@@ -7,6 +7,86 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:40 PM EDT · v302 · Pins you can see
+------------------------------------------------------------------------------
+The Inshore and Offshore pin colours were chosen as interface colours and never
+checked against the one background a pin is actually seen on: the water. Both
+were failing badly, and the only reason either pin was visible at all was the
+2px white ring around it.
+
+Measured against real USGS ImageryTopo tiles rather than by eye:
+
+  Offshore  #7a2fd6 purple on the flat #295890 ocean fill ......... 1.11:1
+  Inshore   #1636ff blue on the Ponce Inlet ICW (#2a6376) ......... 1.05:1
+  Inshore   #1636ff blue on Mosquito Lagoon (#515848) ............. 1.06:1
+
+1.0:1 means two colours are identical in brightness. The purple and the blue
+were within about one percent of the water they were sitting on.
+
+Offshore is the easy one, because seaward of the state-waters line the app
+paints a single flat #295890 and nothing else. Amber #FFC400 is the complement
+of that blue and lands at 4.5:1.
+
+Inshore is harder. Its ground is two different things at once — near-black
+river water at one end and white chart and shoal areas at the other, often in
+the same screen — so no single fill can be high-contrast against both. Light
+beats the water and loses to the white; dark does the reverse. The best a
+single colour can do is sit where the two curves cross, at luminance 0.289,
+which yields 3.10:1 in both directions. Magenta #FF3DD0 (luminance 0.292) is
+that point almost exactly, and magenta has a second property that mattered
+here: no water anywhere is ever magenta. Cyan, teal and blue all read as water
+on a chart, which ruled out the whole cool side of the wheel except this.
+
+Amber and magenta are also about 270 degrees of hue apart, so the two zones
+stay distinct at 14px, in glare, and for red-green colour blindness — which
+the old blue-against-purple pair did not, especially through the amber
+polarized lenses the Brown Sugar theme is built for.
+
+Launches move off #8a4b0f to the dark bitter chocolate #4f1d0a. Nothing was
+wrong with the brown itself; the problem was that v300 borrowed it from Brown
+Sugar's theme accent, and #catchToggle.active paints itself with that same
+accent via var(--teal). Under Brown Sugar the Catch pill and the Launches pill
+therefore came out byte-for-byte identical. The two are now independent values
+and --launch must never be set back to a theme accent. #4f1d0a carries no blue,
+so it still holds its own colour under amber lenses, and takes white at 15.1:1.
+
+Measured across all six themes, lit Catch pill against lit Launches pill:
+
+  Parrot Head ..... 7.03:1     Tequila Sunrise .. 5.36:1
+  Blue Suede ...... 7.48:1     Purple Haze ...... 4.63:1
+  Green-Eyed Lady . 6.77:1     Brown Sugar ...... 2.05:1
+
+Brown Sugar is the honest weak spot and worth writing down. Its accent IS a
+brown, so any brown launch colour stays somewhat close to it under that one
+theme. #4f1d0a is about as far as brown can go — the first attempt, #6e2f12,
+only reached 1.49:1 — but 2.05:1 means the two pills are distinguishable
+rather than unmistakable. The root fix is to stop painting #catchToggle with
+the raw theme accent and give Catch a fixed colour of its own. That would also
+repair the Catch pill's white-on-accent text, which is failing in five of the
+six themes (1.86:1 on Blue Suede, 1.98:1 Parrot Head, 2.05:1 Green-Eyed Lady,
+2.59:1 Tequila Sunrise, 3.00:1 Purple Haze; only Brown Sugar's dark accent
+passes, at 6.79:1). That change is not made here — it is a separate call.
+
+One consequence worth recording. Both new zone fills are much lighter than the
+colours they replace, so white chip text no longer works on them: white sits at
+1.60:1 on the amber and 3.07:1 on the magenta, against 6.99:1 on the old blue.
+The lit Inshore and Offshore chips now take the near-black #04141e instead —
+6.0:1 on magenta, 11.6:1 on amber — the same near-black --on-accent already
+uses wherever a light accent needs text on top of it. The dark text-shadow was
+dropped on those two chips as well, since it existed to lift WHITE text off a
+bright ground. Launches keep white text, being the one dark fill of the three.
+
+The off-state chips got simpler at the same time. Off state is text and outline
+on a black chip, so the old blue and purple each needed a lifted variant
+(#6b8cff, #b478ff) to stay legible there. Magenta reads 6.83:1 on black and
+amber 13.1:1, so both now use the zone colour itself and the unlit chip finally
+matches the pin it refers to. Launches still need their lift and keep #b5713a.
+
+Catch pins are untouched. They are filled per species from the SPECIES table
+and are separated from spots by SHAPE — a rotated diamond against a circle —
+not by colour, so the zone change does not reach them.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 9:25 PM EDT · v301 · Bolder mark, live updates, fresher shell
 ------------------------------------------------------------------------------
 The lock-up reads heavier and larger in both places it appears.
