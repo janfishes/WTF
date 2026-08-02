@@ -7,6 +7,19 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 3:49 PM EDT · v328 · Cracker Ridge
+------------------------------------------------------------------------------
+Two more built-in offshore natural sites, filed under the Offshore →
+Natural category pill:
+
+  · Cracker Ridge      29.156750 / -80.676500  (29°09.405'N 80°40.590'W)
+  · Cracker Ridge NW   29.160367 / -80.682650  (29°09.622'N 80°40.959'W)
+
+Both sit about 13.5 nautical miles out from Ponce Inlet — the same
+neighborhood as Nine Mile Reef — and carry Natural-ledge metas with the
+distance in the usual ~sm/nm form.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 3:43 PM EDT · v327 · Six Natural Sites
 ------------------------------------------------------------------------------
 Six new built-in offshore natural sites, all filed under the Offshore →
