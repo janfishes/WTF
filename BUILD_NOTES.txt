@@ -7,6 +7,17 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 12:21 AM EDT · v312 · Unlogged fish tap is note-only
+------------------------------------------------------------------------------
+Tapping the button of a fish with no catches in the log now changes NOTHING —
+no lighting up, no effect on the other fish's diamonds or the pins — it only
+puts up the "No <fish> logged yet" note. Before, the tap also switched the
+button on, which read as a selection of a fish that isn't on the map. (The
+lit buttons keep the white-fill/black-text reverse they've had since v305 —
+same look as the lit Catches pill — and since v310 they light automatically
+for every logged fish when Catches goes on.)
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 12:13 AM EDT · v311 · Spot pins stay put
 ------------------------------------------------------------------------------
 The species buttons no longer touch anything but their own fish. Since the
