@@ -7,6 +7,32 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 12:35 AM EDT · v313 · MOB warnings, sale disclaimer
+------------------------------------------------------------------------------
+Safety-and-liability wording pass ahead of putting the app up for sale, in
+five places. (1) The startup Accept gate now covers the riskiest feature,
+not just navigation: MOB is called a memory aid, not a rescue device — in an
+emergency follow USCG procedures and call for help on VHF 16 — and the app
+is provided AS IS, pointing to the Disclaimer in Help. (2) The help's
+opening paragraph ends with the same MOB caution. (3) The MOB dropdown gains
+a third honest caution alongside phone-position and drift: everything rides
+on the phone (GPS, battery, signal, software) and any of it can fail, lag,
+or be wrong exactly when needed — carry the real safety equipment (VHF,
+PFDs, EPIRB/PLB offshore); the app substitutes for none of it. (4) The
+Warning section adds that GPS positions are only as good as the phone's fix
+and location features can fail or mislead — never the only means of
+navigation or emergency response. (5) The one-line Disclaimer became a full
+for-sale block: conspicuous AS IS / AS AVAILABLE warranty disclaimer naming
+merchantability and fitness for a particular purpose (a sale creates those
+implied warranties; disclaiming them requires naming them conspicuously),
+no promise MOB or any location feature works when needed, "not navigation
+or rescue equipment / you assume all risk on the water," liability excluded
+to the maximum extent permitted with the exclusive remedy capped at a
+refund of the purchase price, plus the savings clause for jurisdictions
+that limit such exclusions. Wording drafted with care but not by a lawyer —
+have a Florida attorney review before the first sale.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 12:21 AM EDT · v312 · Unlogged fish tap is note-only
 ------------------------------------------------------------------------------
 Tapping the button of a fish with no catches in the log now changes NOTHING —
