@@ -7,6 +7,15 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 1:25 AM EDT · v317 · Disclaimer shown in full
+------------------------------------------------------------------------------
+The help's Disclaimer no longer hides behind a dropdown button. Its four
+paragraphs — the Compass-bearing caveats, the AS IS / no-warranty block, the
+not-safety-equipment paragraph, and the liability cap — now print in full
+under the Disclaimer subhead, so the for-sale legal wording is always in
+view when the help is read or printed. No wording changed.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 1:09 AM EDT · v316 · Inshore pills isolate
 ------------------------------------------------------------------------------
 The v314 inshore sub-pills (Fishing spots · Waypoints · Marinas) now SELECT

@@ -2882,13 +2882,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Disclaimer</div>
       <p class="sheet-note">Read this one before you take the app on the water.</p>
-      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-warn">Disclaimer<span class="ht-caret">▸</span></button>
-      <div class="help-body" id="hb-warn">
       <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. A boater reads a bearing once clear of the inlet, not before, so the rose is anchored just offshore of the inlet mouth rather than at the same point each site's popup measures its nm/bearing figures from. For the closest sites — <b>Lighthouse Point Reef</b>, <b>Site 14 Flagler Ave Reef</b>, and <b>Site 15 Sunglow Reef</b> — that difference in reference point can swing the rose's bearing 15–30° from the number shown in the site's own popup; farther-out sites agree within a few degrees. Bear in mind those three popups are quoting <b>FWC's</b> figures, taken from 29°04.500&#8242;N 80°55.500&#8242;W in the inlet mouth channel — not this app's own reference inside the end of the north jetty, and not the rose. Close in, that choice of origin moves the bearing more than the run itself does. The distance printed on the line is measured from the rose as well, for the same reason and with the same caveat. A <b>site-to-site leg</b> sidesteps all three origins — it is measured between the two marks themselves. All of these figures are <b>magnetic</b>, 7.3° west of true — as the caption under the rose states; FWC published theirs in true degrees, so this app's rendering of a county reef's bearing is its own conversion of FWC's number, not FWC's wording.</p>
       <p class="sheet-note"><b>THE APP IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE,&rdquo; WITHOUT WARRANTY OF ANY KIND</b>, express or implied — including, without limitation, the implied warranties of <b>merchantability</b> and <b>fitness for a particular purpose</b>, and any warranty of accuracy or non-infringement. No promise is made that the app, its data, or any location or emergency-marking feature (including <b>MOB</b>) will be available, accurate, or error-free, or will function when needed.</p>
       <p class="sheet-note">This app is an aid to memory and planning only. It is <b>not navigation equipment and not safety or rescue equipment</b>, and it is no substitute for official charts, a compass, a VHF radio, PFDs, an EPIRB or PLB, a proper lookout, or USCG-required equipment and procedures. You assume all risk of using the app on the water.</p>
       <p class="sheet-note">To the maximum extent permitted by law, the developer and owners of this app accept <b>no liability</b> for any loss, injury, death, or damage — direct, indirect, incidental, or consequential — arising from use of, inability to use, or reliance on this app or anything it displays. If you paid for the app, the developer's entire liability, and your exclusive remedy, is a refund of the amount you paid. Some jurisdictions do not allow certain warranty or liability exclusions, so parts of this section may not apply to you; where that is so, liability is limited to the smallest extent the law allows. If you do not agree to these terms, do not use the app.</p>
-      </div>
 
       <div class="subhead">Copyright</div>
       <p class="sheet-note">© 2026 <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span>. All rights reserved. This app was developed by <span style="color:var(--brass); font-weight:600;">Jan G. Neal</span> for use by saltwater enthusiasts in Volusia County, Florida.</p>
@@ -2899,6 +2896,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v317</b> · Disclaimer shown in full</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v316</b> · Inshore pills isolate, city labels</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v315</b> · Ponce de Leon Inlet pin</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v314</b> · Inshore category pills</p>
@@ -4014,7 +4012,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 316;
+const BUILD_NUM  = 317;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
