@@ -7,8 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-02 · 2:27 AM EDT · v322 · Marinas ride Launches
+Build 2026-08-02 · 2:31 AM EDT · v323 · My Inshore Spots label
 ------------------------------------------------------------------------------
+The user-spots pill in the inshore category row now reads "My Inshore
+Spots" ("Ace's Inshore Spots" with a name set) instead of "My Spots" —
+Jan's point: a user's saved spots can be offshore too, and those ride the
+Offshore button with the reefs, so a plain "My Spots" pill read as if it
+covered all of them. Label only; sorting and behavior unchanged. Help's
+Inshore dropdown explains the wording.
+
+
 The 11 marinas (marinas, yacht clubs, the boatyard) now show and hide with
 the LAUNCHES button — nearly every marina has a ramp, just not a free one
 (Jan). The button keeps its name; its count is now 37 (26 ramps/launches +
