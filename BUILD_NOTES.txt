@@ -7,6 +7,14 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 1:51 AM EDT · v320 · Ace example name
+------------------------------------------------------------------------------
+Wording only. The example name in the two places that show one — the "Your
+name" label atop My Log and Help's My Log writeup — is now "Ace's Catch Log"
+rather than "Jan's Catch Log", since the app is headed for sale and the
+example shouldn't carry the original owner's name. No behavior change.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 1:50 AM EDT · v319 · Name on the log
 ------------------------------------------------------------------------------
 The catch log can now carry your name. The first-open Accept screen gained an
