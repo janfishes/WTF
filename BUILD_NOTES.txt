@@ -7,8 +7,15 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-02 · 2:35 AM EDT · v324 · Offshore categories
+Build 2026-08-02 · 2:42 AM EDT · v325 · My Spots label trimmed
 ------------------------------------------------------------------------------
+Both user-spots pills read just "My Spots" ("Ace's Spots" with a name set)
+— the Inshore/Offshore words v323 added are gone as redundant (Jan): each
+pill already sits in its zone's colored row under its zone pill, blue under
+Inshore, amber under Offshore. Label only; each pill still shows only its
+own side's saved spots. Help wording updated in both dropdowns.
+
+
 Offshore gets the same category treatment as Inshore (Jan): tapping the
 Offshore pill opens its own row of amber pills — My Offshore Spots ·
 Artificial · Natural — with the same lifecycle (opens with nothing picked
