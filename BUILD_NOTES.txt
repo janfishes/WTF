@@ -7,6 +7,27 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 7:31 PM EDT · v332 · Rose At NOAA
+------------------------------------------------------------------------------
+The compass rose moves to NOAA's official position for Ponce de Leon
+Inlet, 29°04.672'N 80°54.511'W (29.077867, -80.908517) — the same point
+the Ponce de Leon Inlet pin has marked since v331. It had been at a
+charted point about 680 ft further seaward (29°04.653'N 80°54.385'W).
+Every rose bearing and distance — the dashed lines to the offshore
+sites, route legs, and the line-label figures — is computed live from
+the rose anchor, so they all follow automatically. The buoy 41070
+figure quoted in the help was re-measured from the new anchor and is
+unchanged at 13.8 nm / 023° true.
+
+Help updated in three places (Overview's Compass line, the Compass
+topic's origins caution, and the Warning's compass paragraph): the rose
+is now described as sitting at NOAA's official inlet position, and the
+rose-vs-popup bearing swing for the three closest sites was re-measured
+from the new anchor and corrected from "15-30°" to 10-16°. The "three
+origins" paragraph now spans "a mile and a half of water" (rose to the
+app's north-jetty origin is 1.5 nm).
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 7:02 PM EDT · v331 · Inlet Pin Fix
 ------------------------------------------------------------------------------
 The Ponce de Leon Inlet waypoint pin moves to NOAA's official position
