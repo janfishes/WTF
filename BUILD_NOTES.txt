@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:53 PM EDT · v307 · Callalisa Creek
+------------------------------------------------------------------------------
+New built-in inshore spot: Callalisa Creek at 29°01.113'N 80°54.225'W
+(29.018550, -80.903750) — Jan's own coordinates, up the creek from the
+Callalisa Creek Kayak Launch pin that had been the only carrier of the name.
+The v266 waypoint sweep had deliberately skipped a GNIS Callalisa pin for
+that reason; this one is a fishing spot at the spot Jan fishes, not the
+gazetteer's mouth point.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:38 PM EDT · v306 · Blue inshore, big name tags
 ------------------------------------------------------------------------------
 Inshore goes BLUE again at Jan's request — but not the old #1636ff, which is
