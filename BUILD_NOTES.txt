@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:05 PM EDT · v295 · Air around the ✕
+------------------------------------------------------------------------------
+The ✕ on a CLOSE button sat too close to the word. The glyph carries the
+global .bi sizing (1.25em), which eats most of the single word space that
+separated them. New .bi-x class -- margin-left:5px -- on the ✕ of all 15 CLOSE
+buttons: every sheet head, the tide panel, the crop tool, the Season Guide's
+three collapsibles, and the CLOSE row v294 appends to each help writeup. Only
+the close pairs; every other command glyph keeps the plain space.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 10:40 PM EDT · v294 · Zone pills filter
 ------------------------------------------------------------------------------
 The map's filter pill row is CENTRED again at every width. The row spans the

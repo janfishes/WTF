@@ -1444,6 +1444,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Trailing icons: every command in the app reads word-then-icon (EDIT ✎, Drop pin 📍,
      Catch +) — .bi wraps a trailing emoji/glyph icon so it renders a touch larger. */
   .bi{font-size:1.25em; line-height:1;}
+  /* v295: the ✕ on a CLOSE button gets its own air -- a single word space sets it too
+     close to the word at the glyph's 1.25em. Only the close pairs; every other command
+     glyph keeps the plain space. */
+  .bi-x{margin-left:5px;}
   /* Per-glyph sizes bring every command glyph's ink to visual parity with ✕ at 1.25em
      (measured with canvas TextMetrics — e.g. ↺'s ink runs ~72% of ✕'s at equal em).
      line-height:0 keeps the enlarged glyphs from growing their buttons. */
@@ -2415,7 +2419,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div id="tidePanel">
     <div class="tp-head">
       <span>3-Day Tide Forecast</span>
-      <button id="tidePanelClose" title="Close">CLOSE <span class="bi">✕</span></button>
+      <button id="tidePanelClose" title="Close">CLOSE <span class="bi bi-x">✕</span></button>
     </div>
     <div id="tidePanelBody"></div>
   </div>
@@ -2484,7 +2488,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2 id="infoTitle">Season Guide</h2>
-    <button class="close" id="infoClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="infoClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="tabs" style="display:none;">
     <button class="tab active" data-tab="season">Season Guide</button>
@@ -2501,11 +2505,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="sizeBagBox" style="display:none;">
         <p class="sheet-note">Recreational limits for Atlantic waters off Volusia County. <b>Size</b> is inches (") of total length unless the row says fork. <b>Bag Limit</b> is fish per person per day unless the row says otherwise. Each row says where its limits apply — <b>Inside 3 mi</b> is Florida state water, the dashed line on the map; <b>Inside &amp; beyond 3 mi</b> means the same limits hold in federal water too. Tap a row’s <b>FWC ↗</b> for FWC’s page on that fish (needs a signal). <b>Use the Fish Rules App (<a href="https://fishrulesapp.com" target="_blank">fishrulesapp.com</a>) to identify fish and confirm current state and federal rules.</b></p>
         <p class="sheet-note"><b>Season bars and regulations are for the Northeast zone</b> — north of the NSB South Causeway. South of it, in the Indian River Lagoon zone including Mosquito Lagoon, redfish, seatrout and a few others differ; each row’s note says how.</p>
-        <div class="loc-btns" style="margin:2px 0 10px;"><button class="mini-btn" type="button" data-close-box="sizeBagBox">CLOSE <span class="bi">✕</span></button></div>
+        <div class="loc-btns" style="margin:2px 0 10px;"><button class="mini-btn" type="button" data-close-box="sizeBagBox">CLOSE <span class="bi bi-x">✕</span></button></div>
       </div>
       <div id="possessionBox" style="display:none;">
         <p class="sheet-note">A bag limit is also a <b>possession</b> limit — the most you may have aboard at any one time, however many days you have been out. Limits are <b>per person</b> unless the row names a vessel limit, which caps the whole boat. Do not keep a fish for someone who is not fishing. Keep fish <b>whole</b> — head and tail attached — until you are ashore, so they can be measured.</p>
-        <div class="loc-btns" style="margin:2px 0 10px;"><button class="mini-btn" type="button" data-close-box="possessionBox">CLOSE <span class="bi">✕</span></button></div>
+        <div class="loc-btns" style="margin:2px 0 10px;"><button class="mini-btn" type="button" data-close-box="possessionBox">CLOSE <span class="bi bi-x">✕</span></button></div>
       </div>
       <p class="sheet-note backup-warn">⚠ <b>Internet is required to update the app for the current FWC regulations.</b> <b class="regs-stamp">(Last updated <span id="regsAsOf">—</span>.)</b> Limits refresh on their own whenever you open the app with a signal — no download — and <b>REGULATION CHANGES</b> below lists what moved. Offline you keep the last set your phone saw. <b class="tbv">Trust But Verify!</b> <span style="font-size:1.25em; vertical-align:-2px;">🔍</span></p>
       <p class="sheet-note" id="regsFresh" style="display:none; color:var(--teal); margin:-4px 0 8px;"></p>
@@ -2748,6 +2752,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v295</b> · Air around the ✕</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v294</b> · Zone pills filter</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v293</b> · Opens on Tequila Sunrise</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v292</b> · Orange app icon</p>
@@ -2857,7 +2862,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2 id="logSheetTitle">Log a Catch</h2>
-    <button class="close" id="logClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="logClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body">
     <label class="field-label" style="margin-top:2px;">Photo (optional)</label>
@@ -2925,7 +2930,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2>Active Feeding Times</h2>
-    <button class="close" id="biteClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="biteClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body" id="biteBody"></div>
 </div>
@@ -2936,7 +2941,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2>Search</h2>
-    <button class="close" id="searchClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="searchClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body">
     <input type="search" id="searchInput" placeholder="Location, species, or help topic…" autocomplete="off">
@@ -2950,7 +2955,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2>About</h2>
-    <button class="close" id="aboutClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="aboutClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body">
     <div class="about-mark">
@@ -2974,7 +2979,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2>Theme</h2>
-    <button class="close" id="themeClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="themeClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body">
     <p class="sheet-note">Pick a color theme for the app. Your choice is saved on this device. Species and zone colors stay the same across themes so pins always read the same.</p>
@@ -2987,7 +2992,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2>Add a Spot</h2>
-    <button class="close" id="addSpotClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="addSpotClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body">
     <p class="sheet-note">Save your own fishing spot to the map. It's stored on this device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. The app sets the type from where the pin landed, and you can override it.</p>
@@ -3035,7 +3040,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2>Create &amp; Calibrate Tide Stations</h2>
-    <button class="close" id="tideCalClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="tideCalClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body">
     <div class="subhead" style="margin-top:2px;">Your Own Tide Stations</div>
@@ -3095,7 +3100,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </div>
 
 <div id="cropModal">
-  <button id="cropClose" type="button" title="Close">CLOSE <span class="bi">✕</span></button>
+  <button id="cropClose" type="button" title="Close">CLOSE <span class="bi bi-x">✕</span></button>
   <div id="cropStage">
     <img id="cropImg" alt="">
     <div id="cropRect"><div class="h br"></div></div>
@@ -3114,7 +3119,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="sheet-handle"></div>
   <div class="sheet-head">
     <h2>Offline Map</h2>
-    <button class="close" id="offlineClose">CLOSE <span class="bi">✕</span></button>
+    <button class="close" id="offlineClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body">
     <p class="sheet-note">Download the satellite map — <b>USGS Imagery Topo</b> over the land and <b>Sentinel-2</b> imagery over the water — for the whole fishing area (Ponce Inlet, the Halifax and Indian Rivers, Mosquito Lagoon, and the offshore reefs). Do this once while you have wifi; afterward the map draws with the signal off. Tiles are stored on this device only.</p>
@@ -3837,7 +3842,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 294;
+const BUILD_NUM  = 295;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6960,7 +6965,7 @@ function renderRegsLog(){
   /* Same CLOSE ✕ the other two collapsibles carry -- this one is appended here because
      the box's contents are rebuilt from REGS_CHANGES rather than written in the markup. */
   box.innerHTML += '<div class="loc-btns" style="margin:8px 0 10px;">' +
-    '<button class="mini-btn" type="button" data-close-box="regsLog">CLOSE <span class="bi">✕</span></button></div>';
+    '<button class="mini-btn" type="button" data-close-box="regsLog">CLOSE <span class="bi bi-x">✕</span></button></div>';
 }
 /* Collapsible notes in the Season Guide: REGULATION CHANGES plus the SIZE & BAG LIMITS
    and POSSESSION explainers, which used to sit open as walls of text above the bars. */
@@ -7247,7 +7252,7 @@ document.addEventListener('click', ev=>{
     const row = document.createElement('div');
     row.className = 'loc-btns help-print-hide';
     row.style.margin = '10px 0 4px';
-    row.innerHTML = '<button class="mini-btn" type="button" data-help-close>CLOSE <span class="bi">✕</span></button>';
+    row.innerHTML = '<button class="mini-btn" type="button" data-help-close>CLOSE <span class="bi bi-x">✕</span></button>';
     body.appendChild(row);
   });
   panel.addEventListener('click', ev=>{
