@@ -7,6 +7,18 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 9:20 PM EDT · v298 · USCG MOB line
+------------------------------------------------------------------------------
+Two help edits. The Map credits note lost its closing four sentences — the
+history of why the credits used to sit on the map permanently, the licence
+reasoning for keeping them on the map behind one tap, and the aside about
+the Eye not hiding the ⓘ. The note now stops after "puts them away": what
+the ⓘ is, what it shows on each chart, and how to close it.
+
+The MOB writeup gains a closing sentence after the "not a rescue device"
+caution: refer to and follow USCG safe boating MOB procedures.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 9:12 PM EDT · v297 · Search leaves no trace
 ------------------------------------------------------------------------------
 Search now ends when you leave it, and a Help writeup it opens is on loan.
