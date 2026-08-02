@@ -7,6 +7,17 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 12:03 AM EDT · v309 · Nothing-logged note always shows
+------------------------------------------------------------------------------
+Tapping a species button for a fish with no catches in the log is supposed to
+put up the "nothing logged" note — but the check looked at the WHOLE set of
+lit species, so if one lit species had catches, tapping an empty one after it
+showed nothing and the button looked dead. The note now keys off the species
+actually tapped: switch on any fish you have never logged and the note reads
+"No <fish> logged yet", every time, no matter what else is lit. (Switching a
+species OFF never shows it, and the v305 "Catches is off" note is unchanged.)
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:57 PM EDT · v308 · Waypoint tags hang left
 ------------------------------------------------------------------------------
 With Labels on, the waypoint pins (the v266 GNIS sweep — named creeks, bays,

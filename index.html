@@ -2879,6 +2879,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v309</b> · Nothing-logged note always shows</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v308</b> · Waypoint tags hang left</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v307</b> · Callalisa Creek</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v306</b> · Blue inshore, big name tags</p>
@@ -3984,9 +3985,9 @@ function showToast(msg, duration=2400){
    build spelled out by hand in five places, which is why those messages still said
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
-const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 308;
-const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
+const BUILD_DATE = '08/02/26';                          // map stamp form
+const BUILD_NUM  = 309;
+const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
 
@@ -6912,8 +6913,11 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
       applyFilter();
     } else {
       applyFilter();
-      if(!catches.some(c=> catchSpeciesList(c).some(k=>activeSpecies.has(k)))){
-        showToast('No ' + sp.label.toLowerCase() + ' in your log yet');
+      // v309: the "nothing logged" note keys off the TAPPED species, not the whole
+      // active set — before, one lit species with catches muted the note for every
+      // empty species tapped after it.
+      if(activeSpecies.has(key) && !catches.some(c=> catchSpeciesList(c).includes(key))){
+        showToast('No ' + sp.label.toLowerCase() + ' logged yet');
       } else if(!showCatches){
         // Catches off means no diamonds, full stop (v305) — say so rather than let the
         // species button look dead.
