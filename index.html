@@ -2801,7 +2801,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-labels">Labels<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-labels">
-      <p class="sheet-note">Turns the <b>name labels</b> on or off for whatever pins are showing. Off means no labels, but the pins stay exactly where they were. The pill lights <b>orange</b> when the labels are on and sits as orange lettering on black when they are off, the same on/off pattern the Inshore, Offshore and Launches pills use. Each name tag is filled in its pin's own colour, and its lettering is black on the bright tags (Inshore blue, Offshore amber) and white on the dark ones (Launches), so a name stays readable whichever zone it belongs to.</p>
+      <p class="sheet-note">Turns the <b>name labels</b> on or off for whatever pins are showing. Off means no labels, but the pins stay exactly where they were. The pill lights <b>orange</b> when the labels are on and sits as orange lettering on black when they are off, the same on/off pattern the Inshore, Offshore and Launches pills use. Each name tag is filled in its pin's own colour, and its lettering is black on the bright tags (Inshore blue, Offshore amber) and white on the dark ones (Launches), so a name stays readable whichever zone it belongs to. Waypoint tags (named creeks, bays and cuts) hang on the <b>left</b> side of their pin, because the topo map prints its own name to the right of that exact point — with Labels on you get both: the chart's printed name to the east, the tag to the west.</p>
       </div>
 
       <div class="subhead">Search, Help &amp; View Buttons</div>
@@ -2879,6 +2879,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v308</b> · Waypoint tags hang left</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v307</b> · Callalisa Creek</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v306</b> · Blue inshore, big name tags</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v305</b> · Catches is the master switch</p>
@@ -3984,7 +3985,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 307;
+const BUILD_NUM  = 308;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5626,7 +5627,12 @@ function applySpotLabels(){
     if(labelsOn && map.hasLayer(m)){
       const s = m.spotRef;
       const cls = s.ramp ? 'lbl-launch' : (s.zone === 'offshore' ? 'lbl-offshore' : 'lbl-inshore');
-      m.bindTooltip((s.name||'').replace(/^CR /,''), {permanent:true, direction:'right', offset:[10,0], className:'spot-label '+cls, opacity:1});
+      /* v308: waypoint pins sit ON the GNIS anchor — the exact point the topo starts
+         printing its own name from, running EASTWARD — so a right-hand tag lies on top
+         of the printed name. Waypoint tags hang LEFT instead: chart name to the east,
+         app tag to the west, both readable with Labels on (Jan's request). */
+      const left = s.wp && !s.ramp;
+      m.bindTooltip((s.name||'').replace(/^CR /,''), {permanent:true, direction:(left?'left':'right'), offset:[left?-10:10,0], className:'spot-label '+cls, opacity:1});
     }
   });
 }

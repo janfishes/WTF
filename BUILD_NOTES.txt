@@ -7,6 +7,19 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:57 PM EDT · v308 · Waypoint tags hang left
+------------------------------------------------------------------------------
+With Labels on, the waypoint pins (the v266 GNIS sweep — named creeks, bays,
+cuts, islands) were covering the topo's own printed names: those pins sit ON
+the GNIS anchor, which is the exact point the imagery starts printing the
+name from, running eastward — so a right-hand tag lay straight on top of the
+printed text (made worse by the v306 bigger tags). Waypoint name tags now
+hang on the LEFT side of their pin; every other pin (fishing spots, launches,
+offshore sites) keeps its tag on the right. Result with Labels on: the
+chart's printed name reads to the east of the pin, the app's tag to the
+west, both visible — which is what Jan asked for.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:53 PM EDT · v307 · Callalisa Creek
 ------------------------------------------------------------------------------
 New built-in inshore spot: Callalisa Creek at 29°01.113'N 80°54.225'W
