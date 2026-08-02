@@ -7,6 +7,17 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 12:13 AM EDT · v311 · Spot pins stay put
+------------------------------------------------------------------------------
+The species buttons no longer touch anything but their own fish. Since the
+app's beginning, picking a species stood the fishing-spot pins down so only
+the catch diamonds were left; v310 kept that for the narrowed state. Removed
+outright at Jan's request: the Inshore, Offshore and Launches pins now stay
+on the chart whatever the species buttons are doing, and switching one fish
+on or off never disturbs another fish's diamonds. Spot pins answer to the
+zone and Launches filters alone. Help updated to match.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 12:11 AM EDT · v310 · Species buttons light for logged fish
 ------------------------------------------------------------------------------
 The species buttons now SHOW the log as well as filter it. Switching Catches

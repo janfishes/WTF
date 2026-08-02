@@ -2771,7 +2771,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-species">Species<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-species">
       <p class="sheet-note">The species buttons are the 23 <b>diamonds</b> down the left edge of the map — one per species the app knows. They carry no colour of their own: unpicked they are white lettering on black, and a picked one <b>reverses</b> — black lettering on a white fill — the same on/off language as the <b>Catches</b> pill.</p>
-      <p class="sheet-note">The species buttons down the left side show and filter your <b>catch log</b>. Switch <b>Catches</b> on and every fish in your log lights its button — the lit buttons are exactly what's on the map. Tap a lit button to switch that fish's diamonds off, and tap it again to bring them back; while you're narrowed down to some of your fish, the fishing-spot pins step aside so only the diamonds are left, and they return when every logged fish is lit again. A new catch lights its fish's button the moment it's logged. A lit species stays visible at any zoom. <b>Catches</b> is the master switch over all of it: turn it off and every button goes dark and no diamonds show; turn it back on and your logged fish light up again. If you've never logged a fish, tapping its button gets a note saying so.</p>
+      <p class="sheet-note">The species buttons down the left side show and filter your <b>catch log</b>. Switch <b>Catches</b> on and every fish in your log lights its button — the lit buttons are exactly what's on the map. Tap a lit button to switch that fish's diamonds off, and tap it again to bring them back — each button touches only its own fish, and the fishing-spot pins and launches stay on the chart throughout. A new catch lights its fish's button the moment it's logged. A lit species stays visible at any zoom. <b>Catches</b> is the master switch over all of it: turn it off and every button goes dark and no diamonds show; turn it back on and your logged fish light up again. If you've never logged a fish, tapping its button gets a note saying so.</p>
       <p class="sheet-note">They show and filter your <b>catch log</b> only, not the fishing spots, and you can have as many lit as you like. Their labels follow the <b>Labels</b> map filter button, and the <b>Eye</b> takes the whole column off the chart along with the action buttons.</p>
       </div>
 
@@ -2879,6 +2879,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v311</b> · Spot pins stay put</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v310</b> · Species buttons light for logged fish</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v309</b> · Nothing-logged note always shows</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v308</b> · Waypoint tags hang left</p>
@@ -3987,7 +3988,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 310;
+const BUILD_NUM  = 311;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6872,14 +6873,6 @@ function reconcileSpeciesWithLog(){
   prevLoggedSpecies = logged;
   syncSpeciesChips();
 }
-/* Narrowed = the user has switched some logged fish off (but not all of them) —
-   the state where the spot pins step aside to leave just the diamonds. */
-function speciesNarrowed(){
-  if(activeSpecies.size === 0) return false;
-  let narrowed = false;
-  loggedSpeciesSet().forEach(k=>{ if(!activeSpecies.has(k)) narrowed = true; });
-  return narrowed;
-}
 function setShowCatches(on){
   showCatches = on;
   document.getElementById('catchToggle').classList.toggle('active', on);
@@ -6995,11 +6988,9 @@ speciesCol.addEventListener('wheel', (e)=>{
 /* The single rule for whether a spot pin belongs on screen. applyFilter() and the easter egg
    both read it, so the two cannot drift. */
 function pinVisible(s){
-  /* Narrowing to some of the logged fish stands the spot pins down so only the diamonds
-     are left — but only while Catches is ON (v305: with Catches off there are no diamonds
-     to clear a view for). v310: with every logged fish lit — the normal Catches-on state —
-     the pins stay; only a deliberate narrow clears them. */
-  if(showCatches && speciesNarrowed()) return false;
+  /* v311: the species buttons touch ONLY their own diamonds — the spot pins never
+     step aside for a species pick (they did from the start through v310; Jan had it
+     removed). Spot pins answer to the zone and Launches filters alone. */
   return s.ramp ? showLaunches : activeZones.has(s.zone);
 }
 function offshorePinsVisible(){
@@ -7051,8 +7042,6 @@ function syncEggMarker(){
 function applyFilter(){
   markers.forEach(m=>{
     const s = m.spotRef;
-    // Picking a species means "show me those catches" — the fishing-spot pins
-    // stand down so only the diamonds are left on the map.
     const visible = pinVisible(s);
     if(!visible){ if(map.hasLayer(m)) map.removeLayer(m); return; }
     if(!map.hasLayer(m)) m.addTo(map);
