@@ -7,6 +7,15 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 7:02 PM EDT · v331 · Inlet Pin Fix
+------------------------------------------------------------------------------
+The Ponce de Leon Inlet waypoint pin moves to NOAA's official position
+for the inlet, 29°04.672'N 80°54.511'W (29.077867, -80.908517), at Jan's
+request. It had been on the GNIS Channel anchor (29.072485, -80.918665),
+about 0.7 nm southwest up the channel from the inlet mouth. The old GNIS
+coordinate is kept as a comment on the pin's data line.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 4:05 PM EDT · v330 · Save Help PDF
 ------------------------------------------------------------------------------
 Help gains a SAVE HELP AS PDF button under PRINT THIS HELP. It runs the
