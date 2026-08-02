@@ -2477,7 +2477,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #acceptGate.hidden{display:none;}
   #acceptBar{width:min(680px,94%); margin:0 auto; background:var(--navy-900);
     border:1px solid var(--line); border-radius:16px; box-shadow:0 -8px 30px rgba(0,0,0,.5);
-    padding:14px 16px; display:flex; align-items:center; gap:12px; justify-content:space-between;}
+    padding:14px 16px; display:flex; flex-direction:column; gap:10px;}
+  #acceptRow{display:flex; align-items:center; gap:10px;}
+  #acceptName{flex:1 1 auto; min-width:0;}
   #acceptText{color:var(--fog); font-size:13.5px; line-height:1.4;}
   #acceptBtn{flex:0 0 auto; background:var(--teal); color:var(--on-accent); border:none; cursor:pointer;
     font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; padding:10px 20px; border-radius:100px;}
@@ -2672,6 +2674,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-catches" style="display:none;">
       <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Scroll to the bottom of your log to see the two ways to export/import your log.</p>
+      <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Jan’s Catch Log”)</span></label>
+      <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
       <div class="loc-btns" style="margin:0 0 10px;">
         <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, catch or spot">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
       </div>
@@ -2706,7 +2710,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
       <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish — one species or several — where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show feeding times by month and fishing regs. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. With Catches on, the <b>Species</b> buttons light up for the fish in your log — tap them to pick which show. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b> The <b>MOB</b> function is a memory aid only — not a rescue device, and no substitute for required safety equipment or USCG procedures.</p>
-      <p class="sheet-note" style="text-align:center; margin-top:4px;"><b>Get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
+      <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <p class="sheet-note" style="margin:14px 0 6px;">Prints this entire help as plain text — every button’s writeup opened out — so it can be read offline or carried on paper.</p>
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 14px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
 
@@ -2751,6 +2755,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mylog"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> My Log<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-mylog">
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>My Log</b> opens your full catch history, listed by <b>date caught</b>, most recent first — not by the order you added them, so a catch you enter later, but that happened earlier, drops into place by its own date. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses, so it fills in automatically for every catch, old and new. Every catch card and spot popup carries <b>EDIT</b> and <b>DELETE</b> buttons, and one <b>UNDO</b> button sits at the top of the log — always there, even after you delete your last catch. It reverses your most recent change — an edit or a delete, on a catch or a spot, whichever came last — stepping back through up to your last 10 changes, one per tap. The same button sits above <b>Your saved spots</b> in the + Spot sheet; both work the identical history. Undone edits only last the session, but a <b>deleted catch or spot is kept for 14 days</b> (the last 10 deletions), so UNDO still brings it back after the app is closed or reloaded — the "Recently deleted" line under each UNDO button counts what's waiting.</p>
+      <p class="sheet-note"><b>Put your name on it.</b> Type your name in the box at the top of My Log — or on the first-open Accept screen — and the sheet becomes <b>“Jan’s Catch Log”</b> instead of “My Catch Log”, with your own name in Jan's place. It's entirely optional: leave the box blank and nothing changes, clear it later and the title goes back to “My Catch Log”. Like everything else here, the name is kept only on your device.</p>
       <p class="sheet-note">On a phone, use <b>Add to Home Screen</b> to launch it like an app. Each person's catches and notes stay private on their own device. The <b>My Log</b> sheet has two exports. <b>Full backup</b> — <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> — carries everything, photos included, along with the spots you added, your edits to built-in spots, and your drop labels; photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. <b>Log only</b> — <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span> — is the same data with the <b>photos stripped out</b>, small enough to email or text; catches restored from it have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what this device hasn't seen; if it can't, it says exactly which check failed rather than shrugging.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-seasons"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons<span class="ht-caret">▸</span></button>
@@ -2896,6 +2901,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v319</b> · Name on the log</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v318</b> · Purple tiles fixed</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v317</b> · Disclaimer shown in full</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v316</b> · Inshore pills isolate, city labels</p>
@@ -3321,7 +3327,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="acceptGate">
   <div id="acceptBar">
     <span id="acceptText"><b>Do not use this site for navigation.</b> The <b>MOB</b> feature is a memory aid only — not a rescue device. In an emergency, follow USCG procedures and call for help on VHF&nbsp;16. Provided <b>AS&nbsp;IS</b> — see the Disclaimer in Help.</span>
-    <button id="acceptBtn">Accept</button>
+    <div id="acceptRow">
+      <input type="text" id="acceptName" maxlength="24" autocomplete="name" placeholder="Your name (optional)">
+      <button id="acceptBtn">Accept</button>
+    </div>
   </div>
 </div>
 
@@ -3367,6 +3376,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     if(accepted){ gate.classList.add('hidden'); }
     btn.addEventListener('click', function(){
       try{ localStorage.setItem('pifc:disclaimerAccepted','1'); }catch(e){}
+      /* Optional name, personalizes the Catch Log title. Blank never clobbers a saved
+         name; the field is editable later at the top of My Log. */
+      try{
+        var nmEl = document.getElementById('acceptName');
+        var nm = nmEl ? nmEl.value.replace(/\s+/g,' ').trim().slice(0,24) : '';
+        if(nm) localStorage.setItem('pifc:userName', nm);
+      }catch(e){}
+      try{ if(window.applyUserName) window.applyUserName(); }catch(e){}
       gate.classList.add('hidden');
       /* map may not exist yet if the app script died; guarded so the gate still closes. */
       try{ setTimeout(function(){ if(window.map && map.invalidateSize) map.invalidateSize(); }, 60); }catch(e){}
@@ -4013,7 +4030,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 318;
+const BUILD_NUM  = 319;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -7418,6 +7435,34 @@ function clearSearchHelpTopic(){
 }
 
 const TAB_TITLES = { season:'Season Guide', catches:'My Catch Log', help:'Help' };
+/* The catch log title is personal when a name is on file — "Jan’s Catch Log" — set on the
+   Accept gate or edited any time at the top of My Log. Stored in localStorage directly
+   (like disclaimerAccepted, NOT an APP_KEY) so the pre-app gate script can write it. */
+function userName(){ try{ return (localStorage.getItem('pifc:userName')||'').trim(); }catch(e){ return ''; } }
+function tabTitle(k){
+  if(k === 'catches'){ const n = userName(); return n ? n + '’s Catch Log' : 'My Catch Log'; }
+  return TAB_TITLES[k];
+}
+function setUserName(v){
+  v = (v||'').replace(/\s+/g,' ').trim().slice(0,24);
+  try{ if(v) localStorage.setItem('pifc:userName', v); else localStorage.removeItem('pifc:userName'); }catch(e){}
+  applyUserName();
+}
+/* Repaints every surface the name touches: the open sheet's title, the REEL FUN sendoff in
+   Help, and the My Log name box (skipped while the user is typing in it). Global because
+   the gate's Accept handler calls it too. */
+function applyUserName(){
+  const n = userName();
+  const active = document.querySelector('.tab.active');
+  if(active && active.dataset.tab === 'catches') infoTitle.textContent = tabTitle('catches');
+  const rf = document.getElementById('reelFunLine');
+  if(rf) rf.textContent = (n ? n + ', get' : 'Get') + ' out there and have some REEL FUN!';
+  const ipt = document.getElementById('logNameInput');
+  if(ipt && document.activeElement !== ipt && ipt.value.trim() !== n) ipt.value = n;
+}
+window.applyUserName = applyUserName;
+document.getElementById('logNameInput').addEventListener('input', function(){ setUserName(this.value); });
+applyUserName();
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.addEventListener('click', ()=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -7426,7 +7471,7 @@ document.querySelectorAll('.tab').forEach(tab=>{
     Object.keys(TAB_TITLES).forEach(k=>{
       document.getElementById('panel-'+k).style.display = (k===which) ? 'block' : 'none';
     });
-    infoTitle.textContent = TAB_TITLES[which];
+    infoTitle.textContent = tabTitle(which);
     // Help re-opens on the writeup last read (v271), not on the bare directory.
     if(which === 'help') restoreHelpTopic();
     // Always show a freshly opened tab from the top, not wherever it was left

@@ -7,6 +7,22 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 1:50 AM EDT · v319 · Name on the log
+------------------------------------------------------------------------------
+The catch log can now carry your name. The first-open Accept screen gained an
+optional "Your name" box next to the Accept button; type a name there and the
+My Log sheet's title reads "Jan's Catch Log" (your name in Jan's place)
+instead of "My Catch Log", and the sendoff at the end of Help's overview
+greets you by name too: "Jan, get out there and have some REEL FUN!". The
+same name is editable any time in a new box at the top of My Log — the title
+updates as you type, clearing the box returns the plain titles, and leaving
+it blank everywhere changes nothing. The name is optional, capped at 24
+characters, and stored only on the device (localStorage, alongside the
+disclaimer-accepted flag, so the gate script can write it before the app
+loads). Existing users who accepted the gate long ago never see it again —
+the My Log box is their way in. Help's My Log writeup documents it.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 1:34 AM EDT · v318 · Purple tiles fixed
 ------------------------------------------------------------------------------
 Fixed the purple square on the Hi Res & ICW view (reported on iPhone at the
