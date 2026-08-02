@@ -7,8 +7,21 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-02 · 2:18 AM EDT · v321 · Four inshore categories
+Build 2026-08-02 · 2:27 AM EDT · v322 · Marinas ride Launches
 ------------------------------------------------------------------------------
+The 11 marinas (marinas, yacht clubs, the boatyard) now show and hide with
+the LAUNCHES button — nearly every marina has a ramp, just not a free one
+(Jan). The button keeps its name; its count is now 37 (26 ramps/launches +
+11 marinas) and Inshore's drops to 124. The Marinas pill leaves the inshore
+category row (My Spots · Landmarks · Waypoints remain). Deliberately a
+visibility-only change: the marina pins keep zone:"inshore" and their
+metas, so they STAY selectable + Catch locations (unlike ramps, which are
+excluded as land points) and keep their pin styling. Do not stamp ramp:true
+on a marina — that would drop it from the catch picker. Jumping to a marina
+from search or a log card lights the Launches button, not the inshore row.
+Help: Launches and Inshore dropdowns updated.
+
+
 Jan's redesign of the v314/v316 inshore sub-pills, in three moves. (1) FOUR
 categories now, sorted by what a pin IS rather than where its data came
 from: My Spots (the user's own saved spots, MOB marks included — the pill
