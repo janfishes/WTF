@@ -1288,7 +1288,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   /* The row spans the map's full width but only the chips should catch taps —
      without this the empty stretch swallows drags and taps meant for the map. */
-  #filterWrap .chiprow{justify-content:flex-end; pointer-events:none;}
+  /* v294: centred at every width. The row spans the map's full width, so flex-end parked
+     the pills against the right edge under the wide layout while the phone rule below
+     centred them — two different bars depending on the screen. Centre is the one Jan
+     asked for and the one the narrow rule has always used. */
+  #filterWrap .chiprow{justify-content:center; flex-wrap:wrap; pointer-events:none;}
   #filterWrap .chiprow > *{pointer-events:auto;}
   .chiprow{
     display:flex; overflow-x:auto; padding-bottom:2px;
@@ -2554,17 +2558,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
       <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish — one species or several — where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show typical feeding times by month. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b></p>
-      <p class="sheet-note" style="text-align:center; margin-top:4px;"><b>Now get out on the water and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
+      <p class="sheet-note" style="text-align:center; margin-top:4px;"><b>Get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <p class="sheet-note" style="margin:14px 0 6px;">Prints this entire help as plain text — every button’s writeup opened out — so it can be read offline or carried on paper.</p>
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 14px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
 
-      <p class="sheet-note">Every part of this help sits behind a button. <b>Tap a button</b> to read it, and tap the button title again to close it. If you tap <b>CLOSE</b> <span class="bi">✕</span> to exit Help and then return, Help will reopen to your last button view.</p>
+      <p class="sheet-note">Every part of this help sits behind a button. <b>Tap a button</b> to read it, and close it again either by tapping its title or with the <b>CLOSE</b> <span class="bi">✕</span> button at the end of the writeup. If you tap <b>CLOSE</b> <span class="bi">✕</span> at the top to exit Help and then return, Help will reopen to your last button view.</p>
 
       <div class="subhead">Action Buttons</div>
       <p class="sheet-note">Ten buttons along the right side of the map are the app’s actions. Tap any button below to read what it does and tap again to close.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list — <b>tap more than one</b> if the trip produced several; the first you tap colors the catch pin on the map, and every one you pick shows its season bar on the entry's My Log card and popup. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> switches just above the location list enable you to narrow the options down according to where you are fishing. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list — <b>tap more than one</b> if the trip produced several; the first you tap colors the catch pin on the map, and every one you pick shows its season bar on the entry's My Log card and popup. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> pills just above the location list narrow it down to where you are fishing: they start black with the whole list showing, and tapping <b>Offshore</b> lights it purple and cuts the list to offshore sites only (<b>Inshore</b> does the same in blue). Tapping the lit one again turns it black and brings the whole list back. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
       <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g. 29°04.902′ N) — the form a chartplotter uses. A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. The line under those buttons prints the position it settled on, so you can check it before saving, and <b>Clear</b> starts over. A photo with embedded GPS fills the position in by itself (see the photo note below). To key or paste numbers in by hand, save them in <b>+ Spot</b> first — its position box reads typed and pasted coordinates in every common form — and the new spot is then in this location list.</p>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>EDIT ✎</b> or <b>DELETE ✕</b> in its popup — or the same buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
@@ -2741,10 +2745,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA; charted place names and their positions come from the USGS Geographic Names Information System. This app is not affiliated with or endorsed by any of those agencies.</p>
 
       <div class="subhead">Build Notes</div>
-      <p class="sheet-note">Two or three words per build.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
-      <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">Two or three words per build; the full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v294</b> · Zone pills filter</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v293</b> · Opens on Tequila Sunrise</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v292</b> · Orange app icon</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v291</b> · Change log trimmed</p>
@@ -2879,8 +2883,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     <label class="field-label">Location</label>
     <div class="chiprow wrap" id="logZoneRow" style="margin-bottom:8px;">
-      <div class="chip active" data-zone="inshore">Inshore</div>
-      <div class="chip active" data-zone="offshore">Offshore</div>
+      <div class="chip" data-zone="inshore">Inshore</div>
+      <div class="chip" data-zone="offshore">Offshore</div>
     </div>
     <select id="logSpotSelect"><option value="">— choose a known spot —</option></select>
     <div class="loc-btns">
@@ -3833,7 +3837,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 293;
+const BUILD_NUM  = 294;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -7231,6 +7235,33 @@ document.addEventListener('click', ev=>{
   const sb = document.querySelector('#infoSheet .sheet-body');
   if(sb) requestAnimationFrame(()=>{ sb.scrollTop = 0; });
 });
+/* v294: every writeup ends with the same CLOSE ✕ the Season Guide's collapsibles carry.
+   A long writeup can run several screens past its own button, and scrolling back up to the
+   title to close it was the only way out. Appended in JS rather than typed into 40-odd
+   bodies in the markup, and tagged .help-print-hide so it does not print. */
+(function(){
+  const panel = document.getElementById('panel-help');
+  if(!panel) return;
+  panel.querySelectorAll('.help-body').forEach(body=>{
+    if(body.querySelector('[data-help-close]')) return;
+    const row = document.createElement('div');
+    row.className = 'loc-btns help-print-hide';
+    row.style.margin = '10px 0 4px';
+    row.innerHTML = '<button class="mini-btn" type="button" data-help-close>CLOSE <span class="bi">✕</span></button>';
+    body.appendChild(row);
+  });
+  panel.addEventListener('click', ev=>{
+    const btn = ev.target.closest && ev.target.closest('[data-help-close]');
+    if(!btn) return;
+    const body = btn.closest('.help-body');
+    const topic = body && body.previousElementSibling;
+    closeHelpTopics();
+    try{ localStorage.removeItem(HELP_TOPIC_KEY); }catch(e){}
+    /* The directory is back, so put the row this writeup belongs to under the eye
+       instead of leaving the sheet parked at whatever depth the writeup was read to. */
+    if(topic && topic.classList.contains('help-topic')) topic.scrollIntoView({block:'center'});
+  });
+})();
 /* v211: tag every <b> in Help whose text is exactly a real button's label with .bn, which
    styles it all caps and a step larger (see the .bn rule in the CSS). Matching by text
    keeps new help copy covered for free and leaves emphasis-only bolds alone. */
@@ -7384,10 +7415,11 @@ function setTideUI(key){
 /* The location list carries every known fishing spot — built-in inshore and offshore
    (including the imported jan-* offshore numbers, which used to be filtered out)
    plus anything the user has added themselves. Boat ramps and kayak launches are
-   excluded. The Inshore/Offshore switches above the list narrow it down; both on
-   means everything. */
+   excluded. The Inshore/Offshore switches above the list narrow it down: NEITHER lit
+   (both black) is the resting state and lists everything, and tapping one lights that
+   pill in its zone colour and cuts the list to that zone alone. */
 const logZoneRow = document.getElementById('logZoneRow');
-let logZones = new Set(['inshore','offshore']);
+let logZones = new Set();
 
 function rebuildSpotSelect(){
   const keep = spotSelect.value;
@@ -7418,8 +7450,9 @@ function rebuildSpotSelect(){
   const bucket = s => (s.zone === 'offshore' ? 'offshore' : 'inshore');
   const isLaunch = s => !!s.ramp || s.zone === 'launch';
 
+  // No pill lit = no filter = every zone, which is how the form opens.
   ['inshore','offshore'].forEach(zone=>{
-    if(!logZones.has(zone)) return;
+    if(logZones.size && !logZones.has(zone)) return;
     addGroup(ZONES[zone].label, SPOTS.filter(s=> !s._deleted && !isLaunch(s) && bucket(s) === zone));
     addGroup(ZONES[zone].label + ' — My Spots', custom.filter(s=> !isLaunch(s) && bucket(s) === zone));
   });
@@ -7428,23 +7461,27 @@ function rebuildSpotSelect(){
   if(keep && spotSelect.querySelector(`option[value="${keep}"]`)) spotSelect.value = keep;
 }
 
+function syncLogZoneChips(){
+  if(!logZoneRow) return;
+  logZoneRow.querySelectorAll('.chip[data-zone]').forEach(c=>
+    c.classList.toggle('active', logZones.has(c.dataset.zone)));
+}
 if(logZoneRow){
-  // Plain on/off toggles, exactly like the map's top-row pills: tapping a pill flips
-  // that pill only — bright zone fill = on, black = off. (The solo-switching logic
-  // that lived here until v243 changed the OTHER pill on a tap, which read as broken
-  // next to the map row.) Both off just empties the known-spot list until one is re-lit.
-  function syncLogZoneChips(){
-    logZoneRow.querySelectorAll('.chip[data-zone]').forEach(c=>
-      c.classList.toggle('active', logZones.has(c.dataset.zone)));
-  }
+  /* v294: these are FILTERS on the location list, not on/off switches for two independent
+     things, so they behave like one — tapping Offshore lights Offshore purple and cuts the
+     list to offshore sites, tapping Inshore hands the light to Inshore, and tapping the lit
+     one again puts both back to black and the whole list back. The plain toggles that lived
+     here from v243 read as broken: from the both-on start, a tap on Offshore turned Offshore
+     OFF and left the list showing inshore only — the opposite of what the tap says. */
   logZoneRow.querySelectorAll('.chip[data-zone]').forEach(chip=>{
     const zone = chip.dataset.zone;
     chip.addEventListener('click', ()=>{
-      if(logZones.has(zone)) logZones.delete(zone); else logZones.add(zone);
+      logZones = logZones.has(zone) ? new Set() : new Set([zone]);
       syncLogZoneChips();
       rebuildSpotSelect();
     });
   });
+  syncLogZoneChips();
 }
 
 rebuildSpotSelect();
@@ -7942,6 +7979,10 @@ function resetLogForm(){
   document.getElementById('logTime').value = nowStr();
   setSizeInputs(null, null);
   document.getElementById('logNotes').value = '';
+  // Both zone pills back to black, so every spot is on the list when the form opens.
+  logZones = new Set();
+  syncLogZoneChips();
+  rebuildSpotSelect();
   spotSelect.value = '';
   pendingLoc = null;
   clearPreviewMarker();

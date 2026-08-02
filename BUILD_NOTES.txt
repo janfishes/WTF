@@ -7,6 +7,45 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 10:40 PM EDT · v294 · Zone pills filter
+------------------------------------------------------------------------------
+The map's filter pill row is CENTRED again at every width. The row spans the
+full top edge of the map, and the base rule justified it flex-end while the
+phone rule centred it, so the bar sat in a different place depending on the
+screen. One rule now: justify-content:center, wrap allowed.
+
+LOG A CATCH -- the Inshore and Offshore pills above the location list now do
+what tapping them says. They were plain on/off toggles (v243) starting BOTH
+lit, so the first tap on Offshore turned Offshore OFF and left the list showing
+inshore spots -- the exact opposite of the tap. They are filters on one list,
+not switches for two independent things, so they behave like one:
+
+  neither lit (both black)  = no filter, every spot on the list -- the state
+                              the form opens in, and what resetLogForm returns
+                              to for every new catch
+  tap Offshore              = Offshore fills purple, list is offshore only
+  tap Inshore               = light hands over, list is inshore only
+  tap the lit one again     = both black, whole list back
+
+logZones is now an empty Set at rest and rebuildSpotSelect() reads size 0 as
+"no filter" rather than "nothing passes". The colours needed no work -- the
+zone pills have carried black-when-off / zone-colour-when-on since v243.
+
+HELP -- every writeup now ends with the same CLOSE ✕ the Season Guide's
+collapsibles got in v290. A long topic runs several screens past its own
+button and the only way out was scrolling back up to the title. The row is
+appended in JS to every .help-body rather than typed into forty-odd bodies,
+carries .help-print-hide so it does not print, and on tap collapses the topic
+and scrolls its button back to the middle of the sheet. The intro paragraph
+says so.
+
+Wording: the hook line is now "Get out there and have some REEL FUN!" (was
+"Now get out on the water and ..."). The Catch writeup describes the new pill
+behaviour. "Two or three words per build" is gone from both places it
+appeared -- the loose line under the Build Notes subhead and the head of the
+list, which keeps its link to this file.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 9:55 PM EDT · v293 · Opens on Tequila Sunrise
 ------------------------------------------------------------------------------
 A fresh copy of the app now opens on TEQUILA SUNRISE instead of Parrot Head.
