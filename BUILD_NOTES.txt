@@ -7,6 +7,31 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 9:45 PM EDT · v300 · Launches go brown
+------------------------------------------------------------------------------
+v299's slate gray still read too light, so launches leave gray altogether:
+--launch is now #8a4b0f, the Brown Sugar theme's accent, borrowed here as a
+fixed colour the way the other zone colours are fixed. It moves the boat-ramp
+and kayak-launch pins, their name labels, the launch ring, the filled state of
+the Launches filter pill and the Launch pill in + Spot.
+
+Three things recommend it. It is darker than either gray it replaces, so the
+pins hold their shape against sand, road casings and dry marsh instead of
+blending into them. It carries no blue channel, which means it survives the
+amber and copper polarized lenses Brown Sugar itself was built for. And it is
+the one warm brown already in the app's vocabulary, so launches now read as
+their own category rather than as a washed-out version of something else.
+White on it measures about 6.8:1.
+
+The OFF state stays on its own lifted tone for the same reason as v299 - OFF
+is text and outline on a BLACK chip, where #8a4b0f is only about 3.1:1. That
+tone is now #b5713a (about 5.5:1 on black), the same hue family so the two
+states plainly belong to one button, and the launch zone chips follow it. The
++ Spot Launch pill's unselected border moves to #5c3a17 to match.
+
+No behaviour, no data, no imagery-source change — color only.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 9:30 PM EDT · v299 · Darker launch gray
 ------------------------------------------------------------------------------
 The launch gray was too pale. --launch goes #8a97a8 -> #5a6673, a deeper
