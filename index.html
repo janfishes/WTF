@@ -2917,6 +2917,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v327</b> · Six Natural Sites</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v326</b> · Purple tiles really fixed</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v325</b> · My Spots label trimmed</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v324</b> · Offshore categories</p>
@@ -3690,6 +3691,14 @@ const SPOTS = [
   { id:"party-grounds-ne", name:"Party Grounds NE Corner", zone:"offshore", lat:29.1699, lng:-80.5377, meta:"Waypoint · Natural reef · ~24.2 sm/21 nm", wp:true, farOut:true, species:["grouper","snapper"] },
   { id:"party-grounds-nw", name:"Party Grounds NW Corner", zone:"offshore", lat:29.1850, lng:-80.6010, meta:"Waypoint · Natural reef · ~20.7 sm/18 nm", wp:true, farOut:true, species:["grouper","snapper"] },
   { id:"party-grounds-s", name:"Party Grounds S End", zone:"offshore", lat:29.1582, lng:-80.5794, meta:"Waypoint · Natural reef · ~21.9 sm/19 nm", wp:true, farOut:true, species:["grouper","snapper"] },
+  { id:"party-grounds-n", name:"Party Grounds N End", zone:"offshore", lat:29.178650, lng:-80.568800, meta:"Waypoint · Natural reef · ~22.4 sm/19.5 nm", wp:true, farOut:true, species:["grouper","snapper"] },
+  { id:"party-grounds-se", name:"Party Grounds SE End", zone:"offshore", lat:29.152267, lng:-80.549850, meta:"Waypoint · Natural reef · ~22.9 sm/20 nm", wp:true, farOut:true, species:["grouper","snapper"] },
+  { id:"party-grounds-sw", name:"Party Grounds SW End", zone:"offshore", lat:29.172000, lng:-80.600850, meta:"Waypoint · Natural reef · ~20.4 sm/17.5 nm", wp:true, farOut:true, species:["grouper","snapper"] },
+  { id:"steeples-north", name:"Steeples (North)", zone:"offshore", lat:29.223333, lng:-80.166667, meta:"Waypoint · Natural ledge · ~46.6 sm/40.5 nm", wp:true, farOut:true, species:["grouper","snapper"] },
+  { id:"steeples-south-ledge", name:"Steeples (South Ledge)", zone:"offshore", lat:29.191667, lng:-80.163333, meta:"Waypoint · Natural ledge · ~46.3 sm/40 nm", wp:true, farOut:true, species:["grouper","snapper"] },
+  { id:"rolldown", name:"Rolldown", zone:"offshore", lat:29.250000, lng:-80.033333, meta:"Waypoint · Natural ledge · ~54.8 sm/47.5 nm", wp:true, farOut:true,
+    desc:"Prominent deep shelf break running near the Steeples.",
+    species:["grouper","snapper"] },
   { id:"ramp-ponce-inlet", name:"Ponce Inlet Boat Ramp", zone:"inshore", lat:29.078999, lng:-80.928617, meta:"Boat ramp", wp:true, ramp:true, species:[] },
   { id:"ramp-po-kayak", name:"PO Causeway Kayak Launch", zone:"inshore", lat:29.145302, lng:-80.982956, meta:"Kayak launch", wp:true, ramp:true, species:[] },
   { id:"ramp-po-boat", name:"South PO Causeway Boat Ramps", zone:"inshore", lat:29.147344, lng:-80.976570, meta:"Boat ramp", wp:true, ramp:true, species:[] },
@@ -4053,7 +4062,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 326;
+const BUILD_NUM  = 327;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }

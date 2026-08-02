@@ -7,6 +7,28 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 3:43 PM EDT · v327 · Six Natural Sites
+------------------------------------------------------------------------------
+Six new built-in offshore natural sites, all filed under the Offshore →
+Natural category pill:
+
+  · Party Grounds N End    29.178650 / -80.568800
+  · Party Grounds SE End   29.152267 / -80.549850
+  · Party Grounds SW End   29.172000 / -80.600850
+  · Steeples (North)       29.223333 / -80.166667
+  · Steeples (South Ledge) 29.191667 / -80.163333
+  · Rolldown               29.250000 / -80.033333  — prominent deep shelf
+                           break running near the Steeples
+
+The three Party Grounds ends join the existing NE Corner, NW Corner and
+S End pins as Natural-reef waypoints. The Steeples pair and the Rolldown
+are marked Natural ledge — they're the deep stuff, 40-plus nautical miles
+out from Ponce Inlet, well beyond anything the app carried before. Each
+meta carries the distance from the inlet in the usual ~sm/nm form, and all
+six work with the compass and its tap-out routes like any other offshore
+mark.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 2:46 AM EDT · v326 · Purple tiles really fixed
 ------------------------------------------------------------------------------
 The purple aerial tiles came back after v318 — bigger, and on the Mac too.
