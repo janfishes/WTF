@@ -1459,6 +1459,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:800; border:1px solid var(--launch) !important; box-shadow:none !important;}
   .chip[data-zone="launch"]:not(.active){opacity:1; color:#b5713a !important; border-color:#b5713a !important;}
   .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
+  /* v314: inshore category sub-row — Spots / Waypoints / Marinas. Hidden unless Inshore
+     is lit. All three wear the Inshore blue (they are slices of that one switch); the
+     off-state border is the dimmed #0f4a80 the + Spot sheet already uses for unlit
+     inshore, which keeps the row visually subordinate to the main pills above it. */
+  #inshoreSubRow{display:none;}
+  #inshoreSubRow.show{display:flex;}
+  #inshoreSubRow .chip{
+    padding:5px 8px 4px; font-size:calc(13px * var(--tsb));
+    background:#000 !important; color:var(--inshore) !important;
+    border:1px solid #0f4a80 !important; box-shadow:none !important;
+    text-shadow:0 2px 3px rgba(0,0,0,.55);
+  }
+  #inshoreSubRow .chip .chip-total{font-size:calc(12px * var(--tsb));}
+  #inshoreSubRow .chip.active{
+    background:var(--inshore) !important; color:#000 !important;
+    border-color:#fff !important; text-shadow:none;
+  }
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
   /* Log-sheet species picker: matches the left-column buttons, which since v303 carry no
      species colour - white text on black in both states, selected marked by full-strength
@@ -2787,6 +2804,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-inshore">Inshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-inshore">
       <p class="sheet-note">An on/off switch for the <b>inshore fishing pins</b> — the creeks, rivers, cuts, flats, jetties, docks and bridges. Turn it off and that whole zone leaves the chart; the number beside it is how many inshore spots there are.</p>
+      <p class="sheet-note">While Inshore is lit, a second, smaller row of blue pills sits just below the filter row — <b>Fishing spots</b>, <b>Waypoints</b> and <b>Marinas</b>, each with its own count. They slice the inshore pins three ways: <b>Fishing spots</b> are the places you fish — the creeks, bridges, flats and holes, plus any inshore spot you saved yourself; <b>Waypoints</b> are the charted place-name pins described below; <b>Marinas</b> are the marinas and yacht clubs. Turning Inshore on always lights all three. Tap a pill to take that group off the chart, tap it again to bring it back — so the map can show just the waterway names, or just the marinas, when that is all the trip calls for. Turn Inshore off and the row leaves with it.</p>
       <p class="sheet-note">Every <b>waterway and island the Topo Satellite view names</b> inside our water — from Tomoka Basin south to the <b>Volusia County line</b> — carries its own inshore pin, <b>63</b> of them: creeks, coves, bays, cuts, sloughs, flats, points, canals and islands, named exactly as the chart prints them. Names and positions come from the <b>USGS Geographic Names Information System</b>, the gazetteer the topo tiles label themselves from, so a pin sits where the map's own label sits, and searching a name you read off the chart finds it. Creek pins land at the creek's <b>mouth</b>, which is the point USGS files a stream under. Where a charted name and a spot name disagreed, the chart won: <b>Tenmile Creek</b> is one word, and the cut is <b>Ponce de Leon Cut</b>, spelled as its ICW daybeacons are. The <b>Mosquito Lagoon</b> waypoint, which had drifted 4½ miles west into the marsh, was put back under the name the map prints. The map stops at the county line: the Brevard end of the lagoon, the Haulover and Merritt Island are off it. The chart names two different <b>Turnbull Creeks</b>, so the southern one is pinned as <b>Turnbull Creek Mosquito Lagoon W</b>.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-offshore">Offshore<span class="ht-caret">▸</span></button>
@@ -2881,6 +2899,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v314</b> · Inshore category pills</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v313</b> · MOB warnings, sale disclaimer</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v312</b> · Unlogged fish tap is note-only</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v311</b> · Spot pins stay put</p>
@@ -3992,7 +4011,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 313;
+const BUILD_NUM  = 314;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6144,12 +6163,16 @@ function updateCatchCount(){ document.getElementById('catchCount').textContent =
    custom spots) has zone === 'launch'; everything else buckets by its zone. */
 function updateFilterCounts(){
   let inshore = 0, offshore = 0, launch = 0;
+  const cats = { spots:0, waypoints:0, marinas:0 };   // v314 sub-pill totals
   markers.forEach(m=>{
     const s = m.spotRef;
     if(!s || s._deleted) return;
     if(s.ramp || s.zone === 'launch') launch++;
     else if(s.zone === 'offshore') offshore++;
-    else if(s.zone === 'inshore') inshore++;
+    else if(s.zone === 'inshore'){ inshore++; cats[inshoreCat(s)]++; }
+  });
+  Object.entries(cats).forEach(([k,n])=>{
+    const el = document.getElementById(k + 'CatCount'); if(el) el.textContent = n;
   });
   const ic = document.getElementById('inshoreCount'); if(ic) ic.textContent = inshore;
   const oc = document.getElementById('offshoreCount'); if(oc) oc.textContent = offshore;
@@ -6852,6 +6875,21 @@ const speciesCol = document.getElementById('speciesCol');
 let activeZones = new Set();
 let activeSpecies = new Set();
 
+/* v314: the Inshore pill got too crowded — ~40 curated fishing spots, the ~80 GNIS
+   waypoint pins (v266) and the marinas all rode one switch. A sub-row of three pills
+   (Spots · Waypoints · Marinas) appears under the filter row while Inshore is lit and
+   narrows the inshore layer per category. Same model as the species pills: turning
+   Inshore ON lights all three, tapping a pill toggles that category, Inshore OFF hides
+   the row and the next ON starts fresh with all three lit. Offshore and Launches are
+   untouched — waypoint reefs stay on the Offshore switch. */
+const INSHORE_CATS = ['spots','waypoints','marinas'];
+let inshoreCats = new Set(INSHORE_CATS);
+function inshoreCat(s){
+  if(s.wp) return 'waypoints';
+  if(/marina|yacht club/i.test(s.meta || '')) return 'marinas';
+  return 'spots';
+}
+
 /* v310: with Catches on, the lit species buttons ARE the list of fish on the map.
    Turning Catches on lights every species with a catch in the log; tapping a lit
    button switches that fish's diamonds off (and back on); turning Catches off
@@ -6912,11 +6950,43 @@ Object.entries(ZONES).forEach(([key,z])=>{
   chip.innerHTML = `${FILTER_ZONE_LABELS[key] || z.label}<span class="chip-total" id="${key}Count">0</span>`;
   chip.addEventListener('click', ()=>{
     if(activeZones.has(key)){ activeZones.delete(key); chip.classList.remove('active'); }
-    else { activeZones.add(key); chip.classList.add('active'); }
+    else {
+      activeZones.add(key); chip.classList.add('active');
+      /* v314: like Catches-and-species, switching Inshore ON starts with every
+         category lit; pills the user switched off don't survive an off/on cycle. */
+      if(key === 'inshore') inshoreCats = new Set(INSHORE_CATS);
+    }
+    if(key === 'inshore') syncInshoreSubRow();
     applyFilter();
   });
   metaRow.appendChild(chip);
 });
+
+/* v314: the inshore category sub-row — its own chiprow inside #filterWrap so the
+   species column's ResizeObserver on the wrap re-seats the column when it appears. */
+const inshoreSubRow = document.createElement('div');
+inshoreSubRow.className = 'chiprow wrap';
+inshoreSubRow.id = 'inshoreSubRow';
+document.getElementById('filterWrap').appendChild(inshoreSubRow);
+const INSHORE_CAT_LABELS = { spots:'Fishing spots', waypoints:'Waypoints', marinas:'Marinas' };
+INSHORE_CATS.forEach(cat=>{
+  const pill = document.createElement('div');
+  pill.className = 'chip filter-count';
+  pill.dataset.icat = cat;
+  pill.innerHTML = `${INSHORE_CAT_LABELS[cat]}<span class="chip-total" id="${cat}CatCount">0</span>`;
+  pill.addEventListener('click', ()=>{
+    if(inshoreCats.has(cat)) inshoreCats.delete(cat);
+    else inshoreCats.add(cat);
+    syncInshoreSubRow();
+    applyFilter();
+  });
+  inshoreSubRow.appendChild(pill);
+});
+function syncInshoreSubRow(){
+  inshoreSubRow.classList.toggle('show', activeZones.has('inshore'));
+  inshoreSubRow.querySelectorAll('.chip').forEach(p=>
+    p.classList.toggle('active', inshoreCats.has(p.dataset.icat)));
+}
 
 const chipBreak = document.createElement('div');
 chipBreak.className = 'chip-break';
@@ -6995,7 +7065,9 @@ function pinVisible(s){
   /* v311: the species buttons touch ONLY their own diamonds — the spot pins never
      step aside for a species pick (they did from the start through v310; Jan had it
      removed). Spot pins answer to the zone and Launches filters alone. */
-  return s.ramp ? showLaunches : activeZones.has(s.zone);
+  if(s.ramp) return showLaunches;
+  if(!activeZones.has(s.zone)) return false;
+  return s.zone !== 'inshore' || inshoreCats.has(inshoreCat(s));   // v314 sub-pills
 }
 function offshorePinsVisible(){
   return pinVisible({ zone:'offshore', ramp:false });
@@ -10423,6 +10495,12 @@ function ensureSpotVisible(s){
     activeZones.add(s.zone);
     const ch = metaRow.querySelector(`.chip[data-zone="${s.zone}"]`);
     if(ch) ch.classList.add('active');
+  }
+  /* v314: jumping to an inshore spot (search, log, saved-spots list) must also
+     re-light its category pill or the pin stays filtered out on arrival. */
+  if(!s.ramp && s.zone === 'inshore'){
+    inshoreCats.add(inshoreCat(s));
+    syncInshoreSubRow();
   }
   applyFilter();
 }

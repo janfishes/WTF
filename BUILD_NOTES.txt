@@ -7,8 +7,24 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-02 · 12:35 AM EDT · v313 · MOB warnings, sale disclaimer
+Build 2026-08-02 · 12:58 AM EDT · v314 · Inshore category pills
 ------------------------------------------------------------------------------
+The Inshore pill had grown too crowded — 41 curated fishing spots, the 81
+GNIS waypoint pins and 11 marinas all rode one switch, and just wanting the
+waterway names (or just the marinas) meant taking everything. While Inshore
+is lit, a second, smaller row of blue pills now sits under the filter row —
+Fishing spots 41 · Waypoints 81 · Marinas 11 — and each slices its own group
+of inshore pins on and off the chart. Same model as the species pills:
+turning Inshore on always lights all three (pills switched off don't
+survive an off/on cycle), tapping a pill hides that group, Inshore off takes
+the row with it. Categories: waypoint pins (wp:true) are Waypoints; Marina/
+yacht-club metas are Marinas; everything else inshore — including saved
+custom spots — is Fishing spots. Offshore is untouched (the reef waypoints
+stay on the Offshore switch), as are Launches. Jumping to a spot from
+search, My Log or Your saved spots re-lights its category pill so the pin
+can't arrive hidden. Help's Inshore dropdown documents the row.
+
+
 Safety-and-liability wording pass ahead of putting the app up for sale, in
 five places. (1) The startup Accept gate now covers the riskiest feature,
 not just navigation: MOB is called a memory aid, not a rescue device — in an
