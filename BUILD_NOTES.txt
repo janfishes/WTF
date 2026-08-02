@@ -7,8 +7,25 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-02 · 2:31 AM EDT · v323 · My Inshore Spots label
+Build 2026-08-02 · 2:35 AM EDT · v324 · Offshore categories
 ------------------------------------------------------------------------------
+Offshore gets the same category treatment as Inshore (Jan): tapping the
+Offshore pill opens its own row of amber pills — My Offshore Spots ·
+Artificial · Natural — with the same lifecycle (opens with nothing picked
+and the chart clear; each pill toggles its own group; Offshore off takes
+the row away). Sorting: user-saved offshore spots (and offshore MOB marks)
+→ My Offshore Spots, named after the user once a name is set; the county
+reef Sites (metas carry a "drops" count) plus the named wrecks, barges,
+steamships, boats and the platform → Artificial (the wreck test reads the
+NAME, keyword list wreck/barge/boat/ship/platform/boiler/semarca — extend
+it if a new wreck name files under Natural); the Natural-reef waypoints
+and the ledges, ridges, holes, knobs and party grounds → Natural. Counts:
+Artificial 29, Natural 15. offshorePinsVisible() (the easter-egg gate) now
+means "Offshore lit AND at least one category picked". Jumps from search
+or a log card light the target's category. Help's Offshore dropdown
+rewritten.
+
+
 The user-spots pill in the inshore category row now reads "My Inshore
 Spots" ("Ace's Inshore Spots" with a name set) instead of "My Spots" —
 Jan's point: a user's saved spots can be offshore too, and those ride the

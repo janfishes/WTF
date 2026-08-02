@@ -1476,6 +1476,21 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background:var(--inshore) !important; color:#000 !important;
     border-color:#fff !important; text-shadow:none;
   }
+  /* v324: the offshore category row — same shape in Offshore amber; the dimmed
+     off-state border is the one the + Spot sheet uses for unlit Offshore. */
+  #offshoreSubRow{display:none;}
+  #offshoreSubRow.show{display:flex;}
+  #offshoreSubRow .chip{
+    padding:5px 8px 4px; font-size:calc(13px * var(--tsb));
+    background:#000 !important; color:var(--offshore) !important;
+    border:1px solid #806013 !important; box-shadow:none !important;
+    text-shadow:0 2px 3px rgba(0,0,0,.55);
+  }
+  #offshoreSubRow .chip .chip-total{font-size:calc(12px * var(--tsb));}
+  #offshoreSubRow .chip.active{
+    background:var(--offshore) !important; color:#000 !important;
+    border-color:#fff !important; text-shadow:none;
+  }
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
   /* Log-sheet species picker: matches the left-column buttons, which since v303 carry no
      species colour - white text on black in both states, selected marked by full-strength
@@ -2814,7 +2829,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-offshore">Offshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-offshore">
-      <p class="sheet-note">An on/off switch for the <b>offshore pins</b> — the county reef Sites, the natural reefs, the wrecks and ledges, and any offshore spot you added yourself. Turn it off and that whole zone leaves the chart; the number beside it is how many offshore sites there are.</p>
+      <p class="sheet-note">The switch for the <b>offshore pins</b> — the county reef Sites, the natural reefs, the wrecks and ledges, and any offshore spot you added yourself. The number beside it is how many offshore sites there are. Like Inshore, tapping it opens a <b>category row</b> just below rather than flooding the chart.</p>
+      <p class="sheet-note">The offshore category row is a smaller line of amber pills — <b>My Offshore Spots</b>, <b>Artificial</b> and <b>Natural</b>, each with its own count. <b>My Offshore Spots</b> are the offshore spots you saved yourself, MOB marks included — the pill carries your name once you've given it in My Log. <b>Artificial</b> is the man-made bottom: the county reef Sites with their deployments, and the named wrecks, barges, steamships and the platform. <b>Natural</b> is the real bottom: the natural reefs, ledges, ridges, holes and the party grounds. The row opens with <b>nothing picked</b> — tap a pill to bring that group on, tap another to add it, tap a lit pill to take it back off. Turn Offshore off and the row leaves with it.</p>
       <p class="sheet-note">An offshore pin carrying a <b>number</b> is a reef with more than one drop on it — the number is how many sites are at that named artificial or natural reef.</p>
       <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs and for clustered natural reef sites — coordinates in degrees and decimal minutes, depth, distance, and bearing to/from the inlet — sorted closest to farthest from the inlet, and plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. Each row is wider than the popup — <b>swipe or scroll sideways</b> within the list to bring the depth, distance, bearing, and any additional details into view. <b>Tap any row to give that drop a name</b> — the name then prints at the end of the row and is saved on this device; rows you have not named simply end at the bearing. If a popup covers the pins, <b>drag it out of the way</b> by its title area.</p>
       </div>
@@ -2901,6 +2917,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v324</b> · Offshore categories</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v323</b> · My Inshore Spots label</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v322</b> · Marinas ride Launches</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v321</b> · Four inshore categories</p>
@@ -4034,7 +4051,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 323;
+const BUILD_NUM  = 324;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6192,12 +6209,12 @@ function updateCatchCount(){ document.getElementById('catchCount').textContent =
    custom spots) has zone === 'launch'; everything else buckets by its zone. */
 function updateFilterCounts(){
   let inshore = 0, offshore = 0, launch = 0;
-  const cats = { myspots:0, landmarks:0, waypoints:0 };   // sub-pill totals
+  const cats = { myspots:0, landmarks:0, waypoints:0, myoffshore:0, artificial:0, natural:0 };   // sub-pill totals
   markers.forEach(m=>{
     const s = m.spotRef;
     if(!s || s._deleted) return;
     if(s.ramp || s.zone === 'launch') launch++;
-    else if(s.zone === 'offshore') offshore++;
+    else if(s.zone === 'offshore'){ offshore++; cats[offshoreCat(s)]++; }
     else if(s.zone === 'inshore'){
       const c = inshoreCat(s);
       if(c === 'marinas') launch++;              // v322: marinas count under Launches
@@ -6947,6 +6964,30 @@ function inshoreCat(s){
   return 'waypoints';
 }
 
+/* v324: Offshore gets the same treatment (Jan) — its own category row of amber
+   pills, same lifecycle: Offshore ON opens the row with nothing selected and no
+   offshore pins, each pill toggles its own group, OFF hides the row.
+     · My Offshore Spots — the user's own saved offshore spots (named after them
+                           like the inshore pill; offshore MOB marks land here);
+     · Artificial        — man-made bottom: the county reef Sites (their metas
+                           carry a "drops" count) and the named wrecks, barges,
+                           steamships, boats and the platform;
+     · Natural           — real bottom: the Natural-reef waypoints and the ledges,
+                           ridges, holes, knobs and party grounds.
+   The wreck/barge test reads the NAME because the historical "Offshore · ..."
+   metas carry only distance — extend the keyword list if a new wreck name
+   slips through to Natural. */
+const OFFSHORE_CATS = ['myoffshore','artificial','natural'];
+let offshoreCats = new Set();
+function offshoreCat(s){
+  if(isCustomSpot(s)) return 'myoffshore';
+  const meta = s.meta || '';
+  if(/natural reef/i.test(meta)) return 'natural';
+  if(/\bdrops?\b/i.test(meta)) return 'artificial';
+  if(/wreck|barge|boat|ship|platform|boiler|semarca/i.test(s.name || '')) return 'artificial';
+  return 'natural';
+}
+
 /* v310: with Catches on, the lit species buttons ARE the list of fish on the map.
    Turning Catches on lights every species with a catch in the log; tapping a lit
    button switches that fish's diamonds off (and back on); turning Catches off
@@ -7009,11 +7050,13 @@ Object.entries(ZONES).forEach(([key,z])=>{
     if(activeZones.has(key)){ activeZones.delete(key); chip.classList.remove('active'); }
     else {
       activeZones.add(key); chip.classList.add('active');
-      /* v321: switching Inshore ON opens the sub-row with nothing selected — no
-         inshore pins until a category pill is lit. */
+      /* v321/v324: switching a zone ON opens its sub-row with nothing selected —
+         no pins until a category pill is lit. */
       if(key === 'inshore') inshoreCats = new Set();
+      if(key === 'offshore') offshoreCats = new Set();
     }
     if(key === 'inshore') syncInshoreSubRow();
+    if(key === 'offshore') syncOffshoreSubRow();
     applyFilter();
   });
   metaRow.appendChild(chip);
@@ -7025,13 +7068,14 @@ const inshoreSubRow = document.createElement('div');
 inshoreSubRow.className = 'chiprow wrap';
 inshoreSubRow.id = 'inshoreSubRow';
 document.getElementById('filterWrap').appendChild(inshoreSubRow);
-/* The pill says INSHORE Spots (v323) because the user's saved spots can be offshore
-   too — those ride the Offshore switch, and a plain "My Spots" read as all of them.
+/* The user-spots pills say INSHORE/OFFSHORE Spots (v323) because each zone's row
+   only holds that side's saved spots, and a plain "My Spots" read as all of them.
    Takes the user's name when they've given one in My Log ("Ace's Inshore Spots") —
-   same possessive the Catch Log title uses; applyUserName() repaints it live. */
-function mySpotsLabel(){
-  try{ const n = userName(); return n ? n + '’s Inshore Spots' : 'My Inshore Spots'; }catch(e){ return 'My Inshore Spots'; }
+   same possessive the Catch Log title uses; applyUserName() repaints both live. */
+function userSpotsLabel(side){
+  try{ const n = userName(); return (n ? n + '’s ' : 'My ') + side + ' Spots'; }catch(e){ return 'My ' + side + ' Spots'; }
 }
+function mySpotsLabel(){ return userSpotsLabel('Inshore'); }
 const INSHORE_CAT_LABELS = { myspots:mySpotsLabel, landmarks:'Landmarks', waypoints:'Waypoints' };
 INSHORE_CATS.forEach(cat=>{
   const pill = document.createElement('div');
@@ -7054,6 +7098,32 @@ function syncInshoreSubRow(){
   inshoreSubRow.classList.toggle('show', activeZones.has('inshore'));
   inshoreSubRow.querySelectorAll('.chip').forEach(p=>
     p.classList.toggle('active', inshoreCats.has(p.dataset.icat)));
+}
+
+/* v324: the offshore category row — amber twin of the inshore one. */
+const offshoreSubRow = document.createElement('div');
+offshoreSubRow.className = 'chiprow wrap';
+offshoreSubRow.id = 'offshoreSubRow';
+document.getElementById('filterWrap').appendChild(offshoreSubRow);
+const OFFSHORE_CAT_LABELS = { myoffshore:()=>userSpotsLabel('Offshore'), artificial:'Artificial', natural:'Natural' };
+OFFSHORE_CATS.forEach(cat=>{
+  const pill = document.createElement('div');
+  pill.className = 'chip filter-count';
+  pill.dataset.icat = cat;
+  const lbl = OFFSHORE_CAT_LABELS[cat];
+  pill.innerHTML = `<span class="icat-lbl">${typeof lbl==='function' ? lbl() : lbl}</span><span class="chip-total" id="${cat}CatCount">0</span>`;
+  pill.addEventListener('click', ()=>{
+    if(offshoreCats.has(cat)) offshoreCats.delete(cat);
+    else offshoreCats.add(cat);
+    syncOffshoreSubRow();
+    applyFilter();
+  });
+  offshoreSubRow.appendChild(pill);
+});
+function syncOffshoreSubRow(){
+  offshoreSubRow.classList.toggle('show', activeZones.has('offshore'));
+  offshoreSubRow.querySelectorAll('.chip').forEach(p=>
+    p.classList.toggle('active', offshoreCats.has(p.dataset.icat)));
 }
 
 const chipBreak = document.createElement('div');
@@ -7136,10 +7206,15 @@ function pinVisible(s){
   if(s.ramp) return showLaunches;
   if(s.zone === 'inshore' && inshoreCat(s) === 'marinas') return showLaunches;   // v322
   if(!activeZones.has(s.zone)) return false;
-  return s.zone !== 'inshore' || inshoreCats.has(inshoreCat(s));   // v314 sub-pills
+  if(s.zone === 'inshore') return inshoreCats.has(inshoreCat(s));     // v314 sub-pills
+  if(s.zone === 'offshore') return offshoreCats.has(offshoreCat(s));  // v324 sub-pills
+  return true;
 }
 function offshorePinsVisible(){
-  return pinVisible({ zone:'offshore', ramp:false });
+  /* v324: "any offshore pins showing" now means the zone is lit AND at least one
+     category pill is — a dummy spot through pinVisible() would answer for one
+     category only. */
+  return activeZones.has('offshore') && offshoreCats.size > 0;
 }
 
 /* ---------- Easter egg ----------
@@ -7499,7 +7574,9 @@ function applyUserName(){
   const ipt = document.getElementById('logNameInput');
   if(ipt && document.activeElement !== ipt && ipt.value.trim() !== n) ipt.value = n;
   const mp = document.querySelector('#inshoreSubRow .chip[data-icat="myspots"] .icat-lbl');
-  if(mp) mp.textContent = mySpotsLabel();
+  if(mp) mp.textContent = userSpotsLabel('Inshore');
+  const mo = document.querySelector('#offshoreSubRow .chip[data-icat="myoffshore"] .icat-lbl');
+  if(mo) mo.textContent = userSpotsLabel('Offshore');
 }
 window.applyUserName = applyUserName;
 document.getElementById('logNameInput').addEventListener('input', function(){ setUserName(this.value); });
@@ -10595,9 +10672,9 @@ function ensureSpotVisible(s){
     const ch = metaRow.querySelector(`.chip[data-zone="${s.zone}"]`);
     if(ch) ch.classList.add('active');
   }
-  /* v314: jumping to an inshore spot (search, log, saved-spots list) must also
-     re-light its category pill or the pin stays filtered out on arrival.
-     v322: marinas live on the Launches switch instead. */
+  /* v314: jumping to a spot (search, log, saved-spots list) must also re-light
+     its category pill or the pin stays filtered out on arrival.
+     v322: marinas live on the Launches switch instead. v324: offshore too. */
   if(!s.ramp && s.zone === 'inshore'){
     if(inshoreCat(s) === 'marinas'){
       if(!showLaunches){ showLaunches = true; document.getElementById('launchToggle').classList.add('active'); }
@@ -10605,6 +10682,10 @@ function ensureSpotVisible(s){
       inshoreCats.add(inshoreCat(s));
       syncInshoreSubRow();
     }
+  }
+  if(!s.ramp && s.zone === 'offshore'){
+    offshoreCats.add(offshoreCat(s));
+    syncOffshoreSubRow();
   }
   applyFilter();
 }
