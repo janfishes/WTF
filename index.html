@@ -716,7 +716,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <style>
   :root{
     /* Species + zone colors (fixed across themes) */
-    --inshore:#1636ff; --offshore:#7a2fd6; --launch:#8a97a8; --mob:#e02020; --catch:#7a2fd6;
+    /* --launch went #8a97a8 -> #5a6673 in v299: the pale gray washed out on light
+       satellite imagery and gave white pill text only ~2.6:1. The deeper slate reads
+       ~5.9:1 under white and holds its shape against sand, water and marsh. */
+    --inshore:#1636ff; --offshore:#7a2fd6; --launch:#5a6673; --mob:#e02020; --catch:#7a2fd6;
     --brass:#c99a4b; --rust:#b5573a;
     /* Ink for the compass rose, its bearing lines and its labels. Its own variable because
        the rose is drawn straight onto the map imagery rather than onto a themed surface, so
@@ -1359,7 +1362,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:#b478ff !important; border-color:#b478ff !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;}
   .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:700; border:1px solid var(--launch) !important; box-shadow:none !important;}
-  .chip[data-zone="launch"]:not(.active){opacity:1; color:#b8c2cc !important; border-color:#b8c2cc !important;}
+  .chip[data-zone="launch"]:not(.active){opacity:1; color:#7d8b9b !important; border-color:#7d8b9b !important;}
   .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
   /* Log-sheet species picker: match the bright left-column buttons (black bg,
@@ -1399,7 +1402,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #addSpotZoneRow .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
   #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:#b478ff !important; border-color:#5c3d80 !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
-  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#b8c2cc !important; border-color:#55606a !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#7d8b9b !important; border-color:#454e57 !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
   /* The line under the Type pills that says how the type was chosen. */
   #addSpotZoneNote{font-size:11px; line-height:1.35; margin:6px 0 0; color:var(--muted);}
@@ -1410,13 +1413,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      OFF: the theme colour, via --accent-lite so it stays legible on the black chip. */
   #catchToggle.active{background:var(--teal) !important; color:#fff !important; border-color:#fff !important; box-shadow:none;
     text-shadow:0 1px 2px rgba(0,0,0,.7), 0 0 3px rgba(0,0,0,.45);}
-  /* Launches filter pill. OFF and ON are the SAME gray - var(--launch), #8a97a8 (red until
-     v232, when red was handed to the MOB spots) - so the outline and text of the off state
-     match the fill of the on state exactly. Gray is light enough on the black chip that no
-     lightened off-state tone is needed. Sourced from the variable rather than retyped so
-     the two states cannot drift. (--launch is fixed in :root, not per-theme.) */
-  #launchToggle{background:#000 !important; color:var(--launch) !important; font-weight:700; border:1px solid var(--launch) !important; box-shadow:none !important;}
-  #launchToggle:not(.active){opacity:1; color:var(--launch) !important; border-color:var(--launch) !important;}
+  /* Launches filter pill (red until v232, when red was handed to the MOB spots).
+     ON is the flat var(--launch) fill. Through v298 OFF used that SAME value, but v299
+     deepened --launch to #5a6673 for the pins, and #5a6673 text on the black chip is only
+     ~3.6:1 - so OFF now takes its own lifted tone (#7d8b9b, ~6:1 on black), the same one
+     the zone chips use. Still visibly darker than the old #8a97a8 off state.
+     (--launch is fixed in :root, not per-theme.) */
+  #launchToggle{background:#000 !important; color:#7d8b9b !important; font-weight:700; border:1px solid #7d8b9b !important; box-shadow:none !important;}
+  #launchToggle:not(.active){opacity:1; color:#7d8b9b !important; border-color:#7d8b9b !important;}
   #launchToggle.active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
 
   /* ---------- Floating action buttons ---------- */
@@ -2760,6 +2764,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v299</b> · Darker launch gray</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v298</b> · USCG MOB line</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v297</b> · Search leaves no trace</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v296</b> · Bigger month labels</p>
@@ -3853,7 +3858,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 298;
+const BUILD_NUM  = 299;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }

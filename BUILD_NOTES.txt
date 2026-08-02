@@ -7,6 +7,30 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 9:30 PM EDT · v299 · Darker launch gray
+------------------------------------------------------------------------------
+The launch gray was too pale. --launch goes #8a97a8 -> #5a6673, a deeper
+slate, which moves everything the variable feeds: the boat-ramp / kayak-launch
+pins on the map, their name labels, the launch ring, the filled state of the
+Launches filter pill, and the Launch pill in + Spot. Two reasons for the
+change. On the map the pale gray sat close in tone to the sand, the road
+casings and the dry marsh, so a ramp pin only read as a white outline; the
+darker fill now carries the pin's shape on its own. And white text on the
+filled Launches pill measured about 2.6:1, the weakest label in the filter
+row — at #5a6673 it is about 5.9:1.
+
+The one place a darker gray would have hurt is the OFF state, which is text
+and outline on a black chip: #5a6673 there is only ~3.6:1. So OFF stops
+sourcing var(--launch) and takes its own lifted tone, #7d8b9b (~6:1 on
+black) — still visibly darker than the old #8a97a8 off state, and the same
+value the launch zone chips already use, which were lightened from #b8c2cc
+to match. That ends the "OFF and ON are the same gray" rule that had held
+since v232; the comment above #launchToggle now records why. The + Spot
+Launch pill's unselected border came down with it (#55606a -> #454e57).
+
+No behaviour, no data, no imagery-source change — color only.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 9:20 PM EDT · v298 · USCG MOB line
 ------------------------------------------------------------------------------
 Two help edits. The Map credits note lost its closing four sentences — the
