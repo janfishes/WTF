@@ -7,6 +7,64 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:58 PM EDT · v303 · Black diamonds, orange inshore
+------------------------------------------------------------------------------
+Follow-up to v302, all of it Jan's calls after seeing it on the phone.
+
+The lit Inshore and Offshore pills were still hard to read. v302 had already
+flipped their text from white to the #04141e near-black, but on a bright pill
+in sun a near-black still reads as a dark grey. Both now take pure #000 —
+6.53:1 on the orange, 12.6:1 on the amber.
+
+Inshore moves from magenta #FF3DD0 to orange #FF6A00. Magenta was the measured
+optimum for that background and orange gives up very little against it (2.86:1
+on dark river water, 3.32:1 on white chart areas, against magenta's 3.10:1
+both ways), so the water is not the issue.
+
+What it does cost is separation from Offshore, and this is the one thing in
+this build worth watching on the water. Orange and amber are about 21 degrees
+apart in hue; magenta sat about 270 degrees away. The two zones are now told
+apart mostly by BRIGHTNESS — amber L=.607 against orange L=.316, a 1.80:1 gap
+— rather than by hue, and that same gap is what carries red/green colour
+blindness, since neither hue survives it. If they ever read as one colour out
+there, the cheap fix is to push OFFSHORE yellower to #FFD800 rather than to
+move Inshore again: it opens the gap to 2.06:1 and also improves offshore on
+the ocean fill, 4.5:1 to 5.2:1. Noted here so it is not re-derived later.
+
+Species buttons carry no species colour at all now — white text on the black
+chip in both columns (the map's left rail and the log sheet's picker). They
+used to fill with the species colour when lit, which put up to 25 different
+fills next to the zone pills. Selected is now carried by weight instead of
+hue: dimmed white when off, full white with a white border and the glow when
+on, plus the scale-up and the tick in the log sheet. The little diamond dot
+follows the text via currentColor, and its inline per-species fill is gone.
+--spc is still set on the element and still drives the season bars and the
+card tags; only the button's own fill and text stopped using it.
+
+Catch pins are one black diamond with a white border, the same for every fish.
+The fill used to be the representative catch's species colour, so catchDivIcon
+took a colour argument — that argument is gone, and the icon cache key that
+included it is now just the badge count. Black against white is the highest-
+contrast pair available and it holds on every ground this map has: dark river
+water, the flat blue ocean, white chart areas, pale sand. No single species
+colour did. Catch-versus-spot was already carried by SHAPE — diamond against
+circle — which is what actually reads at 14px; the species is read off the
+popup and the card, where there is room to name it.
+
+The Catches pill goes black to match those pins, and that quietly fixes the
+v302 note's open problem. It used to fill with var(--teal), the raw theme
+accent, which made it identical to the Launches pill under Brown Sugar and
+left white text at 1.86:1 to 3.00:1 in five of the six themes — the
+text-shadow it carried was patching that, not fixing it. Black fill with white
+text is 21:1 in every theme and depends on no accent. Off state still shows
+the theme colour, so the pill still tells you which theme you are in.
+
+Labels goes blue when lit, #1636ff with white text at 6.99:1. Blue came free
+when Inshore left it, and it is now the one strong hue no pin or zone uses, so
+Labels cannot be misread as a filter. It was a white fill with black text; the
+white text-shadow that existed for that is now a dark one.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:40 PM EDT · v302 · Pins you can see
 ------------------------------------------------------------------------------
 The Inshore and Offshore pin colours were chosen as interface colours and never
