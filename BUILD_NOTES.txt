@@ -7,6 +7,31 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 2:46 AM EDT · v326 · Purple tiles really fixed
+------------------------------------------------------------------------------
+The purple aerial tiles came back after v318 — bigger, and on the Mac too.
+Measurement showed why: the same USGS request answers magenta about one time
+in four and natural color the rest. One render node in USGS's load-balanced
+image cluster is drawing four-band NAIP photos in false-color infrared, and
+no request parameter avoids it (v318's bandIds, the NaturalColor rendering
+rule, and the old WMS endpoint all measured equally affected). Worse, the
+app's tile cache kept whatever arrived first, so one bad answer poisoned
+that tile on the device until the offline map was cleared — that's why the
+Mac showed "major purple."
+
+The fix is client-side: every NAIP tile is now decoded and inspected before
+it reaches the map. A tile whose pixels run magenta (red and blue both well
+above green — no natural land or water scene does that in quantity) is
+refetched through a cache-busting request until a healthy server answers,
+up to four extra tries, which drops the odds of purple ever rendering below
+one in two hundred. The good copy replaces any bad one stored in the tile
+cache, so poisoned caches heal themselves as tiles are viewed — nothing to
+clear by hand. The offline downloader runs NAIP tiles through the same
+guard, so a pre-downloaded Hi-Res pack can't bake a purple tile in. If all
+tries come back bad the tile still shows (a purple photo beats a hole) but
+is evicted from the cache so the next visit tries again.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 2:42 AM EDT · v325 · My Spots label trimmed
 ------------------------------------------------------------------------------
 Both user-spots pills read just "My Spots" ("Ace's Spots" with a name set)
