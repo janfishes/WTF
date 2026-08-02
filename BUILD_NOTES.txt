@@ -7,6 +7,22 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 1:05 AM EDT · v315 · Ponce de Leon Inlet pin
+------------------------------------------------------------------------------
+Logging a catch and choosing "Ponce Inlet" put the pin at 29°05.520'N
+80°56.880'W — up the Halifax by the town, not at the inlet. That entry is
+the GNIS town waypoint (Ponce Inlet the municipality); the inlet itself had
+no pin at all, so the town pin was the only "Ponce Inlet" the location list
+could offer. The inlet now has its own waypoint — Ponce de Leon Inlet
+(charted spelling), Waypoint · Inlet, on the GNIS Channel anchor for the
+feature at 29.072485, -80.918665 — riding the Inshore layer's Waypoints
+pill (now 82) and listed in the catch form's location picker. The town
+waypoint is renamed "Ponce Inlet (Town)" so the two can't be confused in
+that list again; its pin stays where it was, on the water beside the town
+like the other city waypoints. Existing catches keep the location they were
+saved with — edit the catch and re-pick the spot to move it.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 12:58 AM EDT · v314 · Inshore category pills
 ------------------------------------------------------------------------------
 The Inshore pill had grown too crowded — 41 curated fishing spots, the 81
