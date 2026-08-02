@@ -7,8 +7,19 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-02 · 1:05 AM EDT · v315 · Ponce de Leon Inlet pin
+Build 2026-08-02 · 1:09 AM EDT · v316 · Inshore pills isolate
 ------------------------------------------------------------------------------
+The v314 inshore sub-pills (Fishing spots · Waypoints · Marinas) now SELECT
+instead of toggle. Tap a pill and it becomes the only lit one — active blue
+fill with black text — the other two drop to their off state (blue text on
+black) and their pins leave the chart, so one tap shows just the waterway
+names or just the marinas. Tap the lit pill again and all three come back.
+Turning Inshore on still starts with all three lit and every inshore pin
+showing; Inshore off still takes the row away. Jumps from search, My Log or
+Your saved spots still re-light the target's category so the pin can't
+arrive hidden. Help's Inshore dropdown updated to match.
+
+
 Logging a catch and choosing "Ponce Inlet" put the pin at 29°05.520'N
 80°56.880'W — up the Halifax by the town, not at the inlet. That entry is
 the GNIS town waypoint (Ponce Inlet the municipality); the inlet itself had
