@@ -1662,7 +1662,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     body.print-help #infoSheet .sheet-handle,
     body.print-help #infoSheet .tabs,
     body.print-help #infoSheet .sheet-head .close,
-    body.print-help #helpPrintBtn{ display:none !important; }
+    body.print-help #helpPrintBtn,
+    body.print-help #helpPdfBtn{ display:none !important; }
     body.print-help #infoSheet .sheet-head{ background:#fff; border-bottom:2px solid #000; }
     body.print-help #infoSheet .sheet-head h2{ color:#000; }
     body.print-help #infoSheet .sheet-body{ overflow:visible; }
@@ -1718,7 +1719,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* The print button carries an inline display, which would beat the rule below -- so it
      is hidden by name while a writeup is open. */
   #panel-help.topic-open > *{display:none;}
-  #panel-help.topic-open > #helpPrintBtn{display:none !important;}
+  #panel-help.topic-open > #helpPrintBtn,
+  #panel-help.topic-open > #helpPdfBtn{display:none !important;}
   #panel-help.topic-open > .help-topic[aria-expanded="true"],
   #panel-help.topic-open > .help-body.open{display:block;}
   .help-body .sheet-note:last-child{margin-bottom:8px;}
@@ -2726,8 +2728,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
       <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish — one species or several — where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show feeding times by month and fishing regs. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. With Catches on, the <b>Species</b> buttons light up for the fish in your log — tap them to pick which show. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b> The <b>MOB</b> function is a memory aid only — not a rescue device, and no substitute for required safety equipment or USCG procedures.</p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
-      <p class="sheet-note" style="margin:14px 0 6px;">Prints this entire help as plain text — every button’s writeup opened out — so it can be read offline or carried on paper.</p>
-      <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 14px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
+      <p class="sheet-note help-print-hide" style="margin:14px 0 6px;">Prints this entire help as plain text — every button’s writeup opened out — so it can be read offline or carried on paper.</p>
+      <button class="mini-btn help-print-hide" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 14px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
+      <p class="sheet-note help-print-hide" style="margin:14px 0 6px;">Saves this entire help as a PDF — a fixed, non-editable copy to keep on your device or share. In the dialog that opens, choose <b>Save as PDF</b> as the destination.</p>
+      <button class="mini-btn help-print-hide" id="helpPdfBtn" style="display:block; width:100%; margin:0 0 14px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Save help as PDF <span class="bi">&#128196;&#xFE0E;</span></button>
 
       <p class="sheet-note">Every part of this help sits behind a button. <b>Tap a button</b> to read it, and close it again either by tapping its title or with the <b>CLOSE</b> <span class="bi">✕</span> button at the end of the writeup. If you tap <b>CLOSE</b> <span class="bi">✕</span> at the top to exit Help and then return, Help will reopen to your last button view.</p>
 
@@ -2917,6 +2921,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v330</b> · Save Help PDF</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v329</b> · Site note cleanups</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v328</b> · Cracker Ridge</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v327</b> · Six Natural Sites</p>
@@ -4066,7 +4071,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 329;
+const BUILD_NUM  = 330;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -7696,6 +7701,7 @@ document.getElementById('helpBtn').addEventListener('click', ()=>{
    nothing on screen. */
 (function(){
   const btn = document.getElementById('helpPrintBtn');
+  const pdfBtn = document.getElementById('helpPdfBtn');
   if(!btn) return;
   const endHelpPrint = ()=> document.body.classList.remove('print-help');
   window.addEventListener('afterprint', endHelpPrint);
@@ -7710,7 +7716,11 @@ document.getElementById('helpBtn').addEventListener('click', ()=>{
      "this site does not allow printing" — but window.open escapes to real Safari, where
      printing works; on a desktop browser the popup prints the same way. The in-place
      @media print path survives only as the fallback for a blocked popup. */
-  btn.addEventListener('click', ()=>{
+  /* v330: one pipeline for both buttons. Save-as-PDF IS the print dialog — the browser's
+     Save as PDF destination writes a flat, non-editable PDF — so the PDF button runs the
+     same popup and adds a screen-only banner (killed by @media print) telling the user
+     which destination to pick. */
+  const runHelpPrint = (asPdf)=>{
     let w = null;
     try{ w = window.open('', '_blank'); }catch(e){}
     if(!w){
@@ -7719,7 +7729,6 @@ document.getElementById('helpBtn').addEventListener('click', ()=>{
       return;
     }
     const help = document.getElementById('panel-help').cloneNode(true);
-    const pb = help.querySelector('#helpPrintBtn'); if(pb) pb.remove();
     /* Paper has nothing to tap: open every writeup and turn its button into a heading,
        so the printout is the WHOLE help as plain text. The live tool buttons (the tide
        station tool, the offline download) come out -- they do nothing on paper. */
@@ -7732,8 +7741,12 @@ document.getElementById('helpBtn').addEventListener('click', ()=>{
       h.textContent = b.textContent.replace(/\s+/g,' ').trim();
       b.replaceWith(h);
     });
+    const pdfTip = asPdf ?
+      '<div class="pdftip">To save this as a PDF, choose <b>Save as PDF</b> as the printer or ' +
+      'destination in the print dialog. On an iPhone or iPad, pinch open a page in the print ' +
+      'preview, then tap Share and <b>Save to Files</b>.</div>' : '';
     w.document.write('<!doctype html><html><head><meta charset="utf-8">' +
-      '<title>WTF Log — Help</title><style>' +
+      '<title>WTF Log Help</title><style>' +
       'body{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:#000; background:#fff;' +
       ' margin:28px; line-height:1.6; font-size:13px;}' +
       'h1{font-size:19px; margin:0 0 14px;}' +
@@ -7744,12 +7757,17 @@ document.getElementById('helpBtn').addEventListener('click', ()=>{
       'b{font-weight:700;} b.bn{text-transform:uppercase; font-size:1.08em;}' +
       'svg{width:12px; height:12px; vertical-align:-2px;}' +
       'a{color:#000;}' +
-      '</style></head><body><h1>WTF Log — Help</h1>' + help.innerHTML + '</body></html>');
+      '.pdftip{background:#fff6d6; border:2px solid #d9a800; border-radius:8px; padding:10px 12px;' +
+      ' margin:0 0 16px; font-size:14px;}' +
+      '@media print{.pdftip{display:none !important;}}' +
+      '</style></head><body>' + pdfTip + '<h1>WTF Log — Help</h1>' + help.innerHTML + '</body></html>');
     w.document.close();
     /* A beat for the new document to lay out; print() from the app's window object works
        because the popup is a real browser page, not the standalone shell. */
     setTimeout(()=>{ try{ w.focus(); w.print(); }catch(e){} }, 400);
-  });
+  };
+  btn.addEventListener('click', ()=> runHelpPrint(false));
+  if(pdfBtn) pdfBtn.addEventListener('click', ()=> runHelpPrint(true));
 })();
 /* v270: the help's button directory. A tap on any row opens that button's writeup under
    it; a second tap closes it. v271: ONE at a time -- while a writeup is open every other

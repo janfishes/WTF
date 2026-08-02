@@ -7,6 +7,25 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 4:05 PM EDT · v330 · Save Help PDF
+------------------------------------------------------------------------------
+Help gains a SAVE HELP AS PDF button under PRINT THIS HELP. It runs the
+same popup pipeline as printing — the whole help opened out as plain
+text — and the browser's print dialog does the saving: choosing Save as
+PDF as the destination writes a fixed, non-editable PDF. The popup shows
+a yellow how-to banner (choose Save as PDF; on iPhone/iPad pinch open
+the preview page, Share, Save to Files) that is screen-only — an
+@media print rule keeps it out of the saved file. The popup's window
+title dropped its em dash ("WTF Log Help") so the default PDF filename
+comes out clean.
+
+Both intro notes and both buttons now carry help-print-hide, so neither
+the print note nor the PDF note appears in printouts or saved PDFs
+(before, the print note printed). The new button is hidden in the same
+places the print button was: the in-place @media print fallback and the
+one-topic-open view.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 3:56 PM EDT · v329 · Site note cleanups
 ------------------------------------------------------------------------------
 Note corrections on the county reef sites, plus a Long Johns fix:
