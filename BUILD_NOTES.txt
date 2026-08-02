@@ -7,8 +7,31 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-02 · 1:51 AM EDT · v320 · Ace example name
+Build 2026-08-02 · 2:18 AM EDT · v321 · Four inshore categories
 ------------------------------------------------------------------------------
+Jan's redesign of the v314/v316 inshore sub-pills, in three moves. (1) FOUR
+categories now, sorted by what a pin IS rather than where its data came
+from: My Spots (the user's own saved spots, MOB marks included — the pill
+carries the user's name once one is given in My Log, e.g. "Ace's Spots",
+same possessive as the Catch Log title, repainted live by applyUserName);
+Landmarks (things you steer BY — bridges, the trestle, islands, the
+city/town pins, points, flats, shoals); Waypoints (navigable water —
+creeks, rivers, bays, coves, cuts, sloughs, canals, channels, passes, the
+lagoon, basins, named holes, the inlet); Marinas (marinas, yacht clubs, the
+boatyard). The classifier reads the meta KIND after any "Waypoint · "
+prefix, so curated fishing pins and GNIS waypoints file together by kind —
+a curated Creek pin and a GNIS creek waypoint are both Waypoints, and a
+Bridge is a Landmark whichever table it came from. (2) Lifecycle: tapping
+Inshore ON now opens the category row with NOTHING selected and the chart
+clear of inshore pins — all-on at once buried the map under the row. Each
+pill toggles its own group independently; Inshore OFF hides the row and
+clears the pick. (3) Jumps from search, My Log or Your saved spots still
+light the target's category so the pin can't arrive hidden. Help's Inshore
+dropdown rewritten to match. Creeks the chart shows as dead ends are still
+Waypoints for now — sorting is by kind word, and any pin Jan wants re-filed
+moves by flipping that pin's data, not the rule.
+
+
 Wording only. The example name in the two places that show one — the "Your
 name" label atop My Log and Help's My Log writeup — is now "Ace's Catch Log"
 rather than "Jan's Catch Log", since the app is headed for sale and the

@@ -2808,8 +2808,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-inshore">Inshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-inshore">
-      <p class="sheet-note">An on/off switch for the <b>inshore fishing pins</b> — the creeks, rivers, cuts, flats, jetties, docks and bridges. Turn it off and that whole zone leaves the chart; the number beside it is how many inshore spots there are.</p>
-      <p class="sheet-note">While Inshore is lit, a second, smaller row of blue pills sits just below the filter row — <b>Fishing spots</b>, <b>Waypoints</b> and <b>Marinas</b>, each with its own count. They slice the inshore pins three ways: <b>Fishing spots</b> are the places you fish — the creeks, bridges, flats and holes, plus any inshore spot you saved yourself; <b>Waypoints</b> are the charted place-name pins described below; <b>Marinas</b> are the marinas and yacht clubs. Turning Inshore on always lights all three. Tap a pill and it becomes the <b>only lit one</b> — the chart shows just that group and the other two pills go dark; tap the lit pill again to bring all three back. So one tap shows just the waterway names, or just the marinas, when that is all the trip calls for. Turn Inshore off and the row leaves with it.</p>
+      <p class="sheet-note">The switch for the <b>inshore pins</b> — the creeks, rivers, bays, bridges, islands and marinas. The number beside it is how many inshore spots there are. Tapping it doesn't flood the chart: it opens a <b>category row</b> just below, and you pick which groups of pins to show.</p>
+      <p class="sheet-note">The category row is a second, smaller line of blue pills — <b>My Spots</b>, <b>Landmarks</b>, <b>Waypoints</b> and <b>Marinas</b>, each with its own count. They sort the inshore pins by what each one is. <b>My Spots</b> are the spots you saved yourself, MOB marks included — and once you've given the app your name in My Log, the pill carries it. <b>Landmarks</b> are the things you steer <b>by</b>: bridges, the trestle, islands, the city and town pins, points, flats and shoals. <b>Waypoints</b> are the navigable water: creeks, rivers, bays, coves, cuts, sloughs, canals, the lagoon, named holes and the inlet. <b>Marinas</b> are the marinas, yacht clubs and the boatyard. The row opens with <b>nothing picked</b> and the chart clear — tap a pill to bring that group on, tap another to add it, tap a lit pill to take its group back off. Turn Inshore off and the row leaves with it.</p>
       <p class="sheet-note">Every <b>waterway and island the Topo Satellite view names</b> inside our water — from Tomoka Basin south to the <b>Volusia County line</b> — carries its own inshore pin, <b>63</b> of them: creeks, coves, bays, cuts, sloughs, flats, points, canals and islands, named exactly as the chart prints them. Names and positions come from the <b>USGS Geographic Names Information System</b>, the gazetteer the topo tiles label themselves from, so a pin sits where the map's own label sits, and searching a name you read off the chart finds it. Creek pins land at the creek's <b>mouth</b>, which is the point USGS files a stream under. Where a charted name and a spot name disagreed, the chart won: <b>Tenmile Creek</b> is one word, and the cut is <b>Ponce de Leon Cut</b>, spelled as its ICW daybeacons are. The <b>Mosquito Lagoon</b> waypoint, which had drifted 4½ miles west into the marsh, was put back under the name the map prints. The map stops at the county line: the Brevard end of the lagoon, the Haulover and Merritt Island are off it. The chart names two different <b>Turnbull Creeks</b>, so the southern one is pinned as <b>Turnbull Creek Mosquito Lagoon W</b>.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-offshore">Offshore<span class="ht-caret">▸</span></button>
@@ -2901,6 +2901,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v321</b> · Four inshore categories</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v320</b> · Ace example name</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v319</b> · Name on the log</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v318</b> · Purple tiles fixed</p>
@@ -4031,7 +4032,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 320;
+const BUILD_NUM  = 321;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6189,7 +6190,7 @@ function updateCatchCount(){ document.getElementById('catchCount').textContent =
    custom spots) has zone === 'launch'; everything else buckets by its zone. */
 function updateFilterCounts(){
   let inshore = 0, offshore = 0, launch = 0;
-  const cats = { spots:0, waypoints:0, marinas:0 };   // v314 sub-pill totals
+  const cats = { myspots:0, landmarks:0, waypoints:0, marinas:0 };   // sub-pill totals
   markers.forEach(m=>{
     const s = m.spotRef;
     if(!s || s._deleted) return;
@@ -6901,20 +6902,38 @@ const speciesCol = document.getElementById('speciesCol');
 let activeZones = new Set();
 let activeSpecies = new Set();
 
-/* v314: the Inshore pill got too crowded — ~40 curated fishing spots, the ~80 GNIS
-   waypoint pins (v266) and the marinas all rode one switch. A sub-row of three pills
-   (Spots · Waypoints · Marinas) appears under the filter row while Inshore is lit and
-   narrows the inshore layer per category. Turning Inshore ON lights all three;
-   v316 made a tap SELECT (isolate) its category rather than toggle it — see the
-   click handler. Inshore OFF hides the row and the next ON starts fresh with all
-   three lit. Offshore and Launches are untouched — waypoint reefs stay on the
-   Offshore switch. */
-const INSHORE_CATS = ['spots','waypoints','marinas'];
-let inshoreCats = new Set(INSHORE_CATS);
+/* v314: the Inshore pill got too crowded — the curated fishing pins, the GNIS
+   waypoint pins (v266) and the marinas all rode one switch, so a sub-row of category
+   pills appears under the filter row while Inshore is lit and narrows the inshore
+   layer. v321 (Jan's redesign of the v314/v316 categories): FOUR pills sorted by
+   what a pin IS, not where its data came from —
+     · My Spots   — the user's own saved spots (named after them if they've given
+                    the app their name in My Log; MOB marks land here too);
+     · Landmarks  — things you steer BY, not through: bridges, the trestle, islands,
+                    city/town pins, points, flats, shoals;
+     · Waypoints  — navigable water: creeks, rivers, bays, coves, cuts, sloughs,
+                    canals, channels, passes, the lagoon, basins, holes, the inlet;
+     · Marinas    — marinas, yacht clubs, the boatyard.
+   Sorting reads the pin's meta KIND (after any "Waypoint · " prefix), so curated
+   fishing pins and GNIS waypoints file together by kind. Lifecycle (also v321):
+   tapping Inshore ON opens the row with NOTHING selected and no inshore pins —
+   the pins only arrive as pills are lit (Jan: all-on at once buries the map).
+   Each pill toggles its own category independently. Inshore OFF hides the row and
+   clears the selection. Offshore and Launches are untouched — waypoint reefs stay
+   on the Offshore switch. */
+const INSHORE_CATS = ['myspots','landmarks','waypoints','marinas'];
+let inshoreCats = new Set();
+/* customSpots/customSpotMarkers are declared a thousand lines down, so the first
+   applyFilter() calls land before they exist — same guard the log picker uses. */
+function isCustomSpot(s){
+  try{ return !!customSpotMarkers[s.id]; }catch(e){ return false; }
+}
 function inshoreCat(s){
-  if(s.wp) return 'waypoints';
-  if(/marina|yacht club/i.test(s.meta || '')) return 'marinas';
-  return 'spots';
+  if(isCustomSpot(s)) return 'myspots';
+  const kind = (s.meta || '').replace(/^Waypoint · /,'');
+  if(/marina|yacht club/i.test(kind)) return 'marinas';
+  if(/bridge|trestle|island|city|point|flats|shoal/i.test(kind)) return 'landmarks';
+  return 'waypoints';
 }
 
 /* v310: with Catches on, the lit species buttons ARE the list of fish on the map.
@@ -6979,9 +6998,9 @@ Object.entries(ZONES).forEach(([key,z])=>{
     if(activeZones.has(key)){ activeZones.delete(key); chip.classList.remove('active'); }
     else {
       activeZones.add(key); chip.classList.add('active');
-      /* v314: like Catches-and-species, switching Inshore ON starts with every
-         category lit; pills the user switched off don't survive an off/on cycle. */
-      if(key === 'inshore') inshoreCats = new Set(INSHORE_CATS);
+      /* v321: switching Inshore ON opens the sub-row with nothing selected — no
+         inshore pins until a category pill is lit. */
+      if(key === 'inshore') inshoreCats = new Set();
     }
     if(key === 'inshore') syncInshoreSubRow();
     applyFilter();
@@ -6995,19 +7014,24 @@ const inshoreSubRow = document.createElement('div');
 inshoreSubRow.className = 'chiprow wrap';
 inshoreSubRow.id = 'inshoreSubRow';
 document.getElementById('filterWrap').appendChild(inshoreSubRow);
-const INSHORE_CAT_LABELS = { spots:'Fishing spots', waypoints:'Waypoints', marinas:'Marinas' };
+/* My Spots takes the user's name when they've given one in My Log ("Jan's Spots") —
+   same possessive the Catch Log title uses; applyUserName() repaints it live. */
+function mySpotsLabel(){
+  try{ const n = userName(); return n ? n + '’s Spots' : 'My Spots'; }catch(e){ return 'My Spots'; }
+}
+const INSHORE_CAT_LABELS = { myspots:mySpotsLabel, landmarks:'Landmarks', waypoints:'Waypoints', marinas:'Marinas' };
 INSHORE_CATS.forEach(cat=>{
   const pill = document.createElement('div');
   pill.className = 'chip filter-count';
   pill.dataset.icat = cat;
-  pill.innerHTML = `${INSHORE_CAT_LABELS[cat]}<span class="chip-total" id="${cat}CatCount">0</span>`;
-  /* v316: the pills SELECT rather than toggle — tap one and it becomes the only
-     lit pill (active colours) and the only category on the chart; the other two
-     drop to their off state. Tapping the lit pill again restores all three. One
-     tap isolates "just marinas" instead of two (Jan's call over v314's toggles). */
+  const lbl = INSHORE_CAT_LABELS[cat];
+  pill.innerHTML = `<span class="icat-lbl">${typeof lbl==='function' ? lbl() : lbl}</span><span class="chip-total" id="${cat}CatCount">0</span>`;
+  /* v321: each pill toggles its own category. The row starts empty when Inshore
+     turns on, so the first tap shows exactly one category and further taps add or
+     remove groups one at a time. */
   pill.addEventListener('click', ()=>{
-    if(inshoreCats.size === 1 && inshoreCats.has(cat)) inshoreCats = new Set(INSHORE_CATS);
-    else inshoreCats = new Set([cat]);
+    if(inshoreCats.has(cat)) inshoreCats.delete(cat);
+    else inshoreCats.add(cat);
     syncInshoreSubRow();
     applyFilter();
   });
@@ -7460,6 +7484,8 @@ function applyUserName(){
   if(rf) rf.textContent = (n ? n + ', get' : 'Get') + ' out there and have some REEL FUN!';
   const ipt = document.getElementById('logNameInput');
   if(ipt && document.activeElement !== ipt && ipt.value.trim() !== n) ipt.value = n;
+  const mp = document.querySelector('#inshoreSubRow .chip[data-icat="myspots"] .icat-lbl');
+  if(mp) mp.textContent = mySpotsLabel();
 }
 window.applyUserName = applyUserName;
 document.getElementById('logNameInput').addEventListener('input', function(){ setUserName(this.value); });
