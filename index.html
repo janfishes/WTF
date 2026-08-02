@@ -1251,7 +1251,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     text-shadow:none !important;
   }
 
-  /* Spot name labels: plain white, clean font, no bubble/arrow/shading.
+  /* Spot name labels: clean font, no bubble/arrow/shading. Lettering is white by default and
+     black on the two bright zone tags - see the lbl-inshore/lbl-offshore overrides below.
      v235: the name rides the A control at the buttons' half-strength scale (--tsb), like
      the filter pills and compass text. Padding and border stay fixed — the +21 constant in
      compassSpotLabelWidth() covers them, and only the text there carries the scale. */
@@ -1262,9 +1263,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     white-space:nowrap !important; max-width:none !important; line-height:1.2 !important; text-align:center;
     border-radius:100px !important; text-shadow:none !important;
   }
-  .spot-label.lbl-inshore{background:var(--inshore) !important;}
+  /* v304: BLACK lettering on the two bright tags. .spot-label sets colour:#fff for all of
+     them, which was right when Inshore was a deep blue and Offshore a deep purple, but the
+     zones are now orange and amber - white on those is 2.87:1 and 1.60:1, which is what made
+     the name tags unreadable at a glance. Black is 7.31:1 on the orange and 13.15:1 on the
+     amber. Launch stays white: #4f1d0a is dark, and white on it is 15.1:1. The rule is simply
+     "dark tag takes white, bright tag takes black" - if a zone colour ever changes again,
+     check which side of that line it lands on. */
+  .spot-label.lbl-inshore{background:var(--inshore) !important; color:#000 !important;}
   .spot-label.lbl-launch{background:var(--launch) !important;}
-  .spot-label.lbl-offshore{background:var(--offshore) !important;}
+  .spot-label.lbl-offshore{background:var(--offshore) !important; color:#000 !important;}
   .spot-label::before{display:none !important;}
   /* Compass rose overlay: brass-on-navy bearing pills strung along each line out to an
      offshore site, and the rose graphic itself (fixed pixel size, doesn't scale with zoom). */
@@ -1370,18 +1378,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .chip.active:not(.sp){color:var(--fog); background:rgba(20,42,61,.95);}
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
-  /* Catches matches the other switches: black when off (accent text/border),
-     filled with the current theme accent when on. */
-  #catchToggle{background:#000 !important; color:var(--accent-lite) !important; font-weight:700; border:1px solid var(--accent-lite) !important; box-shadow:none !important;}
-  #catchToggle:not(.active){opacity:1; background:#000 !important; color:var(--accent-lite) !important; border-color:var(--accent-lite) !important;}
-  /* Labels: black with white text when off, inverted to white-on-black when on */
-  #labelsToggle{font-weight:700; border:1px solid #fff !important; box-shadow:none !important;}
+  /* v304: Catches drops the theme accent from its OFF state too. v303 had already taken
+     var(--teal) off the lit pill; OFF still carried var(--accent-lite), so the button changed
+     colour with the theme while the pins it switches are the same black-and-white diamond in
+     every theme. Catches is now WHITE-on-black off, BLACK-on-white on - a straight reversal
+     like the zone pills, and the black/white pair matches its own pins. It is the only pill
+     with no hue at all, which is exactly what it is switching. */
+  #catchToggle{background:#000 !important; color:#fff !important; font-weight:700; border:1px solid #fff !important; box-shadow:none !important;}
+  #catchToggle:not(.active){opacity:1; background:#000 !important; color:#fff !important; border-color:#fff !important;}
+  /* v304: Labels reverses with state like Launches/Inshore/Offshore - OFF is the colour as
+     text and outline on black, ON fills with the colour and takes a white ring. It used to be
+     white text and a white border in BOTH states, so only the fill moved. #1636ff is too dark
+     to read as text on black (3.01:1), so OFF uses the lifted #6b8cff (6.82:1) exactly the way
+     Launches uses #b5713a - same hue, obviously the same button. */
+  #labelsToggle{font-weight:700; background:#000 !important; color:#6b8cff !important; border:1px solid #6b8cff !important; box-shadow:none !important;}
   /* .chip padding is bottom-heavy (5 top / 8 bottom), which lifts the text ~1.5px above centre.
      Invisible on the translucent chips, obvious on Labels-ON because it is the one solid white
      fill. Same total vertical padding, so the pill height and the row layout do not move.
      Doubled selector: #metaRow .chip (1,1,0) would otherwise outrank a bare #labelsToggle (1,0,0). */
   #metaRow #labelsToggle{padding:6px 9px 7px;}
-  #labelsToggle:not(.active){background:#000 !important; color:#ffffff !important; border-color:#ffffff !important; opacity:1;}
+  #labelsToggle:not(.active){background:#000 !important; color:#6b8cff !important; border-color:#6b8cff !important; opacity:1;}
   /* v303: the species buttons carry NO species colour any more - white text on the black chip
      in both states, at Jan's request. They used to fill with var(--spc) when lit, which meant
      25 different fills competing with the zone pills beside them and with the pins. The state
@@ -1389,9 +1405,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
      on black with a white border and the same glow the lit chips always had. --spc is still
      set on the element (see line ~6818) and still feeds the season bars and the card tags;
      it is only the button's own fill and text that stop using it. */
+  /* v304: the text is FULL white in BOTH states - the v303 dimmed white (62%) was the thing
+     that made these read as switched off rather than merely unselected. State is carried by
+     the BORDER and the glow instead: a dim white outline when off, a solid white outline plus
+     the glow when on. */
   #speciesCol .chip{color:#fff !important;}
   #speciesCol .chip:not(.active){
-    background:#000 !important; color:rgba(255,255,255,.62) !important;
+    background:#000 !important; color:#fff !important;
     border-color:rgba(255,255,255,.38) !important; filter:none;
   }
   #speciesCol .chip.active{
@@ -1413,9 +1433,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
      sits on the weakest ground (saturated colour on black, or filled colour). */
   #metaRow .chip[data-zone],
   #metaRow #launchToggle{text-shadow:0 2px 3px rgba(0,0,0,.55) !important;}
-  /* v303: dark shadow, because lit Labels is now blue with WHITE text (it was black text on a
+  /* Dark shadow, because lit Labels is blue with WHITE text (v303; it was black text on a
      white fill, which is what the old white shadow was for). */
   #metaRow #labelsToggle.active{text-shadow:0 1px 2px rgba(0,0,0,.55);}
+  /* OFF gets no shadow at all - it is blue text on black, where a dark shadow does nothing. */
+  #metaRow #labelsToggle:not(.active){text-shadow:none !important;}
   /* Off-state is text+outline on a BLACK chip, so it needs its own value only when the zone
      colour is too dark there. The old blue and purple both needed a lift (#6b8cff / #b478ff);
      magenta is 6.83:1 and amber 13.1:1 on black, so both now use the zone colour itself and
@@ -1433,7 +1455,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      white, a white border, the glow and the scale-up rather than by a coloured fill. */
   #logSpeciesRow .chip.sp{
     font-size:14px; font-weight:800; background:#000 !important;
-    color:rgba(255,255,255,.62) !important;
+    color:#fff !important;
     border:1px solid rgba(255,255,255,.38); opacity:1 !important;
     filter:none; transition:transform .1s ease, filter .1s ease;
   }
@@ -1479,15 +1501,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #addSpotZoneNote{font-size:11px; line-height:1.35; margin:6px 0 0; color:var(--muted);}
   #addSpotZoneNote.auto{color:var(--brass);}
   #addSpotZoneNote b{color:var(--fog);}
-  /* v303: BLACK fill in both states, matching the black diamond the catch pins now use, and
-     fixing two things at once. The lit pill used to fill with var(--teal), the raw theme
-     accent, which (a) made it identical to the Launches pill under Brown Sugar, whose accent
-     is a brown, and (b) left white text on a bright accent at 1.86:1 to 3.00:1 in five of the
-     six themes - the text-shadow that used to be here was patching that, not fixing it.
-     Black fill with white text is 21:1 in every theme and depends on no accent at all.
-     ON is full white text and a white border; OFF is the theme colour on the same black, via
-     --accent-lite, so the pill still tells you which theme you are in. */
-  #catchToggle.active{background:#000 !important; color:#fff !important; border-color:#fff !important; box-shadow:none;
+  /* ON is the reversal of OFF: WHITE fill, BLACK text, white ring (v304). v303 made this pill
+     black-filled with white text, but that is what OFF looks like, so the two states only
+     differed by a border and the switch read as dead. Reversing it also drops the last use of
+     the theme accent here - the old var(--teal) fill made this pill identical to Launches
+     under Brown Sugar and left white text at 1.86:1 to 3.00:1 in five of six themes. Black on
+     white is 21:1 and the same in every theme, which is right for a switch whose pins are the
+     one black-and-white marker on the map. */
+  #catchToggle.active{background:#fff !important; color:#000 !important; border-color:#fff !important; box-shadow:none;
     text-shadow:none !important;}
   /* Launches filter pill (red until v232, when red was handed to the MOB spots).
      ON is the flat var(--launch) fill - Brown Sugar's #8a4b0f from v300, now the dark
@@ -2625,7 +2646,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a diamond marker on the map, colored by species. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Scroll to the bottom of your log to see the two ways to export/import your log.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Scroll to the bottom of your log to see the two ways to export/import your log.</p>
       <div class="loc-btns" style="margin:0 0 10px;">
         <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, catch or spot">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
       </div>
@@ -2670,7 +2691,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Ten buttons along the right side of the map are the app’s actions. Tap any button below to read what it does and tap again to close.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list — <b>tap more than one</b> if the trip produced several; the first you tap colors the catch pin on the map, and every one you pick shows its season bar on the entry's My Log card and popup. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> pills just above the location list narrow it down to where you are fishing: they start black with the whole list showing, and tapping <b>Offshore</b> lights it amber and cuts the list to offshore sites only (<b>Inshore</b> does the same in orange). Tapping the lit one again turns it black and brings the whole list back. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list — <b>tap more than one</b> if the trip produced several; the first you tap is the entry's main fish, and every one you pick shows its season bar on the entry's My Log card and popup. Catch pins are the same black diamond whichever fish it was — the species is named in the pin's popup and on the card. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> pills just above the location list narrow it down to where you are fishing: they start black with the whole list showing, and tapping <b>Offshore</b> lights it amber and cuts the list to offshore sites only (<b>Inshore</b> does the same in orange). Tapping the lit one again turns it black and brings the whole list back. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
       <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g. 29°04.902′ N) — the form a chartplotter uses. A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. The line under those buttons prints the position it settled on, so you can check it before saving, and <b>Clear</b> starts over. A photo with embedded GPS fills the position in by itself (see the photo note below). To key or paste numbers in by hand, save them in <b>+ Spot</b> first — its position box reads typed and pasted coordinates in every common form — and the new spot is then in this location list.</p>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>EDIT ✎</b> or <b>DELETE ✕</b> in its popup — or the same buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
@@ -2710,7 +2731,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-seasons"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-seasons">
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>Seasons</b> opens the Season Guide — a month-by-month table for every species the app knows, for the Northeast zone (north of the NSB South Causeway). Each row carries its <b>Size</b> and <b>Bag Limit</b> for Atlantic waters off Volusia, an <b>FWC ↗</b> link to FWC’s page for that fish, and <b>black cells marking months closed to harvest</b> (a season that turns over mid-month blacks out the whole month). Three buttons open the details, each closing again with <b>CLOSE ✕</b>: <b>SIZE &amp; BAG LIMITS</b> for how to read the numbers and which zone they cover, <b>POSSESSION</b> for what you may have aboard, and <b>REGULATION CHANGES</b> for every limit that has moved, newest first. Limits refresh on their own whenever you open the app with a signal — no download — so <b>Internet is required to update the app for the current FWC regulations</b>. FWC and Fish Rules (fishrulesapp.com) are always the live word. <b>Trust But Verify!</b></p>
-      <p class="sheet-note"><b>Reading the season month bars.</b> Every colored bar row you see — in the Season Guide, in a pin’s popup, on a My Log card, or under Your saved spots — is a calendar: <b>12 cells, January on the left through December on the right</b>. Brighter cells are the better months for that species; dim cells are the slow season. Only the Season Guide's bars add black cells for closed harvest months; the bars on popups, catch cards and saved spots show the bite alone. In popups, the letters above the bars mark the months. A catch shows a bar for every species on it, and a spot shows one for every fish you have named in its <b>Details</b> box.</p>
+      <p class="sheet-note"><b>Reading the season month bars.</b> Every colored bar row you see — in the Season Guide, in a pin’s popup, on a My Log card, or under Your saved spots — is a calendar: <b>12 cells, January on the left through December on the right</b>. Brighter cells are the better months for that species; dim cells are the slow season. Only the Season Guide's bars add black cells for closed harvest months; the bars on popups, catch cards and saved spots show the bite alone. In popups, the letters above the bars mark the months. The bars are the one place a species still carries its own colour — the species buttons down the left edge of the map and the catch diamonds on it are black and white now, so the colour here is for telling one bar from another on a card, not a code to match against the map. A catch shows a bar for every species on it, and a spot shows one for every fish you have named in its <b>Details</b> box.</p>
       <p class="sheet-note"><b>Map zones.</b> The guide also carries the zone key the whole map is colored by. <b>Inshore</b> is creeks, rivers, cuts, streams, flats, jetties, docks and ramps. <b>Offshore</b> is the natural reefs, the artificial sites and the wrecks, 3.5–39.1 sm out. Every catch and every spot is filed under one zone or the other — that is what the <b>Inshore</b> and <b>Offshore</b> map filter buttons switch, and what the <b>+ Catch</b> and <b>+ Spot</b> zone pills set.</p>
       <p class="sheet-note">Reef site coordinates are centroids computed from FWC's Artificial Reef Program deployment records for Volusia County (191 individual drops grouped into 16 sites, data as of Mar 6, 2026). Every county site leads with its number. Tap a reef pin and hit "Show drops" to see every individual deployment with its coordinates, listed closest-to-farthest from the inlet. Sites 4, 9, 10 &amp; 11 sit 19.6–39.1 sm (17–34 nm) out and are outside the default view; pan/zoom to find them.</p>
       </div>
@@ -2741,7 +2762,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">The colored diamonds down the <b>left edge of the map</b> — one for each of the 23 species the app knows.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-species">Species<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-species">
-      <p class="sheet-note">The species buttons are the 23 colored <b>diamonds</b> down the left edge of the map — one per species the app knows.</p>
+      <p class="sheet-note">The species buttons are the 23 <b>diamonds</b> down the left edge of the map — one per species the app knows. They carry no colour of their own: the lettering is white on black whether a species is picked or not, and the picked one is marked by a solid white outline and a glow rather than by a coloured fill.</p>
       <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom, and shows even if <b>Catches</b> is off. If you've never logged that fish, you'll get a note saying so.</p>
       <p class="sheet-note">They filter your <b>catch log</b> only, not the fishing spots, and only one species is picked at a time — tap the lit one again to clear it. Their labels follow the <b>Labels</b> map filter button, and the <b>Eye</b> takes the whole column off the chart along with the action buttons.</p>
       </div>
@@ -2751,9 +2772,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-catches">Catches<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-catches">
       <p class="sheet-note">The map filter buttons are <b>pills</b> (hot-dog shapes) in the row across the top of the map, under the header — Catches, Inshore, Offshore, Launches and Labels. The number on each of the first four is a total count.</p>
-      <p class="sheet-note">Shows and hides your <b>catch diamonds</b> — every fish in your log, colored by species. The number beside it is your total number of catches.</p>
+      <p class="sheet-note">Shows and hides your <b>catch diamonds</b> — every fish in your log. The number beside it is your total number of catches. The pill itself is the one switch with no colour: white lettering on black when the diamonds are hidden, and the reverse — black on white — when they are showing, matching the black-and-white diamonds it switches.</p>
       <p class="sheet-note">Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕ button.</p>
-      <p class="sheet-note">Your catches show on the map as small colored <b>diamonds</b>, one color per species; the fishing spots, sites and launches show as small colored <b>pins</b>. A diamond or pin carrying a number is more than one thing in the same place — tap it to read them all.</p>
+      <p class="sheet-note">Your catches show on the map as small black <b>diamonds</b> with a white edge — the same for every fish, so a diamond always means a catch and the species is named in its popup; the fishing spots, sites and launches show as small colored <b>pins</b>. A diamond or pin carrying a number is more than one thing in the same place — tap it to read them all.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-inshore">Inshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-inshore">
@@ -2772,7 +2793,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-labels">Labels<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-labels">
-      <p class="sheet-note">Turns the <b>name labels</b> on or off for whatever pins are showing. Off means no labels, but the pins stay exactly where they were.</p>
+      <p class="sheet-note">Turns the <b>name labels</b> on or off for whatever pins are showing. Off means no labels, but the pins stay exactly where they were. The pill lights <b>blue</b> when the labels are on and sits as blue lettering on black when they are off, the same on/off pattern the Inshore, Offshore and Launches pills use. Each name tag is filled in its pin's own colour, and its lettering is black on the bright tags (Inshore orange, Offshore amber) and white on the dark ones (Launches), so a name stays readable whichever zone it belongs to.</p>
       </div>
 
       <div class="subhead">Search, Help &amp; View Buttons</div>
@@ -2850,6 +2871,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v304</b> · Readable name tags</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v303</b> · Black diamonds, orange inshore</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v302</b> · Pins you can see</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v301</b> · Bolder mark, live updates, fresher shell</p>
@@ -3948,7 +3970,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 303;
+const BUILD_NUM  = 304;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }

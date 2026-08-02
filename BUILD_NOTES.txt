@@ -7,6 +7,56 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 12:20 AM EDT · v304 · Readable name tags
+------------------------------------------------------------------------------
+The pin NAME TAGS were the thing v303 missed. .spot-label sets colour:#fff on
+every tag, which was right when Inshore was a deep blue and Offshore a deep
+purple. Against the orange and amber those zones now carry, white lettering
+was 2.87:1 and 1.60:1 — the tags were the least readable text on the map, and
+there are hundreds of them. Both bright tags take black lettering now, 7.31:1
+on the orange and 13.15:1 on the amber. Launches keeps white, because #4f1d0a
+is dark and white on it is 15.1:1. The rule to carry forward is just "dark tag
+takes white, bright tag takes black" — if a zone colour moves again, check
+which side of that line it lands on.
+
+Labels now reverses with state like Launches, Inshore and Offshore. It had
+been white text and a white border in BOTH states, with only the fill moving,
+which is not the pattern every other pill in that row follows. OFF is now the
+colour as text and outline on black; ON fills with the colour and takes the
+white ring. #1636ff is too dark to read as text on black (3.01:1), so OFF uses
+the lifted #6b8cff at 6.82:1 — the same trick Launches uses with #b5713a, same
+hue, obviously the same button.
+
+Catches loses the last of the theme accent. v303 had already taken var(--teal)
+off the lit pill, but OFF still used var(--accent-lite), so the button changed
+colour with the theme while the pins it switches are the same black-and-white
+diamond in every one. It is now white-on-black off and black-on-white on — a
+straight reversal like the others, and the only pill in the row with no hue at
+all, which is right for the only marker on the map with no hue. As a side
+effect the two states are properly distinguishable again: v303 had it black
+with white text when ON, which is what OFF already looked like, so the switch
+read as dead.
+
+Species buttons go to FULL white lettering in both states. v303 dimmed the
+unselected ones to 62% white, which made them look disabled rather than merely
+unpicked. State is carried by the border and the glow instead — a dim white
+outline when off, a solid white outline plus the glow when on.
+
+Help text caught up with v303 as well as v304, since several passages still
+described the old colour-coding: My Log and the Catches pill both said catches
+were "colored by species", the map-filter section said "small colored
+diamonds, one color per species", the species column was "the 23 colored
+diamonds", and the + Catch walkthrough said "the first you tap colors the
+catch pin on the map". All now describe the black diamond and say the species
+is named in the popup and on the card. The Labels entry describes its new blue
+on/off states and the black-or-white tag lettering.
+
+In the Season Guide, the month bars are the ONE place a species still carries
+its own colour, so the "reading the season month bars" paragraph now says so
+outright — that the colour there is for telling one bar from another on a
+card, not a code to match against the map. Left the bars themselves alone.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:58 PM EDT · v303 · Black diamonds, orange inshore
 ------------------------------------------------------------------------------
 Follow-up to v302, all of it Jan's calls after seeing it on the phone.
