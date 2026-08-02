@@ -7,6 +7,65 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 9:25 PM EDT · v301 · Bolder mark, live updates, fresher shell
+------------------------------------------------------------------------------
+The lock-up reads heavier and larger in both places it appears.
+
+In the banner, "WTF Log" and "Where's The Fish?" now carry a stroke on top of
+their 700 weight. Comic Neue ships one weight above regular and the header was
+already on it, so the only place extra heft could come from is the outline --
+the same -webkit-text-stroke trick the WTF on the fish has used since v168,
+in currentColor so it thickens each glyph instead of ringing it. Sized off
+each line's own type size (.5px on the 23px name, .35px on the 15px tagline,
+.38px/.25px at the narrow breakpoint) so the two lines and the lettering on
+the fish read as one hand at every A setting.
+
+On the home-screen / desktop icon, both elements grew and the letters went
+bold: the fish from 80% to 90% of the square, the WTF block from 49% to 62%,
+the gap between them tightened slightly, and the traced letterforms take a
+centred stroke of 1.8% of the icon width -- the PNG equivalent of the banner's
+text-stroke, since the trace carries only one weight. The letters and the
+fish body still sit inside Android's central-80% maskable circle; only the
+tail and snout tips now reach past it, a deliberate trade for a mark that is
+legible at 60 px instead of floating in a wide band of orange.
+
+The artwork itself is untouched: build_icon.py still reads the W, T and F
+straight out of index.html's <path id="fishP">, so the icon lettering remains
+the same drawn hand as the splash and the banner and cannot drift from them.
+
+Note for iPhone / iPad: iOS reads a home-screen icon at Add-to-Home-Screen
+time and keeps it, so the existing icon will not change on its own. Delete it
+and re-add the app to pick up the new one.
+
+Also in this build, one line in sw.js that had been quietly costing everyone a
+build. The worker serves the saved copy of the page instantly and re-fetches
+the live one in the background for the NEXT open — deliberate, and why a new
+build has always taken two opens to appear. But that background re-fetch was
+fetch(e.request), and a navigation request carries the default cache mode, so
+the refresh could itself be answered out of the browser's HTTP cache — and
+GitHub Pages serves the page with max-age=600. A second, ten-minute layer of
+stale on top of the one-open delay: deploy, open twice inside that window, and
+you could still be handed the old build, with nothing on screen to explain it.
+It is now fetch(SHELL_URL, {cache:'no-store'}), the same no-store the install
+handler already used, so the copy saved for the next open is always the live
+one. Two opens after a deploy now genuinely means the new build. The update
+pill was never affected — its check is not a navigation and always went
+straight to the network. The Updates section of the in-app help gained a
+sentence saying a new build lands on the second open even if the pill is
+never tapped.
+
+Also in this build, on the service worker's side: the background refresh that
+saves the live page for the next open now fetches with cache:'no-store' and by
+URL, instead of re-issuing the navigation request. A navigation carries the
+default cache mode, so that refresh could itself be answered out of the
+browser's HTTP cache — and GitHub Pages serves the page with max-age=600.
+That stacked a 10-minute layer of stale on top of the one-open delay this
+design already has: deploy, open twice, and you could still be handed the old
+build. Going straight to the network means the copy saved for next open is
+genuinely the live one. Install already fetched no-store; the fetch handler
+now matches it. The help's Updates note gained a closing sentence saying so.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 9:45 PM EDT · v300 · Launches go brown
 ------------------------------------------------------------------------------
 v299's slate gray still read too light, so launches leave gray altogether:

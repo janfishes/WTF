@@ -48,20 +48,35 @@ def render(size):
     img = Image.new('RGB', (S, S), BRAND)
     dr  = ImageDraw.Draw(img)
 
-    # Layout, in icon units, then scaled. Everything stays inside the central 80%
-    # so the same file works as an Android maskable icon.
-    fish_w = 0.801 * size          # 410/512
-    wtf_w  = 0.488 * size          # 250/512
-    gap    = 0.055 * size
+    # Layout, in icon units, then scaled. Build 301: the mark was reading small on the
+    # home screen / desktop with a wide band of orange all round, so fish and lettering
+    # both grew and the WTF took a stroke for weight (same trick .logo-wtf uses in the
+    # banner, where Comic Neue's 700 is the heaviest cut there is). The block still
+    # clears the corners iOS and Android round off; it now runs closer to the edges
+    # than Android's central-80% maskable circle, which is a deliberate trade for a
+    # legible mark - the letters and the fish body stay well inside it, only the tail
+    # and snout tips reach past.
+    fish_w = 0.90 * size           # was 0.801
+    wtf_w  = 0.62 * size           # was 0.488
+    gap    = 0.05 * size
     fs = fish_w / F_W
     ls = wtf_w / (L_X1 - L_X0)
     wtf_h, fish_h = (L_Y1 - L_Y0) * ls, F_H * fs
     top = (size - (wtf_h + gap + fish_h)) / 2
 
     lx, ly = (size - wtf_w) / 2, top
+    # The traced letterforms carry one weight, so the extra heft comes from a stroke
+    # ridden round each outline rather than from a bolder cut - the banner's -webkit-text-stroke
+    # in PNG form. Centred on the path, so it thickens the glyph instead of ringing it.
+    bold = max(1, round(0.018 * size * SS))
     for poly in letters:
-        dr.polygon([(((x - L_X0) * ls + lx) * SS, ((y - L_Y0) * ls + ly) * SS)
-                    for x, y in poly], fill=WHITE)
+        p = [(((x - L_X0) * ls + lx) * SS, ((y - L_Y0) * ls + ly) * SS) for x, y in poly]
+        dr.polygon(p, fill=WHITE)
+        dr.line(p + [p[0]], fill=WHITE, width=bold, joint='curve')
+        # joint='curve' rounds the corners it turns but leaves the line ENDS square, so
+        # each vertex still needs a dot of its own or the outline shows nicks.
+        for x, y in p:
+            dr.ellipse([x - bold / 2, y - bold / 2, x + bold / 2, y + bold / 2], fill=WHITE)
 
     fx, fy = (size - fish_w) / 2, top + wtf_h + gap
     dr.polygon([((x * fs + fx) * SS, (y * fs + fy) * SS) for x, y in fish], fill=WHITE)

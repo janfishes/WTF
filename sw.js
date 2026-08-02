@@ -38,7 +38,14 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.open(SHELL_CACHE).then((cache) =>
       cache.match(SHELL_URL).then((cached) => {
-        const refresh = fetch(e.request)
+        // no-store, NOT fetch(e.request). A navigation request carries the default cache
+        // mode, so this background refresh could itself be answered from the browser's HTTP
+        // cache — and GitHub Pages serves the page with max-age=600. That put a second,
+        // 10-minute layer of stale on top of the one-open delay this design already has:
+        // deploy, open twice, and you could still be handed the old build. no-store makes
+        // the refresh always go to the network, so the copy saved for the next open is
+        // genuinely the live one. (v301; the same reason install already uses no-store.)
+        const refresh = fetch(SHELL_URL, { cache: 'no-store' })
           .then((res) => {
             if (res && res.ok) cache.put(SHELL_URL, res.clone());
             return res;

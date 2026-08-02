@@ -955,12 +955,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
      (--tsb), so the header grows with the rest of the furniture without bursting the bar.
      Line heights are unitless for the same reason — a px line height would clip the
      scaled type. */
+  /* v301: both title lines carry a stroke on top of the 700. Comic Neue has nothing
+     heavier than 700, so - exactly as .logo-wtf does over the fish - the extra weight
+     has to be stroked on in currentColor, which thickens the glyph rather than ringing
+     it. Sized off each line's own type size so the name and the tagline read as one
+     hand: ~.022em, a touch under the .5px the 18px WTF takes. */
   .hdr-left .kicker{
     font-family:var(--comic); font-size:calc(15px * var(--tsb)); font-weight:700; font-style:normal;
     color:var(--teal); text-transform:none; margin-top:1px; letter-spacing:.12em; line-height:1.33;
     width:100%; display:block; white-space:nowrap;
+    -webkit-text-stroke:.35px currentColor;
   }
-  .hdr-left h1{font-family:var(--comic); font-size:calc(23px * var(--tsb)); line-height:1.09; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap;}
+  .hdr-left h1{font-family:var(--comic); font-size:calc(23px * var(--tsb)); line-height:1.09; font-weight:700; margin:0; letter-spacing:.01em; white-space:nowrap; -webkit-text-stroke:.5px currentColor;}
   /* align-self overrides the header's own align-items:flex-end. The header bottom-aligns
      its children because the TITLE BLOCK wants that -- the tagline sits on the baseline of
      the bar and the name stacks above it -- but the cookies are a free-standing group of
@@ -1596,8 +1602,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 height:70dvh; border-radius:16px; }
     /* Header: shrink so title, tagline, name, logo, and all three buttons fit on-screen */
     header{padding:3px 8px 4px; gap:5px;}
-    .hdr-left h1{font-size:calc(17px * var(--tsb)); line-height:1.12;}
-    .hdr-left .kicker{font-size:calc(10px * var(--tsb)); letter-spacing:.05em; line-height:1.6; margin-top:1px;}
+    .hdr-left h1{font-size:calc(17px * var(--tsb)); line-height:1.12; -webkit-text-stroke:.38px currentColor;}
+    .hdr-left .kicker{font-size:calc(10px * var(--tsb)); letter-spacing:.05em; line-height:1.6; margin-top:1px; -webkit-text-stroke:.25px currentColor;}
     /* Move the name out of the button row: bottom-center of the header, same line as the tagline */
     header{position:relative;}
     .credit{position:absolute; left:50%; transform:translateX(-50%); bottom:6px;
@@ -2705,7 +2711,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Search also looks through this help: type a topic into <b>🔍</b> and matching help sections are listed under their own heading.</p>
       <p class="sheet-note">Any popup that opens on the map — a spot, a catch, a reef with its drops showing — can be <b>dragged anywhere on screen</b> so it isn't covering the pins underneath. <b>On a phone:</b> press and hold anywhere on the popup that isn't a button, then slide your finger; the popup follows and stays put when you lift off. <b>On a computer:</b> click and hold anywhere on the popup that isn't a button or link, then drag. Buttons, links and the scrolling drops list still work normally, so you can drag from the popup's title or body text. The <b>3-Day Tide Forecast</b> panel moves the same way — drag it by its title bar.</p>
       <p class="sheet-note">Don't need to hunt for a close button: tapping anywhere outside an open popup — elsewhere on the map — closes it, and tapping the dimmed background behind an open sheet (Log a Catch, Search, Bite, and the rest) closes that too.</p>
-      <p class="sheet-note"><b>Updates.</b> Phones cache this app hard enough that a new build can hide behind an old copy for days. The app now checks quietly for a newer build — every time it opens, and when it comes back to the foreground (those paced to once every 10 minutes) — and if one is out, a small pill appears above the build stamp: <span class="g-emph">UPDATE AVAILABLE — Tap to Reload</span>. One tap brings the new build in; the ✕ puts it off until next time. No connection, no check — it never interrupts you on the water.</p>
+      <p class="sheet-note"><b>Updates.</b> Phones cache this app hard enough that a new build can hide behind an old copy for days. The app now checks quietly for a newer build — every time it opens, and when it comes back to the foreground (those paced to once every 10 minutes) — and if one is out, a small pill appears above the build stamp: <span class="g-emph">UPDATE AVAILABLE — Tap to Reload</span>. One tap brings the new build in; the ✕ puts it off until next time. No connection, no check — it never interrupts you on the water. Behind that, the app keeps a saved copy of itself so it opens instantly, and fetches the live page in the background for the next open — so even if you never tap the pill, a new build lands the second time you open the app.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-themes"><span class="ht-g">🎨</span>Themes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-themes">
@@ -2766,6 +2772,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v301</b> · Bolder mark, live updates, fresher shell</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v300</b> · Launches go brown</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v299</b> · Darker launch gray</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v298</b> · USCG MOB line</p>
@@ -3861,7 +3868,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 300;
+const BUILD_NUM  = 301;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
