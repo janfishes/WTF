@@ -2688,7 +2688,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Hooked</div>
-      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish — one species or several — where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show feeding times by month and fishing regs. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. Tap any <b>Species</b> button to filter your total number of catches. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b></p>
+      <p class="sheet-note">Tap any pin on the map for that spot's coordinates and details. <b>+ Catch</b> logs a fish — one species or several — where you caught it and details. <b>+ Spot</b> saves your position or any place you tap on the map, with details and season bars for the fish you name. <b>Bite</b> shows 3-day feeding times. With <b>Tides</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>Waves</b> provide NOAA's offshore buoy data. <b>My Log</b> shows all your catches' info. <b>Seasons</b> show feeding times by month and fishing regs. Tap <b>Compass</b> and one or more offshore pins to get bearings and distance. <b>Topo Satellite</b> → <b>Hi Res &amp; ICW</b> → <b>Street Map</b>. A short tap on <b>Locate Me</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. With Catches on, the <b>Species</b> buttons light up for the fish in your log — tap them to pick which show. Everything is kept on your device. Read further to learn how to add your own tide station, download the offline map so it works without Internet, and back up all your photos and data. <b>Not for navigation.</b></p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b>Get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <p class="sheet-note" style="margin:14px 0 6px;">Prints this entire help as plain text — every button’s writeup opened out — so it can be read offline or carried on paper.</p>
       <button class="mini-btn" id="helpPrintBtn" style="display:block; width:100%; margin:0 0 14px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
@@ -2771,8 +2771,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-species">Species<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-species">
       <p class="sheet-note">The species buttons are the 23 <b>diamonds</b> down the left edge of the map — one per species the app knows. They carry no colour of their own: unpicked they are white lettering on black, and a picked one <b>reverses</b> — black lettering on a white fill — the same on/off language as the <b>Catches</b> pill.</p>
-      <p class="sheet-note">The species buttons down the left side filter your <b>catch log</b>: tap one and the map shows only your catch diamonds for that species — the fishing-spot pins step aside until you switch it back off. A picked species stays visible at any zoom. <b>Catches</b> is the master switch over all of it: with Catches off no diamonds show at all, picked species or not, and the spot pins stay on the chart — switch Catches on and your pick takes effect. If you've never logged that fish, you'll get a note saying so.</p>
-      <p class="sheet-note">They filter your <b>catch log</b> only, not the fishing spots, and only one species is picked at a time — tap the lit one again to clear it. Their labels follow the <b>Labels</b> map filter button, and the <b>Eye</b> takes the whole column off the chart along with the action buttons.</p>
+      <p class="sheet-note">The species buttons down the left side show and filter your <b>catch log</b>. Switch <b>Catches</b> on and every fish in your log lights its button — the lit buttons are exactly what's on the map. Tap a lit button to switch that fish's diamonds off, and tap it again to bring them back; while you're narrowed down to some of your fish, the fishing-spot pins step aside so only the diamonds are left, and they return when every logged fish is lit again. A new catch lights its fish's button the moment it's logged. A lit species stays visible at any zoom. <b>Catches</b> is the master switch over all of it: turn it off and every button goes dark and no diamonds show; turn it back on and your logged fish light up again. If you've never logged a fish, tapping its button gets a note saying so.</p>
+      <p class="sheet-note">They show and filter your <b>catch log</b> only, not the fishing spots, and you can have as many lit as you like. Their labels follow the <b>Labels</b> map filter button, and the <b>Eye</b> takes the whole column off the chart along with the action buttons.</p>
       </div>
 
       <div class="subhead">Map Filter Buttons</div>
@@ -2879,6 +2879,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v310</b> · Species buttons light for logged fish</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v309</b> · Nothing-logged note always shows</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v308</b> · Waypoint tags hang left</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v307</b> · Callalisa Creek</p>
@@ -3986,7 +3987,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 309;
+const BUILD_NUM  = 310;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6119,9 +6120,12 @@ function updateStorageNote(){
   document.getElementById('storageNote').textContent = notes[storageMode];
 }
 /* The number on the Catches pill tracks whatever the species filter is
-   showing: the total for the picked species (summed if several are on), or the
-   whole log when none is picked. Same figure the catches count pill shows. */
+   showing. v310: with Catches on the lit species set is the shown set, so the
+   count is exactly the catches whose fish are lit (the whole log in the normal
+   all-lit state, 0 with everything unchecked). With Catches off it previews:
+   the total for any pre-picked species, or the whole log. */
 function catchFilterCount(){
+  if(showCatches) return catches.filter(c=> catchSpeciesList(c).some(k=>activeSpecies.has(k))).length;
   return activeSpecies.size
     ? catches.filter(c=> catchSpeciesList(c).some(k=>activeSpecies.has(k))).length
     : catches.length;
@@ -6300,6 +6304,7 @@ function catchGroupPopupHTML(m){
   </div>`;
 }
 function renderCatchMarkers(){
+  reconcileSpeciesWithLog();
   catchMarkers.forEach(m=>map.removeLayer(m));
   catchMarkers = catchGroups().map(g=>{
     const rep = g.catches[g.catches.length-1];   // most recent stands for the group
@@ -6842,6 +6847,54 @@ const speciesCol = document.getElementById('speciesCol');
 let activeZones = new Set();
 let activeSpecies = new Set();
 
+/* v310: with Catches on, the lit species buttons ARE the list of fish on the map.
+   Turning Catches on lights every species with a catch in the log; tapping a lit
+   button switches that fish's diamonds off (and back on); turning Catches off
+   clears the lot. prevLoggedSpecies lets a log change light a newly caught fish
+   (and retire a button whose last catch was deleted) without overriding buttons
+   the user has deliberately switched off. */
+let prevLoggedSpecies = new Set();
+function loggedSpeciesSet(){
+  const s = new Set();
+  catches.forEach(c=> catchSpeciesList(c).forEach(k=> s.add(k)));
+  return s;
+}
+function syncSpeciesChips(){
+  speciesCol.querySelectorAll('.chip').forEach(ch=>
+    ch.classList.toggle('active', activeSpecies.has(ch.dataset.species)));
+}
+function reconcileSpeciesWithLog(){
+  const logged = loggedSpeciesSet();
+  if(showCatches){
+    logged.forEach(k=>{ if(!prevLoggedSpecies.has(k)) activeSpecies.add(k); });
+    prevLoggedSpecies.forEach(k=>{ if(!logged.has(k)) activeSpecies.delete(k); });
+  }
+  prevLoggedSpecies = logged;
+  syncSpeciesChips();
+}
+/* Narrowed = the user has switched some logged fish off (but not all of them) —
+   the state where the spot pins step aside to leave just the diamonds. */
+function speciesNarrowed(){
+  if(activeSpecies.size === 0) return false;
+  let narrowed = false;
+  loggedSpeciesSet().forEach(k=>{ if(!activeSpecies.has(k)) narrowed = true; });
+  return narrowed;
+}
+function setShowCatches(on){
+  showCatches = on;
+  document.getElementById('catchToggle').classList.toggle('active', on);
+  if(on){
+    // A species picked while Catches was off is a deliberate narrow — honor it.
+    if(activeSpecies.size === 0) loggedSpeciesSet().forEach(k=> activeSpecies.add(k));
+  } else {
+    activeSpecies.clear();
+  }
+  prevLoggedSpecies = loggedSpeciesSet();
+  syncSpeciesChips();
+  updateCatchCount();
+  applyFilter();
+}
+
 // Row order: Catches, Inshore, Offshore | Launches, Labels
 // Each filter pill (except Labels) is two lines: the name on top, its live total
 // beneath it — the same totals the old cluster-pill overlay used to show when
@@ -6909,14 +6962,12 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
     if(activeSpecies.has(key)){ activeSpecies.delete(key); chip.classList.remove('active'); }
     else { activeSpecies.add(key); chip.classList.add('active'); }
     updateCatchCount();
-    if(activeSpecies.size === 0){
-      applyFilter();
-    } else {
-      applyFilter();
+    applyFilter();
+    if(activeSpecies.has(key)){
       // v309: the "nothing logged" note keys off the TAPPED species, not the whole
       // active set — before, one lit species with catches muted the note for every
       // empty species tapped after it.
-      if(activeSpecies.has(key) && !catches.some(c=> catchSpeciesList(c).includes(key))){
+      if(!catches.some(c=> catchSpeciesList(c).includes(key))){
         showToast('No ' + sp.label.toLowerCase() + ' logged yet');
       } else if(!showCatches){
         // Catches off means no diamonds, full stop (v305) — say so rather than let the
@@ -6944,10 +6995,11 @@ speciesCol.addEventListener('wheel', (e)=>{
 /* The single rule for whether a spot pin belongs on screen. applyFilter() and the easter egg
    both read it, so the two cannot drift. */
 function pinVisible(s){
-  /* A species pick stands the spot pins down so only the diamonds are left — but only
-     while Catches is ON. With Catches off there are no diamonds to clear a view for, so
-     a lingering species pick must not empty the map (v305). */
-  if(showCatches && activeSpecies.size > 0) return false;
+  /* Narrowing to some of the logged fish stands the spot pins down so only the diamonds
+     are left — but only while Catches is ON (v305: with Catches off there are no diamonds
+     to clear a view for). v310: with every logged fish lit — the normal Catches-on state —
+     the pins stay; only a deliberate narrow clears them. */
+  if(showCatches && speciesNarrowed()) return false;
   return s.ramp ? showLaunches : activeZones.has(s.zone);
 }
 function offshorePinsVisible(){
@@ -6997,7 +7049,6 @@ function syncEggMarker(){
 }
 
 function applyFilter(){
-  const speciesActive = activeSpecies.size > 0;
   markers.forEach(m=>{
     const s = m.spotRef;
     // Picking a species means "show me those catches" — the fishing-spot pins
@@ -7009,12 +7060,13 @@ function applyFilter(){
   catchMarkers.forEach(m=>{
     // Catches is the master switch: off means no diamonds at all, whether or not a
     // species is picked (v305 — it used to let a species pick force them back on, so
-    // the pill read as broken). The species pick only narrows what shows when it is on.
+    // the pill read as broken). v310: with Catches on, the lit species set IS the
+    // shown set — a catch shows only if one of its fish is lit, and unchecking every
+    // pill genuinely empties the map rather than falling back to "show all".
     // Each merged marker shows only the catches that pass the filter, badge included.
-    const vis = m.group.catches.filter(c=>{
-      const spOk = !speciesActive || catchSpeciesList(c).some(k=>activeSpecies.has(k));
-      return spOk && showCatches;
-    });
+    const vis = m.group.catches.filter(c=>
+      showCatches && catchSpeciesList(c).some(k=>activeSpecies.has(k))
+    );
     m.visible = vis;
     if(!vis.length){ if(map.hasLayer(m)) map.removeLayer(m); return; }
     const rep = vis[vis.length-1];
@@ -7039,9 +7091,7 @@ document.getElementById('launchToggle').addEventListener('click', function(){
   applyFilter();
 });
 document.getElementById('catchToggle').addEventListener('click', function(){
-  showCatches = !showCatches;
-  this.classList.toggle('active', showCatches);
-  applyFilter();
+  setShowCatches(!showCatches);
 });
 document.getElementById('labelsToggle').addEventListener('click', function(){
   labelsOn = !labelsOn;
@@ -10394,7 +10444,13 @@ function goToCatch(id){
   const m = catchMarkers.find(x=>x.catchRef.id===id);
   if(!m) return;
   closeSearch();
-  if(!showCatches){ showCatches = true; document.getElementById('catchToggle').classList.add('active'); applyFilter(); }
+  if(!showCatches) setShowCatches(true);
+  // A narrowed species set could hide the very catch searched for — light its fish.
+  const need = catchSpeciesList(m.catchRef).filter(k=>!activeSpecies.has(k));
+  if(need.length){
+    need.forEach(k=> activeSpecies.add(k));
+    syncSpeciesChips(); updateCatchCount(); applyFilter();
+  }
   flyThenOpen(m, [m.catchRef.lat, m.catchRef.lng], Math.max(map.getZoom(), 14));
 }
 

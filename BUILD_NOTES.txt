@@ -7,6 +7,23 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 12:11 AM EDT · v310 · Species buttons light for logged fish
+------------------------------------------------------------------------------
+The species buttons now SHOW the log as well as filter it. Switching Catches
+on lights the button of every fish with a catch in the log — the lit buttons
+are exactly what's on the map. Tap a lit button to switch that fish's
+diamonds off, tap it again to bring them back; the buttons stay lit until
+switched off or until Catches is turned off (which darkens the lot). Logging
+a new catch lights its fish's button on the spot, and deleting the last
+catch of a species retires its button — without disturbing buttons the user
+has deliberately switched off. While narrowed to some of the logged fish,
+the spot pins step aside as before; in the normal all-lit state they stay.
+Unchecking every button now genuinely empties the map of diamonds (it used
+to fall back to showing all). The Catches pill count follows the lit set,
+search still lights whatever fish it flies to, and the Help's species-button
+section was rewritten for the new behavior.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 12:03 AM EDT · v309 · Nothing-logged note always shows
 ------------------------------------------------------------------------------
 Tapping a species button for a fish with no catches in the log is supposed to
