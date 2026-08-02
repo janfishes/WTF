@@ -7,6 +7,22 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 1:34 AM EDT · v318 · Purple tiles fixed
+------------------------------------------------------------------------------
+Fixed the purple square on the Hi Res & ICW view (reported on iPhone at the
+1,000 ft scale near Ponce Inlet). The magenta blocks were false-color
+infrared aerial photos coming straight from the USGS NAIP image server: its
+default rendition draws some four-band mosaic footprints with the infrared
+band in place of red, so vegetation prints purple, and the bad footprints
+land as crisp tile-aligned rectangles. The app's photo requests now pin the
+natural-color bands (bandIds=0,1,2 on the exportImage call), which the
+server honors everywhere — verified the bad tile comes back as a normal
+beach photo and that open-ocean tiles still return transparent so the flat
+deep-blue ocean fill is unchanged. The request URL changed, so previously
+downloaded offline Hi-Res tiles and cached tiles re-download themselves on
+next view; nothing to do by hand.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 1:25 AM EDT · v317 · Disclaimer shown in full
 ------------------------------------------------------------------------------
 The help's Disclaimer no longer hides behind a dropdown button. Its four

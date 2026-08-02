@@ -2896,6 +2896,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v318</b> · Purple tiles fixed</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v317</b> · Disclaimer shown in full</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v316</b> · Inshore pills isolate, city labels</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v315</b> · Ponce de Leon Inlet pin</p>
@@ -4012,7 +4013,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 317;
+const BUILD_NUM  = 318;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -4659,6 +4660,12 @@ function tile3857Bbox(x,y,z){
    transparent, so the Sentinel-2 fill underneath still shows through).
    layerName is unused here — exportImage addresses the whole ImageServer — but
    the parameter stays so the call sites and OFFLINE templates don't churn.
+   v318: bandIds=0,1,2 pins the red/green/blue bands — without it the server's
+   default rendition draws some 4-band NAIP mosaic footprints in false-color
+   infrared (magenta land, seen as a tile-aligned purple square near Ponce
+   Inlet at z14, tile 4510/6809). Off-coverage tiles stay transparent PNG with
+   the parameter (verified 2026-08-02); the URL change invalidates offline-pack
+   and SW-cached NAIP tiles, which simply re-download.
    WMS fallback form, should exportImage ever go away:
      base('.../ImageServer/WMSServer') + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap' +
      '&LAYERS=USGSNAIPImagery:NaturalColor&STYLES=&CRS=EPSG:3857&BBOX=' + bbox +
@@ -4667,7 +4674,7 @@ function wmsTileUrl(base, layerName, x, y, z, tileSize){
   tileSize = tileSize || 256;
   const bbox = tile3857Bbox(x,y,z).join(',');
   return base + '?bbox=' + bbox + '&bboxSR=3857&imageSR=3857&size=' + tileSize + ',' + tileSize +
-    '&format=jpgpng&f=image';
+    '&format=jpgpng&f=image&bandIds=0,1,2';
 }
 const OfflineWMSTileLayer = L.TileLayer.extend({
   initialize(baseUrl, options){
