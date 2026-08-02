@@ -7,6 +7,43 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 7:54 PM EDT · v333 · One Inlet Origin
+------------------------------------------------------------------------------
+Every distance and bearing the app itself works out is now measured from
+one point: NOAA's official position for Ponce de Leon Inlet, 29°04.672'N
+80°54.511'W — the same point the compass rose sits on (since v332) and
+the inlet pin marks (since v331). PONCE_INLET, the origin behind every
+offshore popup's live nm/bearing, every drop-list row, and every custom
+offshore spot's figures, had been 29.0817/-80.9367 — which turns out to
+be NOAA's coordinate for the Ponce Inlet TIDE STATION (8721138) at the
+north jetty, adopted as "the Inlet" by accident because the tide code
+already carried it. New rule, written into the code at both tide-station
+tables: gauge positions are for interpolating tides between gauges only,
+never for GPS positions or headings.
+
+The FWC county reef Sites are the one deliberate exception: their
+popups' printed distances are FWC's published deployment-record figures
+(measured from FWC's origin at 29°04.500'N 80°55.500'W) and are carried
+verbatim, untouched. Everything else with a baked figure was recomputed
+from the NOAA position: Lighthouse Point Reef (NOT in the FWC file — its
+3 drops carry no FWC records — so it re-bases with everything else;
+3.4 nm -> 2.8 nm), the natural reef/ledge waypoints (Party Grounds,
+Steeples, Rolldown, Cracker Ridge, Nine Mile Reef — mostly 0.5-1 nm
+shorter), Jan's named grounds (shifts of ~0.1 nm), and 46 per-drop nm
+values on the non-FWC grounds. FWC Sites' data verified byte-identical
+before and after.
+
+Help updated: the Compass topic's two origin paragraphs and the
+Warning's compass paragraph now describe two origins (NOAA inlet + FWC)
+instead of three, note that rose lines and popup figures now agree
+everywhere but a county Site's printed distance (up to about a mile,
+largest at Flagler Ave), and state the tide-gauge rule. The bearing-
+swing caution (10-16 deg) is gone — bearings agree everywhere now. All
+coordinate-entry examples in the help and input placeholders switched
+from the old jetty coordinate to the NOAA position in every form (DM,
+DMS, decimal).
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 7:31 PM EDT · v332 · Rose At NOAA
 ------------------------------------------------------------------------------
 The compass rose moves to NOAA's official position for Ponce de Leon
