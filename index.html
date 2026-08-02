@@ -725,16 +725,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
        complement, at 4.5:1. Inshore's ground is BIMODAL - near-black river water (L=.06) and
        white chart/shoal areas (L=1.0) in the same view - so no fill can be high-contrast
        against both; the crossover sits at luminance .289 and caps out at 3.10:1 either way.
-       Inshore was magenta #FF3DD0 (that exact optimum) for part of v303 and is now orange
-       #FF6A00 at Jan's request. Orange reads 2.86:1 on the dark river water and 3.32:1 on the
-       white chart areas, so it gives up very little against the water.
-       KNOWN COST, recorded so it is not rediscovered: orange and the offshore amber are only
-       about 21 degrees apart in hue, where magenta sat ~270 degrees away. The two zones are
-       now told apart mainly by BRIGHTNESS - amber L=.607 against orange L=.316, a 1.80:1 gap -
-       rather than by hue, and that gap is what does the work for red/green colour blindness
-       too. If the two ever read as one colour on the water, the cheapest fix is to push
-       OFFSHORE yellower (#FFD800, L=.704) rather than to move inshore: it widens the gap to
-       2.06:1 and also improves offshore on the ocean fill, from 4.5:1 to 5.2:1.
+       Inshore was magenta #FF3DD0 (that exact optimum) for part of v303, orange #FF6A00
+       through v305, and is BLUE again at Jan's request (v306) - but NOT the old #1636ff,
+       which is what scored 1.05:1 on the water above. #1e90ff is the brightest blue that is
+       still unmistakably blue: 2.2:1 on the ocean fill, 2.1:1 on the ICW, 5.9:1 on dark
+       river water, 3.2:1 on white chart areas - the same all-rounder profile the orange had -
+       and it is 6.5:1 against BLACK both ways, so the off-state chip text needs no lifted
+       shade (the way old-blue needed #6b8cff) and the lit fill takes black text like the
+       amber does. Hue distance to the offshore amber is back (~160 degrees), which also
+       restores the red/green-colour-blind separation the orange era leaned on brightness for.
        See the chip rules below for why both fills take BLACK text. */
     /* --launch: #8a97a8 gray -> #5a6673 slate (v299) -> #8a4b0f brown (v300) -> #4f1d0a dark
        bitter chocolate (v302). v300 borrowed #8a4b0f from Brown Sugar's accent, but that accent
@@ -750,7 +749,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
        repair its white-on-accent text, currently 1.86:1 to 3.00:1 in five of the six themes.
        That is Jan's call, not done here. Do NOT set --launch back to any theme's accent.
        Off-state chip text does NOT use it - see #launchToggle. */
-    --inshore:#FF6A00; --offshore:#FFC400; --launch:#4f1d0a; --mob:#e02020;
+    --inshore:#1e90ff; --offshore:#FFC400; --launch:#4f1d0a; --mob:#e02020;
     /* Not a pin colour: catch pins are filled per SPECIES (see SPECIES below), never with
        this. --catch only paints the #cropApply button. Left on the old zone purple, which
        nothing else uses any more. */
@@ -1104,7 +1103,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #speciesCol::-webkit-scrollbar{ display:none; }
 
-  #speciesCol .chip{padding:4px 8px; font-size:calc(12px * var(--tsb)); font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
+  /* v306: padding stepped up a notch at every height breakpoint (was 4px 8px here, 3px/2px
+     below) — Jan wanted the pills a little airier. The height-fit math in the comments
+     around the breakpoints is now ~2px per chip optimistic; the column scrolls when it
+     genuinely runs out, so nothing breaks. */
+  #speciesCol .chip{padding:5px 10px; font-size:calc(12px * var(--tsb)); font-weight:800; background:#000 !important; border:1px solid rgba(255,255,255,.25); opacity:1 !important;}
   #speciesCol .chip .dot{width:6px; height:6px; border-radius:1px; transform:rotate(45deg);}
 
   /* ---------- Map ---------- */
@@ -1254,20 +1257,22 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Spot name labels: clean font, no bubble/arrow/shading. Lettering is white by default and
      black on the two bright zone tags - see the lbl-inshore/lbl-offshore overrides below.
      v235: the name rides the A control at the buttons' half-strength scale (--tsb), like
-     the filter pills and compass text. Padding and border stay fixed — the +21 constant in
-     compassSpotLabelWidth() covers them, and only the text there carries the scale. */
+     the filter pills and compass text. Padding and border stay fixed — the +25 constant in
+     compassSpotLabelWidth() covers them, and only the text there carries the scale.
+     v306: 8.5px/700 → 12px/800 at Jan's request — the old size was unreadable on a phone
+     in sunlight. The font/weight/constant in compassSpotLabelWidth() must track this rule. */
   .spot-label{
     border:1.25px solid #fff !important; box-shadow:0 1px 4px rgba(0,0,0,.4) !important;
     color:#fff !important; font-family:'Inter',sans-serif !important; font-style:normal !important;
-    font-size:calc(8.5px * var(--tsb,1)) !important; font-weight:700 !important; padding:3px 9px !important;
+    font-size:calc(12px * var(--tsb,1)) !important; font-weight:800 !important; padding:4px 11px !important;
     white-space:nowrap !important; max-width:none !important; line-height:1.2 !important; text-align:center;
     border-radius:100px !important; text-shadow:none !important;
   }
   /* v304: BLACK lettering on the two bright tags. .spot-label sets colour:#fff for all of
-     them, which was right when Inshore was a deep blue and Offshore a deep purple, but the
-     zones are now orange and amber - white on those is 2.87:1 and 1.60:1, which is what made
-     the name tags unreadable at a glance. Black is 7.31:1 on the orange and 13.15:1 on the
-     amber. Launch stays white: #4f1d0a is dark, and white on it is 15.1:1. The rule is simply
+     them, which was right when Inshore was a deep blue and Offshore a deep purple, but white
+     on a bright fill is what made the name tags unreadable at a glance. Black is 6.5:1 on
+     the v306 inshore blue (#1e90ff, vs 3.2:1 for white) and 13.15:1 on the amber. Launch
+     stays white: #4f1d0a is dark, and white on it is 15.1:1. The rule is simply
      "dark tag takes white, bright tag takes black" - if a zone colour ever changes again,
      check which side of that line it lands on. */
   .spot-label.lbl-inshore{background:var(--inshore) !important; color:#000 !important;}
@@ -1387,17 +1392,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #catchToggle{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid #fff !important; box-shadow:none !important;}
   #catchToggle:not(.active){opacity:1; background:#000 !important; color:#fff !important; border-color:#fff !important;}
   /* v304: Labels reverses with state like Launches/Inshore/Offshore - OFF is the colour as
-     text and outline on black, ON fills with the colour and takes a white ring. It used to be
-     white text and a white border in BOTH states, so only the fill moved. #1636ff is too dark
-     to read as text on black (3.01:1), so OFF uses the lifted #6b8cff (6.82:1) exactly the way
-     Launches uses #b5713a - same hue, obviously the same button. */
-  #labelsToggle{font-weight:800; background:#000 !important; color:#6b8cff !important; border:1px solid #6b8cff !important; box-shadow:none !important;}
+     text and outline on black, ON fills with the colour and takes a white ring.
+     v306: Labels is ORANGE (Jan's request) - it took the #FF6A00 that Inshore gave up when
+     it went back to blue, so the swap keeps orange/blue both in play and Labels still wears
+     a hue no pin or zone uses. Orange reads 6.5:1 on black, so OFF needs no lifted shade. */
+  #labelsToggle{font-weight:800; background:#000 !important; color:#FF6A00 !important; border:1px solid #FF6A00 !important; box-shadow:none !important;}
   /* .chip padding is bottom-heavy (5 top / 8 bottom), which lifts the text ~1.5px above centre.
      Invisible on the translucent chips, obvious on Labels-ON because it is the one solid white
      fill. Same total vertical padding, so the pill height and the row layout do not move.
      Doubled selector: #metaRow .chip (1,1,0) would otherwise outrank a bare #labelsToggle (1,0,0). */
   #metaRow #labelsToggle{padding:6px 9px 7px;}
-  #labelsToggle:not(.active){background:#000 !important; color:#6b8cff !important; border-color:#6b8cff !important; opacity:1;}
+  #labelsToggle:not(.active){background:#000 !important; color:#FF6A00 !important; border-color:#FF6A00 !important; opacity:1;}
   /* v303: the species buttons carry NO species colour any more - white text on the black chip
      in both states, at Jan's request. They used to fill with var(--spc) when lit, which meant
      25 different fills competing with the zone pills beside them and with the pins. The state
@@ -1427,26 +1432,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #speciesCol .chip .dot{background:currentColor !important;}
   .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:800; border:1px solid var(--inshore) !important; box-shadow:none !important;}
   /* PURE BLACK text on the lit zone fills, not white and not a near-black (v303, Jan could not
-     read the pills). White on the old --inshore blue was 6.99:1, but these fills are far
-     lighter - white sits at 1.60:1 on the amber - so the text has to be dark. v302 used the
-     #04141e near-black; #000 buys another ~7% contrast and, more to the point, is the colour
-     that actually looks like ink on a bright pill in sun: 6.53:1 on the orange, 12.6:1 on the
-     amber. The dark text-shadow from #metaRow below is killed on these two, since it existed
-     to lift WHITE text off a bright ground and only muddies black text. */
+     read the pills). These fills are bright - white sits at 1.60:1 on the amber and 3.2:1 on
+     the v306 inshore blue - so the text has to be dark. v302 used the #04141e near-black;
+     #000 buys another ~7% contrast and, more to the point, is the colour that actually looks
+     like ink on a bright pill in sun: 6.5:1 on the blue, 12.6:1 on the amber. The dark
+     text-shadow from #metaRow below is killed on these two, since it existed to lift WHITE
+     text off a bright ground and only muddies black text. */
   .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#000 !important; border-color:#fff !important; text-shadow:none !important;}
   /* Shadow on the zone/launch chip text (both states) — the states whose text
      sits on the weakest ground (saturated colour on black, or filled colour). */
   #metaRow .chip[data-zone],
   #metaRow #launchToggle{text-shadow:0 2px 3px rgba(0,0,0,.55) !important;}
-  /* Dark shadow, because lit Labels is blue with WHITE text (v303; it was black text on a
-     white fill, which is what the old white shadow was for). */
-  #metaRow #labelsToggle.active{text-shadow:0 1px 2px rgba(0,0,0,.55);}
-  /* OFF gets no shadow at all - it is blue text on black, where a dark shadow does nothing. */
+  /* No shadow on lit Labels - it is BLACK text on the bright orange fill (v306), same as the
+     lit zone pills, and a dark shadow only muddies black text. */
+  #metaRow #labelsToggle.active{text-shadow:none !important;}
+  /* OFF gets no shadow at all - it is orange text on black, where a dark shadow does nothing. */
   #metaRow #labelsToggle:not(.active){text-shadow:none !important;}
   /* Off-state is text+outline on a BLACK chip, so it needs its own value only when the zone
-     colour is too dark there. The old blue and purple both needed a lift (#6b8cff / #b478ff);
-     magenta is 6.83:1 and amber 13.1:1 on black, so both now use the zone colour itself and
-     the off state matches the pin exactly. */
+     colour is too dark there. The old #1636ff blue and purple both needed a lift
+     (#6b8cff / #b478ff); the v306 blue is 6.5:1 and amber 13.1:1 on black, so both use the
+     zone colour itself and the off state matches the pin exactly. */
   .chip[data-zone="inshore"]:not(.active){opacity:1; color:var(--inshore) !important; border-color:var(--inshore) !important;}
   .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:800; border:1px solid var(--offshore) !important; box-shadow:none !important;}
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:var(--offshore) !important; border-color:var(--offshore) !important;}
@@ -1471,12 +1476,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     filter:none; transform:scale(1.05);
   }
   #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#fff; font-weight:800;}
-  /* v303: lit Labels is BLUE, not the white fill it used to be. Blue came free when Inshore
-     left it for orange, and it is the one strong hue no pin or zone uses any more, so Labels
-     cannot be mistaken for a filter. #1636ff is the exact blue Inshore carried through v301;
-     white text on it is 6.99:1. The white text-shadow at #metaRow was there for BLACK text on
-     the old white fill and is killed here, or it fringes the white lettering. */
-  #labelsToggle.active{background:#1636ff !important; color:#ffffff !important; border-color:#ffffff !important;}
+  /* v306: lit Labels is ORANGE (was blue v303-v305) - Inshore went back to blue, so Labels
+     took the orange Inshore vacated; still a hue no pin or zone uses, so Labels cannot be
+     mistaken for a filter. Black text on #FF6A00 is 6.5:1 (white is only 2.9:1). */
+  #labelsToggle.active{background:#FF6A00 !important; color:#000 !important; border-color:#ffffff !important;}
   .chip.util.active{border-color:var(--fog); box-shadow:0 0 0 1px var(--fog) inset;}
   /* ---- Tide pills in the Add/Edit Catch sheet (High/Low/Falling/Rising) ----
      SELECTED = white fill, black text + icon, black outline (readable).
@@ -1489,14 +1492,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      same everywhere — SELECTED = solid zone colour, UNSELECTED = black. (They were
      deliberately reversed until v243, which read backwards next to the map row.) */
   /* Add-a-Spot pills: black/unselected until tapped, then a distinct color per zone
-     (magenta/amber/brown) so it's obvious which type is currently chosen. */
+     (blue/amber/brown) so it's obvious which type is currently chosen. */
   /* SELECTED = solid zone colour, white ring, and text that is dark on the two light fills
-     (Inshore magenta, Offshore amber) but white on the dark Launch brown - see the contrast
+     (Inshore blue, Offshore amber) but white on the dark Launch brown - see the contrast
      note on the map chips above. UNSELECTED = black and dimmed,
      so at a glance exactly one pill reads as lit. The dimming is what tells you the app has
      not yet decided a type; as soon as a location is set, one pill lights up. */
   #addSpotZoneRow .chip{opacity:.55 !important; transition:opacity .15s, background .15s, color .15s;}
-  #addSpotZoneRow .chip[data-zone="inshore"]:not(.active){background:#000 !important; color:var(--inshore) !important; border-color:#7f2f6b !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="inshore"]:not(.active){background:#000 !important; color:var(--inshore) !important; border-color:#0f4a80 !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#000 !important; border-color:#fff !important; opacity:1 !important; text-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:var(--offshore) !important; border-color:#806013 !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#000 !important; border-color:#fff !important; opacity:1 !important; text-shadow:none !important;}
@@ -2067,9 +2070,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
      colour, plus the drop shadow these pins had been missing — the old inline
      `box-shadow:0 0 0 2px rgba(255,255,255,.5)` replaced the base shadow instead of adding
      to it. Dashed rather than solid so the two rings stay tellable apart through amber
-     polarized lenses, which flattened the old blue against the old purple. Since v302 the
-     zones are magenta and amber, which those lenses separate on their own, but keep the
-     dash - it is what says "you dropped this one" regardless of colour. */
+     polarized lenses, which flattened the old blue against the old purple. The v306 zones
+     are blue and amber - amber lenses will dim the blue, but the brightness gap still
+     separates them; keep the dash regardless - it is what says "you dropped this one". */
   .mine-ring{
     box-sizing:border-box; border-radius:50%; border:2px dashed var(--ring,#fff);
     display:flex; align-items:center; justify-content:center;
@@ -2267,7 +2270,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      so source order is the only thing that decides it. */
   @media (max-height:820px){
     #speciesCol{gap:2px; padding-bottom:2px;}
-    #speciesCol .chip{padding:3px 8px;}
+    #speciesCol .chip{padding:4px 10px;}
   }
   /* Second step for a genuinely short window. 23 chips at 20px still want 506px and a 620px
      window only offers 500, so below 700px the chips drop to 18px (needs ~460px) and the
@@ -2276,7 +2279,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      itself is the thing worth seeing. */
   @media (max-height:700px){
     #speciesCol{top:6px; bottom:52px;}
-    #speciesCol .chip{padding:2px 8px;}
+    #speciesCol .chip{padding:3px 10px;}
   }
   /* Sits in the 22px the control row reserves beneath itself. Pulled in off the corner --
      10px/5px put the leading "07" right where a desktop window's own rounded bottom-left
@@ -2696,7 +2699,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Ten buttons along the right side of the map are the app’s actions. Tap any button below to read what it does and tap again to close.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list — <b>tap more than one</b> if the trip produced several; the first you tap is the entry's main fish, and every one you pick shows its season bar on the entry's My Log card and popup. Catch pins are the same black diamond whichever fish it was — the species is named in the pin's popup and on the card. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> pills just above the location list narrow it down to where you are fishing: they start black with the whole list showing, and tapping <b>Offshore</b> lights it amber and cuts the list to offshore sites only (<b>Inshore</b> does the same in orange). Tapping the lit one again turns it black and brings the whole list back. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>Catch</b> opens the log-a-catch form. Tap <b>+ Catch</b> and pick the species from the list — <b>tap more than one</b> if the trip produced several; the first you tap is the entry's main fish, and every one you pick shows its season bar on the entry's My Log card and popup. Catch pins are the same black diamond whichever fish it was — the species is named in the pin's popup and on the card. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by hand (High, Low, Falling, or Rising) or tap <b>Auto-detect from NOAA</b> once a location and date/time are set — the app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too; but needs internet). The Location list includes every baked-in fishing spot — inshore and offshore, plus any spot you've added yourself. Boat ramps and kayak launches are left out, because they're land points rather than places you fish; but use <b>Drop pin</b> or <b>My location</b> if you did catch something close by one. The <b>Inshore</b> and <b>Offshore</b> pills just above the location list narrow it down to where you are fishing: they start black with the whole list showing, and tapping <b>Offshore</b> lights it amber and cuts the list to offshore sites only (<b>Inshore</b> does the same in blue). Tapping the lit one again turns it black and brings the whole list back. <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only, and either box of a pair works alone (30 inches records the same fish as 2 ft 6 in).</p>
       <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g. 29°04.902′ N) — the form a chartplotter uses. A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. The line under those buttons prints the position it settled on, so you can check it before saving, and <b>Clear</b> starts over. A photo with embedded GPS fills the position in by itself (see the photo note below). To key or paste numbers in by hand, save them in <b>+ Spot</b> first — its position box reads typed and pasted coordinates in every common form — and the new spot is then in this location list.</p>
       <p class="sheet-note"><b>+ Catch</b> allows you to store a photo from your gallery — photos are stored on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect — everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't; if a photo is refused, set <b>Settings → Camera → Formats → Most Compatible</b> on your iPhone so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Edit or delete a catch:</b> tap a catch diamond on the map and use <b>EDIT ✎</b> or <b>DELETE ✕</b> in its popup — or the same buttons on any entry in the My Log sheet. Editing reopens the form with everything filled in.</p>
@@ -2798,7 +2801,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-labels">Labels<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-labels">
-      <p class="sheet-note">Turns the <b>name labels</b> on or off for whatever pins are showing. Off means no labels, but the pins stay exactly where they were. The pill lights <b>blue</b> when the labels are on and sits as blue lettering on black when they are off, the same on/off pattern the Inshore, Offshore and Launches pills use. Each name tag is filled in its pin's own colour, and its lettering is black on the bright tags (Inshore orange, Offshore amber) and white on the dark ones (Launches), so a name stays readable whichever zone it belongs to.</p>
+      <p class="sheet-note">Turns the <b>name labels</b> on or off for whatever pins are showing. Off means no labels, but the pins stay exactly where they were. The pill lights <b>orange</b> when the labels are on and sits as orange lettering on black when they are off, the same on/off pattern the Inshore, Offshore and Launches pills use. Each name tag is filled in its pin's own colour, and its lettering is black on the bright tags (Inshore blue, Offshore amber) and white on the dark ones (Launches), so a name stays readable whichever zone it belongs to.</p>
       </div>
 
       <div class="subhead">Search, Help &amp; View Buttons</div>
@@ -2876,6 +2879,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v306</b> · Blue inshore, big name tags</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v305</b> · Catches is the master switch</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v304</b> · Readable name tags</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-01 · <b>v303</b> · Black diamonds, orange inshore</p>
@@ -3976,7 +3980,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/01/26';                          // map stamp form
-const BUILD_NUM  = 305;
+const BUILD_NUM  = 306;
 const BUILD_TAG  = 'build 2026-08-01 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5249,7 +5253,11 @@ function seaLimitStrands(){
 function updateSeaOverlays(){
   const z = map.getZoom();
   const topo = (mapMode === 0);
-  const showLine = topo && z >= OCEAN_MIN_Z;
+  /* v306: the app-drawn dashes stop once the scale bar drops under 1 mile (z13). That is
+     also SEA_CLIP_CLOSE_Z, where the clip switches to the real limit line with a seaward
+     pad — the chart's own printed boundary dashes are visible from there, so the app's
+     copy just doubled them (and Jan asked for it gone up close). */
+  const showLine = topo && z >= OCEAN_MIN_Z && z < SEA_CLIP_CLOSE_Z;
   if(showLine && !seaLimitLayer){
     seaLimitLayer = L.layerGroup(seaLimitStrands().map(s =>
       L.polyline(s, { color:'#e8f1f8', weight:1.5, opacity:0.9, dashArray:'6 6', interactive:false })));
@@ -8959,11 +8967,12 @@ function compassTextWidth(txt){
   return _compassMeasure.measureText(txt).width;
 }
 /* The spot name tooltip is drawn in a different font from the bearing labels (see .spot-label),
-   so it needs its own measurement; the constant covers its 9px side padding and 1.25px border,
-   which stay fixed while the text itself carries the A control's half-strength scale (v235). */
+   so it needs its own measurement; the constant covers its 11px side padding and 1.25px border,
+   which stay fixed while the text itself carries the A control's half-strength scale (v235).
+   Font, weight and the constant must match the .spot-label rule (12px/800/4px 11px, v306). */
 function compassSpotLabelWidth(name){
-  _compassMeasure.font = "700 " + (8.5 * compassTextScale()) + "px Inter, system-ui, sans-serif";
-  return _compassMeasure.measureText(name || '').width + 21;
+  _compassMeasure.font = "800 " + (12 * compassTextScale()) + "px Inter, system-ui, sans-serif";
+  return _compassMeasure.measureText(name || '').width + 25;
 }
 
 /* Clip a ray (in container pixels) to the visible map rectangle, so the label can be parked

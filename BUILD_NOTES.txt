@@ -7,6 +7,43 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-01 · 11:38 PM EDT · v306 · Blue inshore, big name tags
+------------------------------------------------------------------------------
+Inshore goes BLUE again at Jan's request — but not the old #1636ff, which is
+the blue that measured 1.05:1 (invisible) against the ICW water and forced the
+move to magenta and then orange in the first place. The new --inshore is
+#1e90ff: unmistakably blue, 2.1–2.3:1 on the waters, 5.9:1 on dark river
+water, 3.2:1 on white chart areas — the same all-rounder profile the orange
+had — and 6.5:1 against black both ways, so the off-state pill text uses the
+zone colour itself (no lifted shade needed) and the lit fill takes black
+lettering like the amber does. Every inshore surface rides the one variable:
+pills, pins, dropped-pin rings, name tags, the Add-a-Spot and log pickers.
+
+Labels takes the orange Inshore vacated: #FF6A00 lettering/outline on black
+when off, solid orange with black text when lit. Still a hue no pin or zone
+wears, so it cannot be mistaken for a filter.
+
+The pin name tags (Inshore, Offshore and Launches labels) go from 8.5px/700
+to 12px/800 with a touch more padding (4px 11px) — the old size was
+unreadable on a phone in sunlight. They keep riding the A text-size control
+at the buttons' half-strength scale (--tsb), and the compass collision math
+(compassSpotLabelWidth) tracks the new font and padding.
+
+The species filter pills get a little more padding at every height
+breakpoint: 5px 10px (was 4px 8px), 4px/3px vertical at the two short-window
+steps (was 3px/2px), and 10px sides throughout.
+
+The app-drawn dashed state-waters line on Topo Satellite now stops at z13 —
+the zoom where the scale bar drops under 1 mile, and also SEA_CLIP_CLOSE_Z,
+where the ocean clip switches to the real boundary with a seaward pad so the
+chart's own printed dashes are visible. The app's copy was doubling them up
+close.
+
+Verified this build: the species filtering path (pinVisible/applyFilter —
+species pick hides spot pins only while Catches is on, diamonds narrow to
+the picked species, toasts for empty log / Catches-off) behaves as designed.
+
+------------------------------------------------------------------------------
 Build 2026-08-01 · 11:05 PM EDT · v305 · Catches is the master switch
 ------------------------------------------------------------------------------
 Label text on the map pills and on the FAB stack goes from semibold 600 to
