@@ -7,6 +7,16 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 12:24 PM EDT · v356 · Disappearing Island GPS
+------------------------------------------------------------------------------
+Disappearing Island moved to Jan's GPS (29.069288, -80.927869) — the
+tidal sandbar mid-inlet, west of v355's placement on the barrier island's
+shore bar. Label side re-verified against the rendered topo tiles: the
+imagery prints "Ponce De Leon Inlet" directly EAST of the new position at
+z16, so the pin's default left-hanging tag is not just acceptable but
+required — never move this tag right.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 12:16 PM EDT · v355 · Jetty Island Landmarks
 ------------------------------------------------------------------------------
 Two new inshore Landmark pins at the inlet. "New Smyrna Beach South Jetty"

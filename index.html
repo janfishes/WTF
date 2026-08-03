@@ -3593,7 +3593,7 @@ const SPOTS = [
   { id:"wp-ponce-cut", name:"Ponce de Leon Cut", zone:"inshore", lat:29.069985, lng:-80.939221, meta:"Waypoint · Cut", wp:true, species:[] },
   { id:"wp-ponce-de-leon-inlet", name:"Ponce de Leon Inlet", zone:"inshore", lat:29.077867, lng:-80.908517, meta:"Waypoint · Inlet", wp:true, species:[] }, /* NOAA official position 29°04.672'N 80°54.511'W (was GNIS Channel anchor 29.072485/-80.918665) */
   { id:"wp-nsb-south-jetty", name:"New Smyrna Beach South Jetty", zone:"inshore", lat:29.073600, lng:-80.912075, meta:"Waypoint · Jetty", wp:true, species:[] }, /* placed on the rock structure off imagery tiles, not a GNIS anchor — tag hangs RIGHT (see applySpotLabels) */
-  { id:"wp-disappearing-island", name:"Disappearing Island", zone:"inshore", lat:29.069000, lng:-80.918300, meta:"Waypoint · Island", wp:true, species:[] }, /* colloquial name, not in GNIS — hand-placed on the tidal sandbar off the barrier island's west shore; default LEFT tag verified clear of the printed "Ponce De Leon Inlet" at z13-z16 */
+  { id:"wp-disappearing-island", name:"Disappearing Island", zone:"inshore", lat:29.069288, lng:-80.927869, meta:"Waypoint · Island", wp:true, species:[] }, /* colloquial name, not in GNIS — Jan's GPS for the tidal sandbar mid-inlet; default LEFT tag verified: the topo prints "Ponce De Leon Inlet" directly EAST of this point at z16, so the tag must never move right */
   { id:"wp-indian-river-n", name:"Indian River North", zone:"inshore", lat:29.050000, lng:-80.909800, meta:"Waypoint · River", wp:true, species:[] },
   { id:"wp-tata-island", name:"Tata Island", zone:"inshore", lat:29.081685, lng:-80.939863, meta:"Waypoint · Island", wp:true, species:[] },
   { id:"wp-halifax-river2", name:"Halifax River", zone:"inshore", lat:29.090000, lng:-80.940300, meta:"Waypoint · River", wp:true, species:[] },
@@ -3927,7 +3927,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 355;
+const BUILD_NUM  = 356;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
