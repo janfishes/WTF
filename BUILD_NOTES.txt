@@ -7,6 +7,22 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 3:55 PM EDT · v373 · Tracks Show And Zoom
+------------------------------------------------------------------------------
+Kept tracks now show on the map at every launch, and tapping a track's
+line zooms the map to fit it (with a toast naming the track, its length
+and duration). The visible 3 px line gets an invisible 22 px twin to do
+the touch-catching; bubblingMouseEvents:false keeps the tap from
+reaching the map's own click handler (which clears a pinned compass
+route). HIDE now persists — a hidden flag rides the track record in
+wtf:tracks, so a hidden track stays hidden across reloads until SHOW.
+SHOW zooms to the track like a line tap does. Help writeup updated.
+
+Also at Jan's request: Topo Satellite moved to the BOTTOM of the FAB
+stack — order is now ... Track My Path, Locate Me, Topo Satellite —
+and the help quick-start paragraph reordered to match.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 3:42 PM EDT · v372 · Track My Path Label
 ------------------------------------------------------------------------------
 The recording button now reads "Track My Path" (Jan's wording, replacing
