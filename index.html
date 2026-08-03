@@ -1498,9 +1498,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     border-color:#fff !important; text-shadow:none;
   }
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
-  /* Log-sheet species picker: matches the left-column buttons, which since v303 carry no
-     species colour - white text on black in both states, selected marked by full-strength
-     white, a white border, the glow and the scale-up rather than by a coloured fill. */
+  /* Log-sheet species picker: matches the map's left-column buttons — white text on black
+     when off, and since v375 the selected pill REVERSES exactly like the map stack's lit
+     species (v305): white fill, black lettering, black check. The glow and scale-up stay. */
   #logSpeciesRow .chip.sp{
     font-size:14px; font-weight:800; background:#000 !important;
     color:#fff !important;
@@ -1509,11 +1509,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #logSpeciesRow .chip.sp .dot{width:7px; height:7px; border-radius:1px; transform:rotate(45deg); background:currentColor !important;}
   #logSpeciesRow .chip.sp.active{
-    background:#000 !important; color:#fff !important;
+    background:#fff !important; color:#000 !important;
     border-color:#fff !important; box-shadow:0 0 8px rgba(255,255,255,.45);
-    filter:none; transform:scale(1.05);
+    filter:none; transform:scale(1.05); text-shadow:none !important;
   }
-  #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#fff; font-weight:800;}
+  #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#000; font-weight:800;}
   /* v306: lit Labels is ORANGE (was blue v303-v305) - Inshore went back to blue, so Labels
      took the orange Inshore vacated; still a hue no pin or zone uses, so Labels cannot be
      mistaken for a filter. Black text on #FF6A00 is 6.5:1 (white is only 2.9:1). */
@@ -2232,13 +2232,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     transition:background-color .9s linear, border-color .9s linear, color .4s linear;}
   #locateBtn.mark-arming svg{color:#fff !important; stroke:#fff !important;}
   #locateBtn.mark-arming svg.mark-hint{color:#fff !important; stroke:none !important;}
-  /* Hover tip (fine pointers only): the old title= tooltip restyled bold and bigger —
-     native title bubbles can't be styled. Hangs LEFT of the pill (the stack hugs the map's
-     right edge) and hides while the hold-to-arm flood is running. */
-  #locateBtn .fab-tip, #trackBtn .fab-tip{display:none;}
+  /* Hover tip (fine pointers only): the old title= tooltips restyled bold and bigger —
+     native title bubbles can't be styled. Every FAB carries one. Hangs LEFT of the pill
+     (the stack hugs the map's right edge); Locate Me's hides while the hold-to-arm flood
+     is running. Buttons must NOT also carry a title attr or the tooltips double. */
+  .fab .fab-tip{display:none;}
   @media (hover:hover) and (pointer:fine){
-    #locateBtn, #trackBtn{position:relative;}
-    #locateBtn:hover .fab-tip, #trackBtn:hover .fab-tip{
+    .fab{position:relative;}
+    .fab:hover .fab-tip{
       display:block; position:absolute; right:calc(100% + 10px); top:50%;
       transform:translateY(-50%); width:max-content; max-width:min(380px, 46vw);
       background:rgba(11,28,43,.96); border:1px solid var(--line); border-radius:9px;
@@ -2246,8 +2247,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       line-height:1.4; white-space:normal; text-align:left; pointer-events:none;
       box-shadow:0 4px 14px rgba(0,0,0,.4); z-index:1200;
     }
-    #locateBtn .fab-tip span, #trackBtn .fab-tip span{display:block;}
-    #locateBtn .fab-tip b, #trackBtn .fab-tip b{font-weight:900;}
+    .fab .fab-tip span{display:block;}
+    .fab .fab-tip b{font-weight:900;}
     #locateBtn.mark-arming:hover .fab-tip{display:none;}
   }
 
@@ -2654,37 +2655,47 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="fab primary" id="logCatchFab">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
       Catch
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the form to log a catch.</span><span>Logged catches show as diamonds on the map.</span></span>
     </button>
     <button class="fab" id="addSpotBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
       Spot
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the form to save your own fishing spot.</span><span>Your saved spots and tracks live here too.</span></span>
     </button>
     <button class="fab" id="biteFab">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c3-4 8-6 12-6 2.5 0 4.5 2 6 4-1.5 2-3.5 4-6 4-4 0-9-2-12-6Z"></path><path d="M17 8.5 20 6M17 15.5 20 18"></path><circle cx="8.5" cy="10.5" r=".6" fill="currentColor"></circle></svg>
       Bite
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the bite forecast —</span><span>today's best fishing times.</span></span>
     </button>
     <button class="fab" id="tidePinBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
       Tides
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> then tap the map for a tide forecast there.</span><span>Tap the button again to clear.</span></span>
     </button>
     <button class="fab" id="waveBtn">
       <svg viewBox="0 0 24 24" fill="currentColor"><use href="#waveArt"></use></svg>
       Waves
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the offshore buoy's live wave report.</span></span>
     </button>
     <button class="fab" id="myLogBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 21 12 12 21 3 12Z"></path></svg>
       My Log
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens your catch log.</span></span>
     </button>
     <button class="fab" id="guideBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg>
       Seasons
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the Season Guide —</span><span>seasons, sizes and bag limits.</span></span>
     </button>
-    <button class="fab" id="compassFab" title="Bearings from Ponce Inlet to the offshore sites">
+    <button class="fab" id="compassFab">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg>
       Compass
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> shows bearings from Ponce Inlet to the offshore sites.</span><span>Tap a site to pin its route.</span></span>
     </button>
     <button class="fab" id="mapModeBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
+      <!-- tip sits BEFORE the label: the mode writer sets this.lastChild, which must stay the label text node -->
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> switches the map view —</span><span>Topo Satellite, Hi Res &amp; ICW, Street Map.</span></span>
       Topo Satellite
     </button>
     <button class="fab" id="trackBtn">
@@ -4018,7 +4029,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 374;
+const BUILD_NUM  = 375;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

@@ -7,6 +7,23 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 4:45 PM EDT · v375 · Tips Everywhere Pick Reversal
+------------------------------------------------------------------------------
+Every button in the FAB stack now carries the same styled hover box the
+Track My Path button got in v368 — dark navy card hanging left of the
+pill, bold key words, fine-pointer hover only (phones never see them).
+New tips on Catch, Spot, Bite, Tides, Waves, My Log, Seasons, Compass
+and Topo Satellite; the Compass button's old native title= bubble is
+gone (a title attr next to a tip would double the tooltips). The tip
+inside Topo Satellite sits BEFORE the label text in the markup — the
+mode writer sets this.lastChild, which must stay the label text node.
+
+Also in this build: the +Catch species picker's selected pill now
+REVERSES like the map's species stack does (v305) — white fill, black
+lettering, and the ✓ check flips to black too. Before, selection was
+carried only by the white border, glow and scale-up.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 4:05 PM EDT · v374 · Track Edit And Notes
 ------------------------------------------------------------------------------
 Saved tracks are now editable: an EDIT ✎ button on each Your-tracks row
