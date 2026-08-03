@@ -2574,7 +2574,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <!-- Build stamp: bottom-left, directly under the scale bar. Short form on purpose —
        date then build number — because it shares that row with nothing but map. Its whole
        job is to tell you which copy of the file is running. -->
-  <div class="build-stamp" id="buildStamp">08/02/26 V1</div>
+  <div class="build-stamp" id="buildStamp">08/03/26 v347</div>
   <div id="filterWrap">
     <div class="chiprow wrap" id="metaRow"></div>
   </div>
@@ -2746,7 +2746,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Ten white buttons along the right side of the map are the app’s actions.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
-      <p class="sheet-note">Tap <b>+ Catch</b> to open the catch dialog window and then pick <b>one or more species</b> from the list. The first one you tap is that entry's main fish, but every one you pick will be stored for that particular log entry. Set date and time (shown in local 12-hour time), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by tapping <b>High</b>, <b>Low</b>, <b>Falling</b>, or <b>Rising</b> — or tap <b>Auto-detect from NOAA</b> once a location and date/time are set. The app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too, but needs internet). <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only (e.g., 30 inches records the fish as 2 ft 6 in).</p>
+      <p class="sheet-note">Tap <b>+ Catch</b> to open the catch dialog window and then pick <b>one or more species</b> from the list. The first one you tap is that entry's main fish, but every one you pick will be stored for that particular log entry. Set date and time (shown in local 12-hour time — on a computer just type the date, like 6/15/1988; phones get a scroll picker), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by tapping <b>High</b>, <b>Low</b>, <b>Falling</b>, or <b>Rising</b> — or tap <b>Auto-detect from NOAA</b> once a location and date/time are set. The app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too, but needs internet). <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only (e.g., 30 inches records the fish as 2 ft 6 in).</p>
       <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g., 29°04.672′ N). A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. A photo with embedded GPS fills the position automatically. You can key or paste numbers in by hand. If you save the location in <b>+ Spot</b> first, that spot will appear in the dropdown list for catch locations.</p>
       <p class="sheet-note">The <b>+ Catch</b> button allows you to store a photo from your gallery — and stores them on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect. Everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't. If a photo is refused on an iPhone, set <b>Settings → Camera → Formats → Most Compatible</b> so new photos save as JPEG.</p>
       <p class="sheet-note"><b>To edit or delete a catch:</b> tap a catch diamond on the map and use <b>EDIT ✎</b> or <b>DELETE ✕</b> in its popup — or use the same buttons on the entry in My Log. Editing reopens the form with everything filled in.</p>
@@ -3919,11 +3919,13 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 346;
-const BUILD_VER  = 'V1';                                // user-facing version on the map stamp
+const BUILD_NUM  = 347;
+const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
+/* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
+   made same-day updates look unchanged. */
 { const bs = document.getElementById('buildStamp');
-  if(bs) bs.textContent = BUILD_DATE + ' ' + BUILD_VER; }
+  if(bs) bs.textContent = BUILD_DATE + ' v' + BUILD_NUM; }
 
 /* ===== Update check =====
    Phones cache this page hard enough that a new build can sit unseen behind an
@@ -7803,6 +7805,65 @@ const logScrim = document.getElementById('logScrim');
 const logSpeciesRow = document.getElementById('logSpeciesRow');
 const tideRow = document.getElementById('tideRow');
 const spotSelect = document.getElementById('logSpotSelect');
+
+/* ---- Manual date entry (v347) ----
+   Desktop Safari's <input type="date"> never auto-advances typed digits between
+   segments — every keystroke lands in whichever segment is focused (usually the
+   month), so typing a full date mangles the value and old years like 1988 are
+   effectively unreachable (the year segment's hit target is a few px wide).
+   Phones keep the native wheel picker; fine-pointer devices get a plain text
+   field parsed by parseDateEntry(). ALWAYS read/write the field through
+   getLogDate()/setLogDate() — logDateEl.value is mm/dd/yyyy on desktop but
+   ISO yyyy-mm-dd on phones. */
+const logDateEl = document.getElementById('logDate');
+const LOG_DATE_TEXT = !COARSE_POINTER;
+if(LOG_DATE_TEXT){
+  logDateEl.type = 'text';
+  logDateEl.placeholder = 'mm/dd/yyyy';
+  logDateEl.inputMode = 'numeric';
+  logDateEl.autocomplete = 'off';
+  // Normalize on commit so "1/5/88" reads back as "01/05/1988".
+  logDateEl.addEventListener('change', ()=>{
+    const iso = parseDateEntry(logDateEl.value);
+    if(iso) setLogDate(iso);
+  });
+}
+function parseDateEntry(str){
+  const s = String(str||'').trim();
+  if(!s) return null;
+  let mo, d, y;
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);                     // yyyy-mm-dd
+  if(m){ y=+m[1]; mo=+m[2]; d=+m[3]; }
+  else if((m = s.match(/^(\d{1,2})[\/\-\. ](\d{1,2})[\/\-\. ](\d{2}|\d{4})$/))){  // m/d/yy(yy)
+    mo=+m[1]; d=+m[2]; y=+m[3];
+  }
+  else if((m = s.match(/^(\d{2})(\d{2})(\d{2}|\d{4})$/))){              // mmddyy(yy), no separators
+    mo=+m[1]; d=+m[2]; y=+m[3];
+  }
+  else return null;
+  if(y < 100){                                   // 88 → 1988, 12 → 2012, 26 → 2026
+    const nowYY = new Date().getFullYear() % 100;
+    y += (y <= nowYY ? 2000 : 1900);
+  }
+  if(y < 1900 || y > 2100 || mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  const dt = new Date(y, mo-1, d);               // round-trip catches Feb 30 etc.
+  if(dt.getFullYear() !== y || dt.getMonth() !== mo-1 || dt.getDate() !== d) return null;
+  return y + '-' + String(mo).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+}
+function setLogDate(iso){
+  if(LOG_DATE_TEXT){
+    const m = String(iso||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    logDateEl.value = m ? `${m[2]}/${m[3]}/${m[1]}` : '';
+  }else{
+    logDateEl.value = iso || '';
+  }
+}
+function getLogDate(){   // '' when empty or unparseable — callers fall back to todayStr()
+  const v = logDateEl.value.trim();
+  if(!v) return '';
+  return LOG_DATE_TEXT ? (parseDateEntry(v) || '') : v;
+}
+
 let activeLogSpecies = [];   // species keys in the order they were tapped; [0] is primary
 let activeTide = null;
 let tideDetail = null;
@@ -7875,7 +7936,7 @@ async function fetchTideState(lat, lng, dateStr, timeStr){
 async function autoTide(silent){
   const status = document.getElementById('tideStatus');
   if(!pendingLoc){ if(!silent) status.textContent = 'Set a location first — tide depends on where you were.'; return; }
-  const dateStr = document.getElementById('logDate').value || todayStr();
+  const dateStr = getLogDate() || todayStr();
   const timeStr = document.getElementById('logTime').value || nowStr();
   status.textContent = 'Checking NOAA tide predictions\u2026';
   try{
@@ -8495,7 +8556,7 @@ function resetLogForm(){
   setTideUI(null);
   tideDetail = null;
   document.getElementById('tideStatus').textContent = '';
-  document.getElementById('logDate').value = todayStr();
+  setLogDate(todayStr());
   document.getElementById('logTime').value = nowStr();
   setSizeInputs(null, null);
   document.getElementById('logNotes').value = '';
@@ -8524,7 +8585,7 @@ function openLogSheet(editCatch){
     });
     setTideUI(editCatch.tide || null);
     tideDetail = editCatch.tideDetail || null;
-    document.getElementById('logDate').value = editCatch.date || todayStr();
+    setLogDate(editCatch.date || todayStr());
     document.getElementById('logTime').value = editCatch.time || '';
     setSizeInputs(editCatch.length || null, editCatch.weight || null);
     document.getElementById('logNotes').value = editCatch.notes || '';
@@ -8569,10 +8630,14 @@ logScrim.addEventListener('click', closeLogSheetFn);
 document.getElementById('saveCatch').addEventListener('click', async ()=>{
   if(!activeLogSpecies.length){ showToast('Pick a species first.'); return; }
   if(!pendingLoc){ showToast('Set a location — choose a spot, drop a pin, or use your location.'); return; }
+  // Typed-but-unreadable date must not silently save as today.
+  if(LOG_DATE_TEXT && logDateEl.value.trim() && !parseDateEntry(logDateEl.value)){
+    showToast('Couldn’t read that date — try mm/dd/yyyy.'); return;
+  }
   const fields = {
     species: activeLogSpecies[0],
     speciesList: activeLogSpecies.slice(),
-    date: document.getElementById('logDate').value || todayStr(),
+    date: getLogDate() || todayStr(),
     time: document.getElementById('logTime').value || '',
     tide: activeTide,
     tideDetail: tideDetail,
@@ -9084,7 +9149,7 @@ photoInput.addEventListener('change', async ()=>{
     if(exif && exif.dateTime){
       const m = exif.dateTime.match(/(\d{4}):(\d{2}):(\d{2})[ T](\d{2}):(\d{2})/);
       if(m){
-        document.getElementById('logDate').value = `${m[1]}-${m[2]}-${m[3]}`;
+        setLogDate(`${m[1]}-${m[2]}-${m[3]}`);
         document.getElementById('logTime').value = `${m[4]}:${m[5]}`;
         statusBits.push('\ud83d\udd50 Date & time set from photo');
         gotTime = true;

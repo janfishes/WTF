@@ -7,6 +7,28 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 2:40 AM EDT · v347 · Typed Catch Dates, Numbered Stamp
+------------------------------------------------------------------------------
+The + Catch date field now accepts a typed date on computers. Desktop
+Safari's built-in date control never moves typed digits along to the next
+segment — every keystroke lands in whichever segment is focused (usually
+the month), so typing a full date scrambled the value and the year could
+only be changed by clicking exactly on the tiny yyyy text (Jan's "won't
+let me enter a 1988 date" report; reproduced and measured in WebKit).
+On a Mac or PC the field is now a plain text box: type 1/15/88,
+01/15/1988, 1.15.88, even 01151988 — all are read, two-digit years snap
+to the sensible century (88 means 1988, 12 means 2012), and the entry is
+tidied to mm/dd/yyyy when you leave the field. An unreadable date blocks
+the save with a toast instead of silently saving as today. Phones keep
+the native scroll-wheel picker, which was never broken. All reads and
+writes of the field go through getLogDate()/setLogDate() — the raw value
+differs by device now. Help's + Catch section mentions typing the date.
+
+Also at Jan's request the lower-left map stamp carries the build number
+again — "08/03/26 v347" instead of the date-plus-V1 form v341 introduced,
+which made same-day updates look unchanged after a reload.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 1:20 AM EDT · v346 · Update Pill Feedback
 ------------------------------------------------------------------------------
 Tapping the UPDATE AVAILABLE pill now shows that it heard you. The tap
