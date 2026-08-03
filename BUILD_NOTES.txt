@@ -7,6 +7,23 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 6:05 PM EDT · v385 · Gauge Blurbs + Jump To End
+------------------------------------------------------------------------------
+Two My Log changes (Jan's asks). First, the backup section itself
+(not just Help) now says tide gauges travel in the exports: the Full
+backup blurb adds "and the tide gauges you created", the Log only
+blurb adds "and your tide gauges" to its list, and the Import
+blurb's left-alone list gains "tide gauges" so all three read the
+same inventory. Wording uses "tide gauges" — the word the My Log
+section already speaks — where Help says "tide stations"; same
+feature (v383). Second, a JUMP TO END button sits beside UNDO at
+the top of the catch log — a long log buries the export/import
+buttons, and this scrolls the sheet body smoothly to the bottom
+(jumpToLogEnd(); scrolls #infoSheet .sheet-body, not the window).
+The panel's intro note now points at it instead of only saying
+"scroll to the bottom".
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 6:03 PM EDT · v384 · Help Sentence Split
 ------------------------------------------------------------------------------
 One-word wording fix in the My Log exports help (Jan's ask): the

@@ -2858,32 +2858,33 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Scroll to the bottom of your log to see the two ways to export/import your log.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Tap <b>JUMP TO END</b> below (or scroll to the bottom of your log) to reach the two ways to export/import your log.</p>
       <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Ace’s Catch Log”)</span></label>
       <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
       <div class="loc-btns" style="margin:0 0 10px;">
         <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, catch or spot">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
+        <button class="mini-btn" onclick="jumpToLogEnd()" title="Skip past the catch list to the backup and import buttons">JUMP TO END <span class="bi bi-sm">⬇</span></button>
       </div>
       <p class="sheet-note" id="trashNoteLog" style="margin:-2px 0 10px;">Recently deleted: none.</p>
       <div id="catchListBody"></div>
       <div style="height:12px;"></div>
 
       <div class="backup-head">Full backup — everything, photos included</div>
-      <p class="backup-sub">Your catch log with its <b>photos</b>, your spot notes, the <b>spots and launches you added yourself</b>, any <b>edits or deletions</b> you made to built-in spots, and your <b>drop labels</b>. This is the file to keep. Photos make it large — often tens of megabytes — so it usually will <b>not</b> go through email. Use <b>Share</b> → AirDrop, Save to Files, or iCloud Drive.</p>
+      <p class="backup-sub">Your catch log with its <b>photos</b>, your spot notes, the <b>spots and launches you added yourself</b>, any <b>edits or deletions</b> you made to built-in spots, your <b>drop labels</b>, and the <b>tide gauges you created</b>. This is the file to keep. Photos make it large — often tens of megabytes — so it usually will <b>not</b> go through email. Use <b>Share</b> → AirDrop, Save to Files, or iCloud Drive.</p>
       <div class="loc-btns">
         <button class="mini-btn" id="exportFullBtn">Save full backup <span class="bi bi-sm">⬇</span></button>
         <button class="mini-btn" id="shareFullBtn">Share full backup <span class="bi bi-xs">⇪</span></button>
       </div>
 
       <div class="backup-head">Log only — no photos, small enough to email</div>
-      <p class="backup-sub">The same catch log, notes, your own spots, spot edits and drop labels — with every <b>photo left out</b>. Usually a few kilobytes, so it attaches to mail or a text message without complaint. Imported catches come in with <b>no photo attached</b>, and nothing can put those photos back later.</p>
+      <p class="backup-sub">The same catch log, notes, your own spots, spot edits, drop labels and <b>your tide gauges</b> — with every <b>photo left out</b>. Usually a few kilobytes, so it attaches to mail or a text message without complaint. Imported catches come in with <b>no photo attached</b>, and nothing can put those photos back later.</p>
       <div class="loc-btns">
         <button class="mini-btn" id="exportLogBtn">Save log only <span class="bi bi-sm">⬇</span></button>
         <button class="mini-btn" id="shareLogBtn">Share / email log <span class="bi bi-mail">✉</span></button>
       </div>
 
       <div class="backup-head">Import</div>
-      <p class="backup-sub">Reads either file back in — on this device, another one, or a fresh copy of the app. Nothing is overwritten: existing catches, notes, spots and labels are left alone and only items this device has never seen are added.</p>
+      <p class="backup-sub">Reads either file back in — on this device, another one, or a fresh copy of the app. Nothing is overwritten: existing catches, notes, spots, labels and tide gauges are left alone and only items this device has never seen are added.</p>
       <div class="loc-btns">
         <button class="mini-btn" id="importBtn">Import backup <span class="bi bi-sm">⬆</span></button>
       </div>
@@ -4103,7 +4104,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 384;
+const BUILD_NUM  = 385;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -11247,6 +11248,13 @@ document.getElementById('shareLogBtn')  .addEventListener('click', ()=> exportBa
    cannot even be selected -- which read, from the outside, as "the app can't
    import". Everything is selectable now; what the file actually contains is
    checked below, and each check has its own message. */
+/* JUMP TO END atop My Log: the catch list can run long, and the export/import
+   buttons live below it. Scrolls the sheet body, not the window. */
+function jumpToLogEnd(){
+  const body = document.querySelector('#infoSheet .sheet-body');
+  if(body) body.scrollTo({top: body.scrollHeight, behavior: 'smooth'});
+}
+
 document.getElementById('importBtn').addEventListener('click', ()=> document.getElementById('importFile').click());
 document.getElementById('importFile').addEventListener('change', async function(){
   const file = this.files && this.files[0];
