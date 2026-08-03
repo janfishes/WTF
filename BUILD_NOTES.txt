@@ -7,6 +7,13 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 11:46 AM EDT · v352 · MOB Depends Wording
+------------------------------------------------------------------------------
+In help's MOB Two Cautions paragraph, the device-reliability sentence now
+opens "This MOB function depends on a phone's GPS, battery, signal, and
+software…" (was "Everything here rides on…"). No behavior changes.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 11:44 AM EDT · v351 · Trim MOB Drill Sentence
 ------------------------------------------------------------------------------
 The Two Cautions paragraph in help's MOB section no longer spells out the
