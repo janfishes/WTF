@@ -7,6 +7,33 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 1:10 AM EDT · v345 · PC Inlet Launch, Help Icon Tidy
+------------------------------------------------------------------------------
+The PC launch view changed again (reversing v344's whole-home-water wide
+open at Jan's request): a computer now opens close on the inlet at z16 —
+the zoom where the scale bar reads 300 ft — with Ponce de Leon Inlet slid
+to the RIGHT (a sixth in from the right edge, so the flat-blue offshore
+fill stays off screen; verified zero blue pixels headless at 1728 px wide)
+and sitting on the species column's Hogfish pill row. The placement still
+runs two frames after load off the live chip; phones are untouched (z10,
+inlet a third in from the left). PC_LAUNCH_ZOOM lives in placeLaunchView;
+DEFAULT_ZOOM stays 10 and still drives the phone view.
+
+Help first-paragraph icon tidy. Each action-button writeup used to open
+with a copy of the button's icon dangling at the start of the paragraph —
+duplicating the "+" in "+ Catch" and the icon already on the section
+button above. Now every icon in those first paragraphs sits directly
+beside the button word it belongs to (Tides, Waves, Seasons, Compass,
+Locate Me — matching the icon-then-word order on the buttons themselves),
+and where the word isn't in the paragraph at all (Spot, My Log, the map
+views) the loose icon is gone. Catch keeps just its "+ Catch" text form.
+
+The CLOSE button on the print/save-as-PDF tab (the page opened by "Print
+this help" and "Save help as PDF") is bigger and readable now: 20px bold
+white on red with fatter padding, and the "if CLOSE does nothing" line
+under it steps up to 17px. It still disappears from the actual printout.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 12:55 AM EDT · v344 · PC Wide Launch, Help Tidy
 ------------------------------------------------------------------------------
 The PC launch view now takes in the whole home water. v343 opened a PC at
