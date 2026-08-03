@@ -2889,7 +2889,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <input type="file" id="importFile" style="display:none;">
 
-      <p class="sheet-note backup-warn">⚠ <b>What each file does and doesn't carry.</b> <b>Photos</b> live only inside the full backup; the log-only file drops them on purpose and they cannot be recovered from it. <b>Your catch log</b> — species, date, time, tide, position, notes — is complete in both. <b>Spots</b> are in both as well: the ones you added, the built-in ones you renamed, moved or deleted, and the names you gave individual reef drops. Everything lives on this device only — clearing the browser's website data, or deleting the app from your home screen, takes it with it. Export something before you change phones.</p>
+      <p class="sheet-note backup-warn">⚠ <b>What each file does and doesn't carry.</b> <b>Photos</b> live only inside the full backup; the log-only file drops them on purpose and they cannot be recovered from it. <b>Your catch log</b> — species, date, time, tide, position, notes — is complete in both. <b>Spots</b> are in both as well: the ones you added, the built-in ones you renamed, moved or deleted, and the names you gave individual reef drops. <b>Your own tide stations</b> — the gauges you created and calibrated — ride along in both files too. Everything lives on this device only — clearing the browser's website data, or deleting the app from your home screen, takes it with it. Export something before you change phones.</p>
       <p class="storage-note" id="backupStatus"></p>
     </div>
     <div id="panel-help" style="display:none;">
@@ -2940,7 +2940,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="help-body" id="hb-mylog">
       <p class="sheet-note">This action button opens your full catch history, listed by <b>date caught</b>, not by the order you added them. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses. Every catch card and spot popup carries <b>EDIT</b> and <b>DELETE</b> buttons. The <b>UNDO</b> button sits at the top of the log.</p>
       <p class="sheet-note"><b>Put your name on it.</b> Type your name in the box at the top of My Log — or on the app's initial Acceptance screen — and the sheet becomes <b>“Ace’s Catch Log”</b> instead of “My Catch Log”, with your own name in Ace's place. It's entirely optional: leave the box blank and nothing changes, clear it later and the title goes back to “My Catch Log”. Like everything else in the app, your name is stored only on your device, nowhere else. On a phone, use <b>Add to Home Screen</b> to launch it like an app.</p>
-      <p class="sheet-note">The <b>My Log</b> sheet has two exports. <b>Full backup</b> as <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> carries everything, photos included, along with the spots you added, your edits to built-in spots, and your drop labels; photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. The <b>Log only</b> backup is called <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span>. It is the same data with the <b>photos stripped out</b>, small enough to email or text, so catches restored from this backup have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what the device hasn't seen. If the backup fails, it says exactly which check failed rather than shrugging.</p>
+      <p class="sheet-note">The <b>My Log</b> sheet has two exports. <b>Full backup</b> as <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> carries everything, photos included, along with the spots you added, your edits to built-in spots, your drop labels, and the tide stations you created; photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. The <b>Log only</b> backup is called <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span>. It is the same data with the <b>photos stripped out</b>, small enough to email or text, so catches restored from this backup have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what the device hasn't seen. If the backup fails, it says exactly which check failed rather than shrugging.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-seasons"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-seasons">
@@ -3039,7 +3039,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-tidecal">Create &amp; Calibrate Tide Stations<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-tidecal">
       <p class="sheet-note">You can add gauges of your own. Tap <b>OPEN THE TIDE STATION TOOL</b> below, and under Your Own Tide Stations, enter a name, a position, and how many minutes after the Ponce Inlet the high and low arrive — no measurements are needed. Saved stations act as real calibration points, so nearby pins pick up better timing straight away. A saved station gets a pin of its own, up whenever <b>Tides</b> is.</p>
-      <p class="sheet-note">In the tool, fill in the name, the position and the two lag figures, then tap <b>SAVE THIS TIDE STATION</b>. It appears straight away as a pin of its own — up whenever <b>Tides</b> is — and every nearby forecast is re-timed against it. Each saved station is listed under the form with a <b>DELETE ✕</b> beside it. Stations you save live on this device and travel in your backup files.</p>
+      <p class="sheet-note">In the tool, fill in the name, the position and the two lag figures, then tap <b>SAVE THIS TIDE STATION</b>. It appears straight away as a pin of its own — up whenever <b>Tides</b> is — and every nearby forecast is re-timed against it. Each saved station is listed under the form with a <b>DELETE ✕</b> beside it. Stations you save live on this device and travel in both backup files — the export buttons are at the <b>bottom of My Log</b>, and <b>Import backup</b> there brings them onto another device.</p>
       <div class="loc-btns help-print-hide" style="margin-top:8px;"><button class="mini-btn" id="tideCalBtn">OPEN THE TIDE STATION TOOL <span class="bi bi-lg">⚙</span></button></div>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-offline">Download Map For Offline Use<span class="ht-caret">▸</span></button>
@@ -4103,7 +4103,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 382;
+const BUILD_NUM  = 383;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -11157,7 +11157,8 @@ function buildBackup(kind){
     notes: userNotes,
     customSpots: customSpots,
     spotOverrides: spotOverrides,
-    dropLabels: dropLabels
+    dropLabels: dropLabels,
+    userTideStations: userTideStations
   };
   const text = JSON.stringify(payload, null, 2);
   return {
@@ -11334,6 +11335,18 @@ document.getElementById('importFile').addEventListener('change', async function(
       if(labelsAdded) await saveDropLabels();
     }
 
+    let stationsAdded = 0;
+    if(Array.isArray(data.userTideStations)){
+      const have = new Set(userTideStations.map(x=>x.id));
+      data.userTideStations.forEach(st=>{
+        if(!st || !st.id || have.has(st.id)) return;
+        if(typeof st.name !== 'string' || !isFinite(st.lat) || !isFinite(st.lng) || !isFinite(st.h) || !isFinite(st.l)) return;
+        userTideStations.push({ id:st.id, name:st.name, lat:+st.lat, lng:+st.lng, h:+st.h, l:+st.l });
+        have.add(st.id); stationsAdded++;
+      });
+      if(stationsAdded){ await saveUserTideStations(); refreshUserTsList(); }
+    }
+
     await persistCatches();
     renderCatchMarkers();
     renderCatchList();
@@ -11347,9 +11360,10 @@ document.getElementById('importFile').addEventListener('change', async function(
     if(spotsAdded)  bits.push(spotsAdded  + ' of your spots');
     if(editsAdded)  bits.push(editsAdded  + ' spot edit'  + (editsAdded===1?'':'s'));
     if(labelsAdded) bits.push(labelsAdded + ' drop label' + (labelsAdded===1?'':'s'));
+    if(stationsAdded) bits.push(stationsAdded + ' tide station' + (stationsAdded===1?'':'s'));
 
     let msg;
-    if(!added && !notesAdded && !spotsAdded && !editsAdded && !labelsAdded){
+    if(!added && !notesAdded && !spotsAdded && !editsAdded && !labelsAdded && !stationsAdded){
       msg = 'Read ' + where + ' without trouble — but every one of its '
           + data.catches.length + ' entries was already on this device, so nothing changed.';
     }else{

@@ -7,6 +7,26 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 5:58 PM EDT · v383 · Tide Stations In Backups
+------------------------------------------------------------------------------
+Your own calibrated tide stations now travel in the backup files.
+Both export shapes — the full backup and the log-only file — carry a
+userTideStations list (they're a few dozen bytes each, so the small
+file takes them too), and Import backup merges stations the device
+hasn't seen, keyed by id like custom spots: no duplicates on a
+re-import, malformed rows (missing name/position/lags) skipped.
+Imported stations save through saveUserTideStations(), so the gauge
+pins redraw and any open forecast re-times immediately, and the
+import summary line counts them ("… 2 tide stations"). Help updated
+in three places: the what-each-file-carries warning and the My Log
+export note now list your tide stations, and the Create & Calibrate
+writeup — which had claimed stations "travel in your backup files"
+before it was true — now also says where the buttons live (export at
+the bottom of My Log, Import backup there brings them onto another
+device). Verified headless: export → wipe → import round-trips the
+station, re-import adds nothing.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 5:45 PM EDT · v382 · Aqua Ct Gauge Removed
 ------------------------------------------------------------------------------
 The Aqua Ct tide gauge (the round-44 observed knot, +144/+170, the
