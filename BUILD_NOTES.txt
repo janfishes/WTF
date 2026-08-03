@@ -7,6 +7,28 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 5:00 PM EDT · v379 · Species Tips Zoom
+------------------------------------------------------------------------------
+Species pills got two upgrades plus help edits, per Jan. (1) Hover tip:
+each species pill now shows the same hover bubble the FAB stack wears
+(fine pointers only) — "TAP: shows or hides your logged <fish>
+catches." / "Only fish you've logged can light up." Because the
+species column scrolls (which would clip a tip nested in a chip), it
+is ONE shared fixed-position bubble (#spTip) positioned by JS to the
+RIGHT of the hovered pill — the mirror of the FAB stack's left-hanging
+tips; hides on mouse-out and column scroll. (2) Switching a species ON
+now zooms the map to that fish's logged catches — fitBounds over all
+its catch positions, capped at z14, padded clear of the filter row /
+species column / FAB stack via overlayInset(). No zoom when switching
+a pill off, and none while Catches is off (no diamonds would show; the
+existing toast covers it). Help: Species Buttons paragraph notes the
+jump; help header count fixed to "Eleven white buttons"; Warning
+rewritten — underlined "Do not rely on this app for navigation.",
+plainer GPS sentence (dropped pins, MARKs, TRACKs are only as good as
+a phone's signal and GPS fix), and the closing "NEVER RELY ON THIS APP
+AS YOUR ONLY MEANS OF NAVIGATION OR EMERGENCY RESPONSE." in bold caps.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 4:41 PM EDT · v378 · Track Help Section
 ------------------------------------------------------------------------------
 Help restructure, per Jan: TRACK MY PATH moved out of the Locate Me

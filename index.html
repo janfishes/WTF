@@ -2251,6 +2251,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
     .fab .fab-tip b{font-weight:900;}
     #locateBtn.mark-arming:hover .fab-tip{display:none;}
   }
+  /* Species pills wear the same hover tip as the FAB stack, but as ONE shared fixed
+     bubble (#spTip, JS-positioned): #speciesCol scrolls, so a tip nested inside a chip
+     would be clipped by the overflow. Hangs RIGHT of the pill — the column hugs the
+     map's left edge, the mirror of the FAB stack. */
+  #spTip{display:none;}
+  @media (hover:hover) and (pointer:fine){
+    #spTip{
+      position:fixed; width:max-content; max-width:min(380px, 46vw);
+      background:rgba(11,28,43,.96); border:1px solid var(--line); border-radius:9px;
+      padding:7px 11px; color:#fff; font-weight:600; font-size:calc(14px * var(--tsb));
+      line-height:1.4; white-space:normal; text-align:left; pointer-events:none;
+      box-shadow:0 4px 14px rgba(0,0,0,.4); z-index:1200;
+      transform:translateY(-50%);
+    }
+    #spTip span{display:block;}
+    #spTip b{font-weight:900;}
+  }
 
   #markBanner{
     position:fixed; left:50%; top:calc(env(safe-area-inset-top, 0px) + 8px); transform:translateX(-50%);
@@ -2882,7 +2899,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap the buttons below to read their sections. Close a section by tapping its title or the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> button at the bottom of the window. Tap the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> at the top of the window to exit Help. When you reopen Help, it will reopen to your last view. Close it again either by tapping its title or the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> button at the end of the writeup.</p>
 
       <div class="subhead">Action Buttons</div>
-      <p class="sheet-note">Ten white buttons along the right side of the map are the app’s actions.</p>
+      <p class="sheet-note">Eleven white buttons along the right side of the map are the app’s actions.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
       <p class="sheet-note">Tap <b>+ Catch</b> to open the catch dialog window and then pick <b>one or more species</b> from the list. The first one you tap is that entry's main fish, but every one you pick will be stored for that particular log entry. Set date and time (shown in local 12-hour time — on a computer just type the date, like 6/15/1988; phones get a scroll picker), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by tapping <b>High</b>, <b>Low</b>, <b>Falling</b>, or <b>Rising</b> — or tap <b>Auto-detect from NOAA</b> once a location and date/time are set. The app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too, but needs internet). <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only (e.g., 30 inches records the fish as 2 ft 6 in).</p>
@@ -2955,7 +2972,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">The black buttons along the <b>left side of your screen</b> — one for each of the 23 fish species (24 including Other).</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-species">Species<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-species">
-      <p class="sheet-note">The black buttons along the left side of your screen list <b>23 fish species (24 including Other)</b> that are fairly common in Volusia’s inland and offshore waters. They show/filter your <b>catch log</b>. Switch the <b>CATCHES</b> button on and every fish in your log lights its species button and shows their catch location as a <b>diamond</b> on the map. Tap a lit button to switch that fish's diamonds off, and tap it again to bring them back. A new catch lights its fish's button the moment it's logged. A lit species stays visible at any zoom.</p>
+      <p class="sheet-note">The black buttons along the left side of your screen list <b>23 fish species (24 including Other)</b> that are fairly common in Volusia’s inland and offshore waters. They show/filter your <b>catch log</b>. Switch the <b>CATCHES</b> button on and every fish in your log lights its species button and shows their catch location as a <b>diamond</b> on the map. Tap a lit button to switch that fish's diamonds off, and tap it again to bring them back — switching a fish on also <b>jumps the map</b> to where its catches are. A new catch lights its fish's button the moment it's logged. A lit species stays visible at any zoom.</p>
       <p class="sheet-note"><b>CATCHES</b> is the master switch over all of it: turn it off and every button goes dark and no diamonds show. Turn it back on and your logged fish light up again. If you've never logged a fish, tapping its button triggers a note saying so: the button stays off and nothing on the map changes.</p>
       </div>
 
@@ -3033,7 +3050,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Phones cache this app hard enough that a new build can hide behind an old copy for days. Consequently, the app checks quietly for a newer build every time it opens, and when one is out, a small pill appears above the build stamp that says: <span class="g-emph">UPDATE AVAILABLE — Tap to Reload</span>. One tap brings the new build in — the pill reads <span class="g-emph">UPDATING…</span> while the new build downloads, then the app reloads on its own; the ✕ puts it off until next time. No connection, no check, so it never interrupts you on the water. Behind that, the app keeps a saved copy of itself so it opens instantly, and fetches the live page in the background for the next open. Therefore, even if you never tap the pill, a new build lands the second time you open the app with signal.</p>
 
       <div class="subhead">Warning</div>
-      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots. GPS positions — your cell signal, a dropped pin's, a <b>MARK</b>'s, or a <b>TRACK</b>'s line — are only as good as the phone's fix, and location features can fail, lag, or mislead. Never rely on this app as your only means of navigation or emergency response.</p>
+      <p class="sheet-note"><b><u>Do not rely on this app for navigation.</u></b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots. GPS positions for dropped pins, <b>MARK</b>s, and <b>TRACK</b>s are only as good as a phone's signal and GPS fix, and location features can fail, lag, or mislead. <b>NEVER RELY ON THIS APP AS YOUR ONLY MEANS OF NAVIGATION OR EMERGENCY RESPONSE.</b></p>
 
       <div class="subhead">Disclaimer</div>
       <p class="sheet-note">Read this one before you take the app on the water.</p>
@@ -4077,7 +4094,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 378;
+const BUILD_NUM  = 379;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -7365,7 +7382,19 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
       return;
     }
     if(activeSpecies.has(key)){ activeSpecies.delete(key); chip.classList.remove('active'); }
-    else { activeSpecies.add(key); chip.classList.add('active'); }
+    else {
+      activeSpecies.add(key); chip.classList.add('active');
+      /* Switching a fish ON jumps the map to where its catches are, padded clear of the
+         furniture via overlayInset(). Only while Catches is on — with it off no diamonds
+         appear, and zooming to an empty spot reads as a glitch (the toast below covers it). */
+      if(showCatches){
+        const pts = catches.filter(c=> catchSpeciesList(c).includes(key)).map(c=>[c.lat,c.lng]);
+        if(pts.length){
+          const ins = overlayInset();
+          map.fitBounds(L.latLngBounds(pts), {paddingTopLeft:ins.tl, paddingBottomRight:ins.br, maxZoom:14});
+        }
+      }
+    }
     updateCatchCount();
     applyFilter();
     if(activeSpecies.has(key) && !showCatches){
@@ -7376,6 +7405,30 @@ Object.entries(SPECIES).forEach(([key,sp])=>{
   });
   speciesCol.appendChild(chip);
 });
+
+/* Hover tip matching the FAB stack's (fine pointers only). One fixed bubble shared by
+   every pill — see the #spTip CSS note for why it can't live inside the chips. */
+const spTip = document.createElement('div');
+spTip.id = 'spTip';
+document.body.appendChild(spTip);
+const spTipFine = window.matchMedia('(hover:hover) and (pointer:fine)');
+function spTipHide(){ spTip.style.display = 'none'; }
+speciesCol.addEventListener('mouseover', (e)=>{
+  const chip = e.target.closest('.chip');
+  if(!chip || !spTipFine.matches) return;
+  const label = chip.querySelector('.lbl').textContent.toLowerCase();
+  spTip.innerHTML = `<span><b>TAP:</b> shows or hides your logged ${label} catches.</span><span>Only fish you&rsquo;ve logged can light up.</span>`;
+  const r = chip.getBoundingClientRect();
+  spTip.style.left = (r.right + 10) + 'px';
+  spTip.style.top  = (r.top + r.height/2) + 'px';
+  spTip.style.display = 'block';
+});
+speciesCol.addEventListener('mouseout', (e)=>{
+  const chip = e.target.closest('.chip');
+  if(chip && chip.contains(e.relatedTarget)) return;
+  spTipHide();
+});
+speciesCol.addEventListener('scroll', spTipHide);
 
 // Make sure wheel/trackpad scrolling over the species column scrolls the list
 // itself instead of falling through to the map's zoom, and stop map drag-capture.
