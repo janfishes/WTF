@@ -7,6 +7,15 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 11:55 PM EDT · v340 · Ace Filler Name
+------------------------------------------------------------------------------
+Walks back v339's static REEL FUN sendoff: the line is personalized again,
+with "Ace" standing in until the user adds their name (on the Accept gate or
+in My Log) — then it reads "<Name>, get out there and have some REEL FUN!".
+applyUserName() repaints it as before, defaulting to "Ace" with no saved
+name.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 11:45 PM EDT · v339 · Filter Help Rewrite
 ------------------------------------------------------------------------------
 Second half of Jan's help rewrite: the Map Filter Buttons group (Catches,
