@@ -7,6 +7,36 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 1:41 PM EDT · v361 · MOB Becomes MARK
+------------------------------------------------------------------------------
+The man-overboard function is reframed as MARK — a plain instant
+waypoint: press and hold Locate Me for a second and the app drops a
+MARK at your position and guides you back to it (same banner, bearing,
+distance, clock, dashed line, wake lock, reload survival as before).
+Works anywhere — inshore, offshore, or the ICW — and the help now says
+so. Nothing mechanical changed; the words, the artwork, and the gate
+did. The arms-up distress figure is now a bold red X ("X marks the
+spot") everywhere the figure appears: the map mark, the banner, the
+Locate Me badge, and the help glyphs — one shared #mobFig symbol, so
+the swap landed everywhere at once. The v359 second startup gate
+(USCG-procedures confirmation) is gone; the startup notice is one step
+again, its wording now "Pins and the MARK feature are memory aids only
+— not navigation, safety, or rescue equipment." Banner title is MARK
+DOWN; cleared marks save as red pins named "MARK <date> <time>"
+(existing saved "MOB ..." pins keep their names). Help rewritten to
+match: the function block sheds the gate and rescue framing, gains a
+uses line (hat overboard, dropped rod, drifted-off bite), and the Two
+Cautions collapse to one (phone-fix drift + GPS/battery/signal
+caveats, uscgboating.org kept as a general pointer). Disclaimer's
+"emergency-marking feature (including MOB)" is now "marking feature
+(including MARK)". Why: the app is headed for sale, and naming the
+feature MAN OVERBOARD + gating it on USCG rescue procedures read as a
+life-safety claim — the largest liability surface in the app. All
+internal names are unchanged (mob* functions, .mob-* CSS, --mob, the
+s.mob flag, wtf:mob storage key), so existing active marks resume
+fine; the old pifc:mobAccepted key is simply no longer read.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 1:18 PM EDT · v360 · MOB Badge Ring, Bold Tip
 ------------------------------------------------------------------------------
 The red MOB figure on the Locate Me button now sits inside the same

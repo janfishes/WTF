@@ -1556,7 +1556,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      one black-and-white marker on the map. */
   #catchToggle.active{background:#fff !important; color:#000 !important; border-color:#fff !important; box-shadow:none;
     text-shadow:none !important;}
-  /* Launches filter pill (red until v232, when red was handed to the MOB spots).
+  /* Launches filter pill (red until v232, when red was handed to the MARK spots).
      ON is the flat var(--launch) fill - Brown Sugar's #8a4b0f from v300, now the dark
      bitter chocolate #4f1d0a (v302, because #8a4b0f made this pill identical to #catchToggle
      .active under Brown Sugar - see the --launch note in :root). Through v298 OFF used the same
@@ -2214,7 +2214,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .loc-dot{width:26px; height:26px; display:flex; align-items:center; justify-content:center; color:var(--accent-lite); filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));}
   .pin-preview{width:17px; height:17px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--brass); border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.5);}
 
-  /* ---------- MOB (man overboard) ---------- */
+  /* ---------- MARK (instant waypoint; internal mob* names kept from its MOB days) ---------- */
   /* The badge on Locate Me: the red figure itself is the affordance — a SHAPE, not a colour
      coding, so it still reads if the red doesn't. The !importants outshout the theme block's
      `.fab svg{stroke:var(--teal) !important}` above; being later at equal specificity wins. */
@@ -2280,8 +2280,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     animation:mobPulse 1.6s ease-out infinite; pointer-events:none;}
   @keyframes mobPulse{0%{transform:scale(.65); opacity:.95;} 100%{transform:scale(1.9); opacity:0;}}
   .mob-line{filter:drop-shadow(0 0 2px rgba(255,255,255,.8));}
-  /* While MOB is active the chart clears for the one job: the species pills, the action
-     stack (bar Locate Me) and every pin step aside; only the MOB mark, the boat and the
+  /* While a MARK is active the chart clears for the one job: the species pills, the action
+     stack (bar Locate Me) and every pin step aside; only the MARK, the boat and the
      line between them stay. Everything returns on CLEAR. */
   body.mob-active #speciesCol{display:none;}
   body.mob-active .fab{display:none;}
@@ -2528,15 +2528,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #acceptText{color:var(--fog); font-size:13.5px; line-height:1.4;}
   #acceptBtn{flex:0 0 auto; background:var(--teal); color:var(--on-accent); border:none; cursor:pointer;
     font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; padding:10px 20px; border-radius:100px;}
-  #acceptStep1, #mobGateStep{display:flex; flex-direction:column; gap:10px;}
-  #acceptStep1[hidden], #mobGateStep[hidden]{display:none;}
-  #mobGateText{color:var(--fog); font-size:13.5px; line-height:1.4;}
-  #mobGateText a{color:var(--teal);}
-  #mobGateRow{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
-  #mobGateYes{flex:1 1 auto; background:#c11a1a; color:#fff; border:none; cursor:pointer;
-    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; padding:10px 20px; border-radius:100px;}
-  #mobGateNo{flex:0 0 auto; background:transparent; color:var(--fog); border:1px solid var(--line); cursor:pointer;
-    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; padding:10px 20px; border-radius:100px;}
+  #acceptStep1{display:flex; flex-direction:column; gap:10px;}
+  #acceptStep1[hidden]{display:none;}
 </style>
 </head>
 <!-- data-theme is on the markup, not applied on load, for the same reason
@@ -2558,18 +2551,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <line x1="15.2" y1="11" x2="17.2" y2="11"></line>
   </g>
 </symbol>
-<!-- MOB figure: a person with both arms thrown up — the distress pose every chartplotter's
-     man-overboard key wears, so the SHAPE says what it is before the red does. Drawn in
-     currentColor; each usage (the Locate Me badge, the map mark, the banner) sets its own
-     red so the figure is never invisible on any background. -->
+<!-- MARK figure: a bold X — "X marks the spot" (until v361 this was the arms-up
+     man-overboard distress figure; the id stays #mobFig, like the rest of the internal
+     mob* names, so nothing else has to move). Drawn in currentColor; each usage (the
+     Locate Me badge, the map mark, the banner) sets its own red so the figure is never
+     invisible on any background. -->
 <symbol id="mobFig" viewBox="0 0 24 24">
-  <circle cx="12" cy="4.6" r="2.7" fill="currentColor"></circle>
-  <g fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-    <path d="M12 8.4v6"></path>
-    <path d="M12 10 5.6 5.4"></path>
-    <path d="M12 10l6.4-4.6"></path>
-    <path d="M12 14.4l-4.4 6.2"></path>
-    <path d="M12 14.4l4.4 6.2"></path>
+  <g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round">
+    <path d="M6 6l12 12"></path>
+    <path d="M18 6 6 18"></path>
   </g>
 </symbol>
 </svg>
@@ -2660,7 +2650,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
       Topo Satellite
     </button>
-    <button class="fab" id="locateBtn" data-tip="Tap: drop your GPS position. Press and HOLD: mark man overboard.">
+    <button class="fab" id="locateBtn" data-tip="Tap: drop your GPS position. Press and HOLD: drop a MARK to steer back to.">
       <svg viewBox="0 0 24 28" width="15" height="17" style="vertical-align:-3px;"><use href="#locatePin"></use></svg>
       Locate Me
       <svg class="mob-hint" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#mobFig" x="4" y="4" width="24" height="24"></use></svg><span class="mob-bang" aria-hidden="true">!</span>
@@ -2668,18 +2658,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
 </div>
 
-<!-- MAN OVERBOARD banner. Fixed over everything (z above sheets and the gate) because while
-     it is up, nothing else on the screen matters. Tapping the banner body fits the map to
-     the boat and the mark; only the CLEAR button (with a confirm) takes it down. -->
+<!-- MARK banner (MAN OVERBOARD until v361). Fixed over everything (z above sheets and the
+     gate) because while it is up, nothing else on the screen matters. Tapping the banner
+     body fits the map to the boat and the mark; only CLEAR (with a confirm) takes it down. -->
 <div id="mobBanner" hidden>
   <div class="mob-top">
     <svg class="mob-fig" viewBox="0 0 24 24" aria-hidden="true"><use href="#mobFig"></use></svg>
-    <span class="mob-title">MAN&nbsp;OVERBOARD</span>
+    <span class="mob-title">MARK&nbsp;DOWN</span>
     <span class="mob-clock" id="mobClock">0:00</span>
     <button id="mobClearBtn" type="button">CLEAR</button>
   </div>
   <div class="mob-nav"><span id="mobBrg">&mdash;</span><span id="mobDist">waiting for GPS&hellip;</span></div>
-  <div class="mob-foot">Steer to the MOB mark using the <b>magnetic bearing</b> on your compass or plotter. <b>Tap this banner</b> to see your position and MOB mark. Zoom in if you don't see both pins simultaneously.</div>
+  <div class="mob-foot">Steer to the MARK using the <b>magnetic bearing</b> on your compass or plotter. <b>Tap this banner</b> to see your position and the MARK. Zoom in if you don't see both pins simultaneously.</div>
 </div>
 
 <!-- ===================== INFO SHEET ===================== -->
@@ -2763,8 +2753,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Fishing</div>
-      <p class="sheet-note">Tap any spot pin on the map for its coordinates and details. Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. A short tap on <b>LOCATE ME</b> puts a pin at your location, but a <b>1-second press</b> on the button triggers the <b>MOB</b> (man-overboard) function. MOB is <b>disabled until you confirm</b> — on the startup notice, or when the 1-second press first offers it — that you have read and will follow the current USCG safe-boating and MOB procedures at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, and back up all your fishing data and photos.</p>
-      <p class="sheet-note"><b>Be advised, this app is not for navigation or emergency use!</b> The <b>MOB</b> function is a memory aid only — not a rescue device, and is no substitute for required safety equipment or US Coast Guard (USCG) MOB emergency procedures — read and follow the current ones at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>.</p>
+      <p class="sheet-note">Tap any spot pin on the map for its coordinates and details. Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. A short tap on <b>LOCATE ME</b> puts a pin at your location, but a <b>1-second press</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, and back up all your fishing data and photos.</p>
+      <p class="sheet-note"><b>Be advised, this app is not for navigation or emergency use!</b> The <b>MARK</b> function is a memory aid only — not navigation, safety, or rescue equipment, and no substitute for the safety gear and safe-boating practice the law and good seamanship require (see <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>).</p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Ace, get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <button class="mini-btn help-print-hide" id="helpPrintBtn" style="display:block; width:100%; margin:14px 0 6px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
       <p class="sheet-note help-print-hide" style="margin:0 0 14px;">Tap to print this entire Help as plain text with every button’s writeup expanded out.</p>
@@ -2787,7 +2777,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-spot"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Spot<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-spot">
       <p class="sheet-note">This action button saves your fishing location on the map. It's only stored on your device and shows up like the built-in spots, including in the <b>+ Catch</b> location list. Drop a pin or use your current location and name it. A <b>Details</b> box takes anything worth remembering — structure, bait, tide — and if you <b>name the fish you catch there</b> (redfish, trout, snook, any species the app knows, by common nicknames too), the spot gets their season bars. You can <b>add and delete</b> entries for spots and launches, and the same goes for the app's built-in locations. Tap any pin and use <b>EDIT ✎</b> to rename or move it, or <b>DELETE ✕</b> to take it off the map. The totals for Inshore, Offshore and Launches update the moment you add or delete one. Deleting a built-in spot only hides it on this device; tapping <b>↺ Restore</b> recovers all built-in spots. Deleted the wrong thing? <b>UNDO</b> above <b>Your saved spots</b> (or at the top of My Log) steps back through your last 10 changes, one per tap — and a deleted catch or spot stays restorable for <b>14 days</b> (the last 10 deletions), even after the app is closed. Your own spots, your edits to built-in ones, and your drop labels are all stored in your backup file, so don't forget to back up occasionally.</p>
-      <p class="sheet-note">Cleared (historical) <b>MOB marks land in your saved spots list</b> — red pins named MOB with their date and time — and are deleted the same way as any spot: tap <b>DELETE ✕</b> beside the entry.</p>
+      <p class="sheet-note">Cleared (historical) <b>MARKs land in your saved spots list</b> — red pins named MARK with their date and time — and are deleted the same way as any spot: tap <b>DELETE ✕</b> beside the entry.</p>
       <p class="sheet-note"><b>The type sets itself.</b> Drop the pin and the app reads the position and lights the matching pill type. It works in three steps. If the pin lands within a couple of hundred yards of a spot that is already on the map, it takes that spot's type, so a pin at a known ramp comes up <b>Launch</b> and a pin on a known reef comes up <b>Offshore</b>. Failing that, if the pin is east of the beach it is <b>Offshore</b>. If it sits on one of the waterways the app already follows for tide timing, it is tagged as <b>Inshore</b>. Anything off the water comes up as a <b>Launch</b> entry.</p>
       <p class="sheet-note"><b>Check the data entries before you tap Save.</b> The app carries a coarse beach line and channel centerlines, not a real shoreline, so the water's edge is the one place the guess can be wrong: a ramp right at the water can read Inshore, and a spot a few hundred yards up a narrow creek can read Launch. Consequently, every app guess is only a suggestion. Tap the right pill and your choice is what gets saved.</p>
       <p class="sheet-note"><b>Typing or pasting a GPS position.</b> All coordinates display in degrees and decimal minutes (e.g. 29°04.672′ N) but can be entered several ways. Anywhere the app asks for a position — here in <b>Add a Spot</b>, and in <b>Add a tide gauge</b> — you can type or <b>paste</b> a coordinate straight into the box. It reads the pair as you write it, so nothing has to be converted first.</p>
@@ -2836,9 +2826,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-locate"><svg viewBox="0 0 24 28" width="13" height="15"><use href="#locatePin"></use></svg> Locate Me<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-locate">
-      <p class="sheet-note">This button drops your GPS position on the map (tap again to remove it). The pin opens with your <b>coordinates</b> and the <b>distance and magnetic headings to/from Ponce Inlet</b> — the <b>second</b> number of the bearing pair is the course home from where you are. It's a straight-line figure, not a channel route. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The small red person figure in a dashed red ring on the <svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> button signifies a MOB function — the same mark MOB drops on the water.</p>
-      <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#mobFig"></use></svg> <b>MOB (man-overboard) function.</b> <b>PRESS and HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. MOB is <b>disabled until it's enabled</b>: a second gate on the startup notice asks you to confirm you have <b>read the current USCG safe-boating and man-overboard procedures</b> at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>. Answer <b>Not now</b> and the function stays off — a later 1-second press brings that confirmation back instead of dropping a mark. The app drops a <b>MOB mark</b> at your position and starts guiding you back: a red banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red figure in a dashed ring — and the screen stays awake while it's up. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while MOB is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see the boat and mark's positions together; <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b> as a record — a <b>red pin</b> named MOB with its date and time, filed under <b>Inshore</b> or <b>Offshore</b>&nbsp;by where it happened. To delete one later, tap its red pin and use <b>DELETE</b>, or open <b>+ Spot</b> and scroll to <b>Your saved spots</b>: MOB entries sit together alphabetically, each with <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons — <b>DELETE ✕</b> removes it. Two things to do <b>at the dock, not on the water</b>: first, <b>enable MOB</b> — read the USCG procedures and answer the confirmation gate now, so an emergency press drops the mark instead of showing a dialog; second, the first time MOB (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, for the same reason.</p>
-      <p class="sheet-note"><b>Two Cautions.</b> First, an MOB mark is where the <b>phone</b> was when the button was pressed, not where the person went in or is; a person in the water <b>drifts</b> from the mark with current and wind, so the longer the clock runs, the wider the circle's search area. This app is an aid to memory, <b>not a rescue device</b>. This MOB function depends on a phone's GPS, battery, signal, and software — and <b>any of them can fail, lag, or be wrong exactly when needed</b>. Carry and use the safety equipment the situation and the law require — VHF radio, PFDs, an EPIRB or personal protective equipment (e.g., safety harness). This app is <b>not a substitute for any of them</b>. <b style="color:#ff5252;">READ AND FOLLOW THE CURRENT USCG SAFE-BOATING AND MOB PROCEDURES AND REGULATIONS</b> at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a> (needs a signal).</p>
+      <p class="sheet-note">This button drops your GPS position on the map (tap again to remove it). The pin opens with your <b>coordinates</b> and the <b>distance and magnetic headings to/from Ponce Inlet</b> — the <b>second</b> number of the bearing pair is the course home from where you are. It's a straight-line figure, not a channel route. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The small red ✕ in a dashed red ring on the <svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> button signifies the MARK function — the same mark it drops on the water.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#mobFig"></use></svg> <b>MARK function.</b> <b>PRESS and HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. The app drops a <b>MARK</b> at your position and starts guiding you back to it: a red banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red ✕ in a dashed ring — and the screen stays awake while it's up. It works anywhere — <b>inshore, offshore, or the ICW</b>. Use it for anything you'll want to run straight back to <b>right now</b>: a hat overboard, a dropped rod, a crab-trap float, the patch of water where the bite turned on just as you drifted off it. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while a MARK is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see the boat and mark's positions together; <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b> as a record — a <b>red pin</b> named MARK with its date and time, filed under <b>Inshore</b> or <b>Offshore</b>&nbsp;by where it happened. To delete one later, tap its red pin and use <b>DELETE</b>, or open <b>+ Spot</b> and scroll to <b>Your saved spots</b>: MARK entries sit together alphabetically, each with <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons — <b>DELETE ✕</b> removes it. One thing to do <b>at the dock, not on the water</b>: the first time MARK (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, so a press on the water drops the mark instead of showing a permission dialog.</p>
+      <p class="sheet-note"><b>Caution.</b> A MARK is where the <b>phone</b> was when the button was pressed — anything in the water <b>drifts</b> from that point with current and wind, so the longer the clock runs, the farther away it may be. The function depends on the phone's GPS, battery, signal, and software, and <b>any of them can fail, lag, or be wrong exactly when needed</b>. This app is an aid to memory, <b>not navigation, safety, or rescue equipment</b>, and it is no substitute for the equipment and practices the situation and the law require — read up at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>.</p>
       </div>
 
       <div class="subhead">Species Buttons</div>
@@ -2858,12 +2848,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-inshore">Inshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-inshore">
-      <p class="sheet-note">This is the <b>master switch</b> for filtering the <b>inshore pins</b>. Tapping this button opens a <b>category row</b> just below, allowing you to pick which groups of pins to show: <b>My Spots</b>, <b>Landmarks</b>, or <b>Waypoints</b>, each with its own total pin count. <b>My Spots</b> shows the location pins you saved west of the beach line, MOB marks included. Once you've given the app your name when opening the app the first time or in My Log, the name of this button will use your name here (Ace’s Spots). <b>Landmarks</b> show locations (pins) you would steer to/by (e.g., bridges, train trestle, islands, cities, towns, flats, shoals, jetties). <b>Waypoints</b> show navigable waterways (e.g., named creeks, rivers, bays, coves, cuts, sloughs, canals, lagoon, holes, and the inlet).</p>
+      <p class="sheet-note">This is the <b>master switch</b> for filtering the <b>inshore pins</b>. Tapping this button opens a <b>category row</b> just below, allowing you to pick which groups of pins to show: <b>My Spots</b>, <b>Landmarks</b>, or <b>Waypoints</b>, each with its own total pin count. <b>My Spots</b> shows the location pins you saved west of the beach line, MARKs included. Once you've given the app your name when opening the app the first time or in My Log, the name of this button will use your name here (Ace’s Spots). <b>Landmarks</b> show locations (pins) you would steer to/by (e.g., bridges, train trestle, islands, cities, towns, flats, shoals, jetties). <b>Waypoints</b> show navigable waterways (e.g., named creeks, rivers, bays, coves, cuts, sloughs, canals, lagoon, holes, and the inlet).</p>
       <p class="sheet-note">After tapping <b>Inshore</b>, tap one of its three pills to bring open that group, tap another pill to add those pins to the map, and tapping the third one does the same. Tapping a pill again removes its pins from the map. Turn Inshore off and all three filters close.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-offshore">Offshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-offshore">
-      <p class="sheet-note">This is the <b>master switch</b> for the <b>offshore pins</b>; the artificial sites (wrecks included), natural reefs, and any offshore spot you’ve added yourself. The number beside it is how many offshore sites there are. Like Inshore, tapping it opens a <b>category row</b> just below: <b>My Spots</b>, <b>Artificial</b>, and <b>Natural</b>, each with its own total count. <b>My Spots</b> are the offshore spots you saved yourself, MOB marks included. (This label will also carry your name once added to the app). <b>Artificial</b> is the man-made bottom; showing pins for the CR sites and deployments, wrecks, barges, etc. <b>Natural</b> is the real bottom: showing pins for the natural reefs, ledges, ridges, holes etc. After tapping <b>Offshore</b>, tap a pill to show those pins on the map, tap another to add it, and so on. Turn Offshore off and the row and pins leave with it.</p>
+      <p class="sheet-note">This is the <b>master switch</b> for the <b>offshore pins</b>; the artificial sites (wrecks included), natural reefs, and any offshore spot you’ve added yourself. The number beside it is how many offshore sites there are. Like Inshore, tapping it opens a <b>category row</b> just below: <b>My Spots</b>, <b>Artificial</b>, and <b>Natural</b>, each with its own total count. <b>My Spots</b> are the offshore spots you saved yourself, MARKs included. (This label will also carry your name once added to the app). <b>Artificial</b> is the man-made bottom; showing pins for the CR sites and deployments, wrecks, barges, etc. <b>Natural</b> is the real bottom: showing pins for the natural reefs, ledges, ridges, holes etc. After tapping <b>Offshore</b>, tap a pill to show those pins on the map, tap another to add it, and so on. Turn Offshore off and the row and pins leave with it.</p>
       <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs and their GPS coordinates, depth, distance, and bearing to/from the inlet, all sorted from closest to farthest from the inlet, and it plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. Each row is wider than the popup — <b>swipe or scroll sideways</b> within the list or drag the double arrows at the bottom corners of the popup until you see the details that interest you. You can <b>tap in any row to give that drop a name</b>. That name then prints at the end of the row and is saved on your device. If a popup covers the pins, simply <b>drag it by its title area</b> and drop on a different spot on the map.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-launches">Launches<span class="ht-caret">▸</span></button>
@@ -2923,12 +2913,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Phones cache this app hard enough that a new build can hide behind an old copy for days. Consequently, the app checks quietly for a newer build every time it opens, and when one is out, a small pill appears above the build stamp that says: <span class="g-emph">UPDATE AVAILABLE — Tap to Reload</span>. One tap brings the new build in — the pill reads <span class="g-emph">UPDATING…</span> while the new build downloads, then the app reloads on its own; the ✕ puts it off until next time. No connection, no check, so it never interrupts you on the water. Behind that, the app keeps a saved copy of itself so it opens instantly, and fetches the live page in the background for the next open. Therefore, even if you never tap the pill, a new build lands the second time you open the app with signal.</p>
 
       <div class="subhead">Warning</div>
-      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots. GPS positions — your cell signal, a dropped pin's, or a <b>MOB</b> mark's — are only as good as the phone's fix, and location features can fail, lag, or mislead. Never rely on this app as your only means of navigation or emergency response.</p>
+      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots. GPS positions — your cell signal, a dropped pin's, or a <b>MARK</b>'s — are only as good as the phone's fix, and location features can fail, lag, or mislead. Never rely on this app as your only means of navigation or emergency response.</p>
 
       <div class="subhead">Disclaimer</div>
       <p class="sheet-note">Read this one before you take the app on the water.</p>
       <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. The rose is anchored at <b>NOAA's official position for Ponce de Leon Inlet</b>, in the inlet mouth, and every figure this app works out — the rose's lines and the nm/bearing in the offshore popups and drop lists — is measured from that same point, so the rose and the popups agree with each other. The one exception is the <b>distance printed in a CR site's popup</b>, which is FWC's published figure taken from FWC's own origin at 29°04.500&#8242;N 80°55.500&#8242;W in the inlet mouth channel. Against the rose's run it can read up to about a mile different — most noticeably on <b>Site 14 Flagler Ave Reef</b>, the closest — and the gap fades with distance. A <b>site-to-site leg</b> sidesteps origins entirely — it is measured between the two marks themselves. All of these figures are <b>magnetic</b>, 7.3° west of true — as the caption under the rose states. Also, FWC published theirs in true degrees.</p>
-      <p class="sheet-note"><b>THE APP IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE,&rdquo; WITHOUT WARRANTY OF ANY KIND</b>, express or implied — including, without limitation, the implied warranties of <b>merchantability</b> and <b>fitness for a particular purpose</b>, and any warranty of accuracy or non-infringement. No promise is made that the app, its data, or any location or emergency-marking feature (including <b>MOB</b>) will be available, accurate, or error-free, or will function when needed.</p>
+      <p class="sheet-note"><b>THE APP IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE,&rdquo; WITHOUT WARRANTY OF ANY KIND</b>, express or implied — including, without limitation, the implied warranties of <b>merchantability</b> and <b>fitness for a particular purpose</b>, and any warranty of accuracy or non-infringement. No promise is made that the app, its data, or any location or marking feature (including <b>MARK</b>) will be available, accurate, or error-free, or will function when needed.</p>
       <p class="sheet-note">This app is an aid to memory and planning only. It is <b>not navigation equipment and not safety or rescue equipment</b>, and it is no substitute for official charts, a compass, a VHF radio, PFDs, an EPIRB or personal safety equipment, a proper lookout, or USCG-required equipment and procedures. You assume all risks of using this app on the water.</p>
       <p class="sheet-note">To the maximum extent permitted by law, the developer and owners of this app accept <b>no liability</b> for any loss, injury, death, or damage — direct, indirect, incidental, or consequential — arising from use of, inability to use, or reliance on this app or anything it displays. If you paid for the app, the developer's entire liability, and your exclusive remedy, is a refund of the amount you paid. Some jurisdictions do not allow certain warranty or liability exclusions, so parts of this section may not apply to you; where that is so, liability is limited to the smallest extent the law allows. If you do not agree to these terms, do not use the app.</p>
 
@@ -3235,24 +3225,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
 </div>
 
-<!-- Startup acceptance gate. Two steps since v359: the general AS-IS acceptance, then a
-     separate MOB gate — the MOB function stays disabled until the user confirms they have
-     read the current USCG safe-boating / man-overboard procedures. "Not now" skips it;
-     a later 1-second press on Locate Me re-presents this gate instead of activating. -->
+<!-- Startup acceptance gate. One step again since v361 (the v359 two-step USCG/MOB gate
+     left with the man-overboard framing — MARK is a waypoint convenience, not a safety
+     feature, so there is nothing to separately enable). -->
 <div id="acceptGate">
   <div id="acceptBar">
     <div id="acceptStep1">
-      <span id="acceptText"><b>Do not use this site for navigation.</b> The <b>MOB</b> feature is a memory aid only — not a rescue device. In an emergency, follow USCG procedures and call for help on VHF&nbsp;16. Provided <b>AS&nbsp;IS</b> — see the Disclaimer in Help.</span>
+      <span id="acceptText"><b>Do not use this site for navigation or emergency use.</b> Pins and the <b>MARK</b> feature are memory aids only — not navigation, safety, or rescue equipment. Provided <b>AS&nbsp;IS</b> — see the Disclaimer in Help.</span>
       <div id="acceptRow">
         <input type="text" id="acceptName" maxlength="24" autocomplete="name" placeholder="Your name (optional)">
         <button id="acceptBtn">Accept</button>
-      </div>
-    </div>
-    <div id="mobGateStep" hidden>
-      <span id="mobGateText"><b style="color:#ff5252;">MOB (man-overboard) function.</b> A 1-second press on <b>LOCATE ME</b> drops a MOB mark — a memory aid only, <b>not a rescue device</b>. To enable it, confirm that you have <b>read the current USCG safe-boating and man-overboard procedures</b> at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>.</span>
-      <div id="mobGateRow">
-        <button id="mobGateYes">I have read them — Enable MOB</button>
-        <button id="mobGateNo">Not now</button>
       </div>
     </div>
   </div>
@@ -3295,9 +3277,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var txt  = document.getElementById('acceptText');
 
   if(gate && btn){
-    var step1 = document.getElementById('acceptStep1');
-    var step2 = document.getElementById('mobGateStep');
-    var mobOk = function(){ try{ return localStorage.getItem('pifc:mobAccepted') === '1'; }catch(e){ return false; } };
     var closeGate = function(){
       gate.classList.add('hidden');
       /* map may not exist yet if the app script died; guarded so the gate still closes. */
@@ -3316,30 +3295,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         if(nm) localStorage.setItem('pifc:userName', nm);
       }catch(e){}
       try{ if(window.applyUserName) window.applyUserName(); }catch(e){}
-      /* Second gate (v359): MOB stays disabled until the USCG-procedures confirmation.
-         Already-confirmed users (and storage failures) go straight through. */
-      if(!mobOk() && step1 && step2){ step1.hidden = true; step2.hidden = false; }
-      else closeGate();
-    });
-    var yes = document.getElementById('mobGateYes');
-    var no  = document.getElementById('mobGateNo');
-    if(yes) yes.addEventListener('click', function(){
-      try{ localStorage.setItem('pifc:mobAccepted','1'); }catch(e){}
       closeGate();
-      try{ if(window.showToast) showToast('MOB enabled — press and hold LOCATE ME for 1 second to drop a mark.', 6000); }catch(e){}
     });
-    if(no) no.addEventListener('click', function(){
-      closeGate();
-      try{ if(window.showToast) showToast('MOB stays off. A 1-second press on LOCATE ME will offer to enable it.', 6000); }catch(e){}
-    });
-    /* Re-present the MOB gate alone — mobActivate() calls this when the confirmation
-       hasn't been given yet. Lives here so the gate works even if app code fails. */
-    window.showMobGate = function(){
-      if(step1) step1.hidden = true;
-      if(step2) step2.hidden = false;
-      gate.classList.remove('hidden');
-    };
-    window.mobGateAccepted = mobOk;
   }
 
   function show(label, msg){
@@ -3998,7 +3955,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 360;
+const BUILD_NUM  = 361;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -7023,7 +6980,7 @@ let activeSpecies = new Set();
    layer. v321 (Jan's redesign of the v314/v316 categories): FOUR pills sorted by
    what a pin IS, not where its data came from —
      · My Spots   — the user's own saved spots (named after them if they've given
-                    the app their name in My Log; MOB marks land here too);
+                    the app their name in My Log; MARK pins land here too);
      · Landmarks  — things you steer BY, not through: bridges, the trestle, islands,
                     city/town pins, points, flats, shoals, the jetty;
      · Waypoints  — navigable water: creeks, rivers, bays, coves, cuts, sloughs,
@@ -7060,7 +7017,7 @@ function inshoreCat(s){
    pills, same lifecycle: Offshore ON opens the row with nothing selected and no
    offshore pins, each pill toggles its own group, OFF hides the row.
      · My Offshore Spots — the user's own saved offshore spots (named after them
-                           like the inshore pill; offshore MOB marks land here);
+                           like the inshore pill; offshore MARK pins land here);
      · Artificial        — man-made bottom: the county reef Sites (their metas
                            carry a "drops" count) and the named wrecks, barges,
                            steamships, boats and the platform;
@@ -7884,7 +7841,7 @@ document.addEventListener('click', ev=>{
     'my log', 'seasons', 'compass', 'locate me', 'topo satellite', 'hi res & icw',
     'street map', 'catches', 'inshore', 'offshore', 'launches', 'labels', 'species',
     'search', 'help', 'themes', 'a', 'accept', 'cancel', 'close', 'edit', 'delete',
-    'print this help', 'mob', 'save this tide station', 'download map for offline use',
+    'print this help', 'mark', 'save this tide station', 'download map for offline use',
     'create & calibrate tide stations', 'disclaimer', 'open the tide station tool',
     'start the download', 'eye'
   ]);
@@ -8280,7 +8237,7 @@ async function saveCustomSpots(){
   try{ await storeSet(CUSTOM_SPOTS_KEY, JSON.stringify(customSpots)); }catch(e){}
 }
 function customSpotFill(s){
-  if(s.mob) return resolveVar('var(--mob)');   // MOB record pins are red whatever water they mark
+  if(s.mob) return resolveVar('var(--mob)');   // MARK record pins are red whatever water they mark
   if(s.zone==='launch') return resolveVar('var(--launch)');
   return resolvedZoneColor[s.zone] || (s.zone==='offshore' ? resolveVar('var(--offshore)') : resolveVar('var(--inshore)'));
 }
@@ -10296,34 +10253,32 @@ document.getElementById('locateBtn').addEventListener('click', function(){
   getFixOnce(place, err=> showToast(geoErrorMessage(err), 9000), 20000);
 });
 
-/* ===================== MOB \u2014 MAN OVERBOARD =====================
+/* ===================== MARK \u2014 INSTANT WAYPOINT =====================
 
-   Press and HOLD Locate Me (~1 s; the pill floods red while it arms) to drop a man-overboard
-   mark and start guiding back to it. Not a plotter feature copied for fun \u2014 the one thing a
-   crew loses instantly when someone goes in is the spot, and any phone already on deck can
-   hold it.
+   Press and HOLD Locate Me (~1 s; the pill floods red while it arms) to drop a MARK and
+   start guiding back to it \u2014 a hat overboard, a dropped rod, the water where the bite
+   turned on as the drift carried the boat off it. (This was the MOB / man-overboard
+   function until v361; Jan reframed it as a plain waypoint convenience before the sale.
+   The internal mob* names, .mob-* classes, the s.mob flag and the wtf:mob storage key all
+   stay \u2014 only the user-facing words and figure changed.)
 
    The fix tradeoff is the OPPOSITE of Locate Me's. getFixOnce holds a coarse fix back six
    seconds hoping GPS beats it, and will take a cached position two minutes old \u2014 right for
    "where am I on the map", wrong here, where a boat at 20 kt covers a hundred metres in ten
-   seconds. MOB takes the FIRST position it can get, however rough, then quietly moves the
+   seconds. MARK takes the FIRST position it can get, however rough, then quietly moves the
    mark when a tighter fix lands within the first few seconds (MOB_UPGRADE_MS from the press
-   \u2014 after that the mark is frozen; later fixes are the boat, not the person).
+   \u2014 after that the mark is frozen; later fixes are the boat, not the thing marked).
 
    While active: a high-accuracy watch feeds the boat position; the banner shows the bearing
    to steer (MAGNETIC, same as the compass rose and every helm compass), the distance (feet
    under ~1000 ft, statute miles beyond \u2014 "0.02 sm" is useless on final approach), and the
-   clock since the press, which is what tells the crew how far the drift has spread. The mark
-   is written to localStorage the moment it exists \u2014 synchronously, not through the async
-   store \u2014 so if Safari reloads or the phone reboots mid-recovery the banner is back up
+   clock since the press, which is what says how far whatever's in the water has drifted. The
+   mark is written to localStorage the moment it exists \u2014 synchronously, not through the
+   async store \u2014 so if Safari reloads or the phone reboots mid-run the banner is back up
    before the map finishes loading. A screen wake lock keeps iOS from suspending the page
    (re-acquired on every return to foreground; the lock dies each time the app is hidden).
 
-   CLEAR is deliberate: a confirm, and the mark is kept as a spot named "MOB <date time>" \u2014
-   if it was real, that record is what goes to the Coast Guard.
-
-   None of this replaces the drill: a pointing spotter, thrown flotation, the VHF. The help
-   says so in as many words. */
+   CLEAR is deliberate: a confirm, and the mark is kept as a spot named "MARK <date time>". */
 
 const MOB_KEY = 'wtf:mob';
 const MOB_HOLD_MS = 900;        // press-and-hold time; matches the pill's CSS flood
@@ -10420,23 +10375,15 @@ function mobDrop(pos){
   mobSaveState();
   mobPlaceMark();
   map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), 15));
-  showToast('MOB mark down \u2014 ' + toDMS(mob.lat, mob.lng)
+  showToast('MARK down \u2014 ' + toDMS(mob.lat, mob.lng)
     + (mob.acc && mob.acc > 150 ? ' (rough fix, \u00b1' + Math.round(mob.acc) + ' m \u2014 tightening as GPS lands)' : ''), 6000);
   mobUpdate();
 }
 
 function mobActivate(){
-  /* Second gate (v359): the function is disabled until the user has confirmed reading
-     the current USCG safe-boating / MOB procedures. The hold re-presents that gate
-     rather than dropping a mark. A mark already down (resume path) is never blocked. */
-  if(!(window.mobGateAccepted && mobGateAccepted()) && !mob && mobWatchId == null){
-    if(window.showMobGate) showMobGate();
-    else showToast('MOB is disabled — accept the USCG-procedures confirmation on the startup notice first.', 7000);
-    return;
-  }
   if(mob || mobWatchId != null){
     if(mob) map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), 14));
-    showToast('MOB is already active \u2014 CLEAR it on the banner before dropping a new mark.', 5000);
+    showToast('A MARK is already active \u2014 CLEAR it on the banner before dropping a new one.', 5000);
     return;
   }
   const blocked = geoBlockedReason();
@@ -10465,25 +10412,25 @@ function mobTeardown(){
 
 function mobClear(){
   if(!mob && mobWatchId == null) return;
-  if(!window.confirm('Clear the MAN OVERBOARD mark?' + (mob ? '\n\nIt will be kept in your spots as a record.' : ''))) return;
+  if(!window.confirm('Clear the MARK?' + (mob ? '\n\nIt will be kept in your spots as a record.' : ''))) return;
   if(mob){
     const d = new Date(mob.t);
-    const name = 'MOB ' + (d.getMonth()+1) + '/' + d.getDate() + ' '
+    const name = 'MARK ' + (d.getMonth()+1) + '/' + d.getDate() + ' '
                + d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
-    /* A person overboard is in the water, so the record files as Inshore or Offshore by
+    /* A MARK is dropped on the water, so the record files as Inshore or Offshore by
        where it happened \u2014 never Launches, which is where the inland fallback used to put
        a mark pressed at the dock. The mob flag paints the pin red whatever its zone. */
     let zone = 'inshore';
     try{ const z = autoSpotZone(mob.lat, mob.lng).zone; if(z === 'offshore') zone = 'offshore'; }catch(e){}
     const s = {id:'custom-'+Date.now(), name, zone, lat:mob.lat, lng:mob.lng,
-               meta: customSpotTypeLabel({zone}) + ' \u00b7 MOB mark', custom:true, mob:true, species:[], ramp:false};
+               meta: customSpotTypeLabel({zone}) + ' \u00b7 MARK', custom:true, mob:true, species:[], ramp:false};
     customSpots.push(s);
     addCustomSpotMarker(s);
     saveCustomSpots();
     updateCustomSpotList();
     if(typeof applyFilter === 'function') applyFilter();
     if(typeof applySpotLabels === 'function') applySpotLabels();
-    showToast('MOB cleared \u2014 kept in your spots as \u201c' + name + '\u201d.', 6000);
+    showToast('MARK cleared \u2014 kept in your spots as \u201c' + name + '\u201d.', 6000);
   }
   mobTeardown();
 }
