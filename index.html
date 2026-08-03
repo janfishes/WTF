@@ -1394,9 +1394,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
      colour with the theme while the pins it switches are the same black-and-white diamond in
      every theme. Catches is now WHITE-on-black off, BLACK-on-white on - a straight reversal
      like the zone pills, and the black/white pair matches its own pins. It is the only pill
-     with no hue at all, which is exactly what it is switching. */
-  #catchToggle{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid #fff !important; box-shadow:none !important;}
-  #catchToggle:not(.active){opacity:1; background:#000 !important; color:#fff !important; border-color:#fff !important;}
+     with no hue at all, which is exactly what it is switching.
+     v381: the BORDER (only) takes the bright theme accent back — var(--accent-lite), same as
+     the species pills it captains, so the whole species column reads as one accent-ringed
+     family. Fills and text stay the hueless black/white reversal of v304. */
+  #catchToggle{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid var(--accent-lite) !important; box-shadow:none !important;}
+  #catchToggle:not(.active){opacity:1; background:#000 !important; color:#fff !important; border-color:var(--accent-lite) !important;}
   /* v304: Labels reverses with state like Launches/Inshore/Offshore - OFF is the colour as
      text and outline on black, ON fills with the colour and takes a white ring.
      v306: Labels is ORANGE (Jan's request) - it took the #FF6A00 that Inshore gave up when
@@ -1417,13 +1420,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
      set on the element (see line ~6818) and still feeds the season bars and the card tags;
      it is only the button's own fill and text that stop using it. */
   /* v304: the text is FULL white in BOTH states - the v303 dimmed white (62%) was the thing
-     that made these read as switched off rather than merely unselected. State is carried by
-     the BORDER and the glow instead: a dim white outline when off, a solid white outline plus
-     the glow when on. */
+     that made these read as switched off rather than merely unselected.
+     v381: the border wears the BRIGHT theme accent in both states (Jan's request) -
+     var(--accent-lite), not var(--teal), because these are black chips and --accent-lite is
+     the accent variant contrast-picked for black grounds (Brown Sugar's raw accent is a dark
+     chocolate that would vanish here). State is still carried by fill + glow: black pill off,
+     white pill + glow on; the accent border rides both. */
   #speciesCol .chip{color:#fff !important;}
   #speciesCol .chip:not(.active){
     background:#000 !important; color:#fff !important;
-    border-color:rgba(255,255,255,.38) !important; filter:none;
+    border-color:var(--accent-lite) !important; filter:none;
   }
   /* v305: the lit species button REVERSES, exactly like Catches — white fill, black
      lettering. v304 carried the state on the border and a glow alone, which is a thin
@@ -1432,7 +1438,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      extra separation from the imagery behind it. */
   #speciesCol .chip.active{
     background:#fff !important; color:#000 !important;
-    border-color:#fff !important; box-shadow:0 0 8px rgba(255,255,255,.45);
+    border-color:var(--accent-lite) !important; box-shadow:0 0 8px rgba(255,255,255,.45);
     filter:none; text-shadow:none !important;
   }
   #speciesCol .chip .dot{background:currentColor !important;}
@@ -1553,8 +1559,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
      the theme accent here - the old var(--teal) fill made this pill identical to Launches
      under Brown Sugar and left white text at 1.86:1 to 3.00:1 in five of six themes. Black on
      white is 21:1 and the same in every theme, which is right for a switch whose pins are the
-     one black-and-white marker on the map. */
-  #catchToggle.active{background:#fff !important; color:#000 !important; border-color:#fff !important; box-shadow:none;
+     one black-and-white marker on the map.
+     v381: border is var(--accent-lite) in both states (see the #catchToggle note above);
+     the white fill / black text stay. */
+  #catchToggle.active{background:#fff !important; color:#000 !important; border-color:var(--accent-lite) !important; box-shadow:none;
     text-shadow:none !important;}
   /* Launches filter pill (red until v232, when red was handed to the MARK spots).
      ON is the flat var(--launch) fill - Brown Sugar's #8a4b0f from v300, now the dark
@@ -4095,7 +4103,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 380;
+const BUILD_NUM  = 381;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

@@ -7,6 +7,19 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 5:20 PM EDT · v381 · Accent Pill Borders
+------------------------------------------------------------------------------
+The species pills and the Catches button now wear the bright theme
+accent as their border, in both the off and lit states (Jan's
+request). The color is var(--accent-lite) — the accent variant
+contrast-picked for black grounds — not the raw var(--teal), so Brown
+Sugar (whose accent is a dark chocolate) gets its bright amber
+instead of a border that vanishes on the black pills. Fills and text
+are unchanged: species pills stay black-off / white-lit with the
+glow, Catches keeps its hueless black/white reversal from v304. This
+partly reverses v304's "no accent on Catches" decision, border only.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 5:15 PM EDT · v380 · Print Buttons Moved
 ------------------------------------------------------------------------------
 Help edits, per Jan. The PRINT THIS HELP and SAVE HELP AS PDF buttons
