@@ -7,6 +7,23 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 8:07 PM EDT · v334 · Measured Vs FWC
+------------------------------------------------------------------------------
+The FWC county reef Sites' popups now print the app's own measured
+distance beside the heading — "measured 2.9 sm/2.5 nm" — so FWC's
+published figure in the headline and the figure measured from NOAA's
+inlet position sit side by side on the pin. Flagler Ave reads
+"4.3 sm/3.7 nm from Inlet · 12 drops · measured 2.9 sm/2.5 nm ·
+154°/334° to/from Inlet (magnetic)". Only the 15 true FWC Sites get the
+extra figure: every other offshore pin's headline distance already IS
+the measured figure (re-based in v333), so printing it again would
+duplicate — Lighthouse Point Reef (not in the FWC file) and the jan-*
+grounds are excluded. Verified in headless Chrome.
+
+The three help passages about the FWC origin gap each gained a sentence
+saying the popup now shows both numbers.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 7:54 PM EDT · v333 · One Inlet Origin
 ------------------------------------------------------------------------------
 Every distance and bearing the app itself works out is now measured from
