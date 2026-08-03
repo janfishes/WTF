@@ -7,6 +7,15 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 11:44 AM EDT · v351 · Trim MOB Drill Sentence
+------------------------------------------------------------------------------
+The Two Cautions paragraph in help's MOB section no longer spells out the
+rescue drill (spotter, thrown flotation, VHF 16 call) — the USCG link added
+in v349/v350 covers procedure, so the sentence and the "Second," marker
+came out and the device-reliability caution now follows straight on
+("Everything here rides on a phone's GPS…"). No behavior changes.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 11:41 AM EDT · v350 · MOB Link In Intro
 ------------------------------------------------------------------------------
 The USCG link now also rides help's opening tour paragraph: the sentence
