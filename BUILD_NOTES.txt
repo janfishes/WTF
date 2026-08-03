@@ -7,6 +7,18 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 8:34 PM EDT · v335 · Inlet Tag Right
+------------------------------------------------------------------------------
+The Ponce de Leon Inlet pin's name tag moves to the RIGHT of the pin.
+The v308 rule hangs waypoint tags left because those pins sit on the
+GNIS anchor — the exact point the topo starts printing its own name
+from, running eastward — so a right-hand tag would cover the printed
+name. This pin left its GNIS anchor for NOAA's official inlet position
+in v331, so the rationale no longer applies; it is now the one
+exception in applySpotLabels. Any other pin moved off its GNIS anchor
+should join it.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 8:07 PM EDT · v334 · Measured Vs FWC
 ------------------------------------------------------------------------------
 The FWC county reef Sites' popups now print the app's own measured

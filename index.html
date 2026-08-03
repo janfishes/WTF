@@ -2921,6 +2921,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v335</b> · Inlet Tag Right</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v334</b> · Measured Vs FWC</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v333</b> · One Inlet Origin</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v332</b> · Rose At NOAA</p>
@@ -4075,7 +4076,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 334;
+const BUILD_NUM  = 335;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -5807,8 +5808,12 @@ function applySpotLabels(){
       /* v308: waypoint pins sit ON the GNIS anchor — the exact point the topo starts
          printing its own name from, running EASTWARD — so a right-hand tag lies on top
          of the printed name. Waypoint tags hang LEFT instead: chart name to the east,
-         app tag to the west, both readable with Labels on (Jan's request). */
-      const left = s.wp && !s.ramp;
+         app tag to the west, both readable with Labels on (Jan's request).
+         v335: the Ponce de Leon Inlet pin left its GNIS anchor for NOAA's inlet
+         position in v331, so the rule's rationale no longer holds there — its tag
+         hangs RIGHT (Jan's request). Any other pin moved off its GNIS anchor
+         should join this exception. */
+      const left = s.wp && !s.ramp && s.id !== 'wp-ponce-de-leon-inlet';
       m.bindTooltip((s.name||'').replace(/^CR /,''), {permanent:true, direction:(left?'left':'right'), offset:[left?-10:10,0], className:'spot-label '+cls, opacity:1});
     }
   });
