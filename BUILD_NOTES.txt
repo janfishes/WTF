@@ -7,6 +7,16 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 9:37 PM EDT · v336 · Merge 50 Ft
+------------------------------------------------------------------------------
+The catch-pin merge distance drops from 100 ft to 50 ft (CATCH_MERGE_M
+30.48 m -> 15.24 m). Catches now have to sit within 50 ft of each other
+before they collapse onto one diamond with a count badge, so nearby but
+distinct catches keep their own pins. Help text and the merged-popup's
+"within X ft" line updated to match. Spot pins were never distance-
+merged, so nothing changes for them.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 8:34 PM EDT · v335 · Inlet Tag Right
 ------------------------------------------------------------------------------
 The Ponce de Leon Inlet pin's name tag moves to the RIGHT of the pin.

@@ -2124,7 +2124,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .catch-marker{width:14px; height:14px; background:#000; border:2px solid #fff; transform:rotate(45deg); box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.5);}
   .catch-marker.dim{opacity:.18;}
   /* ---- Count badges on map pins ----
-     .catch-count sits on a merged catch diamond (several catches within 100 ft);
+     .catch-count sits on a merged catch diamond (several catches within 50 ft);
      .spot-count sits on an inshore or offshore pin and counts the drops/marks recorded
      there. Identical treatment, so one rule.
 
@@ -2822,7 +2822,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="help-body" id="hb-f-catches">
       <p class="sheet-note">The map filter buttons are <b>pills</b> (hot-dog shapes) in the row across the top of the map, under the header — Catches, Inshore, Offshore, Launches and Labels. The number on each of the first four is a total count.</p>
       <p class="sheet-note">Shows and hides your <b>catch diamonds</b> — every fish in your log. The number beside it is your total number of catches. The pill itself is the one switch with no colour: white lettering on black when the diamonds are hidden, and the reverse — black on white — when they are showing, matching the black-and-white diamonds it switches. It is the <b>master switch</b> for the diamonds: with it off none show, even if a species button down the left edge is lit.</p>
-      <p class="sheet-note">Catches within 100&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕ button.</p>
+      <p class="sheet-note">Catches within 50&nbsp;ft of each other merge into one diamond with a count badge — tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own ✎ and ✕ button.</p>
       <p class="sheet-note">Your catches show on the map as small black <b>diamonds</b> with a white edge — the same for every fish, so a diamond always means a catch and the species is named in its popup; the fishing spots, sites and launches show as small colored <b>pins</b>. A diamond or pin carrying a number is more than one thing in the same place — tap it to read them all.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-inshore">Inshore<span class="ht-caret">▸</span></button>
@@ -2921,6 +2921,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-builds">
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted);">The full notes live in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
+      <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v336</b> · Merge 50 Ft</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v335</b> · Inlet Tag Right</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v334</b> · Measured Vs FWC</p>
       <p class="sheet-note" style="font-size:9.5px; color:var(--muted); margin:2px 0 0;">Build 2026-08-02 · <b>v333</b> · One Inlet Origin</p>
@@ -4076,7 +4077,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/02/26';                          // map stamp form
-const BUILD_NUM  = 335;
+const BUILD_NUM  = 336;
 const BUILD_TAG  = 'build 2026-08-02 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
   if(bs) bs.textContent = BUILD_DATE + ' Build ' + BUILD_NUM; }
@@ -6447,10 +6448,10 @@ function catchPopupHTML(c){
   </div>`;
 }
 
-// Catches within 100 ft (30.48 m) of each other collapse onto one diamond so
+// Catches within 50 ft (15.24 m) of each other collapse onto one diamond so
 // stacked pins stop hiding one another. GPS drift means two fish off the same
 // dock rarely share identical decimals, hence a radius rather than exact match.
-const CATCH_MERGE_M = 30.48;
+const CATCH_MERGE_M = 15.24;
 function catchGroups(){
   const groups = [];
   catches.forEach(c=>{
@@ -6487,7 +6488,7 @@ function catchGroupPopupHTML(m){
       <div class="pop-name">${vis.length} catches here</div>
       <div class="pop-zone" style="background:var(--teal); color:#04141e;">Log</div>
     </div>
-    <div class="pop-meta"><span>${toDMS(m.group.lat, m.group.lng)}</span><span>within 100 ft</span></div>
+    <div class="pop-meta"><span>${toDMS(m.group.lat, m.group.lng)}</span><span>within 50 ft</span></div>
     <div class="pop-catch-list">${cards}</div>
   </div>`;
 }
