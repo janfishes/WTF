@@ -7,6 +7,19 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 3:12 PM EDT · v368 · Two-Line Hover Tip
+------------------------------------------------------------------------------
+The Locate Me hover tip is now two lines — "TAP: drops your GPS
+position." over "PRESS AND HOLD: drops a MARK to steer back to." —
+with PRESS AND HOLD extra-bold and both command words in caps.
+Rebuilt as a real element (.fab-tip span inside the button) because
+the old ::after/attr(data-tip) bubble couldn't mix weights or break
+lines; data-tip attr removed; bubble widened (380px cap) so each
+sentence keeps to one line; still fine-pointer-only and hidden while
+the hold-to-arm flood runs. Help wording aligned: quick-start and
+Locate Me notes now say TAP / PRESS AND HOLD in caps too.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 2:58 PM EDT · v367 · Red Mark Set
 ------------------------------------------------------------------------------
 The MARK SET title and the ringed-X icon in the banner header turn
