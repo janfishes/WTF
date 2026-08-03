@@ -7,6 +7,18 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 11:17 PM EDT · v337 · Help Intro Rewrite
+------------------------------------------------------------------------------
+The help's opening section is rewritten to Jan's new wording. Heading changes
+from "Read This Paragraph to Get Hooked" to "Read This Paragraph to Get
+Fishing". Button names now appear in ALL CAPS as they do on screen, the map
+modes are spelled out as a toggle (TOPO SATELLITE → HI RES & ICW → STREET
+MAP), a new line points at the diamond-shaped catch pins, and the
+not-for-navigation / MOB caution moves into its own bolded paragraph naming
+the US Coast Guard in full. The personalized REEL FUN sendoff line is
+unchanged (still #reelFunLine, filled in by applyUserName()).
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 9:37 PM EDT · v336 · Merge 50 Ft
 ------------------------------------------------------------------------------
 The catch-pin merge distance drops from 100 ft to 50 ft (CATCH_MERGE_M
