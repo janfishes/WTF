@@ -7,6 +7,24 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 1:05 PM EDT · v359 · MOB Enable Gate
+------------------------------------------------------------------------------
+The MOB function now sits behind a second acceptance gate: it stays
+disabled until the user confirms they have read the current USCG
+safe-boating and man-overboard procedures at uscgboating.org. The
+startup notice is now two steps — the existing AS-IS acceptance, then
+the red MOB gate with "I have read them — Enable MOB" and "Not now"
+buttons. Not now leaves MOB off; a later 1-second press on Locate Me
+re-presents the confirmation instead of dropping a mark. Users who
+accepted the old one-step gate see the MOB gate on their first long
+press. The confirmation is stored as raw localStorage pifc:mobAccepted
+(same pattern as disclaimerAccepted, written by the pre-app gate
+script). A mark already down (the resume-after-reload path) is never
+blocked. Help updated: the overview line, the MOB section (which now
+lists enabling MOB as the first of two things to do at the dock, ahead
+of the location permission), and the button walkthrough.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 12:45 PM EDT · v358 · Heading Home Help Line
 ------------------------------------------------------------------------------
 Both the Compass and Locate Me help sections now add, after their
