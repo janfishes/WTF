@@ -3,6 +3,10 @@
 One line per build, newest first. Full build notes with dates, times, and
 details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
+## 2026-08-03
+
+- **v342** — Help Cleanup Print Close
+
 ## 2026-08-02
 
 - **v341** — Change log moved to GitHub

@@ -7,6 +7,28 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 12:10 AM EDT · v342 · Help Cleanup, Print Close
+------------------------------------------------------------------------------
+Help text pass. The species-buttons intro line drops "the app knows"; the
+Text Size writeup replaces the plain "AA" with a tall-A/small-A icon matching
+the header button (topic row and body both). Spelling and wording:
+centreline(s) → centerline(s), daybeacons → day beacons, labelled → labeled,
+authorised → authorized, Harbour-band → Harbor-band, and a non-breaking
+space pins "Offshore by" together in the MOB writeup so the printout can't
+run them into "OFFSHOREby". The Warning's GPS sentence now reads: "GPS
+positions — your cell signal, a dropped pin's, or a MOB mark's — are only as
+good as the phone's fix, and location features can fail, lag, or mislead.
+Never rely on this app as your only means of navigation or emergency
+response."
+
+Print/Save-as-PDF fixes: the Build Notes section (live GitHub links, dead on
+paper) is removed from the printed help, and the popup page both buttons open
+now starts with a screen-only red CLOSE ✕ button — cancelling the print
+dialog used to strand the reader on the help page with no way back to the
+app. The button closes the tab (with a close-this-tab-by-hand hint beside it)
+and disappears from the actual printout via @media print.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 11:45 PM EDT · v341 · Change Log On GitHub
 ------------------------------------------------------------------------------
 The change log moved out of the in-app help and onto GitHub: CHANGELOG.md in
