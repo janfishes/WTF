@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v380** — Print Buttons Moved
 - **v379** — Species Tips Zoom
 - **v378** — Track Help Section
 - **v377** — Mark Help Wording

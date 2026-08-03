@@ -7,6 +7,19 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 5:15 PM EDT · v380 · Print Buttons Moved
+------------------------------------------------------------------------------
+Help edits, per Jan. The PRINT THIS HELP and SAVE HELP AS PDF buttons
+and their explanatory notes moved from just under the opening
+paragraph to the very END of Help, after the Copyright section, under
+a small "Print This Help" subhead (the whole block keeps
+help-print-hide so it never appears on paper, and the buttons stay
+direct children of the panel so the topic-open hiding rules still
+reach them). The opening paragraph's closing line now reads "...
+download the offline map, back up your catch log and photos, and see
+the print options at the end of this Help."
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 5:00 PM EDT · v379 · Species Tips Zoom
 ------------------------------------------------------------------------------
 Species pills got two upgrades plus help edits, per Jan. (1) Hover tip:
