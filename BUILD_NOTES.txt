@@ -7,6 +7,13 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 3:42 PM EDT · v372 · Track My Path Label
+------------------------------------------------------------------------------
+The recording button now reads "Track My Path" (Jan's wording, replacing
+v371's "Track Path" minutes later); the same TRACK MY PATH form carried
+through every help/toast reference the v371 build touched.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 3:35 PM EDT · v371 · Track Path Label
 ------------------------------------------------------------------------------
 The new recording button reads "Track Path" instead of "Track" (Jan's

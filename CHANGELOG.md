@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v372** — Track My Path Label
 - **v371** — Track Path Label
 - **v370** — Track Recording
 - **v369** — Location Popup Lines
