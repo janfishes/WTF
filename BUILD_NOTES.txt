@@ -7,6 +7,19 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 4:41 PM EDT · v378 · Track Help Section
+------------------------------------------------------------------------------
+Help restructure, per Jan: TRACK MY PATH moved out of the Locate Me
+topic into its own collapsible section (hb-track) placed BEFORE Locate
+Me, with the magenta dashed-path icon on its topic button. The Locate
+Me topic now opens with "LOCATE ME button drops a pin at your
+location." (with the ringed-pin icon). Dropped from the track copy:
+"— your drift over a ledge, the troll that raised the fish, the route
+you picked through the flats." Also added 'track my path' to the .bn
+button-label set so TRACK MY PATH renders in button style in help
+prose.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 4:28 PM EDT · v377 · Mark Help Wording
 ------------------------------------------------------------------------------
 Two wording changes in help's Locate Me > MARK paragraph, per Jan: the
