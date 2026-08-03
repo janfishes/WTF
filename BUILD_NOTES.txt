@@ -7,6 +7,31 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 5:20 PM EDT · v376 · Track Start Zoom Stop Card
+------------------------------------------------------------------------------
+Starting TRACK MY PATH now zooms the map into the boat: the first
+accepted GPS fix does map.setView at TRACK_START_ZOOM (z18, ~100 ft
+scale) — before, the map sat wherever it was and the track drew
+off-screen (Jan's iPhone report). Resume-after-reload deliberately
+skips the zoom.
+
+Stopping is now a choice card (#trackStopSheet), not a native confirm.
+Saving is AUTOMATIC and the card's note says so. Full-width stacked
+buttons: STOP — KEEP ON MAP (magenta, saves + line stays), STOP —
+CLEAR OFF MAP (saves with t.hidden, the same flag HIDE uses), KEEP
+TRACKING (cancel; scrim tap does the same), then a rule + gap and a
+red DELETE — DON'T KEEP THIS TRACK that confirms before discarding —
+isolated so it cannot be fat-fingered. Deletes of a live recording go
+through pushUndo('track-del') + trashAdd('track') like saved-track
+deletes, so UNDO brings them back. The under-2-points stop keeps the
+old plain confirm (nothing to keep). trkStop's save logic moved into
+trkStopKeep(hideLine) + trkRecord().
+
+Auto-save note added in three places: the stop card, the Track My Path
+hover tip, and the home quick-start line in help; the Track help
+section describes the start zoom and the card.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 4:45 PM EDT · v375 · Tips Everywhere Pick Reversal
 ------------------------------------------------------------------------------
 Every button in the FAB stack now carries the same styled hover box the

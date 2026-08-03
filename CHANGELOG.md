@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v376** — Track Start Zoom Stop Card
 - **v375** — Tips Everywhere Pick Reversal
 - **v374** — Track Edit And Notes
 - **v373** — Tracks Show And Zoom
