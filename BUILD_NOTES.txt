@@ -7,6 +7,15 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 3:35 PM EDT · v371 · Track Path Label
+------------------------------------------------------------------------------
+The new recording button reads "Track Path" instead of "Track" (Jan's
+call), and every help/toast reference to the button follows: TRACK PATH
+in the quick-start line, the feature writeup, the Your-tracks note in
++ Spot, and the start toast. Internals and the Disclaimer's generic
+TRACK feature name unchanged.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 3:25 PM EDT · v370 · Track Recording
 ------------------------------------------------------------------------------
 New TRACK button (above Locate Me): tap to record the boat's path as a

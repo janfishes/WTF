@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v371** — Track Path Label
 - **v370** — Track Recording
 - **v369** — Location Popup Lines
 - **v368** — Two-Line Hover Tip
