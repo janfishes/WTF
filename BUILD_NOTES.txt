@@ -7,6 +7,15 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 6:03 PM EDT · v384 · Help Sentence Split
+------------------------------------------------------------------------------
+One-word wording fix in the My Log exports help (Jan's ask): the
+full-backup sentence now ends at "...and the tide stations you
+created." and "Photos make it big enough that email will usually
+refuse it..." starts its own sentence — the v383 semicolon splice
+had grown too long.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 5:58 PM EDT · v383 · Tide Stations In Backups
 ------------------------------------------------------------------------------
 Your own calibrated tide stations now travel in the backup files.

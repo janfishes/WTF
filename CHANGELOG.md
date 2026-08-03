@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v384** — Help Sentence Split
 - **v383** — Tide Stations In Backups
 - **v382** — Aqua Ct Gauge Removed
 - **v381** — Accent Pill Borders
