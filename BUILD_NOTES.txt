@@ -7,6 +7,19 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 2:52 AM EDT · v348 · Higher Filter Cluster
+------------------------------------------------------------------------------
+On Macs the species list could run past the bottom of the window and need
+scrolling, because it starts below the top filter cluster. The cluster now
+sits 6 px higher (top 4 px instead of 10 px), the filter rows dropped a 2 px
+scrollbar-clearance pad they never used (they wrap, not scroll), and the
+2 px JS gap between the cluster and the species column is gone — the chips'
+own 6 px wrap margin already separates them. Ten pixels total handed to the
+species column; the full 24-fish list now fits without scrolling in any
+window down to about a 726 px viewport (was ~736 px). Phone layout has its
+own top rules and is untouched.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 2:40 AM EDT · v347 · Typed Catch Dates, Numbered Stamp
 ------------------------------------------------------------------------------
 The + Catch date field now accepts a typed date on computers. Desktop

@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v348** — Higher Filter Cluster
 - **v347** — Typed Catch Dates
 - **v346** — Update Pill Feedback
 - **v345** — PC Inlet Launch
