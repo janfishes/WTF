@@ -7,8 +7,33 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-03 · 12:10 AM EDT · v342 · Help Cleanup, Print Close
+Build 2026-08-03 · 12:30 AM EDT · v343 · Clean Ocean, Device Launch Views
 ------------------------------------------------------------------------------
+The Topo Satellite ocean is now clean at every zoom. Zoomed in past the
+1-mile scale (z13+) the view used to switch its blue fill from the
+shoreline envelope out to the state-waters limit so the chart's offshore
+strip could show — but off Volusia that strip is mostly USGS's no-imagery
+mess up close too: giant black tiles, wrong-color filler rectangles and
+vertical seam strips right off Ormond Beach (Jan's report: "tiles showing
+through as rectangles in the Atlantic off the Granada", plus a
+different-color blue strip). The topo (and its z17+ NAIP crisp layer) now
+clips along the shoreline envelope at EVERY zoom — photo to about a mile
+off the beach, flat deep blue beyond — same as the Hi Res & ICW view. The
+chart's printed boundary dashes and the "Volusia County" text along them
+are under the blue now, so the app's own dashed state-waters line, which
+used to stop at z13 where it doubled the chart's, draws at all close zooms
+again. Verified against rendered tiles at z13-z17 along the whole Volusia
+coast: no printed place name is cut by the new blue edge (Ponce Inlet,
+Ponce Park, Seabreeze, Daytona Beach Shores, Wilbur-by-the-Sea and friends
+all sit whole inside the photo strip), so no new SEA_LABEL_WINDOWS were
+needed.
+
+Launch views are per-device now. A PC still opens at the 500-ft scale
+(z15); a phone or tablet (coarse pointer) opens at the 5-mile scale (z10),
+wide enough to take in the whole fishing area. Both open with Ponce de
+Leon Inlet a third of the screen in from the LEFT edge — the view pushed
+east over the water (Jan's mid-build call; the first cut had the inlet on
+the right third).
 Help text pass. The species-buttons intro line drops "the app knows"; the
 Text Size writeup replaces the plain "AA" with a tall-A/small-A icon matching
 the header button (topic row and body both). Spelling and wording:

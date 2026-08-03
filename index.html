@@ -2791,7 +2791,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mapview"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite / Hi Res &amp; ICW / Street Map<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-mapview">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> The button toggles between three map views, showing whichever map view is currently active. In <b>Topo Satellite</b>, zoomed out, Florida's <b>state-waters limit</b> (3 nm on the Atlantic, 9 nm in the Gulf) is drawn as a <b>dashed line</b>. Zooming in further to the 1-mile scale shows the paddling-trail routes, county boundary lines, the Intracoastal's course through the sounds and bays, and every island chain. The <b>Hi Res &amp; ICW</b> map is a hi-res aerial photo — one continuous image of the land and every inside water, the sharpest view of the flats, bars and nearshore bottom. The <b>Intracoastal Waterway (ICW)</b> is mapped as cyan shading through the entire county — it is the channel <i>area</i>, not a centerline. Both maps are stored on your device, so they still draw with the signal off. The Hi Res &amp; ICW view also plots the <b>240 charted aids to navigation</b> along those channels — 217 fixed day beacons and 23 buoys — as small red and green dots, red for the marks on your starboard hand coming in from sea, green to port, and amber for the two or three preferred-channel junction marks. <b>Tap a dot</b> for its full charted name and, where it is lit, its light characteristic (e.g., <span class="g-emph">Halifax River Light 47 · Fl G 4s</span>). The name stays put until you tap another mark or tap open water to clear it. These markers appear with the channel shading, and do not show in the other map views.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> The button toggles between three map views, showing whichever map view is currently active. In <b>Topo Satellite</b>, Florida's <b>state-waters limit</b> (3 nm on the Atlantic, 9 nm in the Gulf) is drawn as a <b>dashed line</b> at every zoom, over a clean deep-blue Atlantic that begins about a mile off the beach. Zooming in to the 1-mile scale shows the paddling-trail routes, the Intracoastal's course through the sounds and bays, and every island chain. The <b>Hi Res &amp; ICW</b> map is a hi-res aerial photo — one continuous image of the land and every inside water, the sharpest view of the flats, bars and nearshore bottom. The <b>Intracoastal Waterway (ICW)</b> is mapped as cyan shading through the entire county — it is the channel <i>area</i>, not a centerline. Both maps are stored on your device, so they still draw with the signal off. The Hi Res &amp; ICW view also plots the <b>240 charted aids to navigation</b> along those channels — 217 fixed day beacons and 23 buoys — as small red and green dots, red for the marks on your starboard hand coming in from sea, green to port, and amber for the two or three preferred-channel junction marks. <b>Tap a dot</b> for its full charted name and, where it is lit, its light characteristic (e.g., <span class="g-emph">Halifax River Light 47 · Fl G 4s</span>). The name stays put until you tap another mark or tap open water to clear it. These markers appear with the channel shading, and do not show in the other map views.</p>
       <p class="sheet-note"><b>The numbers start again on every waterway</b>, which is worth knowing before you go looking for one. There are <b>five marks numbered 47</b> in Volusia County alone — on the Halifax River, at New Smyrna Beach, in Mosquito Lagoon and elsewhere — so "marker 47" on its own does not identify a spot. That is why every dot carries its full name rather than just a number. Positions come from NOAA's electronic navigational charts (Harbor-band cells); the light characteristics are matched to each mark by position from the charts' separate light records. Same caution as the channel itself: aids get moved, go missing, and change — so this app is for planning, not for navigating.</p>
       <p class="sheet-note">The ICW outlines come from the US Army Corps of Engineers' National Channel Framework — the Florida East survey published <b>June 2020</b>. <b>Treat its path as a general reference, not as true soundings.</b> It shows where the channel is authorized to be at that time, not where the water actually is now. Furthermore, shoaling moves the usable water around, and this coast gets plenty of it. Read and rely on your depth sounder and chartplotter — not this app — for navigation.</p>
       </div>
@@ -3916,7 +3916,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 342;
+const BUILD_NUM  = 343;
 const BUILD_VER  = 'V1';                                // user-facing version on the map stamp
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
@@ -4076,7 +4076,11 @@ function setAttribOpen(open){
   map.on('click', function(){ setAttribOpen(false); });
 })();
 L.control.zoom({position:'bottomleft'}).addTo(map);
-const DEFAULT_ZOOM = 15; // initial zoom on load: the 66px scale bar reads 500 ft here at Ponce Inlet's latitude
+/* Initial zoom on load, per device (v343): a PC opens at z15, where the 66px
+   scale bar reads 500 ft at Ponce Inlet's latitude; a phone or tablet (coarse
+   pointer) opens at z10, where it reads 5 mi — wide enough to take in the
+   whole fishing area at a glance. */
+const DEFAULT_ZOOM = window.matchMedia('(pointer: coarse)').matches ? 10 : 15;
 // maxWidth must stay in step with the 66px slot in .leaflet-bottom.leaflet-left
 // .leaflet-control-scale - see the note there.
 L.control.scale({position:'bottomleft', imperial:true, metric:false, maxWidth:66}).addTo(map);
@@ -4113,21 +4117,21 @@ const TILE_PROVIDERS = [
       // "best available imagery" composite often blends in higher-res local/partner
       // imagery beyond plain NAIP — but its tile cache stops at z16 (~2 m/px), so
       // past that it was being stretched into the blocky view zooming in used to give.
-      // Zoomed out (to z12): clipped along the same shoreline envelope as the
-      // ICW view — photo to ~1 mile off the beach, flat deep blue beyond —
+      // Clipped along the same shoreline envelope as the ICW view at EVERY
+      // zoom — photo to ~1 mile off the beach, flat deep blue beyond —
       // because USGS's offshore water is a patchwork of mismatched flight
-      // rectangles that dominates at wide zooms. From the ~1-mile scale in
-      // (z13+): clipped at the state-waters limit instead, so the strip's
-      // real chart content shows — paddling-trail routes, county boundary
-      // dashes, the ICW in Card Sound, bay names, and the small keys the
-      // generalised shoreline drops. The dashed limit is drawn on top either way.
-      { url:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', nativeZoom:16, zIndex:2, oceanFill:'#295890', keyFiller:true, seaClip:'shore', seaClipClose:'limit', labelWindows:true },
+      // rectangles, black no-imagery tiles and filler-blue seams, and up
+      // close (z13+, v343) those read as giant wrong-colour rectangles and
+      // vertical strips right off the beach. The strip's chart content the
+      // old state-waters clip preserved (county boundary dashes) is replaced
+      // by the app's own dashed limit line, drawn on top at all zooms.
+      { url:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', nativeZoom:16, zIndex:2, oceanFill:'#295890', keyFiller:true, seaClip:'shore', labelWindows:true },
       // Top: NAIP aerial photo (USDA, ~0.6 m/px) for close zooms only. Takes over
       // from z17 where the Imagery Topo cache runs out, so zooming in stays sharp
-      // to z18 instead of upscaling z16 tiles. Clipped at the state-waters
-      // limit like the layer below at these zooms (it only draws z17+), so
+      // to z18 instead of upscaling z16 tiles. Clipped along the same shoreline
+      // envelope as the layer below (v343 — was the state-waters limit), so
       // the one-transition ocean holds when NAIP takes over.
-      { type:'wms', url:'https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage', wmsLayer:'USGSNAIPImagery:NaturalColor', minZoom:17, nativeZoom:18, zIndex:3, oceanFill:'#295890', seaClip:'limit' }
+      { type:'wms', url:'https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage', wmsLayer:'USGSNAIPImagery:NaturalColor', minZoom:17, nativeZoom:18, zIndex:3, oceanFill:'#295890', seaClip:'shore' }
     ]
   },
   { name:'Hi-Res NAIP land & water + Sentinel-2 ocean', type:'composite',
@@ -4175,7 +4179,7 @@ const OFFLINE_TILE_TEMPLATES = [
   // get pre-cached; the USGS layer renders open-ocean tiles locally as
   // transparent, so its water tiles are skipped (skipOcean).
   { type:'xyz', tpl:'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg' },
-  { type:'xyz', tpl:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', skipOcean:true, seaClip:'shore', seaClipClose:'limit', labelWindows:true }
+  { type:'xyz', tpl:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', skipOcean:true, seaClip:'shore', labelWindows:true }
 ];
 // Optional add-on set: the ICW Channel view's hi-res NAIP imagery (one aerial
 // photo of land AND water). Opt-in from the Offline sheet — photographic
@@ -4301,11 +4305,14 @@ const SEA_CLIPS = {
   shore: { rings: SHORE_RINGS, pad: SHORE_PAD_M, bb: null },
   limit: { rings: LIMIT_RINGS, pad: 1000,        bb: null }
 };
-/* From the ~1-mile scale in, a topo layer flagged seaClipClose switches from
-   the shoreline cut to the state-waters cut: zoomed in, the strip between
-   shore and the limit is readable chart — trail routes, boundary dashes,
-   the island chains — and worth far more than hiding the imagery seams,
-   which dominate only when zoomed out. */
+/* A layer flagged seaClipClose switches from the shoreline cut to the
+   state-waters cut from the ~1-mile scale (z13) in. NO layer opts in as of
+   v343: the strip between shore and the limit turned out to be mostly
+   USGS's offshore no-imagery mess up close too — black tiles and
+   wrong-colour filler rectangles right off Ormond Beach — so the topo now
+   shore-clips at every zoom and the app draws its own dashed limit line
+   instead of relying on the chart's printed one. Machinery kept in case a
+   future layer wants the old behaviour. */
 const SEA_CLIP_CLOSE_Z = 13;
 function tileClipName(opts, z){
   return (opts.seaClipClose && z >= SEA_CLIP_CLOSE_Z) ? opts.seaClipClose : opts.seaClip;
@@ -5008,12 +5015,12 @@ function mountBaseLayer(i){
       // Coastal tiles clipped/recoloured per-pixel along the clip boundary —
       // see the open-sea handling block above.
       if(sub.keyFiller) opts.keyFiller = true;
-      // Which clip boundary the sublayer's sea is cut along: 'limit' (topo,
-      // the state-waters line) or 'shore' (ICW, the coastline envelope) — see
-      // SEA_CLIPS / paintSeaOverlay() above.
+      // Which clip boundary the sublayer's sea is cut along: 'shore' (the
+      // coastline envelope — every view since v343) or 'limit' (the
+      // state-waters line) — see SEA_CLIPS / paintSeaOverlay() above.
       if(sub.seaClip) opts.seaClip = sub.seaClip;
       // Zoomed in past SEA_CLIP_CLOSE_Z the layer switches to this boundary
-      // (topo: state-waters limit) — see tileClipName() above.
+      // (no sublayer opts in as of v343) — see tileClipName() above.
       if(sub.seaClipClose) opts.seaClipClose = sub.seaClipClose;
       // Topo USGS layer only: pull the blue back around printed coastal names
       // the fill would cut in half — see SEA_LABEL_WINDOWS above.
@@ -5268,11 +5275,12 @@ function seaLimitStrands(){
 function updateSeaOverlays(){
   const z = map.getZoom();
   const topo = (mapMode === 0);
-  /* v306: the app-drawn dashes stop once the scale bar drops under 1 mile (z13). That is
-     also SEA_CLIP_CLOSE_Z, where the clip switches to the real limit line with a seaward
-     pad — the chart's own printed boundary dashes are visible from there, so the app's
-     copy just doubled them (and Jan asked for it gone up close). */
-  const showLine = topo && z >= OCEAN_MIN_Z && z < SEA_CLIP_CLOSE_Z;
+  /* v306 stopped the app-drawn dashes at z13, where the clip used to switch to the
+     state-waters limit and the chart's own printed dashes took over (the app's copy
+     just doubled them). v343 shore-clips at every zoom, which buries the chart's
+     printed line under the blue — so the app's dashed line now runs at all close
+     zooms again; it is the only limit line left. */
+  const showLine = topo && z >= OCEAN_MIN_Z;
   if(showLine && !seaLimitLayer){
     seaLimitLayer = L.layerGroup(seaLimitStrands().map(s =>
       L.polyline(s, { color:'#e8f1f8', weight:1.5, opacity:0.9, dashArray:'6 6', interactive:false })));
@@ -5489,11 +5497,16 @@ function aidPointerHit(e){
 map.on('click', aidPointerHit);
 map.on('mousemove', aidPointerHit);
 
-// Launch centred on Ponce de Leon Inlet (same anchor the inlet label uses, a few
-// lines down) at a wide default zoom, rather than on the geometric centre of
-// every pin — all pins show at this zoom regardless, with per-category totals
-// shown on the filter chips above (see updateFilterCounts()).
-map.setView([29.07783, -80.91022], DEFAULT_ZOOM);
+// Launch with Ponce de Leon Inlet (same anchor the inlet label uses, a few
+// lines down) a third of the screen in from the LEFT edge (v343 — Jan wants
+// the view pushed east), not dead centre: the view's centre is the inlet
+// pushed east by a sixth of the map width, so the screen looks out over the
+// water to the east of the inlet.
+{
+  const startPt = map.project([29.07783, -80.91022], DEFAULT_ZOOM);
+  startPt.x += map.getSize().x/6;
+  map.setView(map.unproject(startPt, DEFAULT_ZOOM), DEFAULT_ZOOM);
+}
 
 // Our own inlet label, on the centreline of the marked cut (v207 — it used to ride the north
 // jetty). The point is halfway along the longest marker-free reach of the channel, between
