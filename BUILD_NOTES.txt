@@ -7,6 +7,38 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 3:25 PM EDT · v370 · Track Recording
+------------------------------------------------------------------------------
+New TRACK button (above Locate Me): tap to record the boat's path as a
+magenta breadcrumb line on the map, tap again (or STOP on the bar) to
+finish. A slim white bar at the top — accent border, non-blocking, the
+chart stays fully usable — shows distance covered, elapsed time, and,
+where the browser allows it, a live battery %. Points are GPS-filtered
+(fixes rougher than 35 m dropped; a point lands after 12 m of real
+movement, 5-decimal rounding) and written to localStorage one by one,
+so an iOS backgrounding reload resumes the recording instead of losing
+it. Past 4000 points the track thins itself (every other point, spacing
+doubles). Recording needs no signal — GPS works offshore; only imagery
+needs tiles. A wake lock holds the screen awake; recording pauses when
+the app leaves the screen (iOS gives web apps no background location),
+and the bar says so. Battery: Chrome/Android get a live % plus a
+low-battery toast at 20%; Safari (Mac + iPhone) removed the Battery
+Status API, so there the start toast and the bar's foot line carry the
+drain warning instead. Kept tracks (last 10, device-local, not in
+backups) live under "Your tracks" in + Spot with SHOW/DELETE; a kept
+track stays drawn after STOP; deletes go through UNDO and the 14-day
+Recently-deleted bin like spots and catches. Tapping the bar fits the
+map to the track so far. While a MARK is up, its banner owns the top of
+the screen and the track bar steps aside; the recording continues.
+
+Also in this build, at Jan's request: the MARK feature's internal names
+finally match its face — every mob identifier, .mob- class, and the
+wtf:mob key renamed to mark forms (v361 had changed only the user-facing
+words). Two legacy shims keep old data honest: a wtf:mob key left by a
+pre-v370 build migrates on load, and pins saved with the old mob:true
+flag still paint red beside the new mark:true.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 3:05 PM EDT · v369 · Location Popup Lines
 ------------------------------------------------------------------------------
 The Locate Me location popup now prints the distance from the inlet

@@ -749,7 +749,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
        repair its white-on-accent text, currently 1.86:1 to 3.00:1 in five of the six themes.
        That is Jan's call, not done here. Do NOT set --launch back to any theme's accent.
        Off-state chip text does NOT use it - see #launchToggle. */
-    --inshore:#1e90ff; --offshore:#FFC400; --launch:#4f1d0a; --mob:#e02020;
+    --inshore:#1e90ff; --offshore:#FFC400; --launch:#4f1d0a; --mark:#e02020;
     /* Not a pin colour: catch pins are filled per SPECIES (see SPECIES below), never with
        this. --catch only paints the #cropApply button. Left on the old zone purple, which
        nothing else uses any more. */
@@ -2214,31 +2214,31 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .loc-dot{width:26px; height:26px; display:flex; align-items:center; justify-content:center; color:var(--accent-lite); filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));}
   .pin-preview{width:17px; height:17px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--brass); border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.5);}
 
-  /* ---------- MARK (instant waypoint; internal mob* names kept from its MOB days) ---------- */
+  /* ---------- MARK (instant waypoint; was MOB / man-overboard until v361 — internals renamed mob*->mark* in v370) ---------- */
   /* The badge on Locate Me: the ✕ itself is the affordance — a SHAPE, not a colour coding,
      so it still reads whatever the theme accent is. The !importants outshout the theme
      block's `.fab svg{stroke:var(--teal) !important}` above; being later at equal
      specificity wins. Since v363 the badge wears the THEME ACCENT (Jan's call), not red —
      the mark on the water stays red. */
   #locateBtn{-webkit-touch-callout:none; -webkit-user-select:none; user-select:none; touch-action:manipulation;}
-  /* The badge wears the same dashed ring shape as the map mark (.mob-pin .disc) — drawn as
+  /* The badge wears the same dashed ring shape as the map mark (.mark-pin .disc) — drawn as
      a circle inside the svg (its own stroke attr, so the stroke:none below can't touch it).
      21px box = the old 16px figure plus the ring's shell. */
-  #locateBtn svg.mob-hint{color:var(--teal) !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
-  #locateBtn.active-locate svg.mob-hint{color:var(--on-accent) !important;}
+  #locateBtn svg.mark-hint{color:var(--teal) !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
+  #locateBtn.active-locate svg.mark-hint{color:var(--on-accent) !important;}
   /* Holding the pill floods it red over the full hold — the "am I doing it?" feedback.
      Let go early and it snaps straight back (no transition without the class). */
-  #locateBtn.mob-arming{background:#c11a1a !important; border-color:#c11a1a !important; color:#fff !important;
+  #locateBtn.mark-arming{background:#c11a1a !important; border-color:#c11a1a !important; color:#fff !important;
     transition:background-color .9s linear, border-color .9s linear, color .4s linear;}
-  #locateBtn.mob-arming svg{color:#fff !important; stroke:#fff !important;}
-  #locateBtn.mob-arming svg.mob-hint{color:#fff !important; stroke:none !important;}
+  #locateBtn.mark-arming svg{color:#fff !important; stroke:#fff !important;}
+  #locateBtn.mark-arming svg.mark-hint{color:#fff !important; stroke:none !important;}
   /* Hover tip (fine pointers only): the old title= tooltip restyled bold and bigger —
      native title bubbles can't be styled. Hangs LEFT of the pill (the stack hugs the map's
      right edge) and hides while the hold-to-arm flood is running. */
-  #locateBtn .fab-tip{display:none;}
+  #locateBtn .fab-tip, #trackBtn .fab-tip{display:none;}
   @media (hover:hover) and (pointer:fine){
-    #locateBtn{position:relative;}
-    #locateBtn:hover .fab-tip{
+    #locateBtn, #trackBtn{position:relative;}
+    #locateBtn:hover .fab-tip, #trackBtn:hover .fab-tip{
       display:block; position:absolute; right:calc(100% + 10px); top:50%;
       transform:translateY(-50%); width:max-content; max-width:min(380px, 46vw);
       background:rgba(11,28,43,.96); border:1px solid var(--line); border-radius:9px;
@@ -2246,52 +2246,87 @@ svg.leaflet-image-layer.leaflet-interactive path {
       line-height:1.4; white-space:normal; text-align:left; pointer-events:none;
       box-shadow:0 4px 14px rgba(0,0,0,.4); z-index:1200;
     }
-    #locateBtn .fab-tip span{display:block;}
-    #locateBtn .fab-tip b{font-weight:900;}
-    #locateBtn.mob-arming:hover .fab-tip{display:none;}
+    #locateBtn .fab-tip span, #trackBtn .fab-tip span{display:block;}
+    #locateBtn .fab-tip b, #trackBtn .fab-tip b{font-weight:900;}
+    #locateBtn.mark-arming:hover .fab-tip{display:none;}
   }
 
-  #mobBanner{
+  #markBanner{
     position:fixed; left:50%; top:calc(env(safe-area-inset-top, 0px) + 8px); transform:translateX(-50%);
     z-index:6000; width:min(384px, calc(100vw - 16px)); box-sizing:border-box;
     background:rgba(255,255,255,.96); border:3px solid var(--teal); border-radius:14px;
     color:#000; font-family:'Space Grotesk',sans-serif; padding:8px 12px 9px;
     box-shadow:0 6px 26px rgba(0,0,0,.55); backdrop-filter:blur(6px); cursor:pointer;
   }
-  #mobBanner .mob-top{display:flex; align-items:center; gap:7px;}
-  #mobBanner .mob-fig{width:21px; height:21px; color:#d81f17; flex:0 0 auto;}
-  #mobBanner .mob-title{font-weight:900; letter-spacing:.09em; font-size:calc(15px * var(--tsb)); color:#d81f17;}
-  #mobBanner .mob-clock{margin-left:auto; font-weight:800; font-variant-numeric:tabular-nums; font-size:calc(15px * var(--tsb)); color:#333;}
-  #mobBanner #mobClearBtn{
+  #markBanner .mark-top{display:flex; align-items:center; gap:7px;}
+  #markBanner .mark-fig{width:21px; height:21px; color:#d81f17; flex:0 0 auto;}
+  #markBanner .mark-title{font-weight:900; letter-spacing:.09em; font-size:calc(15px * var(--tsb)); color:#d81f17;}
+  #markBanner .mark-clock{margin-left:auto; font-weight:800; font-variant-numeric:tabular-nums; font-size:calc(15px * var(--tsb)); color:#333;}
+  #markBanner #markClearBtn{
     background:var(--teal); color:var(--on-accent); border:none; border-radius:100px; cursor:pointer;
     font-family:inherit; font-weight:800; font-size:calc(12px * var(--tsb)); letter-spacing:.06em; padding:3px 11px;
   }
-  #mobBanner .mob-nav{display:flex; align-items:baseline; justify-content:center; gap:18px; margin:3px 0 2px;
+  #markBanner .mark-nav{display:flex; align-items:baseline; justify-content:center; gap:18px; margin:3px 0 2px;
     font-weight:900; font-variant-numeric:tabular-nums; font-size:calc(32px * var(--tsb)); line-height:1.15;}
-  #mobBanner .mob-nav .u{font-size:calc(16px * var(--tsb)); font-weight:800; color:#333;}
-  #mobBanner .mob-foot{font-size:calc(13px * var(--tsb)); font-weight:700; line-height:1.4; color:#333; text-align:center;}
-  #mobBanner .mob-foot b{color:#000;}
+  #markBanner .mark-nav .u{font-size:calc(16px * var(--tsb)); font-weight:800; color:#333;}
+  #markBanner .mark-foot{font-size:calc(13px * var(--tsb)); font-weight:700; line-height:1.4; color:#333; text-align:center;}
+  #markBanner .mark-foot b{color:#000;}
 
   /* The mark on the water: red figure on a white disc inside a DASHED red ring, with a slow
      pulse — shape, pattern and motion all say "this one is different" before colour does. */
-  .mob-pin{position:relative; width:38px; height:38px; display:flex; align-items:center; justify-content:center;}
-  .mob-pin .disc{position:absolute; inset:2px; border-radius:50%; background:rgba(255,255,255,.95);
+  .mark-pin{position:relative; width:38px; height:38px; display:flex; align-items:center; justify-content:center;}
+  .mark-pin .disc{position:absolute; inset:2px; border-radius:50%; background:rgba(255,255,255,.95);
     border:2.5px dashed #e5231b; box-sizing:border-box; box-shadow:0 2px 7px rgba(0,0,0,.5);}
-  .mob-pin svg{position:relative; width:21px; height:21px; color:#d81f17;}
-  .mob-pin .pulse{position:absolute; inset:-3px; border-radius:50%; border:2px solid #ff5252;
-    animation:mobPulse 1.6s ease-out infinite; pointer-events:none;}
-  @keyframes mobPulse{0%{transform:scale(.65); opacity:.95;} 100%{transform:scale(1.9); opacity:0;}}
-  .mob-line{filter:drop-shadow(0 0 2px rgba(255,255,255,.8));}
+  .mark-pin svg{position:relative; width:21px; height:21px; color:#d81f17;}
+  .mark-pin .pulse{position:absolute; inset:-3px; border-radius:50%; border:2px solid #ff5252;
+    animation:markPulse 1.6s ease-out infinite; pointer-events:none;}
+  @keyframes markPulse{0%{transform:scale(.65); opacity:.95;} 100%{transform:scale(1.9); opacity:0;}}
+  .mark-line{filter:drop-shadow(0 0 2px rgba(255,255,255,.8));}
   /* While a MARK is active the chart clears for the one job: the species pills, the action
      stack (bar Locate Me) and every pin step aside; only the MARK, the boat and the
      line between them stay. Everything returns on CLEAR. */
-  body.mob-active #speciesCol{display:none;}
-  body.mob-active .fab{display:none;}
-  body.mob-active #locateBtn{display:flex;}
-  body.mob-active .leaflet-marker-pane > *{display:none;}
-  body.mob-active .leaflet-marker-pane > :has(.mob-pin),
-  body.mob-active .leaflet-marker-pane > :has(.loc-dot){display:block;}
-  body.mob-active .leaflet-tooltip-pane, body.mob-active .leaflet-shadow-pane{display:none;}
+  body.mark-active #speciesCol{display:none;}
+  body.mark-active .fab{display:none;}
+  body.mark-active #locateBtn{display:flex;}
+  body.mark-active .leaflet-marker-pane > *{display:none;}
+  body.mark-active .leaflet-marker-pane > :has(.mark-pin),
+  body.mark-active .leaflet-marker-pane > :has(.loc-dot){display:block;}
+  body.mark-active .leaflet-tooltip-pane, body.mark-active .leaflet-shadow-pane{display:none;}
+
+  /* ---------- TRACK (breadcrumb recording, v370) ---------- */
+  /* Recording state wears the accent like every other lit pill. Its own class, not
+     .pressed — closeAllOverlays() sweeps .pressed off the stack, and a recording must
+     survive sheets opening and closing. */
+  #trackBtn.rec{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
+  #trackBtn.rec svg{stroke:var(--on-accent) !important;}
+  /* The bar is slim and non-blocking — unlike the MARK banner, the chart stays fully
+     usable while a track records. Same white-card-with-accent-border family as the
+     banner; the track itself (line + REC dot) is magenta, a colour nothing else on the
+     water wears (red belongs to the MARK). */
+  #trackBar{
+    position:fixed; left:50%; top:calc(env(safe-area-inset-top, 0px) + 8px); transform:translateX(-50%);
+    z-index:5900; width:min(340px, calc(100vw - 16px)); box-sizing:border-box;
+    background:rgba(255,255,255,.96); border:2.5px solid var(--teal); border-radius:12px;
+    color:#000; font-family:'Space Grotesk',sans-serif; padding:6px 11px;
+    box-shadow:0 5px 20px rgba(0,0,0,.5); backdrop-filter:blur(6px); cursor:pointer;
+  }
+  #trackBar .tk-top{display:flex; align-items:center; gap:8px;}
+  #trackBar .tk-dot{width:11px; height:11px; border-radius:50%; background:#c227d6; flex:0 0 auto;
+    animation:tkBlink 1.4s ease-in-out infinite;}
+  @keyframes tkBlink{0%,100%{opacity:1;} 50%{opacity:.25;}}
+  #trackBar .tk-title{font-weight:900; letter-spacing:.09em; font-size:calc(13.5px * var(--tsb)); color:#8e1d9e;}
+  #trackBar .tk-stat{font-weight:800; font-variant-numeric:tabular-nums; font-size:calc(13.5px * var(--tsb)); color:#333;}
+  #trackBar .tk-batt{font-weight:800; font-size:calc(12.5px * var(--tsb)); color:#333;}
+  #trackBar .tk-batt.low{color:#c11a1a;}
+  #trackBar #trackStopBtn{
+    margin-left:auto; background:var(--teal); color:var(--on-accent); border:none; border-radius:100px; cursor:pointer;
+    font-family:inherit; font-weight:800; font-size:calc(12px * var(--tsb)); letter-spacing:.06em; padding:3px 11px;
+  }
+  #trackBar .tk-foot{font-size:calc(11px * var(--tsb)); font-weight:700; color:#555; text-align:center; margin-top:3px; line-height:1.35;}
+  /* While a MARK is up its banner owns the top of the screen; the recording continues,
+     only the bar steps aside until CLEAR. */
+  body.mark-active #trackBar{display:none;}
+  .track-line{filter:drop-shadow(0 0 2px rgba(255,255,255,.75));}
 
   .search-row{
     display:flex; align-items:center; justify-content:space-between; gap:8px;
@@ -2554,11 +2589,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </g>
 </symbol>
 <!-- MARK figure: a bold X — "X marks the spot" (until v361 this was the arms-up
-     man-overboard distress figure; the id stays #mobFig, like the rest of the internal
-     mob* names, so nothing else has to move). Drawn in currentColor; each usage (the
+     man-overboard distress figure; the id stays #markFig, like the rest of the internal
+     mark* names, so nothing else has to move). Drawn in currentColor; each usage (the
      Locate Me badge, the map mark, the banner) sets its own red so the figure is never
      invisible on any background. -->
-<symbol id="mobFig" viewBox="0 0 24 24">
+<symbol id="markFig" viewBox="0 0 24 24">
   <g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round">
     <path d="M6 6l12 12"></path>
     <path d="M18 6 6 18"></path>
@@ -2652,10 +2687,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
       Topo Satellite
     </button>
+    <button class="fab" id="trackBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg>
+      Track
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> starts recording your path as a line on the map.</span><span>Tap again to <b>stop and keep the track.</b></span></span>
+    </button>
     <button class="fab" id="locateBtn">
       <svg viewBox="0 0 24 28" width="15" height="17" style="vertical-align:-3px;"><use href="#locatePin"></use></svg>
       Locate Me
-      <svg class="mob-hint" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#mobFig" x="4" y="4" width="24" height="24"></use></svg>
+      <svg class="mark-hint" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#markFig" x="4" y="4" width="24" height="24"></use></svg>
       <span class="fab-tip" aria-hidden="true"><span>TAP: drops your GPS position.</span><span><b>PRESS AND HOLD:</b> drops a MARK to steer back to.</span></span>
     </button>
   </div>
@@ -2664,15 +2704,32 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <!-- MARK banner (MAN OVERBOARD until v361). Fixed over everything (z above sheets and the
      gate) because while it is up, nothing else on the screen matters. Tapping the banner
      body fits the map to the boat and the mark; only CLEAR (with a confirm) takes it down. -->
-<div id="mobBanner" hidden>
-  <div class="mob-top">
-    <svg class="mob-fig" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#mobFig" x="4" y="4" width="24" height="24"></use></svg>
-    <span class="mob-title">MARK&nbsp;SET</span>
-    <span class="mob-clock" id="mobClock">0:00</span>
-    <button id="mobClearBtn" type="button">CLEAR</button>
+<div id="markBanner" hidden>
+  <div class="mark-top">
+    <svg class="mark-fig" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#markFig" x="4" y="4" width="24" height="24"></use></svg>
+    <span class="mark-title">MARK&nbsp;SET</span>
+    <span class="mark-clock" id="markClock">0:00</span>
+    <button id="markClearBtn" type="button">CLEAR</button>
   </div>
-  <div class="mob-nav"><span id="mobBrg">&mdash;</span><span id="mobDist">waiting for GPS&hellip;</span></div>
-  <div class="mob-foot">Steer to the MARK using the <b>magnetic bearing</b> on your compass or plotter. <b>Tap this banner</b> to see your position and the MARK. Zoom in if you don't see both pins simultaneously.</div>
+  <div class="mark-nav"><span id="markBrg">&mdash;</span><span id="markDist">waiting for GPS&hellip;</span></div>
+  <div class="mark-foot">Steer to the MARK using the <b>magnetic bearing</b> on your compass or plotter. <b>Tap this banner</b> to see your position and the MARK. Zoom in if you don't see both pins simultaneously.</div>
+</div>
+
+<!-- TRACK bar (v370): slim and non-blocking — the chart stays fully usable while a track
+     records. Tapping the bar body fits the map to the track so far; STOP ends and keeps it.
+     The battery readout fills in only where the Battery Status API exists (Chrome/Android);
+     Safari — Mac and iPhone — removed that API for privacy, so there the foot line carries
+     the drain warning instead. -->
+<div id="trackBar" hidden>
+  <div class="tk-top">
+    <span class="tk-dot"></span>
+    <span class="tk-title">TRACKING</span>
+    <span class="tk-stat" id="trackDist">waiting for GPS&hellip;</span>
+    <span class="tk-stat" id="trackClock">0:00</span>
+    <span class="tk-batt" id="trackBatt" hidden></span>
+    <button id="trackStopBtn" type="button">STOP</button>
+  </div>
+  <div class="tk-foot">GPS and the screen stay on — expect extra battery use. Recording pauses if the app leaves the screen.</div>
 </div>
 
 <!-- ===================== INFO SHEET ===================== -->
@@ -2756,7 +2813,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Fishing</div>
-      <p class="sheet-note">Tap any spot pin on the map for its coordinates and details. Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, and back up all your fishing data and photos.</p>
+      <p class="sheet-note">Tap any spot pin on the map for its coordinates and details. Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. <b>TRACK</b> records your path as a line on the map while the app is on screen — tap it again to stop and keep the track. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, and back up all your fishing data and photos.</p>
       <p class="sheet-note"><b>Be advised, this app is not for navigation or emergency use!</b> The <b>MARK</b> function is a memory aid only — not navigation, safety, or rescue equipment, and no substitute for the safety gear and safe-boating practice the law and good seamanship require (see <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>).</p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Ace, get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <button class="mini-btn help-print-hide" id="helpPrintBtn" style="display:block; width:100%; margin:14px 0 6px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
@@ -2830,7 +2887,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-locate"><svg viewBox="0 0 24 28" width="13" height="15"><use href="#locatePin"></use></svg> Locate Me<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-locate">
       <p class="sheet-note">A <b>TAP</b> on this button drops your GPS position on the map (tap again to remove it). The pin opens with your <b>coordinates</b> and the <b>distance and magnetic headings to/from Ponce Inlet</b> — the <b>second</b> number of the bearing pair is the course home from where you are. It's a straight-line figure, not a channel route. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The small ✕ in a dashed ring on the <svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> button — in your theme's accent color — signifies the MARK function: the same mark it drops on the water.</p>
-      <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#mobFig"></use></svg> <b>MARK function.</b> <b>PRESS AND HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. The app drops a <b>MARK</b> at your position and starts guiding you back to it: a white banner edged in your theme's accent color at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red ✕ in a dashed ring — and the screen stays awake while it's up. It works anywhere — <b>inshore, offshore, or the ICW</b>. Use it for anything you'll want to run straight back to <b>right now</b>: a hat overboard, a dropped rod, the patch of water where the bite turned on just as you drifted off it. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while a MARK is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see the boat and mark's positions together — a short note confirms what the tap did (or says the GPS hasn't locked on yet); <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b> as a record — a <b>red pin</b> named MARK with its date and time, filed under <b>Inshore</b> or <b>Offshore</b>&nbsp;by where it happened. To delete one later, tap its red pin and use <b>DELETE</b>, or open <b>+ Spot</b> and scroll to <b>Your saved spots</b>: MARK entries sit together alphabetically, each with <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons — <b>DELETE ✕</b> removes it. One thing to do <b>at the dock, not on the water</b>: the first time MARK (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, so a press on the water drops the mark instead of showing a permission dialog.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#markFig"></use></svg> <b>MARK function.</b> <b>PRESS AND HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. The app drops a <b>MARK</b> at your position and starts guiding you back to it: a white banner edged in your theme's accent color at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red ✕ in a dashed ring — and the screen stays awake while it's up. It works anywhere — <b>inshore, offshore, or the ICW</b>. Use it for anything you'll want to run straight back to <b>right now</b>: a hat overboard, a dropped rod, the patch of water where the bite turned on just as you drifted off it. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while a MARK is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see the boat and mark's positions together — a short note confirms what the tap did (or says the GPS hasn't locked on yet); <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b> as a record — a <b>red pin</b> named MARK with its date and time, filed under <b>Inshore</b> or <b>Offshore</b>&nbsp;by where it happened. To delete one later, tap its red pin and use <b>DELETE</b>, or open <b>+ Spot</b> and scroll to <b>Your saved spots</b>: MARK entries sit together alphabetically, each with <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons — <b>DELETE ✕</b> removes it. One thing to do <b>at the dock, not on the water</b>: the first time MARK (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, so a press on the water drops the mark instead of showing a permission dialog.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c227d6" stroke-width="2" style="vertical-align:-7px;"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="#c227d6" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="#c227d6" stroke="none"></circle></svg> <b>TRACK function.</b> Tap <b>TRACK</b> and the app records your path as a <b>magenta line</b> on the map — your drift over a ledge, the troll that raised the fish, the route you picked through the flats. A slim bar at the top shows the distance covered and the time; <b>tap the bar</b> to fit the whole track on screen, and tap <b>STOP</b> (or TRACK again) to finish. A kept track stays on the map and is saved under <b>Your tracks</b> in <b>+ Spot</b> — the app keeps your last 10, each with <b>SHOW 🗺</b> and <b>DELETE ✕</b> buttons, and a deleted track is restorable with <b>UNDO</b> for 14 days like anything else. Recording needs <b>no signal</b> — GPS works far offshore; download the offline map first if you want imagery under the line out there. Two honest limits: the app can only record <b>while it is on the screen</b> (it keeps the screen awake for you; locking the phone or switching apps pauses the track until you return), and keeping GPS and the screen on <b>uses real battery</b> — on phones that allow it the bar shows a live battery % and warns when it runs low; iPhones don't let a web app read the battery, so mind the gauge and bring a charging cable for a long day. Tracks live on this device only and are not in backup files.</p>
       <p class="sheet-note"><b>Caution.</b> A MARK is where the <b>phone</b> was when the button was pressed — anything in the water <b>drifts</b> from that point with current and wind, so the longer the clock runs, the farther away it may be. The function depends on the phone's GPS, battery, signal, and software, and <b>any of them can fail, lag, or be wrong exactly when needed</b>. This app is an aid to memory, <b>not navigation, safety, or rescue equipment</b>, and it is no substitute for the equipment and practices the situation and the law require — read up at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>.</p>
       </div>
 
@@ -2916,12 +2974,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Phones cache this app hard enough that a new build can hide behind an old copy for days. Consequently, the app checks quietly for a newer build every time it opens, and when one is out, a small pill appears above the build stamp that says: <span class="g-emph">UPDATE AVAILABLE — Tap to Reload</span>. One tap brings the new build in — the pill reads <span class="g-emph">UPDATING…</span> while the new build downloads, then the app reloads on its own; the ✕ puts it off until next time. No connection, no check, so it never interrupts you on the water. Behind that, the app keeps a saved copy of itself so it opens instantly, and fetches the live page in the background for the next open. Therefore, even if you never tap the pill, a new build lands the second time you open the app with signal.</p>
 
       <div class="subhead">Warning</div>
-      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots. GPS positions — your cell signal, a dropped pin's, or a <b>MARK</b>'s — are only as good as the phone's fix, and location features can fail, lag, or mislead. Never rely on this app as your only means of navigation or emergency response.</p>
+      <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots. GPS positions — your cell signal, a dropped pin's, a <b>MARK</b>'s, or a <b>TRACK</b>'s line — are only as good as the phone's fix, and location features can fail, lag, or mislead. Never rely on this app as your only means of navigation or emergency response.</p>
 
       <div class="subhead">Disclaimer</div>
       <p class="sheet-note">Read this one before you take the app on the water.</p>
       <p class="sheet-note">The <b>Compass</b> overlay is for general reference only, not for setting a heading. The rose is anchored at <b>NOAA's official position for Ponce de Leon Inlet</b>, in the inlet mouth, and every figure this app works out — the rose's lines and the nm/bearing in the offshore popups and drop lists — is measured from that same point, so the rose and the popups agree with each other. The one exception is the <b>distance printed in a CR site's popup</b>, which is FWC's published figure taken from FWC's own origin at 29°04.500&#8242;N 80°55.500&#8242;W in the inlet mouth channel. Against the rose's run it can read up to about a mile different — most noticeably on <b>Site 14 Flagler Ave Reef</b>, the closest — and the gap fades with distance. A <b>site-to-site leg</b> sidesteps origins entirely — it is measured between the two marks themselves. All of these figures are <b>magnetic</b>, 7.3° west of true — as the caption under the rose states. Also, FWC published theirs in true degrees.</p>
-      <p class="sheet-note"><b>THE APP IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE,&rdquo; WITHOUT WARRANTY OF ANY KIND</b>, express or implied — including, without limitation, the implied warranties of <b>merchantability</b> and <b>fitness for a particular purpose</b>, and any warranty of accuracy or non-infringement. No promise is made that the app, its data, or any location or marking feature (including <b>MARK</b>) will be available, accurate, or error-free, or will function when needed.</p>
+      <p class="sheet-note"><b>THE APP IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE,&rdquo; WITHOUT WARRANTY OF ANY KIND</b>, express or implied — including, without limitation, the implied warranties of <b>merchantability</b> and <b>fitness for a particular purpose</b>, and any warranty of accuracy or non-infringement. No promise is made that the app, its data, or any location or marking feature (including <b>MARK</b> and <b>TRACK</b>) will be available, accurate, or error-free, or will function when needed.</p>
       <p class="sheet-note">This app is an aid to memory and planning only. It is <b>not navigation equipment and not safety or rescue equipment</b>, and it is no substitute for official charts, a compass, a VHF radio, PFDs, an EPIRB or personal safety equipment, a proper lookout, or USCG-required equipment and procedures. You assume all risks of using this app on the water.</p>
       <p class="sheet-note">To the maximum extent permitted by law, the developer and owners of this app accept <b>no liability</b> for any loss, injury, death, or damage — direct, indirect, incidental, or consequential — arising from use of, inability to use, or reliance on this app or anything it displays. If you paid for the app, the developer's entire liability, and your exclusive remedy, is a refund of the amount you paid. Some jurisdictions do not allow certain warranty or liability exclusions, so parts of this section may not apply to you; where that is so, liability is limited to the smallest extent the law allows. If you do not agree to these terms, do not use the app.</p>
 
@@ -3110,6 +3168,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="restoreBuiltinBtn">Restore built-in spots <span class="bi bi-undo">↺</span></button>
     </div>
     <p class="sheet-note" style="margin-top:6px;">Restoring brings back any built-in spots you edited or deleted. Your own added spots are not affected.</p>
+    <p class="sheet-note" style="margin-top:14px;">Your tracks: <span id="trackCount">0</span>. Record one with the <b>TRACK</b> button on the map — the app keeps your last 10, on this device only.</p>
+    <div id="trackList"></div>
   </div>
 </div>
 
@@ -3234,7 +3294,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div id="acceptGate">
   <div id="acceptBar">
     <div id="acceptStep1">
-      <span id="acceptText"><b>Do not use this site for navigation or emergency use.</b> Pins and the <b>MARK</b> feature are memory aids only — not navigation, safety, or rescue equipment. Provided <b>AS&nbsp;IS</b> — see the Disclaimer in Help.</span>
+      <span id="acceptText"><b>Do not use this site for navigation or emergency use.</b> Pins, tracks and the <b>MARK</b> feature are memory aids only — not navigation, safety, or rescue equipment. Provided <b>AS&nbsp;IS</b> — see the Disclaimer in Help.</span>
       <div id="acceptRow">
         <input type="text" id="acceptName" maxlength="24" autocomplete="name" placeholder="Your name (optional)">
         <button id="acceptBtn">Accept</button>
@@ -3958,7 +4018,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 369;
+const BUILD_NUM  = 370;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -6119,10 +6179,12 @@ async function trashRemove(kind, id){
 }
 function updateTrashNotes(){
   const c = trash ? trash.filter(e=>e.kind==='catch').length : 0;
-  const s = trash ? trash.length - c : 0;
+  const k = trash ? trash.filter(e=>e.kind==='track').length : 0;
+  const s = trash ? trash.length - c - k : 0;
   const bits = [];
   if(c) bits.push(c + (c===1?' catch':' catches'));
   if(s) bits.push(s + (s===1?' spot':' spots'));
+  if(k) bits.push(k + (k===1?' track':' tracks'));
   const txt = bits.length
     ? 'Recently deleted: ' + bits.join(' · ') + ' — UNDO restores them, kept 14 days (last 10).'
     : 'Recently deleted: none.';
@@ -6153,6 +6215,11 @@ window.appUndo = async function(){
       await persistCatches();
       renderCatchMarkers(); renderCatchList(); updateCatchCount();
       showToast('Deleted catch restored ✓');
+    } else if(e.kind === 'track'){
+      const list = trkLoadSaved();
+      if(!list.some(x=>x.id===e.record.id)){ list.push(e.record); list.sort((a2,b2)=>a2.t0-b2.t0); trkStoreSaved(list); }
+      renderTrackList();
+      showToast('Deleted track restored ✓');
     } else {
       if(!customSpots.some(x=>x.id===e.record.id)){
         customSpots.push(e.record);
@@ -6203,6 +6270,12 @@ window.appUndo = async function(){
     if(typeof applyFilter === 'function') applyFilter();
     if(typeof applySpotLabels === 'function') applySpotLabels();
     showToast('Deleted spot restored ✓');
+  } else if(a.kind === 'track-del'){
+    const list = trkLoadSaved();
+    if(!list.some(x=>x.id===a.record.id)){ list.push(a.record); list.sort((a2,b2)=>a2.t0-b2.t0); trkStoreSaved(list); }
+    await trashRemove('track', a.record.id);
+    renderTrackList();
+    showToast('Deleted track restored ✓');
   } else if(a.kind === 'bspot-edit'){
     if(a.prevOv) spotOverrides[a.id] = a.prevOv; else delete spotOverrides[a.id];
     await saveSpotOverrides();
@@ -8240,7 +8313,7 @@ async function saveCustomSpots(){
   try{ await storeSet(CUSTOM_SPOTS_KEY, JSON.stringify(customSpots)); }catch(e){}
 }
 function customSpotFill(s){
-  if(s.mob) return resolveVar('var(--mob)');   // MARK record pins are red whatever water they mark
+  if(s.mark || s.mob) return resolveVar('var(--mark)');   // MARK record pins are red whatever water they mark (s.mob = pins saved before the v370 rename)
   if(s.zone==='launch') return resolveVar('var(--launch)');
   return resolvedZoneColor[s.zone] || (s.zone==='offshore' ? resolveVar('var(--offshore)') : resolveVar('var(--inshore)'));
 }
@@ -10264,14 +10337,16 @@ document.getElementById('locateBtn').addEventListener('click', function(){
    start guiding back to it \u2014 a hat overboard, a dropped rod, the water where the bite
    turned on as the drift carried the boat off it. (This was the MOB / man-overboard
    function until v361; Jan reframed it as a plain waypoint convenience before the sale.
-   The internal mob* names, .mob-* classes, the s.mob flag and the wtf:mob storage key all
-   stay \u2014 only the user-facing words and figure changed.)
+   v361 changed only the user-facing words and figure; v370 finished the job and renamed
+   the internals too — mob functions, .mob- classes and wtf:mob all became mark forms.
+   Two legacy shims remain because old DATA still carries the old names: the resume
+   below migrates a wtf:mob key, and the pin painter accepts s.mob beside s.mark.)
 
    The fix tradeoff is the OPPOSITE of Locate Me's. getFixOnce holds a coarse fix back six
    seconds hoping GPS beats it, and will take a cached position two minutes old \u2014 right for
    "where am I on the map", wrong here, where a boat at 20 kt covers a hundred metres in ten
    seconds. MARK takes the FIRST position it can get, however rough, then quietly moves the
-   mark when a tighter fix lands within the first few seconds (MOB_UPGRADE_MS from the press
+   mark when a tighter fix lands within the first few seconds (MARK_UPGRADE_MS from the press
    \u2014 after that the mark is frozen; later fixes are the boat, not the thing marked).
 
    While active: a high-accuracy watch feeds the boat position; the banner shows the bearing
@@ -10285,27 +10360,27 @@ document.getElementById('locateBtn').addEventListener('click', function(){
 
    CLEAR is deliberate: a confirm, and the mark is kept as a spot named "MARK <date time>". */
 
-const MOB_KEY = 'wtf:mob';
-const MOB_HOLD_MS = 900;        // press-and-hold time; matches the pill's CSS flood
-const MOB_UPGRADE_MS = 12000;   // window (from the press) in which a tighter fix may move the mark
-let mob = null;                 // {lat,lng,t,acc} \u2014 t is the PRESS moment, not the fix's arrival
-let mobFix = null;              // latest live boat position while active
-let mobWatchId = null, mobTicker = null, mobWakeLock = null;
-let mobMarker = null, mobBoat = null, mobLine = null;
+const MARK_KEY = 'wtf:mark';
+const MARK_HOLD_MS = 900;        // press-and-hold time; matches the pill's CSS flood
+const MARK_UPGRADE_MS = 12000;   // window (from the press) in which a tighter fix may move the mark
+let mark = null;                 // {lat,lng,t,acc} \u2014 t is the PRESS moment, not the fix's arrival
+let markFix = null;              // latest live boat position while active
+let markWatchId = null, markTicker = null, markWakeLock = null;
+let markMarker = null, markBoat = null, markLine = null;
 
-function mobSaveState(){ try{ localStorage.setItem(MOB_KEY, JSON.stringify(mob)); }catch(e){} }
+function markSaveState(){ try{ localStorage.setItem(MARK_KEY, JSON.stringify(mark)); }catch(e){} }
 
-function mobPlaceMark(){
-  if(!mob) return;
-  const ll = [mob.lat, mob.lng];
-  const html = '<div class="mob-pin"><span class="pulse"></span><span class="disc"></span>'
-             + '<svg viewBox="0 0 24 24"><use href="#mobFig"></use></svg></div>';
-  if(mobMarker) mobMarker.setLatLng(ll);
-  else mobMarker = L.marker(ll, {icon: L.divIcon({className:'', html, iconSize:[38,38], iconAnchor:[19,19]}),
+function markPlaceMark(){
+  if(!mark) return;
+  const ll = [mark.lat, mark.lng];
+  const html = '<div class="mark-pin"><span class="pulse"></span><span class="disc"></span>'
+             + '<svg viewBox="0 0 24 24"><use href="#markFig"></use></svg></div>';
+  if(markMarker) markMarker.setLatLng(ll);
+  else markMarker = L.marker(ll, {icon: L.divIcon({className:'', html, iconSize:[38,38], iconAnchor:[19,19]}),
                                  zIndexOffset: 2000, interactive: false}).addTo(map);
 }
 
-function mobFmtClock(ms){
+function markFmtClock(ms){
   const s = Math.max(0, Math.floor(ms/1000));
   const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), r = s%60;
   return h ? h + ':' + String(m).padStart(2,'0') + ':' + String(r).padStart(2,'0')
@@ -10313,122 +10388,122 @@ function mobFmtClock(ms){
 }
 
 /* Bearing + distance + leg, redrawn on every fix. The clock has its own 1 s ticker. */
-function mobUpdate(){
-  const brgEl = document.getElementById('mobBrg'), distEl = document.getElementById('mobDist');
-  if(!mob){ brgEl.textContent = '\u2014'; distEl.textContent = 'dropping mark \u2014 waiting for GPS\u2026'; return; }
-  if(!mobFix){ brgEl.textContent = '\u2014'; distEl.textContent = 'waiting for GPS\u2026'; return; }
-  const b = [mobFix.coords.latitude, mobFix.coords.longitude], mk = [mob.lat, mob.lng];
+function markUpdate(){
+  const brgEl = document.getElementById('markBrg'), distEl = document.getElementById('markDist');
+  if(!mark){ brgEl.textContent = '\u2014'; distEl.textContent = 'dropping mark \u2014 waiting for GPS\u2026'; return; }
+  if(!markFix){ brgEl.textContent = '\u2014'; distEl.textContent = 'waiting for GPS\u2026'; return; }
+  const b = [markFix.coords.latitude, markFix.coords.longitude], mk = [mark.lat, mark.lng];
   const brg = toMagnetic(bearingDeg(b[0], b[1], mk[0], mk[1]));
   const m = map.distance(b, mk), ft = m*3.28084, sm = m/1609.344;
   brgEl.innerHTML = String(Math.round(brg)).padStart(3,'0') + '\u00b0<span class="u">&thinsp;Mag</span>';
   distEl.innerHTML = ft < 1000 ? Math.round(ft) + '<span class="u">&thinsp;ft</span>'
                                : sm.toFixed(sm < 10 ? 2 : 1) + '<span class="u">&thinsp;sm</span>';
-  if(mobLine) mobLine.setLatLngs([b, mk]);
-  else mobLine = L.polyline([b, mk], {color:'#ff5252', weight:2.4, opacity:1, dashArray:'4,5',
-                                      interactive:false, className:'mob-line'}).addTo(map);
+  if(markLine) markLine.setLatLngs([b, mk]);
+  else markLine = L.polyline([b, mk], {color:'#ff5252', weight:2.4, opacity:1, dashArray:'4,5',
+                                      interactive:false, className:'mark-line'}).addTo(map);
   const html = '<div class="loc-dot"><svg viewBox="0 0 24 28" width="22" height="26"><use href="#locatePin"></use></svg></div>';
-  if(mobBoat) mobBoat.setLatLng(b);
-  else mobBoat = L.marker(b, {icon: L.divIcon({className:'', html, iconSize:[26,26], iconAnchor:[13,13]}),
+  if(markBoat) markBoat.setLatLng(b);
+  else markBoat = L.marker(b, {icon: L.divIcon({className:'', html, iconSize:[26,26], iconAnchor:[13,13]}),
                               interactive:false}).addTo(map);
 }
 
-async function mobWakeAcquire(){
-  try{ if('wakeLock' in navigator) mobWakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+async function markWakeAcquire(){
+  try{ if('wakeLock' in navigator) markWakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
 }
 document.addEventListener('visibilitychange', ()=>{
-  if((mob || mobWatchId != null) && document.visibilityState === 'visible') mobWakeAcquire();
+  if((mark || markWatchId != null) && document.visibilityState === 'visible') markWakeAcquire();
 });
 
 /* Shared start for a fresh press and a resume-after-reload. */
-function mobEngage(resumed){
-  document.getElementById('mobBanner').hidden = false;
-  document.body.classList.add('mob-active');
+function markEngage(resumed){
+  document.getElementById('markBanner').hidden = false;
+  document.body.classList.add('mark-active');
   try{ map.closePopup(); }catch(e){}
   try{ if(typeof closeAllOverlays === 'function') closeAllOverlays(); }catch(e){}
-  if(mobTicker == null) mobTicker = setInterval(()=>{
-    const t0 = mob ? mob.t : mobPressT;
-    document.getElementById('mobClock').textContent = mobFmtClock(Date.now() - t0);
+  if(markTicker == null) markTicker = setInterval(()=>{
+    const t0 = mark ? mark.t : markPressT;
+    document.getElementById('markClock').textContent = markFmtClock(Date.now() - t0);
   }, 1000);
-  if(mobWatchId == null){
+  if(markWatchId == null){
     try{
-      mobWatchId = navigator.geolocation.watchPosition(pos=>{
-        mobFix = pos;
-        if(!mob) mobDrop(pos);
-        else if(Date.now() - mob.t < MOB_UPGRADE_MS && pos.coords.accuracy != null
-                && (mob.acc == null || pos.coords.accuracy < mob.acc)){
-          mob.lat = pos.coords.latitude; mob.lng = pos.coords.longitude; mob.acc = pos.coords.accuracy;
-          mobSaveState(); mobPlaceMark();
+      markWatchId = navigator.geolocation.watchPosition(pos=>{
+        markFix = pos;
+        if(!mark) markDrop(pos);
+        else if(Date.now() - mark.t < MARK_UPGRADE_MS && pos.coords.accuracy != null
+                && (mark.acc == null || pos.coords.accuracy < mark.acc)){
+          mark.lat = pos.coords.latitude; mark.lng = pos.coords.longitude; mark.acc = pos.coords.accuracy;
+          markSaveState(); markPlaceMark();
         }
-        mobUpdate();
+        markUpdate();
       }, err=>{ if(err && err.code === 1) showToast(geoErrorMessage(err), 9000); },
       {enableHighAccuracy:true, maximumAge:0, timeout:30000});
     }catch(e){}
   }
-  mobWakeAcquire();
-  if(mob){
-    mobPlaceMark();
-    map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), resumed ? 13 : 15));
+  markWakeAcquire();
+  if(mark){
+    markPlaceMark();
+    map.setView([mark.lat, mark.lng], Math.max(map.getZoom(), resumed ? 13 : 15));
   }
-  mobUpdate();
+  markUpdate();
 }
 
-let mobPressT = 0;
-function mobDrop(pos){
-  if(mob) return;
-  mob = {lat: pos.coords.latitude, lng: pos.coords.longitude, t: mobPressT || Date.now(),
+let markPressT = 0;
+function markDrop(pos){
+  if(mark) return;
+  mark = {lat: pos.coords.latitude, lng: pos.coords.longitude, t: markPressT || Date.now(),
          acc: (pos.coords.accuracy != null) ? pos.coords.accuracy : null};
-  mobSaveState();
-  mobPlaceMark();
-  map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), 15));
-  showToast('MARK down \u2014 ' + toDMS(mob.lat, mob.lng)
-    + (mob.acc && mob.acc > 150 ? ' (rough fix, \u00b1' + Math.round(mob.acc) + ' m \u2014 tightening as GPS lands)' : ''), 6000);
-  mobUpdate();
+  markSaveState();
+  markPlaceMark();
+  map.setView([mark.lat, mark.lng], Math.max(map.getZoom(), 15));
+  showToast('MARK down \u2014 ' + toDMS(mark.lat, mark.lng)
+    + (mark.acc && mark.acc > 150 ? ' (rough fix, \u00b1' + Math.round(mark.acc) + ' m \u2014 tightening as GPS lands)' : ''), 6000);
+  markUpdate();
 }
 
-function mobActivate(){
-  if(mob || mobWatchId != null){
-    if(mob) map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), 14));
+function markActivate(){
+  if(mark || markWatchId != null){
+    if(mark) map.setView([mark.lat, mark.lng], Math.max(map.getZoom(), 14));
     showToast('A MARK is already active \u2014 CLEAR it on the banner before dropping a new one.', 5000);
     return;
   }
   const blocked = geoBlockedReason();
   if(blocked){ showToast(blocked, 7000); return; }
-  mobPressT = Date.now();
+  markPressT = Date.now();
   /* Instant coarse grab alongside the watch: a ten-second-old network fix beats waiting
      eight more while the boat runs on. The watch's first tighter fix upgrades it. */
   try{
-    navigator.geolocation.getCurrentPosition(pos=>{ if(!mob){ mobFix = mobFix || pos; mobDrop(pos); mobUpdate(); } },
+    navigator.geolocation.getCurrentPosition(pos=>{ if(!mark){ markFix = markFix || pos; markDrop(pos); markUpdate(); } },
       ()=>{}, {enableHighAccuracy:false, timeout:8000, maximumAge:10000});
   }catch(e){}
-  mobEngage(false);
+  markEngage(false);
 }
 
-function mobTeardown(){
-  if(mobWatchId != null){ try{ navigator.geolocation.clearWatch(mobWatchId); }catch(e){} mobWatchId = null; }
-  if(mobTicker != null){ clearInterval(mobTicker); mobTicker = null; }
-  if(mobWakeLock){ try{ mobWakeLock.release(); }catch(e){} mobWakeLock = null; }
-  [mobMarker, mobBoat, mobLine].forEach(l=>{ if(l) try{ map.removeLayer(l); }catch(e){} });
-  mobMarker = mobBoat = mobLine = null;
-  mob = null; mobFix = null; mobPressT = 0;
-  try{ localStorage.removeItem(MOB_KEY); }catch(e){}
-  document.getElementById('mobBanner').hidden = true;
-  document.body.classList.remove('mob-active');
+function markTeardown(){
+  if(markWatchId != null){ try{ navigator.geolocation.clearWatch(markWatchId); }catch(e){} markWatchId = null; }
+  if(markTicker != null){ clearInterval(markTicker); markTicker = null; }
+  if(markWakeLock){ try{ markWakeLock.release(); }catch(e){} markWakeLock = null; }
+  [markMarker, markBoat, markLine].forEach(l=>{ if(l) try{ map.removeLayer(l); }catch(e){} });
+  markMarker = markBoat = markLine = null;
+  mark = null; markFix = null; markPressT = 0;
+  try{ localStorage.removeItem(MARK_KEY); }catch(e){}
+  document.getElementById('markBanner').hidden = true;
+  document.body.classList.remove('mark-active');
 }
 
-function mobClear(){
-  if(!mob && mobWatchId == null) return;
-  if(!window.confirm('Clear the MARK?' + (mob ? '\n\nIt will be kept in your spots as a record.' : ''))) return;
-  if(mob){
-    const d = new Date(mob.t);
+function markClear(){
+  if(!mark && markWatchId == null) return;
+  if(!window.confirm('Clear the MARK?' + (mark ? '\n\nIt will be kept in your spots as a record.' : ''))) return;
+  if(mark){
+    const d = new Date(mark.t);
     const name = 'MARK ' + (d.getMonth()+1) + '/' + d.getDate() + ' '
                + d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
     /* A MARK is dropped on the water, so the record files as Inshore or Offshore by
        where it happened \u2014 never Launches, which is where the inland fallback used to put
-       a mark pressed at the dock. The mob flag paints the pin red whatever its zone. */
+       a mark pressed at the dock. The mark flag paints the pin red whatever its zone. */
     let zone = 'inshore';
-    try{ const z = autoSpotZone(mob.lat, mob.lng).zone; if(z === 'offshore') zone = 'offshore'; }catch(e){}
-    const s = {id:'custom-'+Date.now(), name, zone, lat:mob.lat, lng:mob.lng,
-               meta: customSpotTypeLabel({zone}) + ' \u00b7 MARK', custom:true, mob:true, species:[], ramp:false};
+    try{ const z = autoSpotZone(mark.lat, mark.lng).zone; if(z === 'offshore') zone = 'offshore'; }catch(e){}
+    const s = {id:'custom-'+Date.now(), name, zone, lat:mark.lat, lng:mark.lng,
+               meta: customSpotTypeLabel({zone}) + ' \u00b7 MARK', custom:true, mark:true, species:[], ramp:false};
     customSpots.push(s);
     addCustomSpotMarker(s);
     saveCustomSpots();
@@ -10437,18 +10512,18 @@ function mobClear(){
     if(typeof applySpotLabels === 'function') applySpotLabels();
     showToast('MARK cleared \u2014 kept in your spots as \u201c' + name + '\u201d.', 6000);
   }
-  mobTeardown();
+  markTeardown();
 }
 
-document.getElementById('mobClearBtn').addEventListener('click', e=>{ e.stopPropagation(); mobClear(); });
-document.getElementById('mobBanner').addEventListener('click', ()=>{
-  if(!mob) return;
-  if(mobFix){
-    map.fitBounds(L.latLngBounds([[mobFix.coords.latitude, mobFix.coords.longitude], [mob.lat, mob.lng]]),
+document.getElementById('markClearBtn').addEventListener('click', e=>{ e.stopPropagation(); markClear(); });
+document.getElementById('markBanner').addEventListener('click', ()=>{
+  if(!mark) return;
+  if(markFix){
+    map.fitBounds(L.latLngBounds([[markFix.coords.latitude, markFix.coords.longitude], [mark.lat, mark.lng]]),
                   {padding:[70,70], maxZoom:16});
     showToast('Showing your boat and the MARK together.', 3500);
   }else{
-    map.setView([mob.lat, mob.lng], Math.max(map.getZoom(), 14));
+    map.setView([mark.lat, mark.lng], Math.max(map.getZoom(), 14));
     showToast('No GPS fix yet — centered the MARK. Your boat pin appears when GPS locks on.', 5000);
   }
 });
@@ -10460,12 +10535,12 @@ document.getElementById('mobBanner').addEventListener('click', ()=>{
 (function(){
   const btn = document.getElementById('locateBtn');
   let timer = null, sx = 0, sy = 0, firedAt = 0;
-  const cancel = ()=>{ if(timer){ clearTimeout(timer); timer = null; } btn.classList.remove('mob-arming'); };
+  const cancel = ()=>{ if(timer){ clearTimeout(timer); timer = null; } btn.classList.remove('mark-arming'); };
   btn.addEventListener('pointerdown', e=>{
     if(e.isPrimary === false) return;
     sx = e.clientX; sy = e.clientY;
-    btn.classList.add('mob-arming');
-    timer = setTimeout(()=>{ timer = null; firedAt = Date.now(); btn.classList.remove('mob-arming'); mobActivate(); }, MOB_HOLD_MS);
+    btn.classList.add('mark-arming');
+    timer = setTimeout(()=>{ timer = null; firedAt = Date.now(); btn.classList.remove('mark-arming'); markActivate(); }, MARK_HOLD_MS);
   });
   btn.addEventListener('pointermove', e=>{
     if(timer && (Math.abs(e.clientX - sx) > 12 || Math.abs(e.clientY - sy) > 12)) cancel();
@@ -10485,15 +10560,281 @@ document.getElementById('mobBanner').addEventListener('click', ()=>{
 /* Resume: if a mark survived a reload, the banner and guidance are back before the user
    has to remember what to press. */
 (function(){
-  let raw = null; try{ raw = localStorage.getItem(MOB_KEY); }catch(e){}
+  let raw = null;
+  try{
+    raw = localStorage.getItem(MARK_KEY);
+    /* v370 rename shim: a mark dropped on a pre-v370 build lives under wtf:mob. */
+    if(!raw){
+      raw = localStorage.getItem('wtf:mob');
+      if(raw){ localStorage.setItem(MARK_KEY, raw); localStorage.removeItem('wtf:mob'); }
+    }
+  }catch(e){}
   if(!raw) return;
   let saved = null; try{ saved = JSON.parse(raw); }catch(e){}
-  if(!saved || typeof saved.lat !== 'number' || typeof saved.lng !== 'number'){ try{ localStorage.removeItem(MOB_KEY); }catch(e){} return; }
-  mob = {lat: saved.lat, lng: saved.lng, t: saved.t || Date.now(), acc: (saved.acc != null) ? saved.acc : null};
+  if(!saved || typeof saved.lat !== 'number' || typeof saved.lng !== 'number'){ try{ localStorage.removeItem(MARK_KEY); }catch(e){} return; }
+  mark = {lat: saved.lat, lng: saved.lng, t: saved.t || Date.now(), acc: (saved.acc != null) ? saved.acc : null};
   /* Deferred a tick: this IIFE runs mid-parse of the script block, and engaging here would
      touch bindings declared further down (TDZ) — a throw would silently kill everything
      after it. One tick later the whole block has run and engage is safe. */
-  setTimeout(()=>{ try{ mobEngage(true); }catch(e){} }, 0);
+  setTimeout(()=>{ try{ markEngage(true); }catch(e){} }, 0);
+})();
+
+/* ===================== TRACK — BREADCRUMB RECORDING (v370) =====================
+
+   Tap TRACK to start recording the boat's path as a magenta line; tap again to stop and
+   keep it. The GPS fix itself needs no signal — only the imagery under the line does —
+   so a track records fine offshore and off-grid (over pre-downloaded tiles, or blank map).
+
+   The platform truth the whole design bends around: iOS gives a web app NO background
+   geolocation. Recording runs only while the page is on screen, so a wake lock holds the
+   screen awake (re-acquired on each return to foreground) and the bar says so plainly.
+   That also means battery: GPS + screen is a real drain, so the bar carries a live
+   battery %% with a low warning where the Battery Status API exists (Chrome/Android);
+   Safari removed that API for privacy, so there the start toast and the bar's foot line
+   carry the warning instead — a live %% on an iPhone is impossible from a web page.
+
+   Points are filtered before they are kept: fixes worse than TRACK_MAX_ACC are dropped
+   (raw GPS at rest scribbles), and a point lands only after TRACK_MIN_M metres of real
+   movement. 5 decimal places (~1.1 m) is finer than any phone fix, so rounding costs
+   nothing. Past TRACK_MAX_PTS the track thins itself — every other point goes and the
+   spacing doubles — so a long day keeps recording at slightly coarser grain instead of
+   hitting a wall. Like wtf:mark, the active track is written to raw localStorage point by
+   point, synchronously, so an iOS backgrounding reload never loses the recorded part —
+   the track resumes when the app returns. */
+
+const TRACK_KEY   = 'wtf:track';    // the track being recorded, point by point
+const TRACKS_KEY  = 'wtf:tracks';   // kept tracks (device-local; not in backup files)
+const TRACK_COLOR = '#c227d6';      // magenta — red belongs to the MARK
+const TRACK_MIN_M   = 12;           // metres of movement before a point is kept
+const TRACK_MAX_ACC = 35;           // fixes rougher than this (m) are dropped
+const TRACK_MAX_PTS = 4000;         // thinning threshold, not a hard stop
+const TRACKS_MAX    = 10;           // kept tracks; oldest drops off
+let trk = null;                     // {t0, d, minD, pts:[[lat,lng],...]}
+let trkWatchId = null, trkTicker = null, trkWakeLock = null, trkLine = null;
+let trkShown = {};                  // kept-track id -> polyline currently drawn
+let trkBattWarned = false;
+
+function trkSaveState(){ try{ localStorage.setItem(TRACK_KEY, JSON.stringify(trk)); }catch(e){} }
+function trkLoadSaved(){ try{ return JSON.parse(localStorage.getItem(TRACKS_KEY)) || []; }catch(e){ return []; } }
+function trkStoreSaved(list){ try{ localStorage.setItem(TRACKS_KEY, JSON.stringify(list)); }catch(e){} }
+
+function trkFmtDist(m){
+  const ft = m*3.28084, sm = m/1609.344;
+  return ft < 1000 ? Math.round(ft) + ' ft' : sm.toFixed(sm < 10 ? 2 : 1) + ' sm';
+}
+
+function trkPaint(){
+  if(!trk || !trk.pts.length) return;
+  if(trkLine) trkLine.setLatLngs(trk.pts);
+  else trkLine = L.polyline(trk.pts, {color:TRACK_COLOR, weight:3, opacity:.95,
+                                      interactive:false, className:'track-line'}).addTo(map);
+}
+
+function trkUpdateBar(){
+  const el = document.getElementById('trackDist');
+  if(el) el.textContent = (trk && trk.pts.length) ? trkFmtDist(trk.d) : 'waiting for GPS…';
+}
+
+function trkOnFix(pos){
+  if(!trk) return;
+  const c = pos.coords;
+  if(c.accuracy != null && c.accuracy > TRACK_MAX_ACC) return;
+  const p = [Math.round(c.latitude*1e5)/1e5, Math.round(c.longitude*1e5)/1e5];
+  const last = trk.pts[trk.pts.length-1];
+  if(last){
+    const m = map.distance(last, p);
+    if(m < (trk.minD || TRACK_MIN_M)) return;
+    trk.d += m;
+  }
+  trk.pts.push(p);
+  if(trk.pts.length > TRACK_MAX_PTS){
+    const keepLast = trk.pts[trk.pts.length-1];
+    trk.pts = trk.pts.filter((_,i)=> i % 2 === 0);
+    if(trk.pts[trk.pts.length-1] !== keepLast) trk.pts.push(keepLast);
+    trk.minD = (trk.minD || TRACK_MIN_M) * 2;
+  }
+  trkSaveState();
+  trkPaint();
+  trkUpdateBar();
+}
+
+async function trkWakeAcquire(){
+  try{ if('wakeLock' in navigator) trkWakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(trk && document.visibilityState === 'visible') trkWakeAcquire();
+});
+
+/* Battery: live %% + low warning where the API exists; see the section note. The warning
+   re-arms above 25%% or on charge, so it fires once per genuine low crossing, not per fix. */
+function trkBattWatch(){
+  if(!navigator.getBattery || trkBattWatch.armed) return;
+  trkBattWatch.armed = true;
+  navigator.getBattery().then(b=>{
+    const paint = ()=>{
+      const el = document.getElementById('trackBatt');
+      if(!el) return;
+      el.hidden = false;
+      const pct = Math.round(b.level*100);
+      el.textContent = '🔋 ' + pct + '%' + (b.charging ? ' ⚡' : '');
+      el.classList.toggle('low', !b.charging && b.level <= .2);
+      if(trk && !b.charging && b.level <= .2){
+        if(!trkBattWarned){
+          trkBattWarned = true;
+          showToast('Battery ' + pct + '% — tracking keeps GPS and the screen on. Plug in, or STOP the track to save power.', 9000);
+        }
+      } else if(b.charging || b.level > .25) trkBattWarned = false;
+    };
+    b.addEventListener('levelchange', paint);
+    b.addEventListener('chargingchange', paint);
+    paint();
+  }).catch(()=>{});
+}
+
+/* Shared start for a fresh tap and a resume-after-reload. */
+function trkEngage(resumed){
+  document.getElementById('trackBar').hidden = false;
+  document.getElementById('trackBtn').classList.add('rec');
+  if(trkTicker == null) trkTicker = setInterval(()=>{
+    const el = document.getElementById('trackClock');
+    if(el && trk) el.textContent = markFmtClock(Date.now() - trk.t0);
+  }, 1000);
+  if(trkWatchId == null){
+    try{
+      trkWatchId = navigator.geolocation.watchPosition(trkOnFix,
+        err=>{ if(err && err.code === 1) showToast(geoErrorMessage(err), 9000); },
+        {enableHighAccuracy:true, maximumAge:0, timeout:30000});
+    }catch(e){}
+  }
+  trkWakeAcquire();
+  trkBattWatch();
+  trkPaint();
+  trkUpdateBar();
+  if(resumed && trk.pts.length) showToast('Tracking resumed — recording pauses whenever the app leaves the screen.', 6000);
+}
+
+function trkStart(){
+  const blocked = geoBlockedReason();
+  if(blocked){ showToast(blocked, 7000); return; }
+  trk = {t0: Date.now(), d: 0, minD: TRACK_MIN_M, pts: []};
+  trkSaveState();
+  trkEngage(false);
+  showToast('TRACKING — your path draws on the map as you move. GPS and the screen stay on, so expect extra battery use. Tap TRACK again to stop and keep the track.', 8000);
+}
+
+function trkTeardown(){
+  if(trkWatchId != null){ try{ navigator.geolocation.clearWatch(trkWatchId); }catch(e){} trkWatchId = null; }
+  if(trkTicker != null){ clearInterval(trkTicker); trkTicker = null; }
+  if(trkWakeLock){ try{ trkWakeLock.release(); }catch(e){} trkWakeLock = null; }
+  if(trkLine){ try{ map.removeLayer(trkLine); }catch(e){} trkLine = null; }
+  trk = null;
+  try{ localStorage.removeItem(TRACK_KEY); }catch(e){}
+  document.getElementById('trackBar').hidden = true;
+  document.getElementById('trackBtn').classList.remove('rec');
+}
+
+function trkStop(){
+  if(!trk) return;
+  if(trk.pts.length < 2){
+    if(!window.confirm('Stop tracking?\n\nNo movement was recorded yet, so there is nothing to keep.')) return;
+    trkTeardown();
+    showToast('Tracking stopped.');
+    return;
+  }
+  if(!window.confirm('Stop tracking?\n\nThe track will be kept under Your tracks in + Spot.')) return;
+  const d = new Date(trk.t0);
+  const name = 'TRACK ' + (d.getMonth()+1) + '/' + d.getDate() + ' '
+             + d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  const rec = {id:'track-'+Date.now(), name, t0:trk.t0, t1:Date.now(), d:Math.round(trk.d), pts:trk.pts};
+  const list = trkLoadSaved();
+  list.push(rec);
+  let dropped = null;
+  if(list.length > TRACKS_MAX) dropped = list.shift();
+  trkStoreSaved(list);
+  /* The line stays on the map as a shown kept track — stopping should not erase what
+     the day drew. HIDE lives under Your tracks. */
+  const line = trkLine; trkLine = null;
+  trkTeardown();
+  trkShown[rec.id] = line || L.polyline(rec.pts, {color:TRACK_COLOR, weight:3, opacity:.9,
+                                                  interactive:false, className:'track-line'}).addTo(map);
+  if(dropped && trkShown[dropped.id]){ try{ map.removeLayer(trkShown[dropped.id]); }catch(e){} delete trkShown[dropped.id]; }
+  renderTrackList();
+  showToast('Track kept as “' + name + '” — ' + trkFmtDist(rec.d) + '. Find it under Your tracks in + Spot.'
+    + (dropped ? ' Oldest track “' + dropped.name + '” dropped off (the app keeps the last ' + TRACKS_MAX + ').' : ''), 8000);
+}
+
+function renderTrackList(){
+  const cnt = document.getElementById('trackCount');
+  const list = document.getElementById('trackList');
+  const tracks = trkLoadSaved();
+  if(cnt) cnt.textContent = tracks.length;
+  if(!list) return;
+  list.innerHTML = tracks.slice().reverse().map(t=>{
+    const dur = markFmtClock((t.t1 || t.t0) - t.t0);
+    const on = !!trkShown[t.id];
+    return `<div class="loc-preview set" style="margin-top:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <span>${escapeHTML(t.name)} · ${trkFmtDist(t.d)} · ${dur}</span>
+        <span style="display:flex; gap:6px;">
+          <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="toggleTrack('${t.id}')">${on ? 'HIDE' : 'SHOW'} <span class="bi bi-emoji">🗺</span></button>
+          <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="removeTrack('${t.id}')">DELETE <span class="bi">✕</span></button>
+        </span>
+      </div>
+    </div>`;}).join('');
+}
+
+window.toggleTrack = function(id){
+  const t = trkLoadSaved().find(x=>x.id===id);
+  if(!t) return;
+  if(trkShown[id]){
+    try{ map.removeLayer(trkShown[id]); }catch(e){}
+    delete trkShown[id];
+    renderTrackList();
+    return;
+  }
+  trkShown[id] = L.polyline(t.pts, {color:TRACK_COLOR, weight:3, opacity:.9,
+                                    interactive:false, className:'track-line'}).addTo(map);
+  renderTrackList();
+  try{ closeAddSpot(); }catch(e){}
+  map.fitBounds(L.latLngBounds(t.pts), {padding:[60,60], maxZoom:16});
+  showToast('Showing “' + t.name + '” — HIDE it under Your tracks in + Spot.', 5000);
+};
+
+window.removeTrack = async function(id){
+  const list = trkLoadSaved();
+  const i = list.findIndex(x=>x.id===id);
+  if(i < 0) return;
+  const rec = list.splice(i,1)[0];
+  trkStoreSaved(list);
+  if(trkShown[id]){ try{ map.removeLayer(trkShown[id]); }catch(e){} delete trkShown[id]; }
+  pushUndo({kind:'track-del', record:rec});
+  await trashAdd('track', rec);
+  renderTrackList();
+  showToast('Track deleted — UNDO above Your saved spots brings it back.');
+};
+
+/* Bar taps: the body fits the map to the track so far; STOP ends it. */
+document.getElementById('trackStopBtn').addEventListener('click', e=>{ e.stopPropagation(); trkStop(); });
+document.getElementById('trackBar').addEventListener('click', ()=>{
+  if(!trk || !trk.pts.length) return;
+  if(trk.pts.length >= 2) map.fitBounds(L.latLngBounds(trk.pts), {padding:[60,60], maxZoom:16});
+  else map.setView(trk.pts[0], Math.max(map.getZoom(), 15));
+});
+document.getElementById('trackBtn').addEventListener('click', ()=>{ if(trk) trkStop(); else trkStart(); });
+
+/* Resume: a recording that a reload interrupted picks back up; the kept-tracks list
+   paints once the sheet markup is live. Deferred a tick for the same TDZ reason as the
+   MARK resume above. */
+(function(){
+  let raw = null; try{ raw = localStorage.getItem(TRACK_KEY); }catch(e){}
+  if(raw){
+    let saved = null; try{ saved = JSON.parse(raw); }catch(e){}
+    if(saved && Array.isArray(saved.pts)){
+      trk = {t0: saved.t0 || Date.now(), d: saved.d || 0, minD: saved.minD || TRACK_MIN_M, pts: saved.pts};
+      setTimeout(()=>{ try{ trkEngage(true); }catch(e){} }, 0);
+    } else { try{ localStorage.removeItem(TRACK_KEY); }catch(e){} }
+  }
+  setTimeout(()=>{ try{ renderTrackList(); }catch(e){} }, 0);
 })();
 
 /* ===================== BACKUP EXPORT / IMPORT =====================
