@@ -7,6 +7,16 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 4:28 PM EDT · v377 · Mark Help Wording
+------------------------------------------------------------------------------
+Two wording changes in help's Locate Me > MARK paragraph, per Jan: the
+banner line now reads plainly "a banner at the top of the screen shows"
+(dropped "white ... edged in your theme's accent color"), and the
+run-back-now examples are now "a hat that flew off, a fishing rod that
+plunked in the water, the spot where the bite was hot as you drifted
+over it."
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 5:20 PM EDT · v376 · Track Start Zoom Stop Card
 ------------------------------------------------------------------------------
 Starting TRACK MY PATH now zooms the map into the boat: the first
