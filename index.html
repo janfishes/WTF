@@ -2734,7 +2734,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn help-print-hide" id="helpPdfBtn" style="display:block; width:100%; margin:14px 0 6px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Save help as PDF <span class="bi">&#128196;&#xFE0E;</span></button>
       <p class="sheet-note help-print-hide" style="margin:0 0 14px;">Tap to save the entire Help as a fixed, non-editable PDF on your device. In the dialog that opens, choose <b>Save as PDF</b> as the destination.</p>
 
-      <p class="sheet-note">Tap the buttons below to read their sections. Close a section by tapping its title or the <b>CLOSE</b> <span class="bi">✕</span> button at the bottom of the window. Tap the <b>CLOSE</b> <span class="bi">✕</span> at the top of the window to exit Help. When you reopen Help, it will reopen to your last view. Close it again either by tapping its title or the <b>CLOSE</b> <span class="bi">✕</span> button at the end of the writeup.</p>
+      <!-- v344: CLOSE stays bold here but NOT gold (Jan) — a plain <b> in a sheet-note
+           takes --emph, so these carry the body colour inline. -->
+      <p class="sheet-note">Tap the buttons below to read their sections. Close a section by tapping its title or the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> button at the bottom of the window. Tap the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> at the top of the window to exit Help. When you reopen Help, it will reopen to your last view. Close it again either by tapping its title or the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> button at the end of the writeup.</p>
 
       <div class="subhead">Action Buttons</div>
       <p class="sheet-note">Ten white buttons along the right side of the map are the app’s actions.</p>
@@ -2859,7 +2861,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-eye"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.6 12S5.5 5.4 12 5.4 22.4 12 22.4 12 18.5 18.6 12 18.6 1.6 12 1.6 12Z"></path><circle cx="12" cy="12" r="3.1"></circle></svg> Eye<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-eye">
       <p class="sheet-note">The open/closed eye icon sits in the top-right corner of the header. Tap the <b>eye</b> icon and it closes, clearing the map buttons out of the way, leaving your selected fishing pins and the map control buttons. An <b>open eye</b> means your selections are showing; a <b>closed eye</b> means they are hidden, so the cookie always reads as the state of the map rather than as the action. Nothing is reset or unloaded: your filters, species switches and any compass route stay exactly as they were and reappear untouched. Like the theme and the text size, the setting is remembered on your device.</p>
-      <p class="sheet-note"><b>Updates.</b> Phones cache this app hard enough that a new build can hide behind an old copy for days. Consequently, the app checks quietly for a newer build every time it opens, and when one is out, a small pill appears above the build stamp that says: <span class="g-emph">UPDATE AVAILABLE — Tap to Reload</span>. One tap brings the new build in; the ✕ puts it off until next time. No connection, no check, so it never interrupts you on the water. Behind that, the app keeps a saved copy of itself so it opens instantly, and fetches the live page in the background for the next open. Therefore, even if you never tap the pill, a new build lands the second time you open the app with signal.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-credits"><span class="ht-g">ⓘ</span>Map Credits<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-credits">
@@ -2881,6 +2882,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="loc-btns help-print-hide" style="margin-top:8px;"><button class="mini-btn" id="offlineBtn">START THE DOWNLOAD <span class="bi bi-lg">⤓</span></button></div>
       </div>
 
+      <div class="subhead">Updates</div>
+      <p class="sheet-note">Phones cache this app hard enough that a new build can hide behind an old copy for days. Consequently, the app checks quietly for a newer build every time it opens, and when one is out, a small pill appears above the build stamp that says: <span class="g-emph">UPDATE AVAILABLE — Tap to Reload</span>. One tap brings the new build in; the ✕ puts it off until next time. No connection, no check, so it never interrupts you on the water. Behind that, the app keeps a saved copy of itself so it opens instantly, and fetches the live page in the background for the next open. Therefore, even if you never tap the pill, a new build lands the second time you open the app with signal.</p>
+
       <div class="subhead">Warning</div>
       <p class="sheet-note"><b>Do not use this site for navigation.</b> Although most of the GPS coordinates have been verified by scuba divers, assume site locations are approximations, because strong currents and high seas over time can shift and cover underwater sites. Likewise, exceptionally high winds and tidal fluctuations can shift the depth and configuration of inshore spots. GPS positions — your cell signal, a dropped pin's, or a <b>MOB</b> mark's — are only as good as the phone's fix, and location features can fail, lag, or mislead. Never rely on this app as your only means of navigation or emergency response.</p>
 
@@ -2896,11 +2900,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Cartoon Copyright © 1987, 2009 <span style="color:var(--brass); font-weight:600;">Denise J. Morrissette</span>. Adapted with permission.</p>
       <p class="sheet-note">WTF Log — its name, design, text, artwork, and compiled spot data — is the property of the developer. No part of this app may be copied, redistributed, resold, or built into another product without written permission. Reef coordinates are derived from FWC Artificial Reef Program public records; tide predictions come from NOAA; charted place names and their positions come from the USGS Geographic Names Information System. This app is not affiliated with or endorsed by any of those agencies.</p>
 
-      <div class="subhead">Build Notes</div>
-      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-builds">Build Notes<span class="ht-caret">▸</span></button>
-      <div class="help-body" id="hb-builds">
-      <p class="sheet-note">The change log — one line per build — lives on GitHub in <a href="https://github.com/janfishes/WTF/blob/main/CHANGELOG.md" target="_blank" rel="noopener" style="color:var(--teal);">CHANGELOG.md</a>. The full build notes are in <a href="BUILD_NOTES.txt" target="_blank" rel="noopener" style="color:var(--teal);">BUILD_NOTES.txt</a>.</p>
-      </div>
     </div>
   </div>
 </div>
@@ -3916,7 +3915,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 343;
+const BUILD_NUM  = 344;
 const BUILD_VER  = 'V1';                                // user-facing version on the map stamp
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 { const bs = document.getElementById('buildStamp');
@@ -4080,7 +4079,10 @@ L.control.zoom({position:'bottomleft'}).addTo(map);
    scale bar reads 500 ft at Ponce Inlet's latitude; a phone or tablet (coarse
    pointer) opens at z10, where it reads 5 mi — wide enough to take in the
    whole fishing area at a glance. */
-const DEFAULT_ZOOM = window.matchMedia('(pointer: coarse)').matches ? 10 : 15;
+/* v344: every device now opens wide at z10 — the PC's z15 close-up (v343) is gone;
+   Jan wants the whole home water on screen at launch, Tomoka Creek down to the inlet. */
+const COARSE_POINTER = window.matchMedia('(pointer: coarse)').matches;
+const DEFAULT_ZOOM = 10;
 // maxWidth must stay in step with the 66px slot in .leaflet-bottom.leaflet-left
 // .leaflet-control-scale - see the note there.
 L.control.scale({position:'bottomleft', imperial:true, metric:false, maxWidth:66}).addTo(map);
@@ -5497,15 +5499,34 @@ function aidPointerHit(e){
 map.on('click', aidPointerHit);
 map.on('mousemove', aidPointerHit);
 
-// Launch with Ponce de Leon Inlet (same anchor the inlet label uses, a few
-// lines down) a third of the screen in from the LEFT edge (v343 — Jan wants
-// the view pushed east), not dead centre: the view's centre is the inlet
-// pushed east by a sixth of the map width, so the screen looks out over the
-// water to the east of the inlet.
+// Launch views (v344). Phone: the inlet (same anchor the inlet label uses, a
+// few lines down) a third of the screen in from the LEFT edge (v343 — Jan wants
+// the view pushed east), looking out over the water east of the inlet. PC: Jan
+// wants the launch to take in the whole home water — Tomoka Creek down to the
+// inlet — so the inlet instead sits a third in from the RIGHT edge, and its row
+// on screen is the species column's Mahi pill (slightly above centre). The PC
+// placement waits two frames so the species column exists and has been measured
+// (it is built and positioned much further down the file); until then the map
+// shows the initial setView, which is already at the inlet.
 {
-  const startPt = map.project([29.07783, -80.91022], DEFAULT_ZOOM);
-  startPt.x += map.getSize().x/6;
-  map.setView(map.unproject(startPt, DEFAULT_ZOOM), DEFAULT_ZOOM);
+  const placeLaunchView = ()=>{
+    const size = map.getSize();
+    const startPt = map.project([29.07783, -80.91022], DEFAULT_ZOOM);
+    if(COARSE_POINTER){
+      startPt.x += size.x/6;
+    }else{
+      startPt.x -= size.x/6;
+      const chip  = document.querySelector('#speciesCol .chip[data-species="mahi"]');
+      const mapEl = document.getElementById('map');
+      if(chip && mapEl){
+        const cr = chip.getBoundingClientRect(), mr = mapEl.getBoundingClientRect();
+        startPt.y += size.y/2 - (cr.top + cr.height/2 - mr.top);
+      }
+    }
+    map.setView(map.unproject(startPt, DEFAULT_ZOOM), DEFAULT_ZOOM, {animate:false});
+  };
+  if(COARSE_POINTER) placeLaunchView();
+  else requestAnimationFrame(()=> requestAnimationFrame(placeLaunchView));
 }
 
 // Our own inlet label, on the centreline of the marked cut (v207 — it used to ride the north
@@ -7604,15 +7625,6 @@ document.getElementById('helpBtn').addEventListener('click', ()=>{
     /* Paper has nothing to tap: open every writeup and turn its button into a heading,
        so the printout is the WHOLE help as plain text. The live tool buttons (the tide
        station tool, the offline download) come out -- they do nothing on paper. */
-    /* Build Notes is a live-links section -- dead weight on paper, so it stays out. */
-    const bn = help.querySelector('#hb-builds');
-    if(bn){
-      const bnBtn = bn.previousElementSibling;
-      const bnHead = bnBtn && bnBtn.previousElementSibling;
-      if(bnHead && bnHead.classList.contains('subhead')) bnHead.remove();
-      if(bnBtn && bnBtn.classList.contains('help-topic')) bnBtn.remove();
-      bn.remove();
-    }
     help.querySelectorAll('.help-print-hide').forEach(el=> el.remove());
     help.querySelectorAll('.help-body').forEach(el=> el.classList.add('open'));
     help.querySelectorAll('.help-topic').forEach(b=>{

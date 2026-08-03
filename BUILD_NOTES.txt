@@ -7,8 +7,31 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-03 · 12:30 AM EDT · v343 · Clean Ocean, Device Launch Views
+Build 2026-08-03 · 12:55 AM EDT · v344 · PC Wide Launch, Help Tidy
 ------------------------------------------------------------------------------
+The PC launch view now takes in the whole home water. v343 opened a PC at
+z15 with the inlet a third in from the LEFT edge, looking out over the
+ocean; Jan instead wants Tomoka Creek and the inlet on screen together
+with the inlet pushed east. A computer now opens at z10 (same breadth as a
+phone) with Ponce de Leon Inlet a third in from the RIGHT edge, sitting on
+the same screen row as the species column's Mahi pill — slightly above
+centre — so the launch reads from the Tomoka Creek/Basin water at the top
+down past the inlet. The placement is measured off the live Mahi chip two
+frames after load (the species column is built and positioned after the
+map script runs); phones keep the v343 view: z10, inlet a third in from
+the left. DEFAULT_ZOOM is now a flat 10 for every device.
+
+Help tidy, three parts. (1) The Updates writeup — the update pill, the
+saved copy, the two-open lag — moved out of the Eye button's writeup into
+its own always-open "Updates" section just above Warning. (2) In the
+paragraph under SAVE HELP AS PDF, the three bold "CLOSE ✕" mentions no
+longer print in the gold emphasis colour — they stay bold in the body
+colour (Jan: don't use gold on CLOSE X there). (3) The Build Notes
+section is gone from the app entirely — the subhead, the button, the
+writeup with the CHANGELOG.md/BUILD_NOTES.txt links, and the print
+pipeline's special-case code that stripped it from the paper copy. The
+notes files themselves still live in the repo; the app just no longer
+points at them.
 The Topo Satellite ocean is now clean at every zoom. Zoomed in past the
 1-mile scale (z13+) the view used to switch its blue fill from the
 shoreline envelope out to the state-waters limit so the chart's offshore
