@@ -7,6 +7,21 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 7:52 PM EDT · v386 · Brighter Launches Pill
+------------------------------------------------------------------------------
+Jan reported the top filter pills looked like different heights.
+Measured headless: all five are pixel-identical (30px desktop, 26px
+phone, still equal at every A text-size step) — the illusion came
+from the off-state Launches pill wearing the one dim outline in the
+row (#b5713a, ~4.2:1 on black) while its neighbors run 6.4:1
+(Inshore blue) to 13:1 (Offshore amber). Fix: the off-state
+Launches text + border brighten to #d08c4c (~6.6:1 on black), same
+brown hue family so it is obviously the same button, still a muted
+tan next to Labels' vivid #FF6A00 so the two stay apart by
+saturation. ON state (dark chocolate fill) and the + Spot sheet's
+launch chip are untouched.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 6:05 PM EDT · v385 · Gauge Blurbs + Jump To End
 ------------------------------------------------------------------------------
 Two My Log changes (Jan's asks). First, the backup section itself

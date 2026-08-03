@@ -1570,10 +1570,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
      .active under Brown Sugar - see the --launch note in :root). Through v298 OFF used the same
      as ON, but the deeper the fill got the worse OFF read, since OFF is text and outline on a
      BLACK chip: #8a4b0f there is only ~3.1:1 and #4f1d0a is far worse. So OFF keeps its own
-     lifted brown, #b5713a (~5.5:1 on black), same hue family, obviously the same button.
+     lifted brown, same hue family, obviously the same button. v386: that brown brightened
+     #b5713a (~4.2:1 on black) -> #d08c4c (~6.6:1) - the row's other off-state rings run
+     6.4:1 (Inshore) to 13:1 (Offshore), and the one dim outline read as a smaller pill.
+     Still a muted tan next to Labels' vivid #FF6A00, so the two stay apart by saturation.
      (--launch is fixed in :root, not per-theme.) */
-  #launchToggle{background:#000 !important; color:#b5713a !important; font-weight:800; border:1px solid #b5713a !important; box-shadow:none !important;}
-  #launchToggle:not(.active){opacity:1; color:#b5713a !important; border-color:#b5713a !important;}
+  #launchToggle{background:#000 !important; color:#d08c4c !important; font-weight:800; border:1px solid #d08c4c !important; box-shadow:none !important;}
+  #launchToggle:not(.active){opacity:1; color:#d08c4c !important; border-color:#d08c4c !important;}
   #launchToggle.active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
 
   /* ---------- Floating action buttons ---------- */
@@ -4104,7 +4107,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 385;
+const BUILD_NUM  = 386;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
