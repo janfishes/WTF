@@ -7,6 +7,18 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 1:52 PM EDT · v362 · Badge X Out, Mark Set
+------------------------------------------------------------------------------
+Three touches on v361's reframe, all Jan's calls. The red X comes OFF
+the Locate Me button's badge — the badge is back to the bare dashed
+red ring (plus the !), as v360 had it; the X stays on the map mark,
+the banner, and the help glyphs. The Locate Me help line now describes
+the badge as the ring ("the same ring the MARK wears on the water").
+The banner title reads MARK SET instead of MARK DOWN. And the
+crab-trap float leaves the help's example-uses list (now: a hat
+overboard, a dropped rod, the drifted-off bite).
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 1:41 PM EDT · v361 · MOB Becomes MARK
 ------------------------------------------------------------------------------
 The man-overboard function is reframed as MARK — a plain instant
