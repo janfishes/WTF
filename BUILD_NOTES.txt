@@ -7,6 +7,24 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 11:45 PM EDT · v339 · Filter Help Rewrite
+------------------------------------------------------------------------------
+Second half of Jan's help rewrite: the Map Filter Buttons group (Catches,
+Inshore, Offshore, Launches, Labels), Species, the Search/Help/View cookies
+(Search, Help, Themes, Text Size, Eye, Map Credits), the Tide Stations &
+Offline intro, and the Disclaimer, all replaced with Jan's new wording.
+Notable moves: the Updates writeup now lives in the Eye section (was in
+Help); the Help writeup shrinks to a short note (popup-dragging guidance
+moved into Offshore's Show-drops paragraph); the group heading is now
+"Search, Help & View"; the Text Size cookie is described as AA and its help
+button label matches; Species now says 23 species (24 including Other);
+Labels notes its value on the label-less Hi Res & ICW map. Disclaimer drops
+the measured-sm/nm cross-reference sentence, says "CR site's popup", and the
+safety list reads "an EPIRB or personal safety equipment". Also per Jan: the
+REEL FUN sendoff at the top of Help is depersonalized — always "Now get out
+there and have some REEL FUN!" — and applyUserName() no longer touches it.
+
+------------------------------------------------------------------------------
 Build 2026-08-02 · 11:27 PM EDT · v338 · Help Sections Rewrite
 ------------------------------------------------------------------------------
 Jan's rewrite of the help's action-button writeups, applied to every one of
