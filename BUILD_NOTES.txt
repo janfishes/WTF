@@ -7,6 +7,24 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 1:56 PM EDT · v363 · Accent-Colored Mark
+------------------------------------------------------------------------------
+The X returns to the Locate Me badge, and the badge and the MARK
+banner now wear the THEME ACCENT COLOR (--teal, which each theme
+retints) instead of red — Jan's call: the mark on the WATER stays red
+for visibility against any imagery, but the button badge and the
+window follow the theme like every other accent surface. Badge: ring
++ X + ! all var(--teal); while Locate Me is lit (accent background)
+they flip to var(--on-accent). Banner: border and X figure
+var(--teal); background loses its red tint for the same dark navy the
+hover tip uses; CLEAR is now an accent pill (var(--teal) on
+var(--on-accent) text). The hold-to-arm red flood on the button is
+unchanged. Help updated: the badge line describes the accent X-in-ring
+again, the function block's "red banner" is now "banner in your
+theme's accent color". Verified headless in default and Purple Haze —
+badge and banner take teal and purple respectively.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 1:52 PM EDT · v362 · Badge X Out, Mark Set
 ------------------------------------------------------------------------------
 Three touches on v361's reframe, all Jan's calls. The red X comes OFF
