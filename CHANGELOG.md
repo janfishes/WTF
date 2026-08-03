@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v346** — Update Pill Feedback
 - **v345** — PC Inlet Launch
 - **v344** — PC Wide Launch
 - **v343** — Clean Ocean Launch Views

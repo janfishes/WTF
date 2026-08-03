@@ -7,6 +7,20 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 1:20 AM EDT · v346 · Update Pill Feedback
+------------------------------------------------------------------------------
+Tapping the UPDATE AVAILABLE pill now shows that it heard you. The tap
+re-downloads the whole ~1 MB page before reloading, which on cellular is
+several silent seconds — long enough to read as a dead button (Jan's
+iPhone report tonight; closing and reopening then delivered the build via
+the service worker's background refresh, which is the designed safety
+net). Now the pill's message flips to UPDATING… and the reload glyph
+spins the moment it's tapped, a second tap while busy is ignored, and the
+download races an 8-second timer so a stalled connection still ends in a
+plain reload instead of a pill that hangs forever. The help's Updates
+section mentions the UPDATING… state.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 1:10 AM EDT · v345 · PC Inlet Launch, Help Icon Tidy
 ------------------------------------------------------------------------------
 The PC launch view changed again (reversing v344's whole-home-water wide
