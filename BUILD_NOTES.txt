@@ -7,6 +7,14 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 3:05 PM EDT · v369 · Location Popup Lines
+------------------------------------------------------------------------------
+The Locate Me location popup now prints the distance from the inlet
+and the magnetic to/from bearing pair on two separate lines instead
+of one dot-joined line. Wording unchanged; offshore spot popups keep
+their single-line form.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 3:12 PM EDT · v368 · Two-Line Hover Tip
 ------------------------------------------------------------------------------
 The Locate Me hover tip is now two lines — "TAP: drops your GPS

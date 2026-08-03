@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v369** — Location Popup Lines
 - **v368** — Two-Line Hover Tip
 - **v367** — Red Mark Set
 - **v366** — Banner Tap Feedback
