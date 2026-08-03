@@ -7,6 +7,19 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 12:02 PM EDT · v354 · Locate Pin Inlet Popup
+------------------------------------------------------------------------------
+The Locate Me pin now opens a popup: your coordinates (degrees and decimal
+minutes) plus the same line the offshore spot popups carry — distance
+(sm/nm) from the inlet and the magnetic to/from bearing pair, measured
+from the NOAA Ponce de Leon Inlet position. The second number of the pair
+is the course home from where you are; the figure is straight-line, not a
+channel route. Closes the gap where a user offshore but not on a saved
+spot had no way to read the run back to the inlet without saving a spot
+or logging a catch first. Popup opens automatically on the fix; Locate Me
+help updated to say so.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 11:49 AM EDT · v353 · Red Caps USCG Directive
 ------------------------------------------------------------------------------
 The closing directive of the MOB Two Cautions paragraph is now all-caps

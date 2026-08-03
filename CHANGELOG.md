@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v354** — Locate Pin Inlet Popup
 - **v353** — Red Caps USCG Directive
 - **v352** — MOB Depends Wording
 - **v351** — Trim MOB Drill Sentence
