@@ -7,6 +7,13 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 1:58 PM EDT · v364 · Badge Bang Out
+------------------------------------------------------------------------------
+The exclamation mark comes off the Locate Me badge — the badge is now
+just the accent-colored X in its dashed ring. The .mob-bang span and
+its three CSS rules (base, active-locate, mob-arming) are gone.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 1:56 PM EDT · v363 · Accent-Colored Mark
 ------------------------------------------------------------------------------
 The X returns to the Locate Me badge, and the badge and the MARK

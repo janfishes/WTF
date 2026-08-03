@@ -2225,16 +2225,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
      a circle inside the svg (its own stroke attr, so the stroke:none below can't touch it).
      21px box = the old 16px figure plus the ring's shell. */
   #locateBtn svg.mob-hint{color:var(--teal) !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
-  #locateBtn .mob-bang{color:var(--teal) !important; font-weight:900; font-size:calc(15px * var(--tsb)); line-height:1; margin-left:2px;}
   #locateBtn.active-locate svg.mob-hint{color:var(--on-accent) !important;}
-  #locateBtn.active-locate .mob-bang{color:var(--on-accent) !important;}
   /* Holding the pill floods it red over the full hold — the "am I doing it?" feedback.
      Let go early and it snaps straight back (no transition without the class). */
   #locateBtn.mob-arming{background:#c11a1a !important; border-color:#c11a1a !important; color:#fff !important;
     transition:background-color .9s linear, border-color .9s linear, color .4s linear;}
   #locateBtn.mob-arming svg{color:#fff !important; stroke:#fff !important;}
   #locateBtn.mob-arming svg.mob-hint{color:#fff !important; stroke:none !important;}
-  #locateBtn.mob-arming .mob-bang{color:#fff !important;}
   /* Hover tip (fine pointers only): the old title= tooltip restyled bold and bigger —
      native title bubbles can't be styled. Hangs LEFT of the pill (the stack hugs the map's
      right edge) and hides while the hold-to-arm flood is running. */
@@ -2655,7 +2652,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="fab" id="locateBtn" data-tip="Tap: drop your GPS position. Press and HOLD: drop a MARK to steer back to.">
       <svg viewBox="0 0 24 28" width="15" height="17" style="vertical-align:-3px;"><use href="#locatePin"></use></svg>
       Locate Me
-      <svg class="mob-hint" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#mobFig" x="4" y="4" width="24" height="24"></use></svg><span class="mob-bang" aria-hidden="true">!</span>
+      <svg class="mob-hint" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#mobFig" x="4" y="4" width="24" height="24"></use></svg>
     </button>
   </div>
 </div>
@@ -3957,7 +3954,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 363;
+const BUILD_NUM  = 364;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
