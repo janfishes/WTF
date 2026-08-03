@@ -2930,7 +2930,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-tides"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tides<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-tides">
       <p class="sheet-note">The <svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> <b>Tides</b> action button lets you tap anywhere on the map to drop a Tide pin — you get a 3-day high/low forecast, built from official NOAA predictions for Ponce Inlet stored on your device. Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and interpolates the tide lag by distance between the calibrated stations on that arm — or extrapolates past the last one when you're farther upstream. Each forecast carries a confidence badge: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. Again, no internet is needed.</p>
-      <p class="sheet-note"><b>Tapping Tides also brings up the tide gauge pins on the map.</b> They are the marks your forecast is timed from, so they show while it is lit. Tap on a tide gauge to read its offset (lag times). Heights are scaled as well as times: the tide swings about 2.7 ft at Ponce Inlet but only half a foot at Ormond and five inches at Turtle Mound, so the app seeks to match the water you're actually on. Each waterway has its own zero-lag reference, and the app carries a full year of official NOAA predictions for both, updated annually. The <b>Ponce Inlet</b> gauge anchors everything north up the Halifax River and the <b>Ponce De Leon Inlet South</b> gauge anchors the Indian River North and Mosquito Lagoon. Every other gauge is timed as an offset from whichever of those two its waterway belongs to. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is timed the way the water gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The Indian River North is measured the whole way down: <b>New Smyrna Beach</b>, <b>Packwood Place</b> and <b>Turtle Mound</b> are all real gauges, so spots between the inlet and Turtle Mound are timed by interpolation rather than guesswork. South of Turtle Mound there is nothing to measure against for a long way, so once you get more than about five miles past it the app stops guessing: it shows raw Ponce Inlet times, tells you it has done so, and flags the forecast low confidence. In any case, always read the water depth conditions rather than the clock.</p>
+      <p class="sheet-note"><b>Tapping Tides also brings up the tide gauge pins on the map.</b> They are the marks your forecast is timed from, so they show while it is lit. Tap on a tide gauge to read its offset (lag times). Heights are scaled as well as times: the tide swings about 2.7 ft at Ponce Inlet but only half a foot at Ormond and five inches at Turtle Mound, so the app seeks to match the water you're actually on. Each waterway has its own zero-lag reference, and the app carries a full year of official NOAA predictions for both, updated annually. The <b>Ponce Inlet</b> gauge anchors everything north up the Halifax River and the <b>Ponce De Leon Inlet South</b> gauge anchors the Indian River North and Mosquito Lagoon. Every other gauge is timed as an offset from whichever of those two its waterway belongs to. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is followed the way the water gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The bay has no measured gauge at present, so forecasts up that run are rough estimates and wear the low-confidence ⚠ — time the tide at your dock and save it under <b>Create &amp; Calibrate Tide Stations</b> and nearby forecasts pick up your timing. The Indian River North is measured the whole way down: <b>New Smyrna Beach</b>, <b>Packwood Place</b> and <b>Turtle Mound</b> are all real gauges, so spots between the inlet and Turtle Mound are timed by interpolation rather than guesswork. South of Turtle Mound there is nothing to measure against for a long way, so once you get more than about five miles past it the app stops guessing: it shows raw Ponce Inlet times, tells you it has done so, and flags the forecast low confidence. In any case, always read the water depth conditions rather than the clock.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-waves"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><use href="#waveArt"></use></svg> Waves<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-waves">
@@ -4103,7 +4103,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 381;
+const BUILD_NUM  = 382;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -11696,10 +11696,14 @@ const TIDE_LAG_STATIONS = [
   // estimates carried in the separate Tide Board app, which is a decent independent check —
   // but note they are INTERPOLATED, not measured, and grade `medium` accordingly. Do not
   // promote them to rows here without on-water timings of their own.
-  // Aqua Ct carries no hs/ho/ls/lo, so it is deliberately skipped by the HEIGHT knot list
-  // (see `scaled` in extrapolateTideLag) and Turnbull Bay heights still fall back to the
-  // Halifax main-river damping curve. That almost certainly overstates the range at the
-  // head of the bay; it needs recorded water level, not just event times, to fix.
+  // Aqua Ct carried no hs/ho/ls/lo, so it was deliberately skipped by the HEIGHT knot list
+  // (see `scaled` in extrapolateTideLag) and Turnbull Bay heights fell back to the
+  // Halifax main-river damping curve.
+  // Round 45 (v382, 2026-08-03): Aqua Ct REMOVED at Jan's request. The Turnbull Bay branch
+  // is back to zero calibrated knots — lagAtDistance() returns mode:'uncal' up the bay
+  // again (flat mouth estimate, grade `low`), exactly the pre-round-44 state described
+  // above. The branch centreline keeps its Aqua Ct end vertex (it's geometry, not a knot).
+  // A user-saved tide station up the bay re-calibrates the run the same way the row did.
   // `branch` ties a station to a tributary centreline instead of the main river.
   { id:'8721138', name:'Ponce Inlet',                    lat:29.0817, lng:-80.9367, h:0,    l:0,   lagKind:'reference', src:'noaa', hs:1, ho:0, ls:1, lo:0 },
   { id:'8721147', name:'Ponce De Leon Inlet South',      lat:29.0633, lng:-80.9158, h:0,    l:0,   lagKind:'reference', src:'noaa', hs:1, ho:0, ls:1, lo:0 },
@@ -11710,7 +11714,6 @@ const TIDE_LAG_STATIONS = [
   { id:'8721164', name:'New Smyrna Beach',               lat:29.0233, lng:-80.9183, h:29,   l:44,  lagKind:'measured',  src:'noaa', n:58, sd:5,  hs:0.795, ho:0.323, ls:0.765, lo:0.254 },
   { id:'8721222', name:'Packwood Place',                 lat:28.9400, lng:-80.8700, h:102,  l:124, lagKind:'measured',  src:'noaa', n:58, sd:8,  hs:0.341, ho:0.129, ls:0.268, lo:0.077 },
   { id:'8721223', name:'Turtle Mound',                   lat:28.9267, lng:-80.8250, h:188,  l:220, lagKind:'measured',  src:'noaa', n:58, sd:15, hs:0.135, ho:0.028, ls:0.057, lo:-0.012 },
-  { id:'aquact',  name:'Aqua Ct',                        lat:29.0326, lng:-80.9470, h:144,  l:170, lagKind:'measured',  src:'observed', branch:'Turnbull Bay' },
   { id:'5068',    name:'Williams Point',                 lat:28.4555, lng:-80.7605, h:0,    l:0,   lagKind:'unset',     src:'stevens', windDriven:true }
 ];
 
@@ -11818,7 +11821,7 @@ const WW_BRANCHES = [
     [29.04266,-80.95977],[29.04149,-80.95778],[29.04072,-80.95596],
     [29.03657,-80.95287],[29.03343,-80.95234],[29.03277,-80.94987],
     [29.03416,-80.94981],[29.03415,-80.94761],
-    [29.03263,-80.94698]                                       // Aqua Ct (calibrated knot)
+    [29.03263,-80.94698]                                       // Aqua Ct (head of the run; former calibrated knot, removed round 45)
   ]}
 ];
 function armPath(arm){ return arm==='N' ? WW_NORTH : WW_SOUTH; }

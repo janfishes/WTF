@@ -7,6 +7,22 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 5:45 PM EDT · v382 · Aqua Ct Gauge Removed
+------------------------------------------------------------------------------
+The Aqua Ct tide gauge (the round-44 observed knot, +144/+170, the
+only calibrated station on the Turnbull Bay branch) is removed at
+Jan's request. The branch is back to zero calibrated knots, so tide
+pins up the bay print the flat mouth estimate and grade low
+confidence again — the documented pre-round-44 state; the branch
+centreline keeps its Aqua Ct end vertex (geometry, not a knot), and
+the Aqua Ct inshore fishing SPOT pin is untouched. Help's Tides
+writeup reworded: Turnbull Bay is "followed", not "timed", the
+missing-gauge / low-confidence ⚠ state is stated plainly, and it
+points at Create & Calibrate Tide Stations for anyone who times
+their own dock — a user-saved station re-calibrates the run exactly
+as the removed row did.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 5:20 PM EDT · v381 · Accent Pill Borders
 ------------------------------------------------------------------------------
 The species pills and the Catches button now wear the bright theme
