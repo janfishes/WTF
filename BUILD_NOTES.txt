@@ -7,6 +7,14 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 2:58 PM EDT · v367 · Red Mark Set
+------------------------------------------------------------------------------
+The MARK SET title and the ringed-X icon in the banner header turn
+red (#d81f17, the same red as the mark on the water). The rest of the
+banner stays as v365 set it: white card, black/dark-gray text, theme
+accent on the border and CLEAR only.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 2:52 PM EDT · v366 · Banner Tap Feedback
 ------------------------------------------------------------------------------
 Tapping the MARK banner now says what it did: a toast reads "Showing
