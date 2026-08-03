@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v357** — Last Verified Stamp
 - **v356** — Disappearing Island GPS
 - **v355** — Jetty Island Landmarks
 - **v354** — Locate Pin Inlet Popup

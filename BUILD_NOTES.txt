@@ -7,8 +7,24 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-03 · 12:24 PM EDT · v356 · Disappearing Island GPS
+Build 2026-08-03 · 12:33 PM EDT · v357 · Last Verified Stamp
 ------------------------------------------------------------------------------
+The Season Guide's regulation date now means "last verified", not "last
+changed". regs.json carries a second date, `verified`, that the weekly
+Monday FWC check bumps every run whether or not a limit moved; the panel
+prints it as "(Last verified MM/DD/YY)" and the note beside it says the
+limits are checked against FWC's pages weekly on Mondays. `updated` keeps
+its old meaning — the date a limit last MOVED — and still drives the table
+swap, the REGULATION CHANGES list, and the "limits refreshed" notice, so
+none of those fire on a no-change week. applyRegs() now accepts a file
+whose `verified` moved even when the limits didn't (older files without
+`verified` fall back to `updated`). The notify workflow gained a gate: a
+verified-only push opens no issue and sends no mail; only a real `updated`
+change notifies (manual workflow_dispatch always notifies, for testing).
+tools/FWC_CHECK.md and the cloud routine's prompt updated to match — the
+weekly job now commits regs.json every run instead of only on changes.
+
+
 Disappearing Island moved to Jan's GPS (29.069288, -80.927869) — the
 tidal sandbar mid-inlet, west of v355's placement on the barrier island's
 shore bar. Label side re-verified against the rendered topo tiles: the

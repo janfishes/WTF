@@ -9,9 +9,16 @@ A person following these by hand should get the same result.
 
 ```json
 { "updated": "MM/DD/YY",
+  "verified": "MM/DD/YY",
   "source": "...",
   "species": { "trout": { "size": "...", "bag": "...", "closed": [], "waters": "state", "fwc": "spotted-seatrout", "note": "..." } } }
 ```
+
+Two dates, two meanings: `updated` is the date a limit last **moved** — it drives
+the app's table swap, the REGULATION CHANGES list, and the notification email.
+`verified` is the date the limits were last **checked** against FWC, moved or
+not — it is what the Season Guide prints as "(Last verified MM/DD/YY)". Every
+run bumps `verified`; only a real change bumps `updated`.
 
 The app fetches this file on open and uses it whenever its `updated` date is
 newer than the copy baked into the build. Publishing this file is therefore how
@@ -62,10 +69,14 @@ one sentence or two, never a paragraph.
 3. **If a page fails to load or you cannot find the numbers, leave that species
    exactly as it is** and say so in your report. A skipped species is a fine
    outcome; a guessed one is not.
-4. If nothing moved: change nothing, commit nothing, and report "no changes".
-   Do not bump `updated` just to show you ran.
+4. If nothing moved: set `verified` in `regs.json` to today as MM/DD/YY, commit
+   and push that ONE change (message: `Regs verified MM/DD/YY — no changes`),
+   and report "no changes". Do **not** bump `updated`, do not add a
+   `REGS_CHANGELOG.md` entry, and do not touch anything else — the notify
+   workflow deliberately stays silent when only `verified` moved.
 5. If something moved:
-   - Edit `regs.json` — the changed fields, and `updated` to today as MM/DD/YY.
+   - Edit `regs.json` — the changed fields, and BOTH `updated` and `verified`
+     to today as MM/DD/YY.
    - Add an entry at the top of `REGS_CHANGELOG.md` under a `## MM/DD/YY`
      heading: one bullet per species, naming the old value, the new value, and
      the FWC page you read it from.
@@ -74,8 +85,10 @@ one sentence or two, never a paragraph.
    - Do **not** touch `index.html`, `BUILD_NUM`, or anything else. This job
      publishes data, never a build. The baked-in table in index.html is the
      offline fallback and is allowed to fall behind.
-6. Sanity-check before pushing: `python3 -c "import json;d=json.load(open('regs.json'));print(d['updated'],len(d['species']),len(d['changes']))"`
-   must print today's date, **23**, and a changes count one higher than before. The app ignores a file with fewer than 10
+6. Sanity-check before pushing: `python3 -c "import json;d=json.load(open('regs.json'));print(d['updated'],d['verified'],len(d['species']),len(d['changes']))"`
+   — `verified` must print today's date always; `updated` prints today only when a
+   limit moved (with a changes count one higher than before), otherwise it stays
+   what it was and the species count is **23** either way. The app ignores a file with fewer than 10
    species, so a truncated write would silently strand every phone on the old
    table.
 

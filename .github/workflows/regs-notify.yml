@@ -38,7 +38,28 @@ jobs:
         with:
           fetch-depth: 2
 
+      # Since Build 357 the weekly check pushes regs.json EVERY run to bump the
+      # `verified` date (the Season Guide's "(Last verified)" stamp). That bump is
+      # not a regulation change, so only notify when `updated` moved. A manual
+      # workflow_dispatch always notifies, so the path stays testable.
+      - name: Did a limit actually move?
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "moved=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          old=$(git show HEAD~1:regs.json 2>/dev/null | python3 -c "import json,sys;print(json.load(sys.stdin).get('updated',''))" 2>/dev/null || echo "")
+          new=$(python3 -c "import json;print(json.load(open('regs.json')).get('updated',''))")
+          echo "old=$old new=$new"
+          if [ "$old" = "$new" ]; then
+            echo "verified-only bump — no notification."
+            echo "moved=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "moved=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Read what changed
+        if: steps.gate.outputs.moved == 'true'
         id: diff
         run: |
           # The newest dated section of the changelog is the human summary of
@@ -67,6 +88,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Open the notification issue
+        if: steps.gate.outputs.moved == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BODY: ${{ steps.diff.outputs.body }}
@@ -88,6 +110,7 @@ jobs:
       # second recipient, that is when a domain has to be verified at
       # resend.com/domains.
       - name: Email Jan
+        if: steps.gate.outputs.moved == 'true'
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           BODY: ${{ steps.diff.outputs.body }}
