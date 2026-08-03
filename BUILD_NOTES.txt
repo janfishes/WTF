@@ -7,6 +7,15 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 11:49 AM EDT · v353 · Red Caps USCG Directive
+------------------------------------------------------------------------------
+The closing directive of the MOB Two Cautions paragraph is now all-caps
+safety red (#ff5252, the MOB banner red) and adds regulations: "READ AND
+FOLLOW THE CURRENT USCG SAFE-BOATING AND MOB PROCEDURES AND REGULATIONS at
+uscgboating.org (needs a signal)." The link itself keeps the normal link
+style. No behavior changes.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 11:46 AM EDT · v352 · MOB Depends Wording
 ------------------------------------------------------------------------------
 In help's MOB Two Cautions paragraph, the device-reliability sentence now
