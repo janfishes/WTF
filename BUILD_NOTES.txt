@@ -7,6 +7,29 @@ note for every build lives here. New builds are added at the top, date- and
 time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-02 · 11:27 PM EDT · v338 · Help Sections Rewrite
+------------------------------------------------------------------------------
+Jan's rewrite of the help's action-button writeups, applied to every one of
+the ten sections plus the print/PDF intro. The PRINT THIS HELP and SAVE HELP
+AS PDF buttons now sit above their one-line descriptions ("Tap to print…" /
+"Tap to save…"), and the section-behavior paragraph is reworded (close by
+title or CLOSE X at the bottom; CLOSE X at top exits Help; Help reopens to
+your last view). Sections are generally tightened: + CATCH drops the location
+-list and pill detail; + SPOT splits the MOB-marks note into its own
+paragraph and simplifies the type-guess and coordinate-entry writeups; BITE
+drops the majors/minors astronomy sentence; TIDES merges the gauge-pin
+description into the flow and notes predictions are "updated annually";
+WAVES drops the buoy position/distance detail (popup carries it); MY LOG
+shortens the UNDO story to one line; SEASONS repurposes "Map zones" for the
+FWC reef-centroid note; COMPASS condenses five paragraphs to three under a
+single CAUTION; the map-views section condenses to three paragraphs; MOB's
+cautions become their own "Two Cautions" paragraph naming Channel 16. Two
+deliberate departures from the pasted draft: coordinate examples keep the
+NOAA inlet position (29°04.672'N 80°54.511'W) per the v333 two-origins
+cleanup, rather than the draft's 29°04.902'N (the retired tide-gauge point),
+and the dangling "name the fish you catch there" sentence keeps its "the
+spot gets their season bars" payoff.
+------------------------------------------------------------------------------
 Build 2026-08-02 · 11:17 PM EDT · v337 · Help Intro Rewrite
 ------------------------------------------------------------------------------
 The help's opening section is rewritten to Jan's new wording. Heading changes
