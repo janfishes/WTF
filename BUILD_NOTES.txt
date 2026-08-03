@@ -7,6 +7,14 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 12:45 PM EDT · v358 · Heading Home Help Line
+------------------------------------------------------------------------------
+Both the Compass and Locate Me help sections now add, after their
+course-to-the-inlet explanations, that this makes it easy to determine a
+heading back to the inlet when you're offshore and not at one of the
+app's saved spots. Help text only; no behavior changes.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 12:33 PM EDT · v357 · Last Verified Stamp
 ------------------------------------------------------------------------------
 The Season Guide's regulation date now means "last verified", not "last
