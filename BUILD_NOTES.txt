@@ -2,9 +2,27 @@ WTF Log — Build Notes
 =====================
 
 Moved out of the in-app help on 2026-07-31 at 4:00 PM EDT (Build 221).
-Newest first. The help keeps a two-or-three-word tl;dr per build; the full
-note for every build lives here. New builds are added at the top, date- and
-time-stamped.
+Newest first. The change log — one tl;dr line per build — lives in
+CHANGELOG.md on GitHub (since v341); the full note for every build lives
+here. New builds are added at the top, date- and time-stamped.
+
+------------------------------------------------------------------------------
+Build 2026-08-02 · 11:45 PM EDT · v341 · Change Log On GitHub
+------------------------------------------------------------------------------
+The change log moved out of the in-app help and onto GitHub: CHANGELOG.md in
+the repo now carries the one-line-per-build list (v189 through today, grouped
+by date, newest first), rendered readably on the GitHub site. The help's
+Build Notes section shrinks to a single note linking to CHANGELOG.md and
+BUILD_NOTES.txt — no more per-build tl;dr lines in the app itself. New
+builds add their tl;dr line to CHANGELOG.md instead.
+
+Also: the main-screen build stamp (bottom-left of the map) now shows the date
+and the app version — "08/02/26 V1" — instead of the internal build number.
+A new BUILD_VER constant ('V1') sits beside BUILD_DATE/BUILD_NUM; BUILD_NUM
+keeps counting underneath because the update pill and the diagnostic
+BUILD_TAG still compare it against the deployed page. The help's own build
+line (Help → bottom) still shows the full "Build <date> · v<num>" for
+diagnostics.
 
 ------------------------------------------------------------------------------
 Build 2026-08-02 · 11:55 PM EDT · v340 · Ace Filler Name

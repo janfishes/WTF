@@ -1,0 +1,161 @@
+# WTF Log — Change Log
+
+One line per build, newest first. Full build notes with dates, times, and
+details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
+
+## 2026-08-02
+
+- **v341** — Change log moved to GitHub
+- **v340** — Ace Filler Name
+- **v339** — Filter Help Rewrite
+- **v338** — Help Sections Rewrite
+- **v337** — Help Intro Rewrite
+- **v336** — Merge 50 Ft
+- **v335** — Inlet Tag Right
+- **v334** — Measured Vs FWC
+- **v333** — One Inlet Origin
+- **v332** — Rose At NOAA
+- **v331** — Inlet Pin Fix
+- **v330** — Save Help PDF
+- **v329** — Site note cleanups
+- **v328** — Cracker Ridge
+- **v327** — Six Natural Sites
+- **v326** — Purple tiles really fixed
+- **v325** — My Spots label trimmed
+- **v324** — Offshore categories
+- **v323** — My Inshore Spots label
+- **v322** — Marinas ride Launches
+- **v321** — Four inshore categories
+- **v320** — Ace example name
+- **v319** — Name on the log
+- **v318** — Purple tiles fixed
+- **v317** — Disclaimer shown in full
+- **v316** — Inshore pills isolate, city labels
+- **v315** — Ponce de Leon Inlet pin
+- **v314** — Inshore category pills
+- **v313** — MOB warnings, sale disclaimer
+- **v312** — Unlogged fish tap is note-only
+- **v311** — Spot pins stay put
+- **v310** — Species buttons light for logged fish
+- **v309** — Nothing-logged note always shows
+
+## 2026-08-01
+
+- **v308** — Waypoint tags hang left
+- **v307** — Callalisa Creek
+- **v306** — Blue inshore, big name tags
+- **v305** — Catches is the master switch
+- **v304** — Readable name tags
+- **v303** — Black diamonds, orange inshore
+- **v302** — Pins you can see
+- **v301** — Bolder mark, live updates, fresher shell
+- **v300** — Launches go brown
+- **v299** — Darker launch gray
+- **v298** — USCG MOB line
+- **v297** — Search leaves no trace
+- **v296** — Bigger month labels
+- **v295** — Air around the ✕
+- **v294** — Zone pills filter
+- **v293** — Opens on Tequila Sunrise
+- **v292** — Orange app icon
+- **v291** — Change log trimmed
+- **v290** — Zone note, CLOSE buttons
+- **v289** — Limits notes tucked away
+- **v288** — Internet note rewritten
+- **v287** — Regulation changes log
+- **v286** — Update date stands out
+- **v285** — Limits update themselves
+- **v284** — Guide trimmed to the fish
+- **v283** — Checked against FWC
+- **v282** — State or federal water
+- **v281** — Last-updated stamp
+- **v280** — Inch marks & capped names
+- **v279** — Size, bag & closed seasons
+- **v278** — Gulf Flounder & Kingfish back
+- **v277** — Atlantic varieties only
+- **v276** — Varieties in the guide
+- **v275** — Eye icon added
+- **v274** — Bass added
+- **v273** — Hogfish replaces Kingfish
+- **v272** — Intro always open
+- **v271** — One writeup at a time
+- **v270** — Help by button
+- **v269** — Harbor Oaks pin spaced
+- **v268** — Harbor Oaks and Rose Bay
+- **v267** — Volusia line only
+- **v266** — Charted place names
+- **v265** — Popup close ✕ uniform
+- **v264** — Deletes kept 14 days
+- **v263** — Undo moved up
+- **v262** — Log backups moved down
+- **v261** — Multi-species catch
+- **v260** — Details & seasons
+- **v259** — North PO ramp
+- **v258** — Faster hi res
+
+## 2026-07-31
+
+- **v257** — Reef note trimmed
+- **v256** — iPhone launch fixes
+- **v255** — Marker clearance
+- **v254** — Cities & creeks
+- **v253** — Ramsey pin moved
+- **v252** — Fab icons first
+- **v251** — Gentler wag
+- **v250** — Left-right wag
+- **v249** — Map button label
+- **v248** — Sideways wag
+- **v247** — 500 ft start
+- **v246** — Installable app
+- **v245** — Tail wags
+- **v244** — Ft-in lb-oz entry
+- **v243** — Consistent buttons
+- **v242** — Undo everywhere
+- **v241** — Log labels fixed
+- **v240** — Clearer log cards
+- **v239** — Moon phase logged
+- **v238** — Location before tide
+- **v237** — Popups stay visible
+- **v236** — Compass self-heals
+- **v235** — Map labels scale
+- **v234** — Help polish
+- **v233** — Brighter banner
+- **v232** — Red MOB, gray launches
+- **v231** — Banner wording
+- **v230** — MOB declutter
+- **v229** — MOB in caps
+- **v228** — MOB help wording
+- **v227** — Bolder MOB
+- **v226** — Man overboard
+- **v225** — Offline help wording
+- **v224** — Tile retry
+- **v223** — Update pill wording
+- **v222** — Compass new-spot fix
+- **v221** — Build notes moved
+- **v220** — Help search fix
+- **v219** — Instant reopens
+- **v218** — Faster launch
+- **v217** — Update pill redesign
+- **v216** — Help opener retitled
+- **v215** — Compass home bearing
+- **v214** — Help printing fix
+- **v213** — Wording tweaks
+- **v212** — TL;DR reworked
+- **v211** — Filter row layout
+- **v210** — ICW view renamed
+- **v209** — Pill overlap fix
+- **v208** — Buttons scale too
+- **v207** — TL;DR + printing
+- **v206** — Boundary writing spared
+- **v205** — Chart returns close-up
+- **v204** — Coastline label fixes
+- **v203** — Blocky water gone
+- **v202** — Gulf 9-mile line
+- **v201** — Statewide ocean repair
+- **v199–v200** — ICW ocean repair
+- **v197–v198** — Marina pins added
+- **v190–v196** — Satellite views rebuilt
+
+## 2026-07-30
+
+- **v189** — Startup error fix
