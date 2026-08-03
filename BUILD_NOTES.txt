@@ -7,6 +7,22 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 4:05 PM EDT · v374 · Track Edit And Notes
+------------------------------------------------------------------------------
+Saved tracks are now editable: an EDIT ✎ button on each Your-tracks row
+opens an inline editor with the track name (48 chars; emptying it keeps
+the old name) and a free-text Notes box (bait, tide, speed — shown under
+the row like a spot's details). Edits push a track-edit action onto the
+UNDO stack; deleting a mid-edit track closes the editor. Input values
+are assigned via the DOM, not markup attributes (escapeHTML doesn't
+escape quotes). Help writeup updated.
+
+Also in this build: Topo Satellite moved BACK to its original slot
+(above Track My Path — Jan reversed v373's move to the bottom of the
+stack); the help quick-start order follows. Order is again
+... Compass, Topo Satellite, Track My Path, Locate Me.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 3:55 PM EDT · v373 · Tracks Show And Zoom
 ------------------------------------------------------------------------------
 Kept tracks now show on the map at every launch, and tapping a track's

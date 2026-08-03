@@ -2683,6 +2683,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21"></path><path d="M15.3 8.7 13 13l-4.3 2.3L11 11l4.3-2.3Z" fill="currentColor" stroke="none"></path></svg>
       Compass
     </button>
+    <button class="fab" id="mapModeBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
+      Topo Satellite
+    </button>
     <button class="fab" id="trackBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg>
       Track My Path
@@ -2693,10 +2697,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       Locate Me
       <svg class="mark-hint" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#markFig" x="4" y="4" width="24" height="24"></use></svg>
       <span class="fab-tip" aria-hidden="true"><span>TAP: drops your GPS position.</span><span><b>PRESS AND HOLD:</b> drops a MARK to steer back to.</span></span>
-    </button>
-    <button class="fab" id="mapModeBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
-      Topo Satellite
     </button>
   </div>
 </div>
@@ -2813,7 +2813,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Paragraph to Get Fishing</div>
-      <p class="sheet-note">Tap any spot pin on the map for its coordinates and details. Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. <b>TRACK MY PATH</b> records your path as a line on the map while the app is on screen — tap it again to stop and keep the track. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, and back up all your fishing data and photos.</p>
+      <p class="sheet-note">Tap any spot pin on the map for its coordinates and details. Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. <b>TRACK MY PATH</b> records your path as a line on the map while the app is on screen — tap it again to stop and keep the track. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, and back up all your fishing data and photos.</p>
       <p class="sheet-note"><b>Be advised, this app is not for navigation or emergency use!</b> The <b>MARK</b> function is a memory aid only — not navigation, safety, or rescue equipment, and no substitute for the safety gear and safe-boating practice the law and good seamanship require (see <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>).</p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Ace, get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <button class="mini-btn help-print-hide" id="helpPrintBtn" style="display:block; width:100%; margin:14px 0 6px; text-transform:uppercase; font-size:calc(13px * var(--tsb)); letter-spacing:.03em;">Print this help <span class="bi">&#128424;&#xFE0E;</span></button>
@@ -2888,7 +2888,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="help-body" id="hb-locate">
       <p class="sheet-note">A <b>TAP</b> on this button drops your GPS position on the map (tap again to remove it). The pin opens with your <b>coordinates</b> and the <b>distance and magnetic headings to/from Ponce Inlet</b> — the <b>second</b> number of the bearing pair is the course home from where you are. It's a straight-line figure, not a channel route. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The small ✕ in a dashed ring on the <svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> button — in your theme's accent color — signifies the MARK function: the same mark it drops on the water.</p>
       <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#markFig"></use></svg> <b>MARK function.</b> <b>PRESS AND HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. The app drops a <b>MARK</b> at your position and starts guiding you back to it: a white banner edged in your theme's accent color at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red ✕ in a dashed ring — and the screen stays awake while it's up. It works anywhere — <b>inshore, offshore, or the ICW</b>. Use it for anything you'll want to run straight back to <b>right now</b>: a hat overboard, a dropped rod, the patch of water where the bite turned on just as you drifted off it. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while a MARK is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see the boat and mark's positions together — a short note confirms what the tap did (or says the GPS hasn't locked on yet); <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b> as a record — a <b>red pin</b> named MARK with its date and time, filed under <b>Inshore</b> or <b>Offshore</b>&nbsp;by where it happened. To delete one later, tap its red pin and use <b>DELETE</b>, or open <b>+ Spot</b> and scroll to <b>Your saved spots</b>: MARK entries sit together alphabetically, each with <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons — <b>DELETE ✕</b> removes it. One thing to do <b>at the dock, not on the water</b>: the first time MARK (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, so a press on the water drops the mark instead of showing a permission dialog.</p>
-      <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c227d6" stroke-width="2" style="vertical-align:-7px;"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="#c227d6" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="#c227d6" stroke="none"></circle></svg> <b>TRACK MY PATH function.</b> Tap <b>TRACK MY PATH</b> and the app records your path as a <b>magenta line</b> on the map — your drift over a ledge, the troll that raised the fish, the route you picked through the flats. A slim bar at the top shows the distance covered and the time; <b>tap the bar</b> to fit the whole track on screen, and tap <b>STOP</b> (or TRACK MY PATH again) to finish. Kept tracks <b>show on the map</b> every time the app opens, and <b>tapping a track's line zooms the map to it</b>. They are saved under <b>Your tracks</b> in <b>+ Spot</b> — the app keeps your last 10, each with <b>SHOW/HIDE 🗺</b> and <b>DELETE ✕</b> buttons (HIDE sticks until you SHOW it again), and a deleted track is restorable with <b>UNDO</b> for 14 days like anything else. Recording needs <b>no signal</b> — GPS works far offshore; download the offline map first if you want imagery under the line out there. Two honest limits: the app can only record <b>while it is on the screen</b> (it keeps the screen awake for you; locking the phone or switching apps pauses the track until you return), and keeping GPS and the screen on <b>uses real battery</b> — on phones that allow it the bar shows a live battery % and warns when it runs low; iPhones don't let a web app read the battery, so mind the gauge and bring a charging cable for a long day. Tracks live on this device only and are not in backup files.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c227d6" stroke-width="2" style="vertical-align:-7px;"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="#c227d6" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="#c227d6" stroke="none"></circle></svg> <b>TRACK MY PATH function.</b> Tap <b>TRACK MY PATH</b> and the app records your path as a <b>magenta line</b> on the map — your drift over a ledge, the troll that raised the fish, the route you picked through the flats. A slim bar at the top shows the distance covered and the time; <b>tap the bar</b> to fit the whole track on screen, and tap <b>STOP</b> (or TRACK MY PATH again) to finish. Kept tracks <b>show on the map</b> every time the app opens, and <b>tapping a track's line zooms the map to it</b>. They are saved under <b>Your tracks</b> in <b>+ Spot</b> — the app keeps your last 10, each with <b>SHOW/HIDE 🗺</b>, <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons. <b>EDIT ✎</b> renames a track and takes <b>notes</b> — bait, tide, speed, what worked along that path. HIDE sticks until you SHOW it again, and a deleted track is restorable with <b>UNDO</b> for 14 days like anything else. Recording needs <b>no signal</b> — GPS works far offshore; download the offline map first if you want imagery under the line out there. Two honest limits: the app can only record <b>while it is on the screen</b> (it keeps the screen awake for you; locking the phone or switching apps pauses the track until you return), and keeping GPS and the screen on <b>uses real battery</b> — on phones that allow it the bar shows a live battery % and warns when it runs low; iPhones don't let a web app read the battery, so mind the gauge and bring a charging cable for a long day. Tracks live on this device only and are not in backup files.</p>
       <p class="sheet-note"><b>Caution.</b> A MARK is where the <b>phone</b> was when the button was pressed — anything in the water <b>drifts</b> from that point with current and wind, so the longer the clock runs, the farther away it may be. The function depends on the phone's GPS, battery, signal, and software, and <b>any of them can fail, lag, or be wrong exactly when needed</b>. This app is an aid to memory, <b>not navigation, safety, or rescue equipment</b>, and it is no substitute for the equipment and practices the situation and the law require — read up at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>.</p>
       </div>
 
@@ -4018,7 +4018,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 373;
+const BUILD_NUM  = 374;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -6270,6 +6270,12 @@ window.appUndo = async function(){
     if(typeof applyFilter === 'function') applyFilter();
     if(typeof applySpotLabels === 'function') applySpotLabels();
     showToast('Deleted spot restored ✓');
+  } else if(a.kind === 'track-edit'){
+    const list = trkLoadSaved();
+    const t = list.find(x=>x.id===a.id);
+    if(t){ t.name = a.before.name; t.notes = a.before.notes; trkStoreSaved(list); }
+    renderTrackList();
+    showToast('Track edit undone ✓');
   } else if(a.kind === 'track-del'){
     const list = trkLoadSaved();
     if(!list.some(x=>x.id===a.record.id)){ list.push(a.record); list.sort((a2,b2)=>a2.t0-b2.t0); trkStoreSaved(list); }
@@ -10783,6 +10789,7 @@ function trkZoomTo(id){
     + '. HIDE or DELETE it under Your tracks in + Spot.', 5000);
 }
 
+let editingTrackId = null;
 function renderTrackList(){
   const cnt = document.getElementById('trackCount');
   const list = document.getElementById('trackList');
@@ -10792,16 +10799,60 @@ function renderTrackList(){
   list.innerHTML = tracks.slice().reverse().map(t=>{
     const dur = markFmtClock((t.t1 || t.t0) - t.t0);
     const on = !!trkShown[t.id];
+    if(t.id === editingTrackId){
+      /* Inline editor. Values are assigned via the DOM below, not in the markup —
+         escapeHTML doesn't escape quotes, so attribute values are not safe here. */
+      return `<div class="loc-preview set" style="margin-top:6px;">
+        <label class="field-label">Track name</label>
+        <input type="text" id="trackEditName" maxlength="48" style="width:100%; box-sizing:border-box;">
+        <label class="field-label" style="margin-top:8px;">Notes</label>
+        <textarea id="trackEditNotes" rows="2" placeholder="Bait, tide, speed — what worked along this path" spellcheck="true" autocapitalize="sentences" autocorrect="on" style="width:100%; box-sizing:border-box;"></textarea>
+        <div class="loc-btns" style="margin-top:8px;">
+          <button class="mini-btn" style="font-weight:700;" onclick="saveTrackEdit('${t.id}')">Save track</button>
+          <button class="mini-btn" onclick="cancelTrackEdit()">Cancel</button>
+        </div>
+      </div>`;
+    }
+    const notes = t.notes ? `<div style="font-size:calc(11.5px * var(--ts)); color:var(--fog); line-height:1.45; margin-top:5px;">${escapeHTML(t.notes)}</div>` : '';
     return `<div class="loc-preview set" style="margin-top:6px;">
       <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
         <span>${escapeHTML(t.name)} · ${trkFmtDist(t.d)} · ${dur}</span>
         <span style="display:flex; gap:6px;">
           <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="toggleTrack('${t.id}')">${on ? 'HIDE' : 'SHOW'} <span class="bi bi-emoji">🗺</span></button>
+          <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="editTrack('${t.id}')">EDIT <span class="bi">✎</span></button>
           <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="removeTrack('${t.id}')">DELETE <span class="bi">✕</span></button>
         </span>
       </div>
+      ${notes}
     </div>`;}).join('');
+  if(editingTrackId){
+    const t = tracks.find(x=>x.id===editingTrackId);
+    const n = document.getElementById('trackEditName'), no = document.getElementById('trackEditNotes');
+    if(t && n){ n.value = t.name; no.value = t.notes || ''; }
+  }
 }
+
+window.editTrack = function(id){
+  editingTrackId = id;
+  renderTrackList();
+  const n = document.getElementById('trackEditName');
+  if(n){ n.focus(); n.select(); }
+};
+window.cancelTrackEdit = function(){ editingTrackId = null; renderTrackList(); };
+window.saveTrackEdit = function(id){
+  const list = trkLoadSaved();
+  const t = list.find(x=>x.id===id);
+  if(!t){ editingTrackId = null; renderTrackList(); return; }
+  const nEl = document.getElementById('trackEditName'), noEl = document.getElementById('trackEditNotes');
+  const name = (nEl && nEl.value.trim()) || t.name;   // an emptied name keeps the old one
+  const notes = noEl ? noEl.value.trim() : '';
+  pushUndo({kind:'track-edit', id, before:{name: t.name, notes: t.notes || ''}});
+  t.name = name; t.notes = notes;
+  trkStoreSaved(list);
+  editingTrackId = null;
+  renderTrackList();
+  showToast('Track saved ✓ — UNDO above Your saved spots reverses the edit.');
+};
 
 /* HIDE persists (t.hidden in wtf:tracks) — kept tracks otherwise show on the map at
    every launch. */
@@ -10829,6 +10880,7 @@ window.removeTrack = async function(id){
   if(i < 0) return;
   const rec = list.splice(i,1)[0];
   trkStoreSaved(list);
+  if(editingTrackId === id) editingTrackId = null;
   if(trkShown[id]){ try{ map.removeLayer(trkShown[id]); }catch(e){} delete trkShown[id]; }
   pushUndo({kind:'track-del', record:rec});
   await trashAdd('track', rec);
