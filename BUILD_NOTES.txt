@@ -7,6 +7,23 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 12:16 PM EDT · v355 · Jetty Island Landmarks
+------------------------------------------------------------------------------
+Two new inshore Landmark pins at the inlet. "New Smyrna Beach South Jetty"
+(29.073600, -80.912075) sits on the rock structure itself, placed off the
+imagery tiles — not a GNIS anchor — and its name tag hangs RIGHT (over
+open water): the topo prints "Ponce De Leon Inlet" just west of the jetty
+at z13–z14, so the usual left-hanging waypoint tag would cover it; the pin
+joins the wp-ponce-de-leon-inlet exception in applySpotLabels.
+"Disappearing Island" (29.069000, -80.918300) marks the tidal sandbar off
+the barrier island's west shore inside the inlet — a colloquial name, not
+in GNIS, hand-placed; its default left tag was verified clear of every
+printed name at z13–z16. "Jetty" added to the inshore Landmarks
+classifier (bridges, trestle, islands, cities, points, flats, shoals —
+now jetties too); the Inshore help sentence lists jetties with the other
+landmark kinds. Landmarks pill count 52 → 54.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 12:02 PM EDT · v354 · Locate Pin Inlet Popup
 ------------------------------------------------------------------------------
 The Locate Me pin now opens a popup: your coordinates (degrees and decimal
