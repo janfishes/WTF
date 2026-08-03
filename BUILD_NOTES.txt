@@ -7,6 +7,16 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 11:38 AM EDT · v349 · USCG MOB Link
+------------------------------------------------------------------------------
+Help's MOB writeups now tell the reader to read and follow the CURRENT USCG
+safe-boating and MOB procedures, with a live link to the official USCG
+Boating Safety Division site (uscgboating.org, opens in a new tab, needs a
+signal). The link was added in both places help talks about USCG
+procedures: the "Be advised" warning near the top and the Two Cautions
+paragraph in the MOB section. No behavior changes.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 2:52 AM EDT · v348 · Higher Filter Cluster
 ------------------------------------------------------------------------------
 On Macs the species list could run past the bottom of the window and need
