@@ -7,6 +7,14 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 11:41 AM EDT · v350 · MOB Link In Intro
+------------------------------------------------------------------------------
+The USCG link now also rides help's opening tour paragraph: the sentence
+introducing the 1-second MOB press ends with "read and follow the current
+USCG MOB procedures at uscgboating.org" (same new-tab link as v349's two).
+No behavior changes.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 11:38 AM EDT · v349 · USCG MOB Link
 ------------------------------------------------------------------------------
 Help's MOB writeups now tell the reader to read and follow the CURRENT USCG

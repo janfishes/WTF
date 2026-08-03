@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v350** — MOB Link In Intro
 - **v349** — USCG MOB Link
 - **v348** — Higher Filter Cluster
 - **v347** — Typed Catch Dates
