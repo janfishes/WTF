@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v360** — MOB Badge Ring, Bold Tip
 - **v359** — MOB Enable Gate
 - **v358** — Heading Home Help Line
 - **v357** — Last Verified Stamp

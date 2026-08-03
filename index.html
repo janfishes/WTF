@@ -2219,7 +2219,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
      coding, so it still reads if the red doesn't. The !importants outshout the theme block's
      `.fab svg{stroke:var(--teal) !important}` above; being later at equal specificity wins. */
   #locateBtn{-webkit-touch-callout:none; -webkit-user-select:none; user-select:none; touch-action:manipulation;}
-  #locateBtn svg.mob-hint{color:#e5484d !important; stroke:none !important; margin:0 0 0 6px; width:calc(16px * var(--tsb)); height:calc(16px * var(--tsb));}
+  /* The badge wears the same dashed red ring as the map mark (.mob-pin .disc) — drawn as a
+     circle inside the svg (its own stroke attr, so the stroke:none below can't touch it).
+     21px box = the old 16px figure plus the ring's shell. */
+  #locateBtn svg.mob-hint{color:#e5484d !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
   #locateBtn .mob-bang{color:#e5484d !important; font-weight:900; font-size:calc(15px * var(--tsb)); line-height:1; margin-left:2px;}
   #locateBtn.active-locate svg.mob-hint{color:#ffd7d9 !important;}
   #locateBtn.active-locate .mob-bang{color:#ffd7d9 !important;}
@@ -2230,6 +2233,21 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #locateBtn.mob-arming svg{color:#fff !important; stroke:#fff !important;}
   #locateBtn.mob-arming svg.mob-hint{color:#fff !important; stroke:none !important;}
   #locateBtn.mob-arming .mob-bang{color:#fff !important;}
+  /* Hover tip (fine pointers only): the old title= tooltip restyled bold and bigger —
+     native title bubbles can't be styled. Hangs LEFT of the pill (the stack hugs the map's
+     right edge) and hides while the hold-to-arm flood is running. */
+  @media (hover:hover) and (pointer:fine){
+    #locateBtn{position:relative;}
+    #locateBtn:hover::after{
+      content:attr(data-tip); position:absolute; right:calc(100% + 10px); top:50%;
+      transform:translateY(-50%); width:max-content; max-width:min(300px, 42vw);
+      background:rgba(11,28,43,.96); border:1px solid var(--line); border-radius:9px;
+      padding:7px 11px; color:#fff; font-weight:800; font-size:calc(14px * var(--tsb));
+      line-height:1.4; white-space:normal; text-align:left; pointer-events:none;
+      box-shadow:0 4px 14px rgba(0,0,0,.4); z-index:1200;
+    }
+    #locateBtn.mob-arming:hover::after{display:none;}
+  }
 
   #mobBanner{
     position:fixed; left:50%; top:calc(env(safe-area-inset-top, 0px) + 8px); transform:translateX(-50%);
@@ -2642,10 +2660,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
       Topo Satellite
     </button>
-    <button class="fab" id="locateBtn" title="Tap: drop your GPS position. Press and HOLD: mark man overboard.">
+    <button class="fab" id="locateBtn" data-tip="Tap: drop your GPS position. Press and HOLD: mark man overboard.">
       <svg viewBox="0 0 24 28" width="15" height="17" style="vertical-align:-3px;"><use href="#locatePin"></use></svg>
       Locate Me
-      <svg class="mob-hint" viewBox="0 0 24 24" aria-hidden="true"><use href="#mobFig"></use></svg><span class="mob-bang" aria-hidden="true">!</span>
+      <svg class="mob-hint" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4.65 4.4"></circle><use href="#mobFig" x="4" y="4" width="24" height="24"></use></svg><span class="mob-bang" aria-hidden="true">!</span>
     </button>
   </div>
 </div>
@@ -2818,7 +2836,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-locate"><svg viewBox="0 0 24 28" width="13" height="15"><use href="#locatePin"></use></svg> Locate Me<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-locate">
-      <p class="sheet-note">This button drops your GPS position on the map (tap again to remove it). The pin opens with your <b>coordinates</b> and the <b>distance and magnetic headings to/from Ponce Inlet</b> — the <b>second</b> number of the bearing pair is the course home from where you are. It's a straight-line figure, not a channel route. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The small red person figure on the <svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> button signifies a MOB function.</p>
+      <p class="sheet-note">This button drops your GPS position on the map (tap again to remove it). The pin opens with your <b>coordinates</b> and the <b>distance and magnetic headings to/from Ponce Inlet</b> — the <b>second</b> number of the bearing pair is the course home from where you are. It's a straight-line figure, not a channel route. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The small red person figure in a dashed red ring on the <svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> button signifies a MOB function — the same mark MOB drops on the water.</p>
       <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#mobFig"></use></svg> <b>MOB (man-overboard) function.</b> <b>PRESS and HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. MOB is <b>disabled until it's enabled</b>: a second gate on the startup notice asks you to confirm you have <b>read the current USCG safe-boating and man-overboard procedures</b> at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>. Answer <b>Not now</b> and the function stays off — a later 1-second press brings that confirmation back instead of dropping a mark. The app drops a <b>MOB mark</b> at your position and starts guiding you back: a red banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red figure in a dashed ring — and the screen stays awake while it's up. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while MOB is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see the boat and mark's positions together; <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b> as a record — a <b>red pin</b> named MOB with its date and time, filed under <b>Inshore</b> or <b>Offshore</b>&nbsp;by where it happened. To delete one later, tap its red pin and use <b>DELETE</b>, or open <b>+ Spot</b> and scroll to <b>Your saved spots</b>: MOB entries sit together alphabetically, each with <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons — <b>DELETE ✕</b> removes it. Two things to do <b>at the dock, not on the water</b>: first, <b>enable MOB</b> — read the USCG procedures and answer the confirmation gate now, so an emergency press drops the mark instead of showing a dialog; second, the first time MOB (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, for the same reason.</p>
       <p class="sheet-note"><b>Two Cautions.</b> First, an MOB mark is where the <b>phone</b> was when the button was pressed, not where the person went in or is; a person in the water <b>drifts</b> from the mark with current and wind, so the longer the clock runs, the wider the circle's search area. This app is an aid to memory, <b>not a rescue device</b>. This MOB function depends on a phone's GPS, battery, signal, and software — and <b>any of them can fail, lag, or be wrong exactly when needed</b>. Carry and use the safety equipment the situation and the law require — VHF radio, PFDs, an EPIRB or personal protective equipment (e.g., safety harness). This app is <b>not a substitute for any of them</b>. <b style="color:#ff5252;">READ AND FOLLOW THE CURRENT USCG SAFE-BOATING AND MOB PROCEDURES AND REGULATIONS</b> at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a> (needs a signal).</p>
       </div>
@@ -3980,7 +3998,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 359;
+const BUILD_NUM  = 360;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

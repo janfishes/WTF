@@ -7,6 +7,22 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 1:18 PM EDT · v360 · MOB Badge Ring, Bold Tip
+------------------------------------------------------------------------------
+The red MOB figure on the Locate Me button now sits inside the same
+dashed red ring the MOB map mark wears — the badge and the mark it
+promises now match. Drawn as a dashed circle inside the badge's own
+svg (its own stroke attribute, so the button's stroke overrides can't
+touch it); the badge box grows 16px to 21px to make room for the ring
+shell, the figure inside stays the same size, and the ring follows the
+badge's existing colour states (pale pink while located, white during
+the hold-to-arm flood). The button's hover text is now bold and larger:
+the native title tooltip (which can't be styled) is replaced by a
+custom bubble — bold 14px, dark rounded panel hanging left of the pill,
+fine-pointer devices only, hidden while the hold-to-arm flood runs.
+Help's Locate Me note now mentions the ring.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 1:05 PM EDT · v359 · MOB Enable Gate
 ------------------------------------------------------------------------------
 The MOB function now sits behind a second acceptance gate: it stays
