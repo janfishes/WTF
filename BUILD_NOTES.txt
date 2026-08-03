@@ -7,6 +7,18 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 2:45 PM EDT · v365 · White Mark Banner
+------------------------------------------------------------------------------
+The MARK banner goes white: white background, black text (secondary
+lines dark gray), with the theme accent kept only on the border and
+the CLEAR button — the dark navy card made the text hard to read.
+The plain X in the banner header is replaced with the same ringed-X
+icon the Locate Me FAB wears (dashed circle + X), drawn in black.
+Help's MARK paragraph updated to say "a white banner edged in your
+theme's accent color". Tapping the banner is unchanged (it fits the
+map to the boat and the mark — a no-op if both are already framed).
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 1:58 PM EDT · v364 · Badge Bang Out
 ------------------------------------------------------------------------------
 The exclamation mark comes off the Locate Me badge — the badge is now
