@@ -7,6 +7,16 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 2:52 PM EDT · v366 · Banner Tap Feedback
+------------------------------------------------------------------------------
+Tapping the MARK banner now says what it did: a toast reads "Showing
+your boat and the MARK together." when it frames both pins, or "No GPS
+fix yet — centered the MARK. Your boat pin appears when GPS locks on."
+when there's no position to frame. Before, a tap taken while the map
+was already framed (or before the first fix) looked like a dead
+button. Help's MARK paragraph mentions the confirming note.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 2:45 PM EDT · v365 · White Mark Banner
 ------------------------------------------------------------------------------
 The MARK banner goes white: white background, black text (secondary
