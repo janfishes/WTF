@@ -7,6 +7,23 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:45 PM EDT · v392 · Amber Marina Pins
+------------------------------------------------------------------------------
+Jan: everything under the Launches switch that is not an actual
+launch goes AMBER. The Launches switch shows exactly two families —
+real ramps (ramp:true, the dark launch brown) and the marinas class
+(marinas, yacht clubs, the boatyard; /marina|yacht club/i on the
+meta, riding Launches since v322). The marina pins now fill with
+amber #FFC400 — the hue Offshore vacated in v389, so no other pin or
+zone wears it. New MARINA_FILL const + isMarinaSpot() (regex
+duplicated from inshoreCat, which lives too far down and leans on
+customSpotMarkers) applied in both icon builders (initial build +
+builtinSpotIcon for edited pins). Zone stays 'inshore' (catch
+picker), visibility unchanged, name tags still the inshore blue.
+Verified headless: Launches on shows 37 pins, ramps var(--launch),
+marinas #FFC400; screenshot at z13 around the inlet.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:39 PM EDT · v391 · Bigger Round Pins
 ------------------------------------------------------------------------------
 Round spot pins grow 14px -> 16px (Jan's request; the app's global
