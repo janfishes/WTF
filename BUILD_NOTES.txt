@@ -7,6 +7,30 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 9:59 PM EDT · v400 · Labels On Top Of The Water
+------------------------------------------------------------------------------
+Jan: labels extended into the water are partially obscured by the
+fade — they need to sit on top. Label-window REDESIGN: windows no
+longer PUNCH a hole to raw photo (which printed a hard darker box in
+the smudged water and needed pixel-exact anchors). Instead the photo
+is composited BACK over the paint with canvas 'lighten' inside each
+window: dark water pixels keep the paint — no box, no junk — but the
+BRIGHT printed label text pops through on top of the ocean/fade.
+paintSeaOverlay grew a `photo` param (the keyed tile path passes its
+img; the flat shortcuts never carry windows). Because a lighten
+window is invisible except where bright label pixels sit, alignment
+only needs to CONTAIN the label: every entry's zMax extends to 16
+(the inward feather tints the pad zone at all zooms, dimming names
+mid-word at z13+), and at z>=13 windows grow +34/+38px and shift
+(-12,+14) to cover USGS's per-zoom label placement drift. New entry:
+Ponce Inlet (town), measured at z13. Ormond-by-the-Sea keeps its
+z11 exclusion (the chart-dashes call from v399). Windows at z11-12
+also stopped printing photo boxes — the label now floats directly
+on the blue. Verified headless: Ormond z12/z13/z14, Ponce town +
+inlet z13 all readable with no boxes; Massey land 0 blue pixels;
+z9 byte-identical 41,88,144.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 9:46 PM EDT · v399 · Inward Feather + Ormond Window
 ------------------------------------------------------------------------------
 Three Jan reports, one root cause. The dark wedges right of Gaines

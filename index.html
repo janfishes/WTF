@@ -4132,7 +4132,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 399;
+const BUILD_NUM  = 400;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -4664,31 +4664,47 @@ function seaNearRings(clip, lonW, latS, lonE, latN, extraM){
    halves, not degrees, because a printed label is a fixed number of pixels
    at any zoom. Only the Topo USGS layer honours these (labelWindows option);
    the ICW photo has no printed names to save. */
+/* v400: every entry's zMax extends to 16 — the v399 inward feather tints the pad zone at
+   ALL zooms, so printed names running into that strip were dimming mid-word at z13+
+   (Jan: "labels extended into the water are being partially obscured by the fade; they
+   need to sit on top"). A window where no paint/tint sits is a no-op (destination-out
+   against nothing), so the wide ranges cost nothing where a label doesn't print. The
+   punches also gained SOFT EDGES (see the wins loop in paintSeaOverlay) so a window in
+   the smudged water melts in instead of printing a raw-photo box. */
 const SEA_LABEL_WINDOWS = [
-  [28.386,-80.594,70,26,11,12],  // Cape Canaveral
-  [28.263,-80.581,70,22,11,11],  // Patrick Space Force Base
-  [28.219,-80.599,60,18,11,11],  // South Patrick Shores
-  [28.186,-80.585,60,16,11,11],  // Satellite Beach
-  [28.168,-80.582,65,16,11,11],  // Indian Harbour Beach
-  [28.336,-80.615,62,14,11,11],  // Cocoa Beach
-  [29.058,-80.905,75,20,11,12],  // New Smyrna Beach Municipal Airport
-  [29.348,-81.047,68,14,12,12],  // Ormond-by-the-Sea (v399: z11 dropped — at the 2-mi scale the window revealed the chart's original dashed line and cut the label; z12 keeps it)
-  [29.080,-80.930,65,16,11,12],  // Ponce de Leon Inlet
-  [29.901,-81.278,62,14,11,12],  // St. Augustine
-  [29.859,-81.253,64,14,11,12]   // St. Augustine Beach
+  [28.386,-80.594,70,26,11,16],  // Cape Canaveral
+  [28.263,-80.581,70,22,11,16],  // Patrick Space Force Base
+  [28.219,-80.599,60,18,11,16],  // South Patrick Shores
+  [28.186,-80.585,60,16,11,16],  // Satellite Beach
+  [28.168,-80.582,65,16,11,16],  // Indian Harbour Beach
+  [28.336,-80.615,62,14,11,16],  // Cocoa Beach
+  [29.058,-80.905,75,20,11,16],  // New Smyrna Beach Municipal Airport
+  [29.348,-81.047,68,14,12,16],  // Ormond-by-the-Sea (v399: z11 dropped — its z11 window revealed the chart's original dashed line at the 2-mi scale)
+  [29.080,-80.930,65,16,11,16],  // Ponce de Leon Inlet
+  [29.0991,-80.9234,45,14,11,16],  // Ponce Inlet (town — v400, measured at z13; the tail ran into the tint)
+  [29.901,-81.278,62,14,11,16],  // St. Augustine
+  [29.859,-81.253,64,14,11,16]   // St. Augustine Beach
 ];
 // Pixel rects of the windows that touch this tile at its zoom (empty array
 // when none do).
 function seaLabelWindows(coords, size){
   const z = coords.z, out = [];
   const n = Math.pow(2, z);
+  /* v400: at z>=13 USGS prints these labels offset from where the z11-12-measured
+     anchors put them (observed: Ormond-by-the-Sea ~30px south, Ponce Inlet ~west), so
+     the close-zoom windows GROW and shift to cover the placement drift instead of
+     per-zoom re-measured anchors. The extra area is soft-edged good nearshore photo. */
+  const close = z >= 13;
+  const dx = close ? -12 : 0, dy = close ? 14 : 0;
+  const gw = close ? 34 : 0,  gh = close ? 38 : 0;   // generous: the lighten window is invisible except where bright label pixels sit
   for(const w of SEA_LABEL_WINDOWS){
     if(z < w[4] || z > w[5]) continue;
-    const cx = ((w[1]+180)/360*n - coords.x)*size;
+    const cx = ((w[1]+180)/360*n - coords.x)*size + dx;
     const p = w[0]*Math.PI/180;
-    const cy = ((1 - Math.log(Math.tan(p) + 1/Math.cos(p))/Math.PI)/2*n - coords.y)*size;
-    if(cx + w[2] < 0 || cx - w[2] > size || cy + w[3] < 0 || cy - w[3] > size) continue;
-    out.push([cx - w[2], cy - w[3], 2*w[2], 2*w[3]]);
+    const cy = ((1 - Math.log(Math.tan(p) + 1/Math.cos(p))/Math.PI)/2*n - coords.y)*size + dy;
+    const hw = w[2] + gw, hh = w[3] + gh;
+    if(cx + hw < 0 || cx - hw > size || cy + hh < 0 || cy - hh > size) continue;
+    out.push([cx - hw, cy - hh, 2*hw, 2*hh]);
   }
   return out;
 }
@@ -4713,7 +4729,7 @@ function isOpenSeaTile(coords, clipName, labelWindows){
 // by stroking the boundary with a fat round-joined line into a punch-out
 // mask), so the blue edge is the boundary's own smooth shape. Tiles wholly
 // inside the boundary are left untouched.
-function paintSeaOverlay(g, coords, size, clipName, labelWindows){
+function paintSeaOverlay(g, coords, size, clipName, labelWindows, photo){
   const clip = SEA_CLIPS[clipName];
   if(!clip || coords.z < OCEAN_MIN_Z) return;
   const n = Math.pow(2, coords.z);
@@ -4802,9 +4818,27 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
       }
     }
   }
-  // Punch the label windows out of the blue so the printed names show whole.
-  for(const w of wins) og.fillRect(w[0], w[1], w[2], w[3]);
   g.drawImage(o, 0, 0);
+  /* Label windows, v400 redesign: instead of PUNCHING a hole to raw photo (which prints
+     a hard darker box in the smudged water, and needs pixel-exact anchors — USGS shifts
+     label placement between zooms), the photo is composited BACK over the paint with
+     'lighten' inside each window: dark water pixels keep the paint (no box), but the
+     BRIGHT printed label text pops through on top of the ocean/fade. Alignment only
+     needs the window to CONTAIN the label, so the z13+ drift is harmless. `photo` is
+     the original tile image (keyed path only — the flat shortcuts never carry windows,
+     isOpenSeaTile refuses tiles a window touches). */
+  if(wins.length && photo){
+    const sx = (photo.naturalWidth || photo.width)/size, sy = (photo.naturalHeight || photo.height)/size;
+    g.save();
+    g.globalCompositeOperation = 'lighten';
+    for(const w of wins){
+      const x = Math.max(0, w[0]), y = Math.max(0, w[1]);
+      const ww = Math.min(size, w[0]+w[2]) - x, wh = Math.min(size, w[1]+w[3]) - y;
+      if(ww <= 0 || wh <= 0) continue;
+      g.drawImage(photo, x*sx, y*sy, ww*sx, wh*sy, x, y, ww, wh);
+    }
+    g.restore();
+  }
 }
 
 const OfflineTileLayer = L.TileLayer.extend({
@@ -4871,7 +4905,7 @@ const OfflineTileLayer = L.TileLayer.extend({
               }
               if(hit) g.putImageData(id, 0, 0);
             }
-            paintSeaOverlay(g, coords, tile.width, tileClipName(this.options, coords.z), this.options.labelWindows);
+            paintSeaOverlay(g, coords, tile.width, tileClipName(this.options, coords.z), this.options.labelWindows, img);
           }catch(e){ /* canvas unavailable — the unclipped drawImage (or nothing) stands */ }
           finish(null);
         };
