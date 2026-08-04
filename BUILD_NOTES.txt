@@ -7,6 +7,61 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 12:50 PM EDT · v420 · Sticky Section Title Bar
+------------------------------------------------------------------------------
+Jan: in Help, move the section windows' CLOSE buttons up to the title bar, and
+make the title bar stay visible while the section is scrolled; also rewrite the
+third paragraph of the Help intro so it is clearer, with colored text.
+
+CLOSE moved to the title bar.  The CLOSE ✕ row that v294 appended to the END of
+every writeup is gone.  The section's own title button now carries "CLOSE ✕"
+where the ▸/▾ caret sat while the section is open (openHelpTopic swaps the
+.ht-caret's contents and adds .ht-close; closeHelpTopics puts the caret back).
+It is a label on that same button, not a nested button — HTML does not allow a
+button inside a button, and a tap anywhere on the bar already closed the
+section, so the visible CLOSE and the bar do the same thing.
+
+Title bar stays put.  .help-topic[aria-expanded="true"] is now position:sticky
+top:0 inside #infoSheet .sheet-body (the same scroller the Season Guide's month
+row sticks to).  Sticky parks the bar at the scroller's PADDING edge, so plain
+sticky left two strips where text slid past in the open: the sheet-body's 12px
+top padding above the bar and the 4px gap between the bar and the boxed body.
+Two OFFSET (not spread) shadows in --navy-900 — the sheet's own colour — mask
+exactly those two strips: 0 -16px 0 and 0 6px 0.  A symmetric 16px ring was
+tried first and clipped text 16px BELOW the bar, which read as a ghost
+half-line.  Re-check both numbers if .sheet-body's padding ever changes.
+
+Closing scrolls back to the row.  Closing used to reset the sheet to scrollTop
+0.  Now that CLOSE can be tapped from the sticky bar several screens down, the
+close branch runs scrollIntoSheet(topic,'center') instead — the directory comes
+back with the row you just left under your eye.  Opening still starts at the
+top.  (v419's scrollIntoSheet, not scrollIntoView: the latter moves the
+document too and tucks the banner under the iPhone status bar.)
+
+Help intro rewritten.  The old single paragraph ("Close a section by tapping
+its title or the CLOSE ✕ button at the bottom of the window…", which also said
+the same thing twice) is now three short paragraphs: what opening a section
+does, how the sticky title bar and its CLOSE work, and how to leave Help.
+Colours mirror the screen — var(--teal) for the title bar (the open bar really
+is teal in every theme), --emph gold for the two headline phrases, and CLOSE
+stays --fog per Jan's rule that CLOSE is bold but never gold.
+
+Print is unaffected: the caret (and so the CLOSE label) is already dropped from
+both print paths, and the print stylesheet now forces the bar back to
+position:static with no shadow.
+
+Verified headless at 393px and 1280px: bar sticks with CLOSE on its right end,
+nothing shows through above or below it, closing re-centres the row, and a
+reopened Help restores the remembered section with the bar already labelled.
+
+Help's first paragraph (folded in, same build).  After the SPECIES sentence:
+"The EYE cookie [open][half-shut][shut] toggles between three map visibility
+settings." — the three eye drawings inline at 14px, the same markup the Eye
+writeup uses, word-then-icon per the app rule.  And the sentence "Everything is
+only stored on your device." is now bold, so it takes --emph gold like the
+other emphasised phrases in that paragraph.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 12:25 PM EDT · v419 · Cookies Above Actions
 ------------------------------------------------------------------------------
 Jan: move the cookie section in help above the action buttons section; and

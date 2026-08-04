@@ -1803,7 +1803,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     body.print-help #panel-help a{ text-decoration:underline; }
     /* Paper carries no taps: every button's writeup prints opened out. */
     body.print-help #panel-help .help-body{ display:block !important; border:0 !important; padding-left:0 !important; }
-    body.print-help #panel-help .help-topic{ border:0 !important; padding:0 !important; font-size:14px; }
+    /* v420: the open section's bar is sticky on screen — on paper it is just a heading. */
+    body.print-help #panel-help .help-topic{ border:0 !important; padding:0 !important; font-size:14px;
+      position:static !important; box-shadow:none !important; }
     /* Paper prints the WHOLE help, so the one-at-a-time hiding comes off. */
     body.print-help #panel-help.topic-open > *{ display:block !important; }
     body.print-help #panel-help .ht-caret,
@@ -1833,9 +1835,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
     border-radius:8px; padding:9px 10px; cursor:pointer;
   }
   .help-topic:active{background:var(--navy-700);}
-  .help-topic[aria-expanded="true"]{border-color:var(--teal); color:var(--teal);}
+  /* v420: the OPEN writeup's title button is the section window's TITLE BAR -- it sticks to
+     the top of the sheet's scroller so the name of what is being read, and the CLOSE that
+     shuts it, stay on screen however far down the writeup runs. Sticky top:0 parks the bar at
+     the scroller's PADDING edge, so text would slide visibly through the sheet-body's 12px
+     top padding above it and through the 4px gap below it — two offset (not spread) shadows
+     in --navy-900, the sheet's own colour, mask exactly those two strips. A symmetric ring
+     was tried first and cut text off 16px BELOW the bar, which read as a ghost half-line.
+     Re-check both numbers against .sheet-body's padding if that ever changes. */
+  .help-topic[aria-expanded="true"]{
+    border-color:var(--teal); color:var(--teal);
+    position:sticky; top:0; z-index:6;
+    box-shadow:0 -16px 0 var(--navy-900), 0 6px 0 var(--navy-900);
+  }
   .help-topic svg{vertical-align:-2px; margin-right:6px;}
   .help-topic .ht-caret{float:right; margin-left:8px;}
+  /* The caret becomes the CLOSE control while the section is open (a tap anywhere on the
+     bar closes it, so this is a label on the same button, not a button inside a button --
+     which HTML does not allow). Body colour, not gold: Jan's rule for CLOSE. */
+  .help-topic .ht-caret.ht-close{color:var(--fog); letter-spacing:.03em;}
   /* Text/emoji glyphs on a topic button sit LEFT of the word, matching the inline-svg
      ones above them (v292 - Jan: glyph before the label in this section too). */
   .help-topic .ht-g{margin-right:6px;}
@@ -3076,12 +3094,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Section to Get Fishing</div>
-      <p class="sheet-note">Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. Tap any spot pin on the map for its coordinates and details. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. Tap <b>Depth Lines</b> to lay depth contours in feet over the water on either satellite view — or press and hold the map for about half a second, which does the same. Tap <b>TRACK MY PATH</b> to record your path as a line on the map while the app is on screen — tap it again to stop. The track is <b>saved automatically</b> under Your tracks in + SPOT. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, back up your catch log and photos, and see the print options at the end of this Help.</p>
+      <p class="sheet-note">Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. Tap any spot pin on the map for its coordinates and details. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. Tap <b>Depth Lines</b> to lay depth contours in feet over the water on either satellite view — or press and hold the map for about half a second, which does the same. Tap <b>TRACK MY PATH</b> to record your path as a line on the map while the app is on screen — tap it again to stop. The track is <b>saved automatically</b> under Your tracks in + SPOT. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. The <b>EYE</b> cookie <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 12S5.5 5.4 12 5.4 22.4 12 22.4 12 18.5 18.6 12 18.6 1.6 12 1.6 12Z"></path><circle cx="12" cy="12" r="3.1"></circle></svg> <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 12S5.5 18.6 12 18.6 22.4 12 22.4 12"></path><path d="M2.2 11.4H21.8"></path><path d="M8.9 12a3.1 3.1 0 0 0 6.2 0"></path></svg> <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 9.6S5.5 15.4 12 15.4 22.4 9.6 22.4 9.6"></path><path d="M4.6 13.4 3 15.6M9 15.1 8.3 17.7M15 15.1 15.7 17.7M19.4 13.4 21 15.6"></path></svg> toggles between three map visibility settings. Tap on a diamond-shaped pin to see your catch details. <b>Everything is only stored on your device.</b> Read further to learn how to add your own tide station, download the offline map, back up your catch log and photos, and see the print options at the end of this Help.</p>
       <p class="sheet-note"><b>Be advised, this app is not for navigation or emergency use!</b> The <b>MARK</b> function is a memory aid only — not navigation, safety, or rescue equipment, and no substitute for the safety gear and safe-boating practice the law and good seamanship require (see <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>).</p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Ace, get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <!-- v344: CLOSE stays bold here but NOT gold (Jan) — a plain <b> in a sheet-note
-           takes --emph, so these carry the body colour inline. -->
-      <p class="sheet-note">Tap the buttons below to read their sections. Close a section by tapping its title or the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> button at the bottom of the window. Tap the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> at the top of the window to exit Help. When you reopen Help, it will reopen to your last view. Close it again either by tapping its title or the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> button at the end of the writeup.</p>
+           takes --emph, so these carry the body colour inline. v420: rewritten for the
+           sticky title bar; the colours here mirror what the reader sees on screen — teal
+           is the open section's title bar, --fog is the CLOSE control itself. -->
+      <p class="sheet-note"><b style="color:var(--emph);">How these sections work.</b> Tap any button below and its section opens on its own — everything else steps aside so you read one page at a time.</p>
+      <p class="sheet-note">The section's name sits in a <b style="color:var(--teal);">title bar</b> at the top of the window, and that bar <b style="color:var(--teal);">stays put while you scroll</b>, so you always know what you are reading and never have to scroll back up to get out. To close the section, tap that bar anywhere — the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> on its right end does the same thing.</p>
+      <p class="sheet-note">To leave Help altogether, tap the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> at the very top of this window. <b style="color:var(--emph);">Help remembers where you were</b> — open it again and the section you were last reading comes back with it.</p>
 
       <div class="subhead">Search, Help &amp; View</div>
       <p class="sheet-note">Five round <b>cookies</b> sit in the top-right corner of the header, and a sixth — the map credits <b>ⓘ</b> — sits in the bottom-right corner of the map.</p>
@@ -4300,7 +4322,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 419;
+const BUILD_NUM  = 420;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -8591,7 +8613,8 @@ function closeHelpTopics(){
   panel.querySelectorAll('.help-body.open').forEach(el=> el.classList.remove('open'));
   panel.querySelectorAll('.help-topic').forEach(b=>{
     b.setAttribute('aria-expanded','false');
-    const c = b.querySelector('.ht-caret'); if(c) c.textContent = '▸';
+    const c = b.querySelector('.ht-caret');
+    if(c){ c.classList.remove('ht-close'); c.textContent = '▸'; }
   });
 }
 function openHelpTopic(btn, remember){
@@ -8601,7 +8624,10 @@ function openHelpTopic(btn, remember){
   closeHelpTopics();
   body.classList.add('open');
   btn.setAttribute('aria-expanded','true');
-  const c = btn.querySelector('.ht-caret'); if(c) c.textContent = '▾';
+  /* v420: the open bar carries CLOSE ✕ where the caret was -- the bar is sticky, so this is
+     the close control for the whole writeup no matter how far it is scrolled. */
+  const c = btn.querySelector('.ht-caret');
+  if(c){ c.classList.add('ht-close'); c.innerHTML = 'CLOSE <span class="bi bi-x">✕</span>'; }
   panel.classList.add('topic-open');
   if(remember !== false){ try{ localStorage.setItem(HELP_TOPIC_KEY, body.id); }catch(e){} }
   return true;
@@ -8622,17 +8648,21 @@ document.addEventListener('click', ev=>{
   if(!body || !body.classList.contains('help-body')) return;
   const wasFromSearch = helpTopicFromSearch;
   helpTopicFromSearch = false;   // a hand-tap takes ownership of whatever is open now
+  const sb = document.querySelector('#infoSheet .sheet-body');
   if(body.classList.contains('open')){
     closeHelpTopics();
     // Dismissing a writeup search opened must not erase the writeup the reader last chose.
     if(!wasFromSearch){ try{ localStorage.removeItem(HELP_TOPIC_KEY); }catch(e){} }
+    /* v420: closing now happens from the sticky title bar, which can be miles down the
+       writeup -- bring the directory back with this row under the eye rather than dumping
+       the reader at the top of the list. */
+    requestAnimationFrame(()=> scrollIntoSheet(b, 'center'));
   } else {
     openHelpTopic(b, true);
+    /* Everything else is now hidden, so the page under the finger has changed shape --
+       start it at the top rather than at whatever scroll the directory was left at. */
+    if(sb) requestAnimationFrame(()=>{ sb.scrollTop = 0; });
   }
-  /* Everything else is now hidden, so the page under the finger has changed shape --
-     start it at the top rather than at whatever scroll the directory was left at. */
-  const sb = document.querySelector('#infoSheet .sheet-body');
-  if(sb) requestAnimationFrame(()=>{ sb.scrollTop = 0; });
 });
 /* v419: scrollIntoView() moves EVERY scrollable ancestor, not just the sheet — and on iOS
    WebKit that includes the document itself even though html,body are overflow:hidden. Closing
@@ -8653,35 +8683,10 @@ function scrollIntoSheet(el, mode){
   const doc = document.scrollingElement || document.documentElement;
   if(doc && doc.scrollTop) doc.scrollTop = 0;
 }
-/* v294: every writeup ends with the same CLOSE ✕ the Season Guide's collapsibles carry.
-   A long writeup can run several screens past its own button, and scrolling back up to the
-   title to close it was the only way out. Appended in JS rather than typed into 40-odd
-   bodies in the markup, and tagged .help-print-hide so it does not print. */
-(function(){
-  const panel = document.getElementById('panel-help');
-  if(!panel) return;
-  panel.querySelectorAll('.help-body').forEach(body=>{
-    if(body.querySelector('[data-help-close]')) return;
-    const row = document.createElement('div');
-    row.className = 'loc-btns help-print-hide';
-    row.style.margin = '10px 0 4px';
-    row.innerHTML = '<button class="mini-btn" type="button" data-help-close>CLOSE <span class="bi bi-x">✕</span></button>';
-    body.appendChild(row);
-  });
-  panel.addEventListener('click', ev=>{
-    const btn = ev.target.closest && ev.target.closest('[data-help-close]');
-    if(!btn) return;
-    const body = btn.closest('.help-body');
-    const topic = body && body.previousElementSibling;
-    const wasFromSearch = helpTopicFromSearch;
-    helpTopicFromSearch = false;
-    closeHelpTopics();
-    if(!wasFromSearch){ try{ localStorage.removeItem(HELP_TOPIC_KEY); }catch(e){} }
-    /* The directory is back, so put the row this writeup belongs to under the eye
-       instead of leaving the sheet parked at whatever depth the writeup was read to. */
-    if(topic && topic.classList.contains('help-topic')) scrollIntoSheet(topic, 'center');
-  });
-})();
+/* v294 appended a CLOSE ✕ row to the END of every writeup, because a long writeup could run
+   several screens past its own button. v420 RETIRED that row: the title button is now sticky
+   (see the .help-topic[aria-expanded="true"] rule) and carries the CLOSE ✕ itself, so the
+   close control is on screen at every scroll depth and there is nothing to append. */
 /* v211: tag every <b> in Help whose text is exactly a real button's label with .bn, which
    styles it all caps and a step larger (see the .bn rule in the CSS). Matching by text
    keeps new help copy covered for free and leaves emphasis-only bolds alone. */
