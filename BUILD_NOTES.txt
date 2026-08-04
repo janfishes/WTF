@@ -7,6 +7,127 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 2:15 AM EDT · v409 · Ten Fathom Curve
+------------------------------------------------------------------------------
+Jan: "I don't see depths around the 10 fathom area." He was right, and the
+reason was not the data. The 60 ft contour — the ten fathom curve, the line
+every boat off this beach runs to — was in every offshore block all along, and
+the layer simply never drew it where he was looking.
+
+The tiers were cut for the lagoon, where the numbers that matter are 3 and 6
+and 12, and offshore they inherited that shape by accident. 60 ft landed in
+tier 1, so it did not draw until z13. 120 and 180 — twenty and thirty fathoms —
+landed in tier 3 and did not draw until z15. The shelf therefore read as empty
+water at exactly the zooms you would use to look at it: block c6_3 holds
+ninety-one contours and precisely one of them was in the wide tier.
+
+v409 promotes the fathom curves to the frame — 60, 120 and 180 draw from z11 —
+and levels 70 and 90 to tier 1 so the shelf steps by ten feet at z13. The
+promotion is applied on decode from one small table rather than baked into the
+blocks, so it stays readable and reversible, and it is keyed on DEPTH rather
+than on which block a line came from: there is no 60 ft of water anywhere
+inshore of the beach in this county, so a depth rule cannot leak into the
+lagoon and cannot step at the -80.3 seam the way a per-block rule would.
+
+WIDE-ZOOM OFFSHORE. Below z11 the layer used to draw nothing at all. That is
+right for the rivers — at that scale the Halifax is a few pixels wide and its
+own wiggle fills it solid — and wrong for the ocean, where the whole point of a
+wide view is to watch the shelf run away from the beach. From z9 the app paints
+its own flat blue sea, so the lines have a clean background out there, and the
+app opens at z10. So z9 and z10 now draw a sparse frame offshore: 60, 100, 180,
+300, 600, 1500 and 2400 ft, no more than seven levels anywhere on the screen.
+The subset is keyed on depth again, which is what keeps the inshore water out
+of it with no block test — the shallowest member is 60 ft, and nothing inshore
+of the surf is that deep, so the lagoon and the rivers stay blank below z11
+exactly as before. The screen-length cull earns its keep here: the 60 ft
+contour comes out of the build as one long spine per block plus a few dozen
+specks of wiggle around it, and at z9 the spine is about 70 px and the specks
+are under 2, so the cull is the whole difference between a drawn ten fathom
+curve and a smear.
+
+At the opening view the ten fathom curve now runs down the whole beach from
+Flagler to Titusville with eight tags on it, and all 54 offshore pins sit
+inside labelled coverage — most of them between the 60 and 100 ft lines.
+
+The gesture's auto-zoom was narrowed rather than dropped. It fired below z11
+and would now move the map out from under a hand that was already looking at
+drawn contours; it fires below z9 instead, where nothing draws anywhere and it
+is still the difference between a working gesture and a dead one. The toast
+tells the middle case apart: at z9-z10 it says the offshore contours are on and
+to zoom in for the rivers.
+
+LABELS. Jan also asked whether all the lines are labelled. They were not, and
+nothing in the old rule ever tried to be. It walked each line from its FIRST
+VERTEX, offered a tag at 170 px along the path and every 620 px after, and
+dropped an offer silently if it fell off-screen or touched a tag already
+placed — with no retry. Four ways a drawn line ended up with no number anywhere
+on the screen: its on-screen path was under 170 px, so it was never offered
+one; it crossed the view but its 620 px rhythm, counted from a first vertex
+that could be miles offshore, put every offer outside; it lost every offer to a
+collision; or it was outranked by nothing at all, because offers were taken in
+DATA order, which is level ascending, so the 1 ft and 2 ft lines claimed the
+space first and the deep line a fisherman was actually looking for went bare. A
+per-tier labelling lag made it worse: tier 2 drew at z14 and could not be
+labelled until z15, tier 3 drew at z15 and waited for z16. The 8 and 10 ft
+lines were on the screen with no numbers on them, by design.
+
+The rule now: candidates are measured along the part of the line that is
+actually on screen, and placement runs in rounds in priority order. Round one
+gives every line its first tag, so a line that would otherwise carry none
+always beats a line collecting its third. Later rounds repeat tags along the
+long lines, every 340 px or so. Priority inside a round is tier first, then the
+five-multiples, then deepest first, so under pressure the numbers that survive
+are the ones worth reading. The labelling lag is gone: everything drawn is a
+candidate. Density is held by a minimum separation between tag centres rather
+than by bare collision, because tags that merely fail to overlap still read as
+soup; at z15, where every foot draws, only the five-multiples repeat. Tags also
+keep out from under the species column, the filter row and the button stack —
+measured with the same overlayInset() the popups use — with one deliberate
+exception: a line whose only room on the screen is the strip under the button
+stack is still better numbered there than left bare, so round one gets a second
+look with that clearance dropped. Without it the 600 and 1500 ft lines at the
+opening view were drawn and never named.
+
+Measured on a 1280x900 screen: the ten fathom curve carries 12 to 15 tags at
+z11 and z12 over the reef grounds, every drawn level is tagged at z12 off
+Ponce, and z15 in the lagoon places 27 tags over 401 drawn lines — a chart, not
+a wall of text. A full redraw costs 7 ms at the busiest z15 view and 3 ms at
+the opening view.
+
+GULF STREAM CUT. Jan: "don't need gulf stream." v407 ran the offshore blocks
+out to -79.2 and down the slope onto the Blake Plateau at about 3,000 ft.
+Coverage now stops at -79.75: the c9 and c10 columns are gone, 39 blocks down
+to 29. That is exactly the water BlueTopo only covers with 16 m tiles — the
+coarsest, most smoothed, least trustworthy thing in the set — so the layer
+loses its weakest data and nothing anyone runs to. Rolldown, the furthest mark
+on the chart, sits at -80.033, so the c8 column stays and carries the slope for
+about 13 nm past the outermost pin: context, not a destination. The deepest
+line that exists in the data is now about 2,500 ft.
+
+SOUTHERN BLOCKS REFRESHED. The 2026-08-04 BlueTopo pull, fetched for the
+offshore build, carries newer surveys under six blocks of the inshore grid:
+c5_1, c5_2, c5_3, c6_3, c6_4 and c6_5. They are rebuilt here with the current
+tier table. All eleven other inshore blocks were rebuilt too and came out
+BYTE-IDENTICAL, which is the check that the tier table and the pipeline have
+not drifted since v408. c5_1 gains the most — 997 lines to 1,206, and 79 km of
+new contour — and c5_2 gains 62 lines. The other four have the same line and
+level counts as before and differ by well under one percent in vertices: micro-
+refinement, not new structure. Worth knowing where the new survey actually is:
+almost all of it sits on the ATLANTIC side of those blocks, around the Cape
+Canaveral shoals at -80.50 to -80.54, not in Mosquito Lagoon. Volusia's own
+water is essentially unchanged. Reviewed before and after at z12 and z13 over
+the bight: the new lines are a smoother, more coherent set of nested contours
+around the cape shoal, with no speckle and no survey seams.
+
+DEPTH_DATA_V goes 3 to 4. It must, or cache-first serves the old blocks
+forever.
+
+Help updated: the depth topic now says the ocean is drawn from the opening view
+while the rivers need a couple of steps in, names the fathom curves, states
+that every line carries its depth where there is room, and no longer claims
+coverage down to 3,000 ft.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 1:40 AM EDT · v408 · Four Foot Line
 ------------------------------------------------------------------------------
 The shallow bays on the west side of the lagoon — Turnbull, Rose, Strickland,
