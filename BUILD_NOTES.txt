@@ -7,6 +7,21 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 11:15 PM EDT · v403 · Get Fishing Reword
+------------------------------------------------------------------------------
+Help edits in the opening quick-start block, per Jan:
+
+- Heading is now "Read This Section to Get Fishing" (was "Paragraph").
+- "Tap any spot pin on the map for its coordinates and details." moved
+  from the start of the paragraph to right after the + SPOT sentence.
+- TRACK MY PATH sentence now reads "Tap TRACK MY PATH to record your
+  path as a line on the map while the app is on screen — tap it again
+  to stop. The track is saved automatically under Your tracks in
+  + SPOT."
+
+Help-only change; no code touched.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 11:10 PM EDT · v402 · Coastwide Label Sweep
 ------------------------------------------------------------------------------
 Jan: "lots of labels have this problem [half-dimmed printed names]. do i
