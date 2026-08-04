@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v428** — Route Home Inlet
 - **v427** — Help Icons Lead
 - **v426** — One Plus By Spot
 - **v425** — Filters Under Cookies

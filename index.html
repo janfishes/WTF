@@ -3160,6 +3160,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-offshore"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><g transform="translate(24,0) scale(-1,1)"><use href="#waveArt"></use></g></svg> Offshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-offshore">
       <p class="sheet-note">This is the <b>master switch</b> for the <b>offshore pins</b>; the artificial sites (wrecks included), natural reefs, and any offshore spot you’ve added yourself. The number beside it is how many offshore sites there are. Like Inshore, tapping it opens a <b>category row</b> just below: <b>My Spots</b>, <b>Artificial</b>, and <b>Natural</b>, each with its own total count. <b>My Spots</b> are the offshore spots you saved yourself, MARKs included. (This label will also carry your name once added to the app). <b>Artificial</b> is the man-made bottom; showing pins for the CR sites and deployments, wrecks, barges, etc. <b>Natural</b> is the real bottom: showing pins for the natural reefs, ledges, ridges, holes etc. After tapping <b>Offshore</b>, tap a pill to show those pins on the map, tap another to add it, and so on. Turn Offshore off and the row and pins leave with it.</p>
+      <p class="sheet-note"><b>The inlet stands with them.</b> Whenever <b>Offshore</b> is lit, the <b>Ponce de Leon Inlet</b> pin stays on the chart even with Inshore switched off — it is the mark you steer for coming home, so it does not leave the screen just because the inside pins have. It keeps its <b>blue</b> inshore color among the purple grounds, which is how you pick it out. <b>Tap it</b> and its popup carries the position the whole app measures from — <b>29°04.672&#8242; N 80°54.511&#8242; W</b> — in the degrees-and-minutes form a plotter takes. It is still filed as an <b>inshore</b> waypoint everywhere else: it counts under Inshore's <b>Waypoints</b>, and it appears once, by that name, in the <b>+ Catch</b> spot list.</p>
       <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs and their GPS coordinates, depth, distance, and bearing to/from the inlet, all sorted from closest to farthest from the inlet, and it plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. Each row is wider than the popup — <b>swipe or scroll sideways</b> within the list or drag the double arrows at the bottom corners of the popup until you see the details that interest you. You can <b>tap in any row to give that drop a name</b>. That name then prints at the end of the row and is saved on your device. If a popup covers the pins, simply <b>drag it by its title area</b> and drop on a different spot on the map.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-launches"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3.5 8.5c.4 3 2.6 5 5.7 5h5.6c3.1 0 5.3-2 5.7-5Z"></path><path d="M2 20.5 22 13.5"></path></svg> Launches<span class="ht-caret">▸</span></button>
@@ -3228,8 +3229,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-compass"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"></circle><path d="M12 4 13.9 10.1 20 12 13.9 13.9 12 20 10.1 13.9 4 12 10.1 10.1Z"></path></svg> Compass<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-compass">
-      <p class="sheet-note">Tapping <svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 4 13.9 10.1 20 12 13.9 13.9 12 20 10.1 13.9 4 12 10.1 10.1Z"></path></svg> <b>Compass</b> puts a compass rose at NOAA's official position for Ponce de Leon Inlet (<b>29°04.672&#8242; N 80°54.511&#8242; W</b>), right in the inlet mouth, and gives you the <b>heading (magnetic)</b> and <b>distance (SM)</b> to any offshore pin you subsequently tap. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose center out to that pin. Tap on one or more pins, and each leg is labeled the same way with heading and distance. With a <b>single pin</b> up, the label also carries the <b>reciprocal</b> heading. Read as to/from, the first number is the course out, the second is the course to the inlet. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The compass identifies the magnetic variation for the current year under the rose (e.g., <b>MAGNETIC · VAR 7.3°W 2026</b>). The compass rose only works on <b>offshore</b> sites.</p>
+      <p class="sheet-note">Tapping <svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 4 13.9 10.1 20 12 13.9 13.9 12 20 10.1 13.9 4 12 10.1 10.1Z"></path></svg> <b>Compass</b> puts a compass rose at NOAA's official position for Ponce de Leon Inlet (<b>29°04.672&#8242; N 80°54.511&#8242; W</b>), right in the inlet mouth, and gives you the <b>heading (magnetic)</b> and <b>distance (SM)</b> to any offshore pin you subsequently tap. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose center out to that pin. Tap on one or more pins, and each leg is labeled the same way with heading and distance. With a <b>single pin</b> up, the label also carries the <b>reciprocal</b> heading. Read as to/from, the first number is the course out, the second is the course to the inlet. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The compass identifies the magnetic variation for the current year under the rose (e.g., <b>MAGNETIC · VAR 7.3°W 2026</b>). The pins it draws to are the <b>offshore</b> ones — plus the <b>Ponce de Leon Inlet</b> pin itself, which is how a route gets you home (see below).</p>
       <p class="sheet-note">After you tap <b>Compass</b>, tap the <b>Eye</b> twice to take the Species and Action buttons off the map for better viewing. Tap an offshore mark and you get the leg from the rose out to it. Tap a second and a leg is added <b>from the first mark to the second</b> — the inlet leg is not dropped, so the line reads <b>rose → first ground → next ground</b> and so on for as many pins as you tap, with each leg carrying its own heading and distance to the next pin. <b>Every pin on the route also gets a ring around it</b>, so the run reads as a chain of ringed pins linked by dashed lines. Wherever a route gets busy the labels sort themselves out: each new leg looks for a clear stretch of its own line and steps around the labels already drawn. Tapping any mark that is already on the route — or tapping off the route — clears the <b>whole route</b> in one tap.</p>
+      <p class="sheet-note"><b>Finish the route at the inlet.</b> The rose stands on the <b>Ponce de Leon Inlet</b> pin, and that pin is <b>the last mark you tap</b>: tap the grounds you plan to fish, then <b>tap the inlet</b>, and a final leg runs from the last ground back to the inlet carrying the <b>heading and distance to steer in</b>. So the whole day reads as one line — <b>inlet → first ground → next ground → inlet</b> — with the run home on it before you leave the dock. The inlet pin is on the chart for this whenever <b>Offshore</b> is lit, blue among the purple grounds, with or without Inshore switched on. Two things worth knowing: the inlet does <b>nothing on its own</b> — with no grounds on the route yet there is no leg to draw, since a line from the rose to the inlet has nowhere to run — and while the compass is up, <b>pins don't open their popups</b> (the popup would cover the line you asked to see), so read the inlet's coordinates with the compass switched <b>off</b>. They are the same numbers printed in this topic: <b>29°04.672&#8242; N 80°54.511&#8242; W</b>. Tapping the inlet a second time clears the route like any other mark on it.</p>
       <p class="sheet-note"><b>CAUTION.</b> The compass rose and the offshore popups measure from the <b>same point</b>. Every figure this app works out — the rose's lines, and the distance and bearing in every offshore popup and drop list — runs from NOAA's official position for Ponce de Leon Inlet at <b>29°04.672&#8242; N 80°54.511&#8242; W</b> (29.077867, −80.908517), in the mouth by the jetties, where the rose sits and the inlet pin stands. The one exception is a Volusia County Reef (CR) site's printed distance, which is FWC's published figure rather than one this app worked out. FWC's origin was not published with the records — it was recovered by fitting all 191 county drop coordinates against their stated distances. FWC measures from <b>29°04.500&#8242; N 80°55.500&#8242; W</b> (29.0750, −80.9250), 0.88 nm (about 1.0 sm) at 259° true (266° magnetic with the app's 7.3° variation), so FWC's origin is just under a mile WSW of NOAA's official inlet position, up the mouth channel toward the ICW. Consequently, for the CR sites, the runs from the app's rose can read up to about a mile different from the number in the site's popup; the bearings agree everywhere. A site-to-site leg is measured between the two marks themselves, so there is no concern there. The variation at Ponce Inlet is taken as <b>7.3° west</b> (WMM, 2026), added to the true bearing the geometry gives, so nothing here should disagree with the compass in front of you. It drifts a little further west each year, so it is worth a re-check every few years. The one figure left in true degrees is the buoy's <b>Mean Wave Direction</b>, which is NOAA's own reading rather than anything this app worked out — and its popup says so. Everything else — every bearing, every drop-list distance, every other site's nm/sm figure, and the rose's own lines — is measured from the same point the rose sits on and the Ponce de Leon Inlet pin marks.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mapview"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite / Hi Res &amp; ICW / Street Map<span class="ht-caret">▸</span></button>
@@ -4329,7 +4331,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 427;
+const BUILD_NUM  = 428;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -6287,6 +6289,13 @@ const inletLabelMarker = L.marker([29.07783, -80.91022], {
 
 /* ===================== SPOT MARKERS ===================== */
 
+/* The inlet waypoint is the app's home point — the same position the compass rose sits on
+   and every "from Inlet" figure is measured from — so it is referred to by id in three
+   places (the label-side exception, the filter, and the compass target list) rather than by
+   a literal repeated in each. Declared HERE, above all three, so none of them can hit the
+   TDZ during start-up. */
+const HOME_SPOT_ID = 'wp-ponce-de-leon-inlet';
+
 let userNotes = {};
 let labelsOn = false;
 
@@ -6445,7 +6454,7 @@ function applySpotLabels(){
          the structure, no GNIS anchor) joins it — the topo prints "Ponce De Leon
          Inlet" just WEST of the jetty at z13-z14, so a left tag would cover it;
          open water lies east. */
-      const left = s.wp && !s.ramp && s.id !== 'wp-ponce-de-leon-inlet' && s.id !== 'wp-nsb-south-jetty';
+      const left = s.wp && !s.ramp && s.id !== HOME_SPOT_ID && s.id !== 'wp-nsb-south-jetty';
       m.bindTooltip((s.name||'').replace(/^CR /,''), {permanent:true, direction:(left?'left':'right'), offset:[left?-10:10,0], className:'spot-label '+cls, opacity:1});
     }
   });
@@ -8117,6 +8126,13 @@ function pinVisible(s){
      removed). Spot pins answer to the zone and Launches filters alone. */
   if(s.ramp) return showLaunches;
   if(s.zone === 'inshore' && inshoreCat(s) === 'marinas') return showLaunches;   // v322
+  /* v428: the inlet is the way home, so it stands on the OFFSHORE layer too. It is filed
+     inshore (it is an inshore waypoint, and the catch picker and the sub-row counts must
+     keep reading it that way — a second offshore copy would give the log form's
+     match-by-name dropdown two "Ponce de Leon Inlet" entries), so the zone gate would drop
+     it the moment Inshore went off, taking the pin you steer for off the chart just when it
+     is wanted. Visible whenever Offshore is lit, plus its own inshore home. */
+  if(s.id === HOME_SPOT_ID && activeZones.has('offshore')) return true;
   if(!activeZones.has(s.zone)) return false;
   if(s.zone === 'inshore') return inshoreCats.has(inshoreCat(s));     // v314 sub-pills
   if(s.zone === 'offshore') return offshoreCats.has(offshoreCat(s));  // v324 sub-pills
@@ -10493,8 +10509,18 @@ function compassSpotForCatch(g){
   return { id: 'catchgrp-' + g.lat.toFixed(6) + ',' + g.lng.toFixed(6),
            name: '', lat: g.lat, lng: g.lng, ramp: false, zone: 'offshore' };
 }
+/* v428: the inlet pin itself is a target, so a route can END where it started — tap the
+   grounds you are fishing, then tap the inlet, and the last leg carries the heading and
+   distance to steer in. It is the one inshore target on the compass; every other mark on a
+   route is offshore. Wired whether or not it is currently on the map: wiring only happens on
+   a compass toggle-on, so gating it on visibility would leave the pin dead if Offshore were
+   lit AFTER the compass came up — and a marker that is off the map cannot be tapped anyway. */
+function compassHomeMarker(){
+  const m = builtinMarkerById[HOME_SPOT_ID];
+  return m ? [m] : [];
+}
 function compassTargets(){
-  return compassOffshoreMarkers().concat(compassOffshoreCatchMarkers());
+  return compassOffshoreMarkers().concat(compassOffshoreCatchMarkers()).concat(compassHomeMarker());
 }
 
 /* Popups are stashed rather than destroyed: bindPopup() accepts the same Popup instance back,
@@ -10525,10 +10551,15 @@ function wireCompassMarkers(){
     if(m._compassWired) return;
     m._compassWired = true;
     const target = m.spotRef ? m.spotRef : compassSpotForCatch(m.group);
-    m.on('mouseover', ()=>{ if(COMPASS_HOVER_OK && compassOn && !compassChain.length) compassShow(target); });
-    m.on('mouseout',  ()=>{ if(COMPASS_HOVER_OK && compassOn && !compassChain.length) compassShow(null); });
+    /* The rose stands ON the inlet, so a leg from the rose to the inlet has nowhere to run.
+       The inlet is only ever the END of a route — it does nothing until there is a ground on
+       the route to steer in FROM, and it takes no hover preview. */
+    const isHome = target.id === HOME_SPOT_ID;
+    m.on('mouseover', ()=>{ if(!isHome && COMPASS_HOVER_OK && compassOn && !compassChain.length) compassShow(target); });
+    m.on('mouseout',  ()=>{ if(!isHome && COMPASS_HOVER_OK && compassOn && !compassChain.length) compassShow(null); });
     m.on('click',     ()=>{
       if(!compassOn) return;
+      if(isHome && !compassChain.length) return;
       compassLastPin = Date.now();
       /* Tapping marks builds a route. The first tap gives you the run from the rose; every tap
          after it adds a leg onto the end of the chain, so the line reads inlet -> first ground ->
@@ -10736,6 +10767,9 @@ function redrawCompass(){
   /* Every mark on the route gets a ring, so the whole run reads as a chain of ringed grounds
      rather than a set of lines you have to trace to work out the order. */
   compassChain.forEach(t=>{
+    /* The inlet needs no ring: the rose is already drawn on that exact point, and an
+       11px ring inside it just crowds the rose's own centre. */
+    if(t.id === HOME_SPOT_ID) return;
     L.circleMarker([t.lat, t.lng], { radius:11, color:'var(--rose)', weight:2.4, opacity:1,
       fill:false, interactive:false, className:'compass-line' }).addTo(compassLayer);
   });

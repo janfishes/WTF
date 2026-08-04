@@ -7,6 +7,75 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 5:45 PM EDT · v428 · Route Home Inlet
+------------------------------------------------------------------------------
+Jan: make the Ponce de Leon Inlet inshore waypoint a spot that can be navigated
+to from offshore.
+
+The inlet was already the app's origin — the pin, COMPASS_ROSE_POS and
+PONCE_INLET all stand on NOAA's official position 29°04.672'N 80°54.511'W — but
+it could not be steered TO.  Two things were in the way.  It is filed
+zone:"inshore", so pinVisible() dropped it the moment Inshore went off: running
+home with only Offshore lit, the one pin you want was off the chart.  And
+compassTargets() listed offshore marks and offshore catch groups only, so every
+compass leg ran OUT from the rose and nothing could run back INTO it.
+
+Both are fixed, and neither by adding a second pin.  A duplicate offshore copy
+of the inlet would put two "Ponce de Leon Inlet" entries in the + Catch spot
+dropdown, which matches by NAME — catches would land on whichever one it found
+first.  So the one pin does both jobs.
+
+  · pinVisible() — the inlet shows whenever Offshore is lit, ahead of the zone
+    gate, plus its own inshore home under Waypoints.  It keeps its blue inshore
+    colour among the purple grounds, which is how you pick it out, and it still
+    counts under Inshore · Waypoints everywhere else.  The "row opens with
+    nothing selected" lifecycle for both sub-rows is untouched: with Inshore on
+    and no pill lit, the inlet is hidden exactly as before.
+
+  · compassTargets() — the inlet marker joins the list, so a route can END where
+    it started.  Tap the grounds, then tap the inlet, and the last leg carries
+    the heading and distance to steer IN.  The whole day reads inlet → ground →
+    ground → inlet with the run home on it before leaving the dock.
+
+Three details the compass needed.  The rose stands ON the inlet, so a leg from
+the rose to the inlet has nowhere to run: tapping the inlet with an empty route
+is a no-op (it is only ever the END of a route), and it takes no hover preview
+either.  And no ring is drawn on it — the rose already marks that point, and an
+11px ring inside it just crowds the rose's centre.  Tapping it a second time
+clears the whole route like any other mark on it.
+
+The marker is wired whether or not it is on the map at the time.  Wiring only
+happens on a compass toggle-on, so gating it on visibility would leave the pin
+dead if Offshore were lit AFTER the compass came up; an off-map marker cannot be
+tapped anyway.
+
+Coordinates needed no work: every spot popup already prints toDMS(), so the
+inlet pin reads 29°04.672'N 80°54.511'W in the degrees-and-minutes form a
+plotter takes.  The one wrinkle is that compass targets have their popups
+unbound while the compass is up (a popup would cover the line you asked to
+see) — so the coordinates are read with the compass OFF.  Help says so rather
+than special-casing the inlet, which would have meant a tap both pinning the leg
+and throwing a popup over it.
+
+The literal 'wp-ponce-de-leon-inlet' is now the const HOME_SPOT_ID, declared
+above the three places that reference it (the v335 label-side exception, the
+filter, the compass target list) so none can hit the TDZ at start-up.
+
+Help: the Offshore filter topic gains a paragraph on the inlet standing with the
+offshore pins, its colour, its coordinates and its unchanged inshore filing; the
+Compass topic gains a "Finish the route at the inlet" paragraph, and its closing
+line no longer says the rose "only works on offshore sites".
+
+Verified headless at 1400x900, fresh profile, cache disabled: with Offshore +
+Natural lit and Inshore off the inlet marker is on the map and its popup carries
+the coordinates; the compass target list contains it; a lone tap leaves the
+route empty; ground-then-inlet gives the chain [reef-sunglow,
+wp-ponce-de-leon-inlet] with the return leg drawn and labelled and a ring on the
+ground only; a second tap clears it; the popup is rebound when the compass goes
+off.  Inshore-only behaviour unchanged (hidden with no pill lit, shown under
+Waypoints).  No page errors.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 3:50 PM EDT · v427 · Help Icons Lead
 ------------------------------------------------------------------------------
 Jan: in Help, put the icons in front of their labels, just like they are on
