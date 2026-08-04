@@ -782,10 +782,27 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --navy-950:#060f18; --navy-900:#0b1c2b; --navy-800:#132a3d; --navy-700:#1c3a51;
     --line:#3d6d90; --fog:#e9eef1; --muted:#8fa8b8; --teal:#19cec0;
     --map-bg:#16344a;
-    /* Text/icon colour to use ON TOP of a --teal accent fill. Light accents take the near-black,
-       dark accents (Brown Sugar) take white. Without this the accent push left white
-       labels sitting on bright cyan at ~1.7:1. */
-    --on-accent:#04141e;
+    /* v430: THREE accent values per theme, one job each. Jan asked for white text on the accent
+       fills, so the fills had to move — white on the bright accent was 1.86:1 to 3.00:1 in five
+       of the six themes and no amount of type weight fixes that.
+         --teal        the bright accent. TEXT, borders, rules, the compass rose (--rose follows
+                       it) — everything drawn ON a themed ground. UNCHANGED, and it is what the
+                       theme picker's swatch shows, so the themes still look like themselves.
+         --accent-deep the same HUE with the saturation pushed up and the lightness taken down
+                       until WHITE clears 4.5:1 on it (measured: 4.62–4.69 in the five dark-accent
+                       themes). Used for every accent FILL that carries text or icons — sheet
+                       heads, lit FABs, primary buttons, the tide banner. Brown Sugar's accent is
+                       already dark enough (6.79:1) so its deep value is its own accent, nudged
+                       one step for the same treatment.
+         --accent-lite the accent lightened for TEXT ON BLACK (filter pills, the FAB stack's
+                       off state). Unchanged.
+       Known limit, Blue Suede Shoes: nothing can clear 4.5:1 with white AND stand more than
+       1.9:1 off that theme's own #154a7c sheet ground — its ground IS a mid blue. 1.96:1 is
+       the ceiling and that is what it gets; the sheet head still reads by its border and its
+       bold white type.
+       Text/icon colour to use ON TOP of an --accent-deep fill: white everywhere now. */
+    --on-accent:#ffffff;
+    --accent-deep:#078278;
     /* --brass was a FIXED gold on every theme, so it failed on the light grounds (2.49:1 on
        Brown Sugar). It is now per-theme. --emph is bold body copy in the sheets, --link is
        hyperlinks (deliberately blue and separate from --emph), --accent-lite is the accent
@@ -809,25 +826,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
   body[data-theme="purplehaze"]{
     --navy-950:#05060a; --navy-900:#0d1017; --navy-800:#171b26; --navy-700:#242a3a;
     --line:#606a8f; --fog:#eef0f5; --muted:#9298ac; --teal:#9484ff; --map-bg:#141826;
-    --on-accent:#04141e;
+    --on-accent:#ffffff; --accent-deep:#6e59ff;
       --brass:#d9a955; --emph:#f0b95e; --link:#6fb2ff; --accent-lite:#9484ff;
   }
   body[data-theme="greeneyedlady"]{
     --navy-950:#071109; --navy-900:#0e2015; --navy-800:#183524; --navy-700:#234a33;
     --line:#42805e; --fog:#e9f2ea; --muted:#8fb59d; --teal:#2fce7c; --map-bg:#12261a;
-    --on-accent:#04141e;
+    --on-accent:#ffffff; --accent-deep:#16864c;
       --brass:#d9a955; --emph:#f0b95e; --link:#5ab4ff; --accent-lite:#2fce7c;
   }
   body[data-theme="tequilasunrise"]{
     --navy-950:#1a0d12; --navy-900:#2a141d; --navy-800:#3d1f2b; --navy-700:#522a39;
     --line:#96566a; --fog:#f7ecef; --muted:#c48a9c; --teal:#ff7a3d; --map-bg:#2a1820;
-    --on-accent:#04141e;
+    --on-accent:#ffffff; --accent-deep:#d34200;
       --brass:#d9a955; --emph:#ffc06a; --link:#6fb8ff; --accent-lite:#ff7a3d;
   }
   body[data-theme="bluesuedeshoes"]{
     --navy-950:#0f3a61; --navy-900:#154a7c; --navy-800:#0d3050; --navy-700:#0a2540;
     --line:#5e9ec9; --fog:#ffffff; --muted:#bcd7ec; --teal:#4ecbff; --map-bg:#1d5688;
-    --on-accent:#04141e;
+    --on-accent:#ffffff; --accent-deep:#007caf;
       --brass:#f0cf8a; --emph:#ffd98f; --link:#b3e2ff; --accent-lite:#4ecbff;
     /* Light blue, stated outright rather than inherited: this is the swatch blue the picker
        shows for the theme, a shade paler than the --teal accent, which carries better over
@@ -842,7 +859,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   body[data-theme="brownsugar"]{
     --navy-950:#f2efe9; --navy-900:#fdfcf9; --navy-800:#f7f4ee; --navy-700:#e6e1d7;
     --line:#8a8378; --fog:#1a1714; --muted:#56504a; --teal:#8a4b0f; --map-bg:#e9e2d4;
-    --on-accent:#ffffff;
+    --on-accent:#ffffff; --accent-deep:#934b06;
       --brass:#6b4a0c; --emph:#7a4308; --link:#0a56c4; --accent-lite:#e09a4a;
     /* White. Brown Sugar's accent is a dark chocolate - the one theme accent that cannot be
        used on the map, since it vanishes against deep water. White is Jan's call and is right
@@ -1263,7 +1280,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     margin-bottom:calc(8px + env(safe-area-inset-bottom, 0px)) !important;
   }
   .attrib-toggle:active{background:rgba(6,15,24,.98);}
-  body.attrib-open .attrib-toggle{background:var(--teal); color:var(--on-accent); border-color:var(--teal);}
+  body.attrib-open .attrib-toggle{background:var(--accent-deep); color:var(--on-accent); border-color:var(--accent-deep);}
   .leaflet-control-attribution a{color:#7fd0ff !important;}
   .leaflet-control-zoom a{background:var(--navy-900) !important; color:var(--fog) !important; border-color:var(--line) !important;}
   /* Leaflet gives corner controls clear:both and appends bottom controls in reverse, so this
@@ -1744,7 +1761,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .sheet.open{transform:translateY(0); visibility:visible;}
   .sheet-handle{width:36px; height:4px; background:var(--line); border-radius:4px; margin:10px auto 4px;}
-  .sheet-head{display:flex; align-items:center; justify-content:space-between; padding:10px 18px; background:var(--teal); color:var(--on-accent); border-bottom:1px solid var(--line);}
+  .sheet-head{display:flex; align-items:center; justify-content:space-between; padding:10px 18px; background:var(--accent-deep); color:var(--on-accent); border-bottom:1px solid var(--line);}
   .sheet-head h2{font-family:'Space Grotesk',sans-serif; font-size:calc(15px * var(--ts)); margin:0; font-weight:700; color:var(--on-accent);}
   .sheet-head .close{
     font-family:'JetBrains Mono',monospace; font-size:calc(11px * var(--ts)); color:var(--on-accent); font-weight:700;
@@ -2074,7 +2091,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .loc-preview .mono{font-family:'JetBrains Mono',monospace; color:var(--brass); font-size:11px;}
   .save-btn{
     width:100%; margin-top:20px; padding:12px; border-radius:10px; border:none;
-    background:var(--teal); color:var(--on-accent); font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
+    background:var(--accent-deep); color:var(--on-accent); font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
   }
   .save-btn:active{filter:brightness(.86);}
   .storage-note{font-size:10.5px; color:var(--muted); text-align:center; margin:10px 0 0; line-height:1.5;}
@@ -2102,12 +2119,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .photo-remove:active{background:rgba(255,255,255,.2);}
   .photo-crop{
-    position:absolute; top:7px; left:7px; background:var(--teal); border:1.5px solid #fff;
+    position:absolute; top:7px; left:7px; background:var(--accent-deep); border:1.5px solid #fff;
     color:#fff; border-radius:100px; height:29px; padding:0 13px; cursor:pointer; font-size:11.5px; font-weight:700;
     font-family:'Space Grotesk',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,.5);
   }
   .photo-crop:active{filter:brightness(1.15);}
-  body[data-theme="brownsugar"] .photo-crop{background:var(--teal); border-color:#fff;}
+  body[data-theme="brownsugar"] .photo-crop{background:var(--accent-deep); border-color:#fff;}
   .photo-revert{
     position:absolute; bottom:7px; left:7px; background:rgba(6,15,24,.92); border:1.5px solid rgba(255,255,255,.85);
     color:#fff; border-radius:100px; height:29px; padding:0 13px; cursor:pointer; font-size:11.5px; font-weight:700;
@@ -2206,7 +2223,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     width:auto !important; height:26px !important; top:8px !important; right:8px !important;
     padding:0 10px !important; font:700 11px/26px 'JetBrains Mono',monospace !important;
     letter-spacing:.02em; display:flex; align-items:center; justify-content:center;
-    background:var(--teal) !important; border:1px solid var(--on-accent); border-radius:8px;
+    background:var(--accent-deep) !important; border:1px solid var(--on-accent); border-radius:8px;
     box-shadow:0 1px 4px rgba(0,0,0,.5);
     color:var(--on-accent) !important;
   }
@@ -2335,14 +2352,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     box-shadow:0 0 0 1.5px rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center;
     font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; color:#fff; line-height:1;
   }
-  /* v429: the stack matches the filter pills' language — BLACK when off, the theme accent when
-     lit. Off: black fill, WHITE label, var(--accent-lite) ring + icons (accent-lite, not
-     --teal, for the same reason the black pills use it: Brown Sugar's chocolate --teal
-     vanishes on black while its accent-lite amber reads). Lit: var(--teal) fill with
-     var(--on-accent) label AND icons — on-accent is black in five themes and white in Brown
-     Sugar, which is the only pairing that clears the contrast rule on every accent (white on
-     Blue Suede's #4ecbff is 1.9:1, on Parrot Head's #19cec0 1.9:1 — both fail; black clears
-     10:1+ on all five bright accents and Brown Sugar's dark accent takes the white). */
+  /* v429/v430: the stack matches the filter pills' language — BLACK when off, the theme accent
+     when lit, and the label is WHITE in both states. Off: black fill, var(--accent-lite) ring +
+     icons (accent-lite, not --teal, for the same reason the black pills use it: Brown Sugar's
+     chocolate --teal vanishes on black while its accent-lite amber reads). Lit:
+     var(--accent-deep) fill with white label AND icons — v429 had to use black type here
+     because white on the BRIGHT accent is 1.9:1; v430 deepened the fill instead (see
+     --accent-deep at the top of the sheet) so white clears 4.6:1 in every theme, which is what
+     Jan asked for. Nothing in this block hardcodes a colour: change the theme, change both. */
   .fab{background:#000 !important; border-color:var(--accent-lite) !important; color:#fff !important;}
   /* v415: stroke-width bumped 2.6 -> 3.2 (Jan: bold the FAB icons) — that renders ~2.0px of
      line at the 15px icon size, the same weight the filter pills went to in v414. THIS is
@@ -2351,19 +2368,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .fab svg{stroke:var(--accent-lite) !important; stroke-width:3.2;}
   /* Selected buttons all adopt the current theme's accent color (--teal),
      so they follow whatever theme the user picks. */
-  #tidePinBtn.tide-active{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
+  #tidePinBtn.tide-active{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
   #tidePinBtn.tide-active svg{stroke:var(--on-accent) !important;}
-  .fab.pressed{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
+  .fab.pressed{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
   .fab.pressed svg{stroke:var(--on-accent) !important;}
   /* The wave glyph is a FILLED path, unlike every other FAB icon, which is stroked line art.
      Without its own rule it falls back to currentColor — black at rest — and picks up the
      shared 2.6px stroke as an outline. Matches the neighbouring icons' pressed white. */
   #waveBtn svg{fill:var(--accent-lite) !important; stroke:none !important;}
   #waveBtn.pressed svg{fill:var(--on-accent) !important;}
-  #locateBtn.active-locate{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
+  #locateBtn.active-locate{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
   #locateBtn svg{color:var(--accent-lite);}
   #locateBtn.active-locate svg{color:var(--on-accent);}
-  #mapModeBtn.street-on{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
+  #mapModeBtn.street-on{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
   #mapModeBtn.street-on svg{stroke:var(--on-accent) !important;}
   /* Channel state gets the same lit treatment as Street, in the channel's own cyan rather
      than the theme accent, so the button matches what is drawn on the water. This is the ONE
@@ -2377,7 +2394,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      and this is a sticky map layer, not an overlay. v429: the fill is the THEME ACCENT like the
      rest of the lit stack (it was the contour lines' own pale cyan #9eeeff, Jan's call to bring
      it into line); only the ICW state above keeps a fixed colour, and for the reason noted there. */
-  #depthBtn.depth-on{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
+  #depthBtn.depth-on{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
   #depthBtn.depth-on svg{stroke:var(--on-accent) !important;}
   /* Coastal place names the app prints over the flat ocean blue in the Topo
      Satellite view (USGS's own labels get cut off by the ocean repair at wide
@@ -2480,7 +2497,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #markBanner .mark-title{font-weight:900; letter-spacing:.09em; font-size:calc(15px * var(--tsb)); color:#d81f17;}
   #markBanner .mark-clock{margin-left:auto; font-weight:800; font-variant-numeric:tabular-nums; font-size:calc(15px * var(--tsb)); color:#333;}
   #markBanner #markClearBtn{
-    background:var(--teal); color:var(--on-accent); border:none; border-radius:100px; cursor:pointer;
+    background:var(--accent-deep); color:var(--on-accent); border:none; border-radius:100px; cursor:pointer;
     font-family:inherit; font-weight:800; font-size:calc(12px * var(--tsb)); letter-spacing:.06em; padding:3px 11px;
   }
   #markBanner .mark-nav{display:flex; align-items:baseline; justify-content:center; gap:18px; margin:3px 0 2px;
@@ -2514,7 +2531,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Recording state wears the accent like every other lit pill. Its own class, not
      .pressed — closeAllOverlays() sweeps .pressed off the stack, and a recording must
      survive sheets opening and closing. */
-  #trackBtn.rec{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
+  #trackBtn.rec{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
   #trackBtn.rec svg{stroke:var(--on-accent) !important;}
   /* The bar is slim and non-blocking — unlike the MARK banner, the chart stays fully
      usable while a track records. Same white-card-with-accent-border family as the
@@ -2536,7 +2553,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #trackBar .tk-batt{font-weight:800; font-size:calc(12.5px * var(--tsb)); color:#333;}
   #trackBar .tk-batt.low{color:#c11a1a;}
   #trackBar #trackStopBtn{
-    margin-left:auto; background:var(--teal); color:var(--on-accent); border:none; border-radius:100px; cursor:pointer;
+    margin-left:auto; background:var(--accent-deep); color:var(--on-accent); border:none; border-radius:100px; cursor:pointer;
     font-family:inherit; font-weight:800; font-size:calc(12px * var(--tsb)); letter-spacing:.06em; padding:3px 11px;
   }
   #trackBar .tk-foot{font-size:calc(11px * var(--tsb)); font-weight:700; color:#555; text-align:center; margin-top:3px; line-height:1.35;}
@@ -2731,7 +2748,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #tideBanner{
     position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:1160;
     display:flex; align-items:center; gap:10px; padding:8px 10px 8px 14px;
-    background:var(--teal); color:var(--on-accent); border-radius:100px; font-family:'Space Grotesk',sans-serif;
+    background:var(--accent-deep); color:var(--on-accent); border-radius:100px; font-family:'Space Grotesk',sans-serif;
     font-size:14.5px; font-weight:700; box-shadow:0 4px 16px rgba(0,0,0,.4); white-space:nowrap;
   }
   #tideBanner button{
@@ -2744,7 +2761,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .td-row{display:flex; align-items:center; gap:8px; font-size:calc(12px * var(--ts)); padding:2px 0; font-family:'JetBrains Mono',monospace;}
   .td-row.past{opacity:.4;}
   .td-row .td-type{flex:0 0 42px; font-weight:700; padding:1px 5px; border-radius:4px; text-align:center; font-size:9.5px; color:#04141e;}
-  .td-type.td-high{background:var(--teal); color:var(--on-accent);}
+  .td-type.td-high{background:var(--accent-deep); color:var(--on-accent);}
   /* Fill, not text — pinned to the fixed gold so the near-black label on it stays legible
      now that --brass is theme-driven and goes dark on the light grounds. */
   .td-type.td-low{background:#c99a4b; color:#04141e;}
@@ -2767,7 +2784,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #tidePanel.open{display:flex;}
   #tidePanel .tp-head{
     display:flex; align-items:center; justify-content:space-between; gap:8px;
-    padding:12px 14px; border-bottom:1px solid var(--line); background:var(--teal);
+    padding:12px 14px; border-bottom:1px solid var(--line); background:var(--accent-deep);
     font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:var(--on-accent);
   }
   #tidePanel .tp-head button{color:var(--on-accent) !important; border-color:var(--on-accent) !important;}
@@ -2819,7 +2836,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #acceptRow{display:flex; align-items:center; gap:10px;}
   #acceptName{flex:1 1 auto; min-width:0;}
   #acceptText{color:var(--fog); font-size:13.5px; line-height:1.4;}
-  #acceptBtn{flex:0 0 auto; background:var(--teal); color:var(--on-accent); border:none; cursor:pointer;
+  #acceptBtn{flex:0 0 auto; background:var(--accent-deep); color:var(--on-accent); border:none; cursor:pointer;
     font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; padding:10px 20px; border-radius:100px;}
   #acceptStep1{display:flex; flex-direction:column; gap:10px;}
   #acceptStep1[hidden]{display:none;}
@@ -3587,7 +3604,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <option value="15">Detailed — zoom 15 (large)</option>
     </select>
     <label class="sheet-note" style="display:flex; gap:8px; align-items:flex-start; margin:10px 0 0; cursor:pointer;">
-      <input type="checkbox" id="offlineIcw" style="width:16px; height:16px; flex:0 0 auto; margin:2px 0 0; padding:0; accent-color:var(--teal);">
+      <input type="checkbox" id="offlineIcw" style="width:16px; height:16px; flex:0 0 auto; margin:2px 0 0; padding:0; accent-color:var(--accent-deep);">
       <span style="flex:1; min-width:0;">Also save the <b>Hi Res &amp; ICW</b> view's photo (land <i>and</i> water). Sharper on the flats and in the channel, but a noticeably larger download.</span>
     </label>
     <p class="sheet-note" id="offlineEst" style="margin:8px 0 0;"></p>
@@ -4340,7 +4357,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 429;
+const BUILD_NUM  = 430;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

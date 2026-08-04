@@ -7,6 +7,67 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 7:35 PM EDT · v430 · Deep Accent Fills
+------------------------------------------------------------------------------
+Jan: change the hue or saturation on the themes so the white text meets the
+threshold.
+
+v429 had to put BLACK type on the lit buttons because white on the bright
+theme accent is 1.86:1 to 3.00:1 — a failure this file has had a note about
+since v302.  Rather than argue with the type, the FILL moved.
+
+Each theme now carries THREE accent values instead of two, one job each:
+
+  --teal         the bright accent, UNCHANGED.  Text, borders, rules, tabs,
+                 the compass rose (--rose still follows it).  It is also what
+                 the theme picker's swatch shows, so every theme still looks
+                 like itself.
+  --accent-deep  NEW.  The same HUE with the saturation pushed up and the
+                 lightness taken down until white clears 4.5:1.  Used for
+                 every accent FILL that carries text or icons.
+  --accent-lite  unchanged — the accent lightened for text ON BLACK (filter
+                 pills, the FAB stack's off state).
+
+    Parrot Head      #19cec0 -> #078278   white 1.98 -> 4.69
+    Purple Haze      #9484ff -> #6e59ff   white 3.00 -> 4.63
+    Green-Eyed Lady  #2fce7c -> #16864c   white 2.05 -> 4.62
+    Tequila Sunrise  #ff7a3d -> #d34200   white 2.59 -> 4.62
+    Blue Suede Shoes #4ecbff -> #007caf   white 1.86 -> 4.66
+    Brown Sugar      #8a4b0f -> #934b06   white 6.79 -> 6.46 (already passed;
+                                          nudged one step for consistency)
+
+Hue is held in every one of them — Purple Haze barely moves in lightness at
+all, it just runs its saturation to the wall.  --on-accent is therefore #fff
+in all six themes now (it was the near-black #04141e in five), and every
+place it appears sits on an --accent-deep fill, so that pairing is white on
+4.6:1 or better everywhere.
+
+Surfaces that moved to --accent-deep: sheet heads, the lit FAB stack (pressed,
+Street Map, Depth Lines, Locate Me, Tides, Track My Path recording), the
+Leaflet popup CLOSE button, primary form buttons, the + Catch photo CROP
+button, the MARK banner's CLEAR pill, the track bar's STOP pill, the tide
+banner and tide panel head, the tide table's HIGH chip, the offline-download
+checkbox (it draws a white check INSIDE the fill), the credits toggle when
+open, and the Accept gate's button.
+
+Deliberately left on the bright --teal: everything drawn as INK on a themed
+ground (sheet body text, subheads, the Season Guide stamp, tab underline,
+focus outlines, the pop-tip rule, the update banner), the offline progress
+bar (a fill with no text on it), the popup's black-on-accent "Log" badge, and
+the white MARK/track cards' accent borders — those are all cases where a
+deepened colour would be the WRONG move, and --rose stays bright so the
+compass rose over dark water is untouched.
+
+KNOWN LIMIT, Blue Suede Shoes: no colour can clear 4.5:1 with white AND stand
+more than 1.89:1 off that theme's own #154a7c sheet ground — the ground IS a
+mid blue.  #007caf gets 1.96:1 against it, which is the ceiling; the sheet
+head reads by its border and its bold white type.  Nothing else in the app
+puts a deep fill on that ground.
+
+Verified headless in all six themes: lit fill, label and icon colours read
+back exactly as specified, off state black/white/accent-lite, roses unchanged.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 6:50 PM EDT · v429 · Black FAB Stack
 ------------------------------------------------------------------------------
 Jan: make the FAB stack's backgrounds black when off and the theme color when
