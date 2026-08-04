@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v406** — Depth Button
 - **v405** — Depth Contours
 
 ## 2026-08-03

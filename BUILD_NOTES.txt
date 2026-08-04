@@ -7,6 +7,84 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 12:56 AM EDT · v406 · Depth Button
+------------------------------------------------------------------------------
+v405 gave the depth contours a press-and-hold on the map and no button at
+all. Jan couldn't get it to fire on the Mac OR on the phone, so v406 does
+two things: it gives the layer a real button, and it makes the hold
+forgiving enough that a hand on the water can't miss it.
+
+THE BUTTON. A new DEPTH pill sits in the FAB stack directly under TOPO
+SATELLITE — it belongs with the map-layer controls, not down among the
+recording ones. Contour-line glyph (the same three wavy lines the Help
+topic wears), word to the right of the icon like every other FAB, and a
+.fab-tip hover tip inside the button (fine pointers only; no title attr,
+which would double the tooltip). Tapping it draws the contours; tapping
+again clears them.
+
+The lit state is its own class, .depth-on — NOT .pressed, because
+closeAllOverlays sweeps .pressed and this is a sticky map layer, not an
+overlay that a sheet should close. Lit, the pill fills with the contour
+lines' own pale cyan #9eeeff on the label tags' near-black #04141e, so
+the button matches what is drawn on the water. That is deliberately
+paler than the ICW state's vivid #39d6ff on the button directly above
+it, and it steers clear of red (MARK), magenta (TRACK), purple and blue
+(the zones), amber (marinas) and orange (Labels).
+
+Button and gesture share ONE toggle, depthToggle(), so the two can never
+disagree; depthSyncFab() paints the lit state and is called from the
+toggle, from baselayerchange and from the map-mode button. On the Street
+Map the layer draws nothing, so the button stays in place but sits unlit
+and a tap only says "Depth contours are on the satellite map views" —
+the same answer the hold has always given there. The ON state is
+remembered through a trip to the Street Map and the pill relights on the
+way back.
+
+WHY THE HOLD MISSED. Read skeptically and reproduced under Chrome with a
+mouse, Chrome with emulated touch, and WebKit with a mouse, the v405
+gesture fired correctly in all three — jitter and all. So the honest
+first suspect for both of Jan's devices is the service worker's two-open
+lag: v405 had only just gone up, and the Mac's Safari and the phone's
+home-screen app each need their own two opens (check the build stamp,
+⌘⇧R on the Mac). But the code did carry a real defect that emulation
+can't stage, and it is fixed here: the RELEASE was listened for on the
+map container. A finger or a mouse that lifts anywhere else — over the
+header, a FAB, a sheet — targets THAT element, so the container never
+heard the release, the pointer id stayed latched, and the next press was
+silently eaten by the second-finger guard. One lost press per stray
+release is exactly the "sometimes it just does nothing" report. The
+release now comes off WINDOW.
+
+Three more places the release could go missing, all closed:
+  · a pointercancel now counts as a hold from 400 ms, below the full
+    threshold. iOS claims a press as its own long press at about half a
+    second and the cancel it sends IS the proof the hold happened.
+  · touchend/touchcancel run the same state machine as a safety net
+    (finish() with a null id matches whatever is armed); whichever
+    arrives first fires and the other finds it disarmed.
+  · selectstart and dragstart are refused while armed — desktop Safari
+    answers a still mouse on a tile with a text selection or a native
+    image drag, and an image drag replaces the pointerup with a cancel.
+
+The hold is 600 ms now (was 550) and the slop is 14 px (was 12), so a
+real finger's jitter and a resting hand's drift both survive. Verified:
+a 900 ms hold that wanders 5 px and one that wanders 12 px both toggle;
+one that wanders 30 px does not; a 100 ms tap does not. Everything v405
+promised still holds — the toggle fires on RELEASE so a hold that
+becomes a pan is just a pan, and a hold does not clear a pinned compass
+route while a plain tap still does (checked in WebKit against
+compassPinnedId).
+
+HELP AND WORDING. The depth topic now leads with the DEPTH button and
+carries the hold as the shortcut, with the duration spelled out in
+words — "press and hold anywhere on the map for about half a second" —
+and the same phrasing rides the button's hover tip. Get Fishing gained a
+DEPTH sentence in stack order, the white-button count went from Eleven
+to Twelve, 'depth' joined the .bn button-label name set, and the
+map-view button's tip dropped its press-and-hold line now that the
+gesture has a button of its own to be described on.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 12:36 AM EDT · v405 · Depth Contours
 ------------------------------------------------------------------------------
 New layer: water-depth contour lines in FEET over either satellite view,

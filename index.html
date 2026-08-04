@@ -2242,6 +2242,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      than the theme accent, so the button matches what is drawn on the water. */
   #mapModeBtn.icw-on{background:#39d6ff !important; border-color:#39d6ff !important; color:#04141e !important;}
   #mapModeBtn.icw-on svg{stroke:#04141e !important;}
+  /* DEPTH lit state (v406). Its own class, NOT .pressed — closeAllOverlays sweeps .pressed
+     and this is a sticky map layer, not an overlay. The fill is the contour lines' own pale
+     cyan (DEPTH_LINE #9eeeff) on the labels' near-black (#04141e), so the button matches what
+     is drawn on the water — deliberately paler than the ICW state's vivid #39d6ff on the
+     button directly above it, and clear of red (MARK), magenta (TRACK), purple/blue (zones),
+     amber (marinas) and orange (Labels). */
+  #depthBtn.depth-on{background:#9eeeff !important; border-color:#9eeeff !important; color:#04141e !important;}
+  #depthBtn.depth-on svg{stroke:#04141e !important;}
   /* Coastal place names the app prints over the flat ocean blue in the Topo
      Satellite view (USGS's own labels get cut off by the ocean repair at wide
      zooms) — styled after USGS's white-on-halo label look. */
@@ -2781,8 +2789,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="fab" id="mapModeBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
       <!-- tip sits BEFORE the label: the mode writer sets this.lastChild, which must stay the label text node -->
-      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> switches the map view —</span><span>Topo Satellite, Hi Res &amp; ICW, Street Map.</span><span><b>PRESS AND HOLD THE MAP:</b> depth contours in feet.</span></span>
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> switches the map view —</span><span>Topo Satellite, Hi Res &amp; ICW, Street Map.</span></span>
       Topo Satellite
+    </button>
+    <button class="fab" id="depthBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 12c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 17c3-3 6-3 9 0s6 3 9 0"></path></svg>
+      Depth
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> draws depth contours in feet on the water.</span><span>Tap again to clear them.</span><span><b>PRESS AND HOLD THE MAP</b> for about half a second does the same.</span></span>
     </button>
     <button class="fab" id="trackBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg>
@@ -2929,7 +2942,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Section to Get Fishing</div>
-      <p class="sheet-note">Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. Tap any spot pin on the map for its coordinates and details. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. Tap <b>TRACK MY PATH</b> to record your path as a line on the map while the app is on screen — tap it again to stop. The track is <b>saved automatically</b> under Your tracks in + SPOT. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, back up your catch log and photos, and see the print options at the end of this Help.</p>
+      <p class="sheet-note">Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. Tap any spot pin on the map for its coordinates and details. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. Tap <b>DEPTH</b> to lay depth contours in feet over the water on either satellite view — or press and hold the map for about half a second, which does the same. Tap <b>TRACK MY PATH</b> to record your path as a line on the map while the app is on screen — tap it again to stop. The track is <b>saved automatically</b> under Your tracks in + SPOT. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, back up your catch log and photos, and see the print options at the end of this Help.</p>
       <p class="sheet-note"><b>Be advised, this app is not for navigation or emergency use!</b> The <b>MARK</b> function is a memory aid only — not navigation, safety, or rescue equipment, and no substitute for the safety gear and safe-boating practice the law and good seamanship require (see <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>).</p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Ace, get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <!-- v344: CLOSE stays bold here but NOT gold (Jan) — a plain <b> in a sheet-note
@@ -2937,7 +2950,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">Tap the buttons below to read their sections. Close a section by tapping its title or the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> button at the bottom of the window. Tap the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> at the top of the window to exit Help. When you reopen Help, it will reopen to your last view. Close it again either by tapping its title or the <b style="color:var(--fog);">CLOSE</b> <span class="bi">✕</span> button at the end of the writeup.</p>
 
       <div class="subhead">Action Buttons</div>
-      <p class="sheet-note">Eleven white buttons along the right side of the map are the app’s actions.</p>
+      <p class="sheet-note">Twelve white buttons along the right side of the map are the app’s actions.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
       <p class="sheet-note">Tap <b>+ Catch</b> to open the catch dialog window and then pick <b>one or more species</b> from the list. The first one you tap is that entry's main fish, but every one you pick will be stored for that particular log entry. Set date and time (shown in local 12-hour time — on a computer just type the date, like 6/15/1988; phones get a scroll picker), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by tapping <b>High</b>, <b>Low</b>, <b>Falling</b>, or <b>Rising</b> — or tap <b>Auto-detect from NOAA</b> once a location and date/time are set. The app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too, but needs internet). <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only (e.g., 30 inches records the fish as 2 ft 6 in).</p>
@@ -2997,7 +3010,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-depth"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 7c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 12c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 17c3-3 6-3 9 0s6 3 9 0"></path></svg> Depth Contours<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-depth">
-      <p class="sheet-note"><b>PRESS AND HOLD anywhere on the map for about half a second</b> and the water fills with <b>depth contours in feet</b> — thin pale-cyan lines joining equal depths, each carrying its own number on a small dark tag (<span class="g-emph">3 ft</span>, <span class="g-emph">6 ft</span>, <span class="g-emph">12 ft</span>). <b>Press and hold again to clear them.</b> There is no button for it: the layer is meant to be flicked on to read a flat and flicked straight back off, and the chart has enough buttons. It works on <b>Topo Satellite</b> and <b>Hi Res &amp; ICW</b> — the satellite views, where the contours have a bottom to sit on; on the Street Map a hold just says so. The setting sticks, so if you leave them on they are on next time you open the app.</p>
+      <p class="sheet-note">Tap <b>DEPTH</b> and the water fills with <b>depth contours in feet</b> — thin pale-cyan lines joining equal depths, each carrying its own number on a small dark tag (<span class="g-emph">3 ft</span>, <span class="g-emph">6 ft</span>, <span class="g-emph">12 ft</span>). The button lights up in that same pale cyan while the lines are up; <b>tap DEPTH again to clear them.</b> There is also a shortcut for a hand already on the chart: <b>press and hold anywhere on the map for about half a second</b> and let go, and the lines come on and off the same way. It works on <b>Topo Satellite</b> and <b>Hi Res &amp; ICW</b> — the satellite views, where the contours have a bottom to sit on; on the Street Map nothing is drawn and the app says so. The setting sticks, so if you leave them on they are on next time you open the app. If nothing appears, check the zoom — the lines start drawing a step or two in from the widest view, and the app tells you to zoom in when you turn them on too far out.</p>
       <p class="sheet-note"><b>What you see changes with the zoom</b>, so the lines never bury the picture. Wide out, only the <b>heavy lines</b> draw — <b>6, 12, 20, 30, 50, 100 and 200 ft</b> — which is the shape of the water: the run of the channel, the deep holes, the drop off the beach. Zoom in a step and the <b>3 and 9 ft</b> lines join them, the ones that fence the flats. A step closer brings the <b>2 ft steps</b>, and at the closest zooms <b>every single foot</b> from 1 to 12 draws — fine enough to pick out the one-foot lip a redfish sits on. Zoom back out and they thin away again. The lines draw <b>under</b> your pins, your track and the compass, so nothing you put on the chart is ever hidden by them.</p>
       <p class="sheet-note"><b>Where the numbers come from.</b> The contours are built from <b>NOAA's own surveys</b> and stored <b>in the app</b>, so they draw with the signal off, anywhere in the county, with nothing to download first. The bottom comes from <b>NOAA BlueTopo</b> — the Office of Coast Survey's "best available" compiled bathymetry for navigable US water, which already includes the <b>2022 Indian River Lagoon lidar</b> — with <b>NOAA NCEI's CUDEM</b> survey filling the skinny water BlueTopo does not reach. Only water gets lines: land, spoil islands and the inland ponds are masked off.</p>
       <p class="sheet-note"><b>Be advised: these are not chart soundings, and this is not for navigation.</b> The depths are measured to <b>NAVD88</b> — near enough to <b>average water level</b> — while a nautical chart's soundings are to <b>mean lower low water</b>, which around Ponce Inlet runs <b>a foot or two lower</b> than what you see here. So a line marked <span class="g-emph">3 ft</span> can be closer to <b>2 ft</b> of water on a low tide, and less than that on a hard north wind. Surveys are also years old in places and this coast <b>shoals and moves</b>. Use these lines to find an edge, a hole or a drop worth fishing — read your <b>depth sounder and chartplotter</b>, not this app, for the water under your boat.</p>
@@ -4145,7 +4158,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 405;
+const BUILD_NUM  = 406;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -8371,7 +8384,7 @@ document.addEventListener('click', ev=>{
 (function(){
   const NAMES = new Set([
     '+ catch', '+catch', 'catch', '+ spot', '+spot', 'spot', 'bite', 'tides', 'waves',
-    'my log', 'seasons', 'compass', 'locate me', 'topo satellite', 'hi res & icw',
+    'my log', 'seasons', 'compass', 'depth', 'locate me', 'topo satellite', 'hi res & icw',
     'street map', 'catches', 'inshore', 'offshore', 'launches', 'labels', 'species',
     'search', 'help', 'themes', 'a', 'accept', 'cancel', 'close', 'edit', 'delete',
     'print this help', 'mark', 'track my path', 'save this tide station', 'download map for offline use',
@@ -13532,7 +13545,8 @@ themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); 
 
 /* ===================== DEPTH CONTOURS =====================
    Water-depth contour lines in FEET, drawn over either satellite view and
-   turned on and off by a PRESS AND HOLD on the map itself.
+   turned on and off by the DEPTH button in the FAB stack (v406) or, as a
+   shortcut, by a PRESS AND HOLD on the map itself.
 
    Where the numbers come from. The lines are built offline from NOAA's own
    surveys and shipped with the app as static files, so no depth service has to
@@ -13821,10 +13835,26 @@ const DepthLayer = L.Layer.extend({
   }
 });
 
+/* The DEPTH button's lit state. It reads depthOn AND satMode: the layer remembers it is on
+   while the Street Map is up, but nothing is drawn there, so the button must not claim
+   otherwise. Switching back to a satellite view relights it. */
+function depthSyncFab(){
+  const b = document.getElementById('depthBtn');
+  if(b) b.classList.toggle('depth-on', depthOn && satMode);
+}
+
+/* The one toggle. Both the DEPTH button and the press-and-hold come through here, so the
+   two can never disagree about the state or the lit button. */
+function depthToggle(){
+  if(!satMode){ showToast('Depth contours are on the satellite map views.'); return; }
+  depthSetOn(!depthOn);
+}
+
 function depthSetOn(on, quiet){
-  if(on === depthOn) return;
+  if(on === depthOn){ depthSyncFab(); return; }
   depthOn = on;
   depthPersist();
+  depthSyncFab();
   if(on){
     depthEnsureBlocks();
     if(!depthLayer) depthLayer = new DepthLayer();
@@ -13842,9 +13872,11 @@ function depthSetOn(on, quiet){
 }
 
 /* ---- The gesture: PRESS AND HOLD the map ----
-   There is no button for this, on purpose — the chart is already full of them,
-   and the layer is something you flick on to read a flat and straight back off.
-   The help says so in words, and the map-view button's hover tip repeats it.
+   SECONDARY since v406. The DEPTH button in the stack is the control people find;
+   the hold is the shortcut for a hand already on the chart. Both call depthToggle().
+   (v405 shipped the hold alone, with no button — Jan couldn't get it to fire on
+   either the Mac or the phone, so the button is now the primary way in and the
+   hold's release path was made forgiving; see the notes on window/cancel below.)
 
    Three traps, all of them handled here rather than hoped about:
 
@@ -13871,9 +13903,26 @@ function depthSetOn(on, quiet){
    the chart for a moment and then pan, and the layer had already flipped before
    the pan began. Waiting for the finger to lift means a hold that turns into a
    drag — however long the pause before it — is just a drag. (Caught in headless
-   verify: press, wait 700 ms, drag, and the contours came on.) */
-const DEPTH_HOLD_MS = 550;
-const DEPTH_HOLD_SLOP = 12;
+   verify: press, wait 700 ms, drag, and the contours came on.)
+
+   v406 hardening, all of it about the RELEASE never arriving on the map element:
+   - the release is listened for on WINDOW, not the map container. A pointerup
+     whose finger has wandered onto the header, a FAB or a sheet targets THAT
+     element, so the container never heard it, `pid` stayed set, and the next
+     press was silently eaten by the second-finger guard. One lost press per
+     stray release is exactly the "sometimes it just doesn't work" report.
+   - a pointercancel counts as a hold from DEPTH_HOLD_CANCEL_MS, below the full
+     threshold: iOS claims a press as its own long press at about half a second,
+     and the cancel it sends IS the proof the hold happened.
+   - touchend/touchcancel are a safety net on the same state machine (finish()
+     with a null id matches whatever is armed); whichever arrives first fires,
+     the other finds it disarmed and does nothing.
+   - selectstart/dragstart are refused while armed — desktop Safari answers a
+     still mouse on a tile with a text selection or an image drag, and an image
+     drag replaces the pointerup with a pointercancel. */
+const DEPTH_HOLD_MS = 600;         // "about half a second" in the help and the tip
+const DEPTH_HOLD_CANCEL_MS = 400;  // a system-cancelled press only has to reach here
+const DEPTH_HOLD_SLOP = 14;        // px: a real finger jitters, a resting hand drifts
 (function(){
   const el = map.getContainer();
   let armed = false, t0 = 0, sx = 0, sy = 0, pid = null, swallow = false;
@@ -13899,22 +13948,33 @@ const DEPTH_HOLD_SLOP = 12;
     if(Math.abs(e.clientX - sx) > DEPTH_HOLD_SLOP || Math.abs(e.clientY - sy) > DEPTH_HOLD_SLOP) disarm();
   }, { passive:true });
 
-  function finish(e){
-    if(!armed || e.pointerId !== pid) return;
+  // id null = "whatever is armed" (the touch fallback, which carries no pointerId).
+  function finish(id, floor){
+    if(!armed || (id !== null && id !== pid)) return;
     const held = Date.now() - t0;
     disarm();
-    if(held < DEPTH_HOLD_MS) return;
-    if(!satMode) showToast('Depth contours are on the satellite map views.');
-    else depthSetOn(!depthOn);
+    if(held < (floor || DEPTH_HOLD_MS)) return;
+    depthToggle();
     swallow = true;                              // eat the click this hold ends with
     setTimeout(()=> { swallow = false; }, 700);
   }
-  el.addEventListener('pointerup', finish, { passive:true });
+  // Released on WINDOW, not on the map: a finger that lifts over the header or a
+  // button still ends the hold it started (see the v406 note above).
+  window.addEventListener('pointerup', (e)=> finish(e.pointerId), { passive:true });
   // pointercancel counts as a release, not a wash-out: iOS fires it the moment
   // the system claims a press as its own long press, which is the very gesture
   // being made here — the movement guard above has already disarmed anything
-  // that was really a drag or a pinch by the time it arrives.
-  el.addEventListener('pointercancel', finish, { passive:true });
+  // that was really a drag or a pinch by the time it arrives. It arrives BEFORE
+  // the full threshold, so it gets the lower floor.
+  window.addEventListener('pointercancel', (e)=> finish(e.pointerId, DEPTH_HOLD_CANCEL_MS), { passive:true });
+  window.addEventListener('touchend', ()=> finish(null), { passive:true });
+  window.addEventListener('touchcancel', ()=> finish(null, DEPTH_HOLD_CANCEL_MS), { passive:true });
+
+  // Desktop Safari answers a still mouse on a tile with a text selection or a
+  // native image drag; the drag would replace the pointerup with a cancel.
+  const refuse = (e)=> { if(armed) e.preventDefault(); };
+  el.addEventListener('selectstart', refuse);
+  el.addEventListener('dragstart', refuse);
 
   document.addEventListener('click', (e)=>{
     if(!swallow) return;
@@ -13932,11 +13992,14 @@ const DEPTH_HOLD_SLOP = 12;
 
 // The layer belongs to the satellite views; switching to the street map takes
 // it off the screen without forgetting that it was on.
-map.on('baselayerchange', ()=> { if(depthLayer) depthLayer.redraw(); });
+map.on('baselayerchange', ()=> { if(depthLayer) depthLayer.redraw(); depthSyncFab(); });
 document.getElementById('mapModeBtn').addEventListener('click', ()=> {
   if(depthOn && depthLayer) setTimeout(()=> depthLayer.redraw(), 0);
+  setTimeout(depthSyncFab, 0);                  // satMode is set by the mode writer
 });
+document.getElementById('depthBtn').addEventListener('click', depthToggle);
 try{ if(localStorage.getItem('wtf:depth-on') === '1') depthSetOn(true, true); }catch(e){}
+depthSyncFab();
 
 /* ===================== INIT ===================== */
 
