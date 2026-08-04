@@ -3753,7 +3753,7 @@ const SPOTS = [
     desc:"Adjoins Site 2 on its northwest corner, forming one of the larger connected structure fields in the system.",
     tip:"Worth working as a pair with Site 2 on the same trip since the two sit so close together.",
     species:["grouper","snapper"] },
-  { id:"nine-mile-reef", name:"Nine Mile Reef", zone:"offshore", lat:29.0000, lng:-80.6833, meta:"Waypoint · Natural reef · ~14.4 sm/12.5 nm", wp:true, species:["grouper","snapper"] },
+  { id:"nine-mile-reef", name:"Nine Mile Reef", zone:"offshore", lat:29.155000, lng:-80.812600, meta:"Waypoint · Natural reef · ~7.9 sm/6.8 nm", wp:true, species:["grouper","snapper"] },
   { id:"party-grounds-ne", name:"Party Grounds NE Corner", zone:"offshore", lat:29.1699, lng:-80.5377, meta:"Waypoint · Natural reef · ~23.0 sm/20 nm", wp:true, farOut:true, species:["grouper","snapper"] },
   { id:"party-grounds-nw", name:"Party Grounds NW Corner", zone:"offshore", lat:29.1850, lng:-80.6010, meta:"Waypoint · Natural reef · ~20.1 sm/17.5 nm", wp:true, farOut:true, species:["grouper","snapper"] },
   { id:"party-grounds-s", name:"Party Grounds S End", zone:"offshore", lat:29.1582, lng:-80.5794, meta:"Waypoint · Natural reef · ~20.7 sm/18 nm", wp:true, farOut:true, species:["grouper","snapper"] },
@@ -4132,7 +4132,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 403;
+const BUILD_NUM  = 404;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -4736,19 +4736,78 @@ const SEA_LABEL_WINDOWS = [
    and stays alone). The v400 Ponce Inlet (town) WINDOW was removed with this — it
    existed to pop that exact wrong label through. */
 const SEA_LABEL_ERASERS = [
-  // [lat, lngLeftEdge, leftPad px, width px, halfH px, zMin, zMax, r, g, b]
-  [29.10018,-80.93139,14,92,22,15,16, 52,105,118],  // "Ponce Inlet" printed in the ocean off Live Oak Creek (lat/lng read off the actual z16 tile pixels)
+  // [lat, lngLeftEdge, leftPad px, width px, halfH px, zMin, zMax]
+  [29.10018,-80.93139,14,92,22,15,16],  // "Ponce Inlet" printed in the ocean off Live Oak Creek (lat/lng read off the actual z16 tile pixels)
   /* v402: same wrong label at z13/z14 — there it sits in OPEN WATER too (not
      over the beach as v401 assumed), half-dimmed by the paint (Jan's "Ponce
      Inlet" screenshot). Smaller font at these zooms (61x9 px), same geo-stable
      left edge (-80.931 measured at z13 AND z14). Boxes measured by
-     tools/scan_sea_labels.py off the tile pixels. Fill = the APP-RENDERED ambient
-     water (headless screenshot median +2), NOT the raw tile's — the app lays extra
-     paint there, and a raw-tile fill printed a teal chip against it ('darken' is
-     only invisible while fill >= ambient). */
-  [29.10118,-80.93079,10,71,12,13,13, 44,109,123],
-  [29.10061,-80.93122,10,71,12,14,14, 51,108,122]
+     tools/scan_sea_labels.py off the tile pixels. */
+  [29.10118,-80.93079,10,71,12,13,13],
+  [29.10061,-80.93122,10,71,12,14,14]
 ];
+/* v404: the erase is per-pixel INPAINTING on the fully composited tile, no
+   sampled colours. History of why: v401's single 'darken' fill left the label's
+   DARK NAVY HALO untouched (darken can't reach pixels darker than its fill —
+   Jan's Rose Bay "mostly the black outline" report), and a paired 'lighten'
+   fill can't fix it because the water changes hue across the rect (teal
+   feather-zone west, bluer paint east — one lo colour raised the blue half
+   into a visible lighter band). Instead: for each COLUMN of the rect, take the
+   median colour (columns are perpendicular to the coast's colour gradient, so
+   a column is near-uniform water), mark pixels deviating from it by >16 in any
+   channel (the bright letters AND the dark halo), and rewrite them with the
+   median of the column's UNMARKED pixels. Water texture outside the strokes is
+   untouched; runs after every other composite so it sees exactly the on-screen
+   ambient (photo, feather, fade, paint). Text is ~9 px in a >=24 px column, so
+   every column keeps a water majority for the median. */
+function eraseLabelRect(g, x, y, w, h){
+  x = Math.round(x); y = Math.round(y);
+  w = Math.round(w); h = Math.round(h);
+  if(w <= 0 || h < 3) return;
+  const id = g.getImageData(x, y, w, h), d = id.data;
+  const med = a => a.slice().sort((p,q)=>p-q)[a.length>>1];
+  // pass 1: mark ink — pixels deviating from their column's median (threshold
+  // 12 catches the letters and the halo core; the 1px dilation below catches
+  // the antialiased fringe that sits within the threshold)
+  const mark = new Uint8Array(w*h);
+  const colMed = [];
+  for(let cx = 0; cx < w; cx++){
+    const rs = [], gs = [], bs = [];
+    for(let cy = 0; cy < h; cy++){
+      const i = (cy*w + cx)*4;
+      rs.push(d[i]); gs.push(d[i+1]); bs.push(d[i+2]);
+    }
+    colMed.push([med(rs), med(gs), med(bs)]);
+    for(let cy = 0; cy < h; cy++){
+      const i = (cy*w + cx)*4, cm = colMed[cx];
+      if(Math.abs(d[i]-cm[0]) > 12 || Math.abs(d[i+1]-cm[1]) > 12 || Math.abs(d[i+2]-cm[2]) > 12)
+        mark[cy*w + cx] = 1;
+    }
+  }
+  const dil = new Uint8Array(mark);
+  for(let cy = 0; cy < h; cy++)
+    for(let cx = 0; cx < w; cx++)
+      if(mark[cy*w + cx])
+        for(let ny = Math.max(0, cy-1); ny <= Math.min(h-1, cy+1); ny++)
+          for(let nx = Math.max(0, cx-1); nx <= Math.min(w-1, cx+1); nx++)
+            dil[ny*w + nx] = 1;
+  // pass 2: rewrite marked pixels with their column's clean-water median
+  for(let cx = 0; cx < w; cx++){
+    const wr = [], wg = [], wb = [];
+    for(let cy = 0; cy < h; cy++){
+      if(dil[cy*w + cx]) continue;
+      const i = (cy*w + cx)*4;
+      wr.push(d[i]); wg.push(d[i+1]); wb.push(d[i+2]);
+    }
+    const cm = wr.length ? [med(wr), med(wg), med(wb)] : colMed[cx];
+    for(let cy = 0; cy < h; cy++){
+      if(!dil[cy*w + cx]) continue;
+      const i = (cy*w + cx)*4;
+      d[i] = cm[0]; d[i+1] = cm[1]; d[i+2] = cm[2];
+    }
+  }
+  g.putImageData(id, x, y);
+}
 function seaLabelErasers(coords, size){
   const z = coords.z, out = [];
   const n = Math.pow(2, z);
@@ -4758,7 +4817,10 @@ function seaLabelErasers(coords, size){
     const p = w[0]*Math.PI/180;
     const cy = ((1 - Math.log(Math.tan(p) + 1/Math.cos(p))/Math.PI)/2*n - coords.y)*size;
     if(cx + w[3] < 0 || cx - w[2] > size || cy + w[4] < 0 || cy - w[4] > size) continue;
-    out.push([cx - w[2], cy - w[4], w[2] + w[3], 2*w[4], 'rgb(' + w[7] + ',' + w[8] + ',' + w[9] + ')']);
+    // clip to the tile so eraseLabelRect works on real pixels only
+    const x0 = Math.max(0, cx - w[2]), y0 = Math.max(0, cy - w[4]);
+    const x1 = Math.min(size, cx + w[3]), y1 = Math.min(size, cy + w[4]);
+    if(x1 > x0 && y1 > y0) out.push([x0, y0, x1 - x0, y1 - y0]);
   }
   return out;
 }
@@ -4915,14 +4977,12 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows, photo){
     }
     g.restore();
   }
-  // v401 label erasers: flatten wrongly-placed printed names into the water (see table).
+  // Label erasers: inpaint wrongly-placed printed names into the water
+  // (v404 per-column median rewrite — see eraseLabelRect above the table).
   if(labelWindows){
     const eras = seaLabelErasers(coords, size);
-    if(eras.length){
-      g.save();
-      g.globalCompositeOperation = 'darken';
-      for(const e of eras){ g.fillStyle = e[4]; g.fillRect(e[0], e[1], e[2], e[3]); }
-      g.restore();
+    for(const e of eras){
+      try{ eraseLabelRect(g, e[0], e[1], e[2], e[3]); }catch(err){}
     }
   }
 }

@@ -7,6 +7,36 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 11:27 PM EDT · v404 · Eraser Inpainting
+------------------------------------------------------------------------------
+Jan: "across from Rose Bay, Ponce Inlet is still showing through at
+3000 ft, but mostly the black outline."
+
+That was the erased label's DARK NAVY HALO: the v401 'darken' fill can
+only pull down pixels BRIGHTER than the fill, so the white letters
+flattened but the dark outline around them survived. A paired 'lighten'
+fill can't fix it either — the water changes hue across the rect (teal
+feather-zone west, bluer paint east), and any single lo colour raised
+the blue half into a visible lighter band (caught in headless verify).
+
+SEA_LABEL_ERASERS is now per-pixel INPAINTING, no sampled colours at
+all: eraseLabelRect() runs on the fully composited tile (photo +
+feather + fade + paint), takes each COLUMN's median colour (columns run
+perpendicular to the coast's colour gradient, so each is near-uniform
+water), marks pixels deviating >12 in any channel — the letters AND the
+halo — dilates the mark 1 px to catch the antialiased fringe, and
+rewrites marked pixels with the median of the column's clean pixels.
+Water texture outside the strokes is untouched; entries are back to
+plain geometry [lat, lngLeftEdge, leftPad, width, halfH, zMin, zMax].
+The v402 hi-fill colour columns are gone from the table.
+
+Verified headless at z13/z14/z15 off Rose Bay: label and outline gone
+at all three, no box, no lighter band. Headless-verify gotcha for next
+time: re-shooting after an edit MUST use a fresh Chrome profile — a
+reused profile's service worker serves the previous build's cached
+shell (one round of screenshots was of the old code).
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 11:15 PM EDT · v403 · Get Fishing Reword
 ------------------------------------------------------------------------------
 Help edits in the opening quick-start block, per Jan:
