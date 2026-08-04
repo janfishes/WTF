@@ -7,8 +7,14 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-04 · 3:20 AM EDT · v411 · Pill Icons Refined
+Build 2026-08-04 · 3:30 AM EDT · v412 · Offshore Wave Flipped
 ------------------------------------------------------------------------------
+Jan: point the Offshore pill's wave opposite the Waves (buoy) icon. The
+buoy's breaking wave crests on the LEFT, and v411's Offshore swells did
+too; the Offshore swells are now mirrored — trough first, cresting on the
+right — in the pill (FILTER_ICONS) and the matching help filter topic.
+Same viewBox and stroke; the ink extents are symmetric so nothing else
+moves.
 Jan's follow-ups on the v410 filter-pill icons, same night: the icons moved
 IN FRONT of the words (like the FAB stack; the rest of the app stays
 word-then-icon), Offshore trades the jetties for a wave (two stacked
