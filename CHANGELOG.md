@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v418** — Phone Launch View
 - **v417** — Bolder Cookies
 - **v416** — Locate Pin Sized
 - **v415** — Calm Water Line

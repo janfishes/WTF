@@ -4300,7 +4300,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 417;
+const BUILD_NUM  = 418;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -6180,37 +6180,68 @@ function aidPointerHit(e){
 map.on('click', aidPointerHit);
 map.on('mousemove', aidPointerHit);
 
-// Launch views (v345). Phone: zoom 10, the inlet (same anchor the inlet label
-// uses, a few lines down) a third of the screen in from the LEFT edge (v343 —
-// Jan wants the view pushed east), looking out over the water east of the
-// inlet. PC (v345, Jan): open right down at the inlet at zoom 16 — where the
-// 66px scale bar reads 300 ft — with the inlet on the species column's
-// Hogfish pill row and slid to the RIGHT (a sixth in from the right edge) so
-// the flat-blue offshore fill stays off screen. The PC placement waits two
-// frames so the species column exists and has been measured (it is built and
-// positioned much further down the file); until then the map shows the initial
-// setView, which is already at the inlet.
+// Launch views (v345, phone redone in v418). Both devices now open ON the inlet
+// and hang it off two pieces of the app's own furniture.
+//   PC (v345, Jan): zoom 16 — where the 66px scale bar reads 300 ft — with the
+//     inlet on the species column's Hogfish pill row and slid to the RIGHT (a
+//     sixth in from the right edge) so the flat-blue offshore fill stays off
+//     screen.
+//   Phone (v418, Jan): zoom 14 — the 1000 ft scale — with "Ponce de Leon Inlet"
+//     lined up horizontally with the Hogfish pill (same row) and the last letter
+//     of the name, the "t", sitting directly under the centre of the Eye cookie
+//     in the header. The x target is therefore measured off the RENDERED label
+//     text, not off the pin: the tooltip is direction:'center', so the anchor
+//     has to sit half a name-width west of where the "t" is wanted.
+// Both placements wait for the web font AND two frames: the species column is
+// built and positioned much further down this file, and Space Grotesk arrives
+// late (the fonts are swapped in with media="print" onload), which changes the
+// name's measured width. Until then the map shows the initial setView, which is
+// already at the inlet — and on a fresh open the splash is still up over it.
 {
-  const PC_LAUNCH_ZOOM = 16;
+  const PC_LAUNCH_ZOOM    = 16;
+  const PHONE_LAUNCH_ZOOM = 14;   // 66px scale bar = 1000 ft at this latitude
   const placeLaunchView = ()=>{
-    const size = map.getSize();
-    const z = COARSE_POINTER ? DEFAULT_ZOOM : PC_LAUNCH_ZOOM;
+    const size  = map.getSize();
+    const z     = COARSE_POINTER ? PHONE_LAUNCH_ZOOM : PC_LAUNCH_ZOOM;
     const startPt = map.project([29.07783, -80.91022], z);
+    const mapEl = document.getElementById('map');
+    const mr    = mapEl ? mapEl.getBoundingClientRect() : null;
+    // Vertical: the inlet rides the Hogfish pill's row on both devices.
+    const chip  = document.querySelector('#speciesCol .chip[data-species="hogfish"]');
+    if(chip && mr){
+      const cr = chip.getBoundingClientRect();
+      if(cr.height) startPt.y += size.y/2 - (cr.top + cr.height/2 - mr.top);
+    }
     if(COARSE_POINTER){
-      startPt.x += size.x/6;
+      // Horizontal: put the name's last glyph under the Eye cookie's centre.
+      // The offset from the anchor to the end of the text is measured live off
+      // the tooltip (a Range over the text node gives the ink box, without the
+      // tooltip's own padding), so it follows the A text-size control too.
+      const lbl = document.querySelector('.leaflet-tooltip.place-label');
+      const eye = document.getElementById('uiEyeBtn');
+      let placed = false;
+      if(lbl && eye && mr && lbl.firstChild){
+        const rng = document.createRange();
+        rng.selectNodeContents(lbl);
+        const tr = rng.getBoundingClientRect();
+        const er = eye.getBoundingClientRect();
+        if(tr.width && er.width){
+          const anchorX = map.latLngToContainerPoint([29.07783, -80.91022]).x;
+          const tailX   = (tr.right - mr.left) - anchorX;      // anchor -> "t"
+          const targetX = (er.left + er.width/2) - mr.left;    // Eye centre
+          startPt.x += size.x/2 - (targetX - tailX);
+          placed = true;
+        }
+      }
+      if(!placed) startPt.x += size.x/6;   // pre-v418 fallback: inlet a third in from the left
     }else{
       startPt.x -= size.x/3;
-      const chip  = document.querySelector('#speciesCol .chip[data-species="hogfish"]');
-      const mapEl = document.getElementById('map');
-      if(chip && mapEl){
-        const cr = chip.getBoundingClientRect(), mr = mapEl.getBoundingClientRect();
-        startPt.y += size.y/2 - (cr.top + cr.height/2 - mr.top);
-      }
     }
     map.setView(map.unproject(startPt, z), z, {animate:false});
   };
-  if(COARSE_POINTER) placeLaunchView();
-  else requestAnimationFrame(()=> requestAnimationFrame(placeLaunchView));
+  const runPlacement = ()=> requestAnimationFrame(()=> requestAnimationFrame(placeLaunchView));
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(runPlacement, runPlacement);
+  else runPlacement();
 }
 
 // Our own inlet label, on the centreline of the marked cut (v207 — it used to ride the north

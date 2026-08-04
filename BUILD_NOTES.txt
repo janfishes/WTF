@@ -7,6 +7,46 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 12:16 PM EDT · v418 · Phone Launch View
+------------------------------------------------------------------------------
+Jan: make the iPhone open with Ponce de Leon Inlet horizontally lined up with
+Hogfish and the "t" vertically in line with the centre of the eye cookie, at
+the 1000 ft zoom.
+
+PHONE LAUNCH VIEW. A phone now opens at zoom 14 — where the 66px scale bar
+reads 1000 ft at the inlet's latitude — instead of the wide zoom 10 it has
+opened at since v344, and the view is hung off two pieces of the app's own
+furniture rather than off a fraction of the screen:
+
+  * VERTICALLY, the inlet sits on the Hogfish pill's row in the species
+    column — the same rule the PC has used since v345, so the phone branch
+    now shares that measurement instead of skipping it.
+  * HORIZONTALLY, the last letter of "Ponce de Leon Inlet" — the "t" — lands
+    directly under the centre of the Eye cookie in the header.
+
+The x target is measured off the RENDERED label, not off the pin. The inlet
+tooltip is direction:'center', so the anchor has to sit half a name-width west
+of wherever the "t" is wanted; the offset from anchor to the end of the text is
+read live with a Range over the tooltip's text node (a Range gives the ink box,
+without the tooltip's padding), which means the placement follows the A
+text-size control instead of assuming one name width.
+
+Both placements now also wait on document.fonts.ready before their two frames.
+Space Grotesk arrives late by design — the font links are swapped in with the
+media="print" onload trick — and the name is measurably wider once it lands, so
+measuring before it would have put the "t" in the wrong place. On a real open
+the splash is still up while this happens (the minimum hold is 1.7 s), so
+nothing is seen to move; the pre-v418 placement, the inlet a third in from the
+left edge, survives as the fallback if the label or the cookie can't be
+measured, and the vertical step is skipped if the species column is hidden (the
+Eye's compact and shut states put it away).
+
+Measured headless at 393x852 with a coarse pointer: scale bar 1000 ft, the
+label's right edge within a pixel of the Eye cookie's centre, the label's
+middle within a pixel of the Hogfish pill's middle, and the topo's own printed
+"Ponce De Leon Inlet" still fully readable below it.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 12:10 PM EDT · v417 · Bolder Cookies
 ------------------------------------------------------------------------------
 Jan: bold the cookies in the upper-right banner, and see whether there is room
