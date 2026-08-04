@@ -7,6 +7,75 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 4:35 AM EDT · v414 · Bolder Pill Icons
+------------------------------------------------------------------------------
+Jan, over the course of the build: make the diamond and the inshore icons
+bigger; make the inshore one longer with a pronounced bend in the middle;
+bold the icon outlines and make bigger if needed for clarity; change the
+curvy wave on Offshore to the backwards wave shape from the NOAA buoy;
+add the hover label to the top icons too, the tips like the FAB stack has,
+showing in the open and half-shut Eye states, for all icons except the
+species pills; counts stay; and no icons on the Inshore/Offshore category
+rows — the top-of-map filter buttons only.
+
+The v411 sizing rule is retired. That rule was "ink exactly as tall as the
+count digits (10px), hairline weight"; the set is now 12px of ink as the
+base and every stroke-width is picked so each drawing RENDERS at ~2.0px of
+line whatever its own viewBox scale. Two icons go larger still: the Catches
+diamond at 15px, because it is the app's own catch-pin shape and wanted the
+presence to say so, and the Inshore waterway at 18px (.fic-big/.fic-long).
+
+Retuning any icon from here means: re-trim its viewBox tight to the ink,
+padding every side by HALF the stroke; set stroke-linejoin:round so a sharp
+corner cannot reach past that pad; then solve
+  stroke-width = 2.0 x viewBoxHeight / renderedHeight
+Get the stroke wrong and the icon is merely a little bold. Get the PAD
+wrong and the drawing is silently clipped at the viewBox edge with no
+error anywhere — that is the failure mode to watch for.
+
+Drawings changed:
+
+- Inshore: one pronounced dogleg instead of a run of small wiggles — a
+  straight reach down, a hard bend across a full channel width, a straight
+  reach out. Longer and leaner than the old drawing.
+- Offshore: now the BUOY's own breaking wave, the #waveArt symbol the Waves
+  button and the NDBC pin use, mirrored so it curls the opposite way. Drawn
+  by <use> reference rather than copied, so the two can never drift apart.
+  It is the one filled icon in the set. Its viewBox is trimmed to the
+  symbol's measured ink (0.98 3.52 22.04 16.95) — measure that with
+  svg.getBBox() on the ROOT svg, not getBBox() on the inner <g>, which
+  reports a different space and produced a sliver of a wave first time.
+  This supersedes v412's mirrored-swells drawing, but keeps its intent:
+  the pill's wave points against the buoy icon's.
+
+Hover tips on the filter pills (#filtTip). The same styled bubble the FAB
+stack and the species pills wear, on every pill in the filter wrap, in all
+Eye states. It earns its keep most in the half-shut state, where a pill is
+down to a bare icon. One shared fixed bubble, positioned in JS: the rows
+are flex-wrapped inside a positioned wrap, so a nested bubble would be
+clipped AND would stretch the row it lived in. Hangs below the pill,
+centred on it, left clamped to the window. Fine pointers only, like the
+other two — a phone has no hover and would only get a stuck bubble.
+
+Because of that bubble there are NO title attributes on the pills. v413
+had added titles in the compact state; a title alongside the bubble
+doubles the tooltip, which is the same trap the FAB stack carries a
+warning about. applyUIPillTitles() is gone.
+
+Not done, deliberately: icons for the Inshore and Offshore CATEGORY pills.
+A full set was drawn and tried (pin, pennant, waypoint ring, stacked
+blocks, reef mound) and Jan's call is that only the top-of-map filter
+buttons carry icons. Those category pills therefore keep their words in
+every Eye state — strip the word off a pill with no icon and nothing is
+left but a number. If they ever do get icons, the drawings are in this
+file's history at v414 and the compact rule to widen is
+`body.ui-compact #metaRow .chip .chip-word` -> `#filterWrap`.
+
+Also retired here: two sub-row drawings that lost at 12px and are worth
+not re-trying — a chart-style wreck (hull curve + mast) read as an anchor,
+and a legged platform read as two separate letter T's.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 3:45 AM EDT · v413 · Half Shut Eye
 ------------------------------------------------------------------------------
 Jan: put a half-closed eye between the open and the closed one, and use it
