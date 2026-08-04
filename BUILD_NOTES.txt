@@ -7,6 +7,26 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 9:33 PM EDT · v398 · Consistent Coast Smudge
+------------------------------------------------------------------------------
+Jan: the fade and smudge are not consistent along the coast. Two
+causes found and fixed. (1) The photo's nearshore water is NOT one
+colour coastwide — flat #2A6C76 near Ponce (what v397 matched) but
+darker textured water off Ormond/Daytona — so the 350 m feather
+matched some stretches and printed a traceable soft line on others.
+Feather widened 350 m -> 1200 m in 8 steps (alphas now computed:
+a_j = 1/(j+0.5), last 0.5/F — the telescoping linear-ramp solution),
+wide enough to absorb the local colour differences everywhere.
+(2) Real bug: the feather only drew on tiles where the pad-radius
+`near` search hit — a tile sitting wholly inside the 1.3-2.5 km
+feather zone got NO feather, leaving un-smudged rectangles along the
+coast. The feather now has its own ring search (nearFeather, its own
+path + strokes) and the flat-fill early-out checks it too.
+Verified headless: Ormond/Daytona/NSB-south/Flagler all dissolve
+without a traceable line; Massey area scanned 0 pure-ocean pixels on
+land; z9 offshore still byte-identical 41,88,144.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 9:24 PM EDT · v397 · Seamless Sea Edge + Land-Tile Fix
 ------------------------------------------------------------------------------
 Three changes on the v396 fade, at Jan's direction ("start with the

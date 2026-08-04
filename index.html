@@ -4132,7 +4132,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 397;
+const BUILD_NUM  = 398;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -4509,12 +4509,21 @@ const SEA_FADE_NEAR_R = 42, SEA_FADE_NEAR_G = 108, SEA_FADE_NEAR_B = 118;   // #
 /* v397: the cut line itself is FEATHERED — the paint's alpha ramps 0 -> 1 over
    SEA_EDGE_FEATHER_M just seaward of the painted edge, so the photo's water smudges into
    the paint instead of ending on a hard line. Done with destination-out strokes of
-   decreasing alpha past the pad; the alphas below are solved so the COMPOUND erasure
-   (each stroke multiplies alpha down) comes out as a linear ramp in 4 bands
-   (12.5% / 37.5% / 62.5% / 87.5% paint). Feather reveals up to ~35%-blended photo just
-   past the pad — if USGS junk ever ghosts through here, shrink SEA_EDGE_FEATHER_M. */
-const SEA_EDGE_FEATHER_M = 350;
-const SEA_EDGE_FEATHER_ALPHAS = [0.667, 0.4, 0.286, 0.125];   // stroke j widens by M*j/4; band j nets (j-0.5)/4 paint
+   decreasing alpha past the pad, solved so the COMPOUND erasure (each stroke multiplies
+   alpha down) comes out as a LINEAR ramp: band j of F nets (j-0.5)/F paint, which needs
+   stroke alphas a_j = 1/(j+0.5) for j<F and a_F = 0.5/F (telescoping product).
+   v398: widened 350 m -> 1200 m in 8 steps (Jan: "the fade and smudge are not consistent
+   along the coast") — the photo's water is NOT one colour coastwide (flat #2A6C76 near
+   Ponce, darker textured water off Ormond/Daytona), so a narrow feather matched some
+   stretches and printed a traceable soft line on others; a kilometre-wide ramp absorbs
+   the local differences everywhere. If USGS junk rectangles ever ghost through the blend
+   band, shrink SEA_EDGE_FEATHER_M first. */
+const SEA_EDGE_FEATHER_M = 1200;
+const SEA_EDGE_FEATHER_STEPS = 8;
+const SEA_EDGE_FEATHER_ALPHAS = Array.from({length: SEA_EDGE_FEATHER_STEPS}, (_, i) => {
+  const j = i + 1;
+  return j < SEA_EDGE_FEATHER_STEPS ? 1/(j + 0.5) : 0.5/SEA_EDGE_FEATHER_STEPS;
+});
 const SEA_FADE_STEPS = 8;
 function seaFadeT(z){                    // fade strength by zoom: 0 at z<=9, full from z13 in
   return z <= 9 ? 0 : (z >= 13 ? 1 : (z - 9)/4);
@@ -4715,6 +4724,11 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
   // Rings whose fade band reaches this tile — a wider search than the punch pad,
   // so fully-open-sea tiles within SEA_FADE_M of the coast still get their teal.
   const nearBand = fadeT ? seaNearRings(clip, lonW, latS, lonE, latN, SEA_FADE_M) : [];
+  /* v398: rings whose FEATHER zone reaches this tile. The feather extends pad+1200 m off
+     the rings — at close zooms a tile can sit wholly inside that zone with `near` empty,
+     and drawing the feather only on `near` tiles left un-feathered rectangles along the
+     coast (half of Jan's "fade and smudge are not consistent" report). */
+  const nearFeather = clip.pad > 0 ? seaNearRings(clip, lonW, latS, lonE, latN, SEA_EDGE_FEATHER_M) : [];
   const wins = labelWindows ? seaLabelWindows(coords, size) : [];
   if(!near.length){
     /* Wholly inside the rings -> untouched. This check must NOT be skipped when only
@@ -4722,7 +4736,7 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
        nearBand set, and falling through would base-fill it solid blue with no punch —
        the v396 "blue square on land by Massey Ranch Airpark" bug, fixed v397. */
     if(pointInRings(clip, (lonW+lonE)/2, (latS+latN)/2)) return;
-    if(!wins.length && !nearBand.length){
+    if(!wins.length && !nearBand.length && !nearFeather.length){
       g.fillStyle = OCEAN_DEEP; g.fillRect(gx0, gy0, gx1-gx0, gy1-gy0);
       return;
     }
@@ -4767,14 +4781,24 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
       og.lineJoin = 'round'; og.lineCap = 'round';
       og.lineWidth = 2*clip.pad/mPerPx;
       og.stroke();
-      // v397 feather: partial-alpha erase bands just past the pad — see the constants.
-      for(let j=1; j<=SEA_EDGE_FEATHER_ALPHAS.length; j++){
-        og.strokeStyle = 'rgba(0,0,0,' + SEA_EDGE_FEATHER_ALPHAS[j-1] + ')';
-        og.lineWidth = 2*(clip.pad + SEA_EDGE_FEATHER_M*j/SEA_EDGE_FEATHER_ALPHAS.length)/mPerPx;
-        og.stroke();
-      }
-      og.strokeStyle = '#000';
     }
+  }
+  // v397 feather (v398: own ring set + path, so it draws on every tile its zone touches).
+  if(nearFeather.length){
+    og.lineJoin = 'round'; og.lineCap = 'round';
+    og.beginPath();
+    for(const k of nearFeather){
+      const r = clip.rings[k];
+      og.moveTo(lng2px(r[0]), lat2px(r[1]));
+      for(let i=2;i<r.length;i+=2) og.lineTo(lng2px(r[i]), lat2px(r[i+1]));
+      og.closePath();
+    }
+    for(let j=1; j<=SEA_EDGE_FEATHER_ALPHAS.length; j++){
+      og.strokeStyle = 'rgba(0,0,0,' + SEA_EDGE_FEATHER_ALPHAS[j-1] + ')';
+      og.lineWidth = 2*(clip.pad + SEA_EDGE_FEATHER_M*j/SEA_EDGE_FEATHER_ALPHAS.length)/mPerPx;
+      og.stroke();
+    }
+    og.strokeStyle = '#000';
   }
   // Punch the label windows out of the blue so the printed names show whole.
   for(const w of wins) og.fillRect(w[0], w[1], w[2], w[3]);
