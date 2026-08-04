@@ -7,6 +7,31 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 9:24 PM EDT · v397 · Seamless Sea Edge + Land-Tile Fix
+------------------------------------------------------------------------------
+Three changes on the v396 fade, at Jan's direction ("start with the
+exact water color from the land map", "smudge the line where the
+water is cut off", "blur maybe"):
+(1) The fade now STARTS at the imagery's own nearshore water colour.
+The ImageryTopo tiles paint the water off the beach a byte-uniform
+flat #2A6C76 (sampled 42,108,118 at eight z14 points) — SEA_FADE_NEAR
+switched to it from v396's greener #2A7070, so paint and photo meet
+in the same colour.
+(2) The cut line is FEATHERED: paint alpha ramps 0 -> 1 over
+SEA_EDGE_FEATHER_M (350 m) past the pad, via 4 destination-out
+strokes with alphas solved for a linear compound ramp (a blur
+equivalent, implemented as an alpha ramp because Safari — Jan's
+platform — lacked canvas ctx.filter until very recently). If USGS
+junk ever ghosts through the blend band, shrink SEA_EDGE_FEATHER_M.
+(3) BUG FIX for Jan's "blue square on land left of Massey airport"
+(a v396 regression, live for ~10 min): a land tile 2-5 km inside the
+shore boundary had near empty but nearBand set, skipped the
+wholly-inside early return, and base-filled solid blue with no
+punch. The pointInRings check now runs whenever near is empty.
+Verified headless: Massey Ranch Airpark + z13/z10/z14 views clean,
+no blue squares, edge smudged, z9 still byte-identical 41,88,144.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 9:17 PM EDT · v396 · Nearshore Sea Fade
 ------------------------------------------------------------------------------
 Jan (from the greener-ocean mockup): green the sea near the land,

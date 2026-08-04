@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v397** — Seamless Sea Edge
 - **v396** — Nearshore Sea Fade
 - **v395** — 2px Pin Ring
 - **v394** — Darker Marina Amber

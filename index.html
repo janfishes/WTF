@@ -4132,7 +4132,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 396;
+const BUILD_NUM  = 397;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -4501,7 +4501,20 @@ const OCEAN_MIN_Z = 9;             // z<=8: USGS's own ocean rendering; leave it
    reaching 0 at z9, so the z8/z9 handoff to USGS's own ocean stays byte-identical
    (the whole reason OCEAN_DEEP equals USGS's z<=8 ocean — see the note above). */
 const SEA_FADE_M = 5000;                 // teal fully relaxed to OCEAN_DEEP this far past the painted edge
-const SEA_FADE_NEAR_R = 42, SEA_FADE_NEAR_G = 112, SEA_FADE_NEAR_B = 112;   // #2A7070 at the edge
+/* v397: the fade STARTS at the imagery's own nearshore water colour — the ImageryTopo
+   tiles paint the water off the beach a flat #2A6C76 (sampled 42,108,118 across eight
+   z14 tiles, byte-uniform) — so the photo-to-paint edge all but disappears; v396's
+   #2A7070 teal start was greener than the photo and printed the edge as a line. */
+const SEA_FADE_NEAR_R = 42, SEA_FADE_NEAR_G = 108, SEA_FADE_NEAR_B = 118;   // #2A6C76 at the edge = the tiles' own water
+/* v397: the cut line itself is FEATHERED — the paint's alpha ramps 0 -> 1 over
+   SEA_EDGE_FEATHER_M just seaward of the painted edge, so the photo's water smudges into
+   the paint instead of ending on a hard line. Done with destination-out strokes of
+   decreasing alpha past the pad; the alphas below are solved so the COMPOUND erasure
+   (each stroke multiplies alpha down) comes out as a linear ramp in 4 bands
+   (12.5% / 37.5% / 62.5% / 87.5% paint). Feather reveals up to ~35%-blended photo just
+   past the pad — if USGS junk ever ghosts through here, shrink SEA_EDGE_FEATHER_M. */
+const SEA_EDGE_FEATHER_M = 350;
+const SEA_EDGE_FEATHER_ALPHAS = [0.667, 0.4, 0.286, 0.125];   // stroke j widens by M*j/4; band j nets (j-0.5)/4 paint
 const SEA_FADE_STEPS = 8;
 function seaFadeT(z){                    // fade strength by zoom: 0 at z<=9, full from z13 in
   return z <= 9 ? 0 : (z >= 13 ? 1 : (z - 9)/4);
@@ -4703,9 +4716,13 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
   // so fully-open-sea tiles within SEA_FADE_M of the coast still get their teal.
   const nearBand = fadeT ? seaNearRings(clip, lonW, latS, lonE, latN, SEA_FADE_M) : [];
   const wins = labelWindows ? seaLabelWindows(coords, size) : [];
-  if(!near.length && !nearBand.length){
-    if(pointInRings(clip, (lonW+lonE)/2, (latS+latN)/2)) return;   // wholly inside — untouched
-    if(!wins.length){
+  if(!near.length){
+    /* Wholly inside the rings -> untouched. This check must NOT be skipped when only
+       nearBand is non-empty: a land tile 2-5 km inside the boundary has near empty but
+       nearBand set, and falling through would base-fill it solid blue with no punch —
+       the v396 "blue square on land by Massey Ranch Airpark" bug, fixed v397. */
+    if(pointInRings(clip, (lonW+lonE)/2, (latS+latN)/2)) return;
+    if(!wins.length && !nearBand.length){
       g.fillStyle = OCEAN_DEEP; g.fillRect(gx0, gy0, gx1-gx0, gy1-gy0);
       return;
     }
@@ -4750,6 +4767,13 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
       og.lineJoin = 'round'; og.lineCap = 'round';
       og.lineWidth = 2*clip.pad/mPerPx;
       og.stroke();
+      // v397 feather: partial-alpha erase bands just past the pad — see the constants.
+      for(let j=1; j<=SEA_EDGE_FEATHER_ALPHAS.length; j++){
+        og.strokeStyle = 'rgba(0,0,0,' + SEA_EDGE_FEATHER_ALPHAS[j-1] + ')';
+        og.lineWidth = 2*(clip.pad + SEA_EDGE_FEATHER_M*j/SEA_EDGE_FEATHER_ALPHAS.length)/mPerPx;
+        og.stroke();
+      }
+      og.strokeStyle = '#000';
     }
   }
   // Punch the label windows out of the blue so the printed names show whole.
