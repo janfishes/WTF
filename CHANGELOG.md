@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v426** — One Plus By Spot
 - **v425** — Filters Under Cookies
 - **v420** — Sticky Section Title Bar
 - **v419** — Cookies Above Actions

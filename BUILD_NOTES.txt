@@ -7,6 +7,21 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 3:25 PM EDT · v426 · One Plus By Spot
+------------------------------------------------------------------------------
+Jan: delete the extra + by SPOT in the Help intro's first paragraph.
+
+The intro named the button "+ SPOT" in text AND then drew the plus-icon glyph
+after it, so the reader saw two pluses in a row.  The gold text "+" (the
+.hi-plus span) is gone; the line now reads "SPOT <plus glyph>", matching what
+v424 did for CATCH — the word, then its drawing.
+
+The .hi-plus CSS rule went with it (that span was its only use).  The plain-
+text "+ SPOT" later in the same paragraph ("saved automatically under Your
+tracks in + SPOT") is untouched — it carries no glyph, so it needs the + to
+name the button.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 3:05 PM EDT · v425 · Filters Under Cookies
 ------------------------------------------------------------------------------
 Jan: in Help, the Map Filter section goes under the Cookies section, then the
