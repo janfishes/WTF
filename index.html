@@ -749,7 +749,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
        repair its white-on-accent text, currently 1.86:1 to 3.00:1 in five of the six themes.
        That is Jan's call, not done here. Do NOT set --launch back to any theme's accent.
        Off-state chip text does NOT use it - see #launchToggle. */
-    --inshore:#1e90ff; --offshore:#FFC400; --launch:#4f1d0a; --mark:#e02020;
+    /* v389: --offshore is PURPLE #9e3cff (Jan's pick from the white-text mockup) — the
+       vividest hue family that passes 4.5:1 with WHITE text on the lit pill (4.6:1; the
+       amber could only reach bronze #927000 before white passed). This walks back part of
+       the v302 water measurement above: purple on the flat #295890 ocean is ~1.6:1 (better
+       than the old #7a2fd6's 1.11:1 but nowhere near amber's 4.5:1), so the pin's white
+       ring carries the separation — widened to 3px the same build for exactly that reason.
+       Bluer than TRACK's magenta #c227d6 so the two stay tellable apart. */
+    --inshore:#1e90ff; --offshore:#9e3cff; --launch:#4f1d0a; --mark:#e02020;
     /* Not a pin colour: catch pins are filled per SPECIES (see SPECIES below), never with
        this. --catch only paints the #cropApply button. Left on the old zone purple, which
        nothing else uses any more. */
@@ -1277,7 +1284,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      check which side of that line it lands on. */
   .spot-label.lbl-inshore{background:var(--inshore) !important; color:#000 !important;}
   .spot-label.lbl-launch{background:var(--launch) !important;}
-  .spot-label.lbl-offshore{background:var(--offshore) !important; color:#000 !important;}
+  .spot-label.lbl-offshore{background:var(--offshore) !important; color:#fff !important;}   /* v389: white on the purple (4.6:1; black is 4.56:1) */
   .spot-label::before{display:none !important;}
   /* Compass rose overlay: brass-on-navy bearing pills strung along each line out to an
      offshore site, and the rose graphic itself (fixed pixel size, doesn't scale with zoom). */
@@ -1444,14 +1451,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #speciesCol .chip .dot{background:currentColor !important;}
   .chip[data-zone="inshore"]{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid var(--inshore) !important; box-shadow:none !important;}
-  /* PURE BLACK text on the lit zone fills, not white and not a near-black (v303, Jan could not
-     read the pills). These fills are bright - white sits at 1.60:1 on the amber and 3.2:1 on
-     the v306 inshore blue - so the text has to be dark. v302 used the #04141e near-black;
-     #000 buys another ~7% contrast and, more to the point, is the colour that actually looks
-     like ink on a bright pill in sun: 6.5:1 on the blue, 12.6:1 on the amber. The dark
-     text-shadow from #metaRow below is killed on these two, since it existed to lift WHITE
-     text off a bright ground and only muddies black text. */
-  .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#000 !important; border-color:#fff !important; text-shadow:none !important;}
+  /* v389: WHITE text on every lit pill (Jan's pick from the mockup — one rule for the whole
+     row). White cannot pass on the bright pin blue #1e90ff (3.2:1), so the lit Inshore FILL
+     darkens a step to #0073e3 (white 4.6:1) while the PINS and the off-state border keep
+     #1e90ff. Offshore's fill is var(--offshore) itself — the v389 purple takes white at
+     4.6:1 directly, so pill and pins stay matched. (History: v303 tried white on the old
+     bright fills and Jan could not read the pills; the fix then was black ink, the fix now
+     is darker fills.) */
+  .chip[data-zone="inshore"].active{background:#0073e3 !important; color:#fff !important; border-color:#fff !important; text-shadow:none !important;}
   /* v388: NO text-shadow on the zone/launch chips any more. The 0 2px 3px dark shadow
      dated from when off-state text was saturated colour on black; with v387's white
      text a dark shadow only blurs the letterforms (Jan: "hard to read on dark fills
@@ -1459,8 +1466,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      killed it; now no state carries it. */
   #metaRow .chip[data-zone],
   #metaRow #launchToggle{text-shadow:none !important;}
-  /* No shadow on lit Labels - it is BLACK text on the bright orange fill (v306), same as the
-     lit zone pills, and a dark shadow only muddies black text. */
+  /* No shadow on lit Labels (v389: white text on the rust fill — shadows stay off, v388). */
   #metaRow #labelsToggle.active{text-shadow:none !important;}
   /* OFF gets no shadow at all - it is orange text on black, where a dark shadow does nothing. */
   #metaRow #labelsToggle:not(.active){text-shadow:none !important;}
@@ -1469,11 +1475,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      The zone colour moves to the BORDER alone, which still says which pin family the pill
      switches — same pattern as the species column's accent rings. The LIT fills keep BLACK
      text: white is only 3.2:1 on the inshore blue, 1.6:1 on the amber, 2.9:1 on the orange
-     (the v303 unreadable-pills lesson), so there the ratio can NOT be met and black stays. */
+     (the v303 unreadable-pills lesson), so there the ratio can NOT be met and black stays.
+     v389 superseded the lit-state half of this: the lit fills themselves changed (inshore
+     #0073e3, offshore purple, Labels #c45200) so every lit pill now takes white — see the
+     lit-pill comment below. The off-state half above still holds as written. */
   .chip[data-zone="inshore"]:not(.active){opacity:1; color:#fff !important; border-color:var(--inshore) !important;}
   .chip[data-zone="offshore"]{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid var(--offshore) !important; box-shadow:none !important;}
   .chip[data-zone="offshore"]:not(.active){opacity:1; color:#fff !important; border-color:var(--offshore) !important;}
-  .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#000 !important; border-color:#fff !important; box-shadow:none; text-shadow:none !important;}
+  .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; box-shadow:none; text-shadow:none !important;}
   .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:800; border:1px solid var(--launch) !important; box-shadow:none !important;}
   .chip[data-zone="launch"]:not(.active){opacity:1; color:#b5713a !important; border-color:#b5713a !important;}
   .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
@@ -1491,7 +1500,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   #inshoreSubRow .chip .chip-total{font-size:calc(12px * var(--tsb));}
   #inshoreSubRow .chip.active{
-    background:var(--inshore) !important; color:#000 !important;
+    background:#0073e3 !important; color:#fff !important;   /* v389: matches the lit Inshore pill */
     border-color:#fff !important; text-shadow:none;
   }
   /* v324: the offshore category row — same shape in Offshore amber; the dimmed
@@ -1501,12 +1510,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #offshoreSubRow .chip{
     padding:5px 8px 4px; font-size:calc(13px * var(--tsb));
     background:#000 !important; color:var(--offshore) !important;
-    border:1px solid #806013 !important; box-shadow:none !important;
+    border:1px solid #55229c !important; box-shadow:none !important;   /* v389: dimmed purple, was amber #806013 */
     text-shadow:none;   /* v388: dark shadow on a black chip does nothing but blur */
   }
   #offshoreSubRow .chip .chip-total{font-size:calc(12px * var(--tsb));}
   #offshoreSubRow .chip.active{
-    background:var(--offshore) !important; color:#000 !important;
+    background:var(--offshore) !important; color:#fff !important;   /* v389: white on the purple */
     border-color:#fff !important; text-shadow:none;
   }
   .chip.sp.active{box-shadow:0 0 0 1px currentColor inset;}
@@ -1528,8 +1537,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#000; font-weight:800;}
   /* v306: lit Labels is ORANGE (was blue v303-v305) - Inshore went back to blue, so Labels
      took the orange Inshore vacated; still a hue no pin or zone uses, so Labels cannot be
-     mistaken for a filter. Black text on #FF6A00 is 6.5:1 (white is only 2.9:1). */
-  #labelsToggle.active{background:#FF6A00 !important; color:#000 !important; border-color:#ffffff !important;}
+     mistaken for a filter. v389: the lit fill darkens to the rust #c45200 so it takes WHITE
+     text (4.6:1) with the rest of the row; OFF keeps the vivid #FF6A00 ring. */
+  #labelsToggle.active{background:#c45200 !important; color:#fff !important; border-color:#ffffff !important;}
   .chip.util.active{border-color:var(--fog); box-shadow:0 0 0 1px var(--fog) inset;}
   /* ---- Tide pills in the Add/Edit Catch sheet (High/Low/Falling/Rising) ----
      SELECTED = white fill, black text + icon, black outline (readable).
@@ -1550,9 +1560,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
      not yet decided a type; as soon as a location is set, one pill lights up. */
   #addSpotZoneRow .chip{opacity:.55 !important; transition:opacity .15s, background .15s, color .15s;}
   #addSpotZoneRow .chip[data-zone="inshore"]:not(.active){background:#000 !important; color:var(--inshore) !important; border-color:#0f4a80 !important; box-shadow:none !important;}
-  #addSpotZoneRow .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#000 !important; border-color:#fff !important; opacity:1 !important; text-shadow:none !important;}
-  #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:var(--offshore) !important; border-color:#806013 !important; box-shadow:none !important;}
-  #addSpotZoneRow .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#000 !important; border-color:#fff !important; opacity:1 !important; text-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="inshore"].active{background:#0073e3 !important; color:#fff !important; border-color:#fff !important; opacity:1 !important; text-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="offshore"]:not(.active){background:#000 !important; color:var(--offshore) !important; border-color:#55229c !important; box-shadow:none !important;}
+  #addSpotZoneRow .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important; text-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="launch"]:not(.active){background:#000 !important; color:#b5713a !important; border-color:#4a2610 !important; box-shadow:none !important;}
   #addSpotZoneRow .chip[data-zone="launch"].active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important; opacity:1 !important;}
   /* The line under the Type pills that says how the type was chosen. */
@@ -2121,7 +2131,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Markers ---------- */
   .spot-marker{
-    border-radius:50%; border:2px solid #fff;
+    /* v389: ring widened 2px -> 3px (Jan: "as bright white as possible"). The colour was
+       already pure #fff; at 14px pin size width is what reads as brightness, and the ring
+       carries the pin's separation from the water now that offshore is purple (~1.6:1 on
+       the flat ocean fill — see the --offshore note in :root). */
+    border-radius:50%; border:3px solid #fff;
     box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.5);
   }
   .spot-marker.dim{opacity:.2;}
@@ -2146,7 +2160,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      dark river water, the flat blue ocean, white chart areas and pale sand alike - which no
      single species colour did. The outer rgba(0,0,0,.6) ring still separates it from dark
      water; the white border is what separates it from everything else. */
-  .catch-marker{width:14px; height:14px; background:#000; border:2px solid #fff; transform:rotate(45deg); box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.5);}
+  .catch-marker{width:14px; height:14px; background:#000; border:3px solid #fff; transform:rotate(45deg); box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.5);}   /* v389: 3px ring like .spot-marker */
   .catch-marker.dim{opacity:.18;}
   /* ---- Count badges on map pins ----
      .catch-count sits on a merged catch diamond (several catches within 50 ft);
@@ -2512,12 +2526,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   /* Easter egg. Sized against the viewport so it fits a phone screen without scrolling and
      gets more room on a desktop; the artist's credit is part of the artwork itself. */
-  /* Reuses the offshore pin exactly — same 14px, same var(--offshore) fill (amber since
-     v302, purple before it), same white ring — so it reads as one of the offshore pins
-     rather than as a separate kind of marker. Keep it on the var, not a literal. */
+  /* Reuses the offshore pin exactly — same 14px, same var(--offshore) fill (purple again
+     since v389, amber v302–v388, purple before that), same white ring — so it reads as one
+     of the offshore pins rather than as a separate kind of marker. Keep it on the var, not
+     a literal. */
   .egg-pin{
     width:14px; height:14px; box-sizing:border-box; border-radius:50%;
-    background:var(--offshore); border:2px solid #fff;
+    background:var(--offshore); border:3px solid #fff;
     box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 5px rgba(0,0,0,.5);
   }
   .egg-img{
@@ -4115,7 +4130,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 388;
+const BUILD_NUM  = 389;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

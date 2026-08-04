@@ -7,6 +7,30 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:26 PM EDT · v389 · Purple Offshore + White Lit Text
+------------------------------------------------------------------------------
+Jan picked purple from the white-text mockup and asked for the pins
+too, plus the brightest possible white ring on all pins. --offshore
+is now PURPLE #9e3cff (amber #FFC400 since v302; purple #7a2fd6
+before that — a homecoming): pins, name tags, sub-row, off-state pill
+ring, + sheets, easter-egg pin all follow the var. Every LIT pill now
+takes WHITE text: Offshore's purple passes directly (4.6:1); Inshore's
+lit fill darkens to #0073e3 (pins/border keep #1e90ff — white is only
+3.2:1 on the pin blue); Labels' lit fill darkens to rust #c45200 (OFF
+keeps the vivid #FF6A00 ring). Sub-rows and the + Catch / + Spot
+sheets match. Offshore name tags flip to white text (4.6:1 on the
+purple). Dimmed amber borders (#806013) became dimmed purple #55229c.
+Pin rings: already pure #fff, so "brighter" = WIDER — 3px (was 2px)
+on spot pins, catch diamonds and the egg pin; at 14px the ring is
+what separates a pin from the water, and purple needs it (measured
+~1.6:1 on the flat #295890 ocean vs amber's 4.5:1 — the v302 lesson;
+the fat ring is the counterweight). Purple is bluer than TRACK's
+magenta #c227d6 so the two stay apart. Nav-aid amber junction dots
+(Hi Res & ICW) are unrelated and unchanged. Verified headless:
+computed colors on every pill state, pin border 3px #fff, purple
+pins/tags over the ocean at z11.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:15 PM EDT · v388 · Pill Text Shadow Removed
 ------------------------------------------------------------------------------
 Jan: the shadow makes the text hard to read on dark fills too. The
