@@ -1026,15 +1026,37 @@ svg.leaflet-image-layer.leaflet-interactive path {
      uniform group in the circle; the small A is then dropped onto the shared baseline inside
      its own box. Aligning the raw text boxes instead left the pair sitting ~5px low, because
      the small A's short line box shrank the group and pulled its centre down. */
-  /* Eye cookie: hides the FAB column and the species pills so the chart underneath can be read
-     without map furniture over it. Open eye = they are showing, shut eye = they are hidden, which
-     is the state of the map rather than the action, matching how the other cookies read. */
+  /* Eye cookie: three states, tapped in a cycle, each one showing less map furniture than the
+     last. OPEN eye = everything is showing. HALF-SHUT eye = the words come off the top filter
+     pills and the FAB stack, leaving the icons (and the pills' live totals) alone, and the
+     species column goes away until Catches is tapped. SHUT eye = the FAB column and the species
+     pills are off the map altogether so the chart underneath can be read. The drawing always
+     shows the state of the map rather than the action, matching how the other cookies read. */
   #uiEyeBtn svg{display:block;}
-  #uiEyeBtn .eye-shut{display:none;}
-  body.ui-hidden #uiEyeBtn .eye-open{display:none;}
+  #uiEyeBtn .eye-half, #uiEyeBtn .eye-shut{display:none;}
+  body.ui-compact #uiEyeBtn .eye-open, body.ui-hidden #uiEyeBtn .eye-open{display:none;}
+  body.ui-compact #uiEyeBtn .eye-half{display:block;}
   body.ui-hidden #uiEyeBtn .eye-shut{display:block;}
   body.ui-hidden .fab-col, body.ui-hidden #speciesCol,
   body.ui-hidden .tide-station-icon{display:none !important;}
+
+  /* ---- Half-shut: icons only ----
+     The FAB labels are bare text nodes (the map-mode writer needs its label to stay one), so
+     they are collapsed with font-size rather than hidden by selector; .fab-tip sets its own
+     size, so the hover tips still read at full size. The pills' words ARE in spans, and their
+     totals stay: an icon with no number would say nothing about how many pins are lit. */
+  body.ui-compact .fab{font-size:0; padding:4px 7px;}
+  body.ui-compact .fab svg{margin-right:0;}
+  body.ui-compact #locateBtn svg.mark-hint{margin-left:5px;}
+  body.ui-compact #metaRow .chip .chip-word{display:none;}
+  body.ui-compact #metaRow .chip .fic{margin-right:0;}
+  body.ui-compact #metaRow .chip .chip-total{margin-left:5px;}
+  /* Labels is the one top pill with no total, so with its word gone it is a lone icon —
+     it needs its own even padding or it sits off centre in its pill. */
+  body.ui-compact #metaRow #labelsToggle{padding:6px 9px;}
+  /* The species column is the captain's crew: in the half-shut state it rides with Catches,
+     appearing when Catches is switched on and going away when it is switched back off. */
+  body.ui-compact:not(.catches-on) #speciesCol{display:none !important;}
   /* Gauge pins ride with the Tides button instead of living on the chart full time. Same
      display:none the Eye uses, and on the marker element rather than the glyph, so a hidden
      gauge goes hit area and all and cannot be tapped by accident. The class starts ON the
@@ -2737,8 +2759,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-btn" id="helpBtn" title="Help">?</button>
       <button class="help-btn" id="themeBtn" title="Theme">🎨</button>
       <button class="help-btn" id="sizeBtn" title="Text size" aria-label="Text size"><span class="a-lg">A</span><span class="a-sm">A</span></button>
-      <button class="help-btn" id="uiEyeBtn" title="Hide the buttons and species pills" aria-label="Hide the buttons and species pills" aria-pressed="false">
+      <button class="help-btn" id="uiEyeBtn" title="Hide the button words and species pills" aria-label="Hide the button words and species pills" aria-pressed="false">
         <svg class="eye-open" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.6 12S5.5 5.4 12 5.4 22.4 12 22.4 12 18.5 18.6 12 18.6 1.6 12 1.6 12Z"></path><circle cx="12" cy="12" r="3.1"></circle></svg>
+        <!-- Half-shut eye: the lid has come down to the middle, so the lower lash line and the
+             bottom half of the pupil are all that is left. It sits between the open and the shut
+             drawings because its state does — the furniture is still there, wearing half of it. -->
+        <svg class="eye-half" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.6 12S5.5 18.6 12 18.6 22.4 12 22.4 12"></path><path d="M2.2 11.4H21.8"></path><path d="M8.9 12a3.1 3.1 0 0 0 6.2 0"></path></svg>
         <svg class="eye-shut" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.6 9.6S5.5 15.4 12 15.4 22.4 9.6 22.4 9.6"></path><path d="M4.6 13.4 3 15.6M9 15.1 8.3 17.7M15 15.1 15.7 17.7M19.4 13.4 21 15.6"></path></svg>
       </button>
     </div>
@@ -3022,7 +3048,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-compass"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"></circle><path d="M12 4 13.9 10.1 20 12 13.9 13.9 12 20 10.1 13.9 4 12 10.1 10.1Z"></path></svg> Compass<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-compass">
       <p class="sheet-note">Tapping <svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 4 13.9 10.1 20 12 13.9 13.9 12 20 10.1 13.9 4 12 10.1 10.1Z"></path></svg> <b>Compass</b> puts a compass rose at NOAA's official position for Ponce de Leon Inlet (<b>29°04.672&#8242; N 80°54.511&#8242; W</b>), right in the inlet mouth, and gives you the <b>heading (magnetic)</b> and <b>distance (SM)</b> to any offshore pin you subsequently tap. Switch it on and only the rose appears. <b>Hover a pin on a computer, or tap one on a phone</b>, and a single dashed line runs from the rose center out to that pin. Tap on one or more pins, and each leg is labeled the same way with heading and distance. With a <b>single pin</b> up, the label also carries the <b>reciprocal</b> heading. Read as to/from, the first number is the course out, the second is the course to the inlet. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The compass identifies the magnetic variation for the current year under the rose (e.g., <b>MAGNETIC · VAR 7.3°W 2026</b>). The compass rose only works on <b>offshore</b> sites.</p>
-      <p class="sheet-note">After you tap <b>Compass</b>, tap the <b>Eye</b> to hide the Species and Action buttons for better viewing. Tap an offshore mark and you get the leg from the rose out to it. Tap a second and a leg is added <b>from the first mark to the second</b> — the inlet leg is not dropped, so the line reads <b>rose → first ground → next ground</b> and so on for as many pins as you tap, with each leg carrying its own heading and distance to the next pin. <b>Every pin on the route also gets a ring around it</b>, so the run reads as a chain of ringed pins linked by dashed lines. Wherever a route gets busy the labels sort themselves out: each new leg looks for a clear stretch of its own line and steps around the labels already drawn. Tapping any mark that is already on the route — or tapping off the route — clears the <b>whole route</b> in one tap.</p>
+      <p class="sheet-note">After you tap <b>Compass</b>, tap the <b>Eye</b> twice to take the Species and Action buttons off the map for better viewing. Tap an offshore mark and you get the leg from the rose out to it. Tap a second and a leg is added <b>from the first mark to the second</b> — the inlet leg is not dropped, so the line reads <b>rose → first ground → next ground</b> and so on for as many pins as you tap, with each leg carrying its own heading and distance to the next pin. <b>Every pin on the route also gets a ring around it</b>, so the run reads as a chain of ringed pins linked by dashed lines. Wherever a route gets busy the labels sort themselves out: each new leg looks for a clear stretch of its own line and steps around the labels already drawn. Tapping any mark that is already on the route — or tapping off the route — clears the <b>whole route</b> in one tap.</p>
       <p class="sheet-note"><b>CAUTION.</b> The compass rose and the offshore popups measure from the <b>same point</b>. Every figure this app works out — the rose's lines, and the distance and bearing in every offshore popup and drop list — runs from NOAA's official position for Ponce de Leon Inlet at <b>29°04.672&#8242; N 80°54.511&#8242; W</b> (29.077867, −80.908517), in the mouth by the jetties, where the rose sits and the inlet pin stands. The one exception is a Volusia County Reef (CR) site's printed distance, which is FWC's published figure rather than one this app worked out. FWC's origin was not published with the records — it was recovered by fitting all 191 county drop coordinates against their stated distances. FWC measures from <b>29°04.500&#8242; N 80°55.500&#8242; W</b> (29.0750, −80.9250), 0.88 nm (about 1.0 sm) at 259° true (266° magnetic with the app's 7.3° variation), so FWC's origin is just under a mile WSW of NOAA's official inlet position, up the mouth channel toward the ICW. Consequently, for the CR sites, the runs from the app's rose can read up to about a mile different from the number in the site's popup; the bearings agree everywhere. A site-to-site leg is measured between the two marks themselves, so there is no concern there. The variation at Ponce Inlet is taken as <b>7.3° west</b> (WMM, 2026), added to the true bearing the geometry gives, so nothing here should disagree with the compass in front of you. It drifts a little further west each year, so it is worth a re-check every few years. The one figure left in true degrees is the buoy's <b>Mean Wave Direction</b>, which is NOAA's own reading rather than anything this app worked out — and its popup says so. Everything else — every bearing, every drop-list distance, every other site's nm/sm figure, and the rose's own lines — is measured from the same point the rose sits on and the Ponce de Leon Inlet pin marks.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mapview"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite / Hi Res &amp; ICW / Street Map<span class="ht-caret">▸</span></button>
@@ -3106,7 +3132,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-eye"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.6 12S5.5 5.4 12 5.4 22.4 12 22.4 12 18.5 18.6 12 18.6 1.6 12 1.6 12Z"></path><circle cx="12" cy="12" r="3.1"></circle></svg> Eye<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-eye">
-      <p class="sheet-note">The open/closed eye icon sits in the top-right corner of the header. Tap the <b>eye</b> icon and it closes, clearing the map buttons out of the way, leaving your selected fishing pins and the map control buttons. An <b>open eye</b> means your selections are showing; a <b>closed eye</b> means they are hidden, so the cookie always reads as the state of the map rather than as the action. Nothing is reset or unloaded: your filters, species switches and any compass route stay exactly as they were and reappear untouched. Like the theme and the text size, the setting is remembered on your device.</p>
+      <p class="sheet-note">The eye icon sits in the top-right corner of the header, and it has <b>three settings</b> — each tap moves to the next one and clears a little more off the chart.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 12S5.5 5.4 12 5.4 22.4 12 22.4 12 18.5 18.6 12 18.6 1.6 12 1.6 12Z"></path><circle cx="12" cy="12" r="3.1"></circle></svg> <b>Open eye</b> — everything is showing.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 12S5.5 18.6 12 18.6 22.4 12 22.4 12"></path><path d="M2.2 11.4H21.8"></path><path d="M8.9 12a3.1 3.1 0 0 0 6.2 0"></path></svg> <b>Half-shut eye</b> — the words come off the filter pills across the top and off the button stack down the right, leaving just the icons, and the filter pills keep their running totals so you can still see how many pins each one is showing. The species pills go away too, and from here they ride with <b>Catches</b>: tap Catches and the species list comes out beside it, tap Catches again and it goes back away. Everything still works exactly as it did — this only takes the lettering off the chart.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 9.6S5.5 15.4 12 15.4 22.4 9.6 22.4 9.6"></path><path d="M4.6 13.4 3 15.6M9 15.1 8.3 17.7M15 15.1 15.7 17.7M19.4 13.4 21 15.6"></path></svg> <b>Shut eye</b> — the button stack and the species pills come off the map altogether, leaving your fishing pins and the map's own controls. One more tap opens the eye again.</p>
+      <p class="sheet-note">The drawing always reads as the state of the map rather than as the action, the same way the other header cookies do. Nothing is reset or unloaded in any setting: your filters, species switches and any compass route stay exactly as they were and come back untouched. Like the theme and the text size, the setting is remembered on your device.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-credits"><span class="ht-g">ⓘ</span>Map Credits<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-credits">
@@ -4185,7 +4215,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 412;
+const BUILD_NUM  = 413;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -6512,7 +6542,14 @@ async function loadAll(){
     const ts = await storeGet(TEXT_SCALE_KEY);
     applyTextScale(ts == null ? 0 : (parseInt(ts, 10) || 0));
   }catch(e){ applyTextScale(0); }
-  try{ applyUIHidden((await storeGet(UI_HIDDEN_KEY)) === '1'); }catch(e){}
+  /* The Eye cookie used to be a plain on/off and saved '1'/'0'; it now saves the state name.
+     Both shapes are read here so a device that last ran the older build starts where it left
+     off. loadAll() runs at the very bottom of the script, so the state machine and the filter
+     pills it titles both exist by now. */
+  try{
+    const saved = await storeGet(UI_HIDDEN_KEY);
+    applyUIState(saved === '1' ? 'hidden' : (saved === '0' ? 'full' : saved));
+  }catch(e){}
   /* Round 32 locked the built-in lag table; round 33 clears the storage behind it. Any
      device-saved override written before the lock is deleted here, once, so a future read
      path can never resurrect a stale lag. Built-in lags now live ONLY in TIDE_LAG_STATIONS. */
@@ -7602,6 +7639,10 @@ function reconcileSpeciesWithLog(){
 function setShowCatches(on){
   showCatches = on;
   document.getElementById('catchToggle').classList.toggle('active', on);
+  /* The half-shut Eye hangs the species column off this switch (see the ui-compact rules):
+     Catches on brings the pills out, Catches off puts them away. The class is kept up to
+     date in every state so the column is already right when the Eye changes. */
+  document.body.classList.toggle('catches-on', on);
   if(on){
     // A species picked while Catches was off is a deliberate narrow — honor it.
     if(activeSpecies.size === 0) loggedSpeciesSet().forEach(k=> activeSpecies.add(k));
@@ -7640,7 +7681,9 @@ const FILTER_ICONS = {
 const catchToggle = document.createElement('div');
 catchToggle.className = 'chip util filter-count';
 catchToggle.id = 'catchToggle';
-catchToggle.innerHTML = FILTER_ICONS.catches + 'Catches<span class="chip-total" id="catchCount">0</span>';
+/* The pill's word lives in its own span (not a bare text node) so the half-shut Eye can take
+   the words off the top row and leave the icon and the total standing. */
+catchToggle.innerHTML = FILTER_ICONS.catches + '<span class="chip-word">Catches</span><span class="chip-total" id="catchCount">0</span>';
 metaRow.appendChild(catchToggle);
 
 Object.entries(ZONES).forEach(([key,z])=>{
@@ -7648,7 +7691,7 @@ Object.entries(ZONES).forEach(([key,z])=>{
   chip.className = 'chip filter-count';
   chip.dataset.zone = key;
   chip.style.color = z.color;
-  chip.innerHTML = `${FILTER_ICONS[key] || ''}${FILTER_ZONE_LABELS[key] || z.label}<span class="chip-total" id="${key}Count">0</span>`;
+  chip.innerHTML = `${FILTER_ICONS[key] || ''}<span class="chip-word">${FILTER_ZONE_LABELS[key] || z.label}</span><span class="chip-total" id="${key}Count">0</span>`;
   chip.addEventListener('click', ()=>{
     if(activeZones.has(key)){ activeZones.delete(key); chip.classList.remove('active'); }
     else {
@@ -7736,13 +7779,13 @@ metaRow.appendChild(chipBreak);
 const launchToggle = document.createElement('div');
 launchToggle.className = 'chip util filter-count';
 launchToggle.id = 'launchToggle';
-launchToggle.innerHTML = FILTER_ICONS.launch + 'Launches<span class="chip-total" id="launchCount">0</span>';
+launchToggle.innerHTML = FILTER_ICONS.launch + '<span class="chip-word">Launches</span><span class="chip-total" id="launchCount">0</span>';
 metaRow.appendChild(launchToggle);
 
 const labelsToggle = document.createElement('div');
 labelsToggle.className = 'chip util filter-count';
 labelsToggle.id = 'labelsToggle';
-labelsToggle.innerHTML = FILTER_ICONS.labels + 'Labels';
+labelsToggle.innerHTML = FILTER_ICONS.labels + '<span class="chip-word">Labels</span>';
 metaRow.appendChild(labelsToggle);
 
 /* v211: the species column starts below the filter row, which owns the full top edge.
@@ -13508,18 +13551,57 @@ document.getElementById('sizeBtn').addEventListener('click', async ()=>{
   try{ await storeSet(TEXT_SCALE_KEY, String(textStepIdx)); }catch(e){}
 });
 
-/* ---------- Eye cookie: hide the map furniture ----------
-   Takes the FAB column and the species pills off the map so the water underneath can be read.
-   Nothing is unloaded or reset — the buttons come back exactly as they were, filters and all —
-   and the state is saved per device like the theme and the text size. */
+/* ---------- Eye cookie: turn the map furniture down, then off ----------
+   Three states, cycled by tapping the eye, each one leaving less over the chart:
+
+     full     open eye       everything showing
+     compact  half-shut eye  the words come off the top filter pills and the FAB stack —
+                             icons only, plus the pills' live totals, which are the whole
+                             point of those pills — and the species column rides with the
+                             Catches switch instead of standing there all the time
+     hidden   shut eye       the FAB column, the species pills and the gauge pins are off
+                             the map altogether
+
+   Nothing is unloaded or reset in any state — the buttons come back exactly as they were,
+   filters and all — and the state is saved per device like the theme and the text size. */
 const UI_HIDDEN_KEY = 'ui-hidden';
-function applyUIHidden(hidden){
-  document.body.classList.toggle('ui-hidden', !!hidden);
+const UI_STATES = ['full','compact','hidden'];
+let uiState = 'full';
+/* Words gone means the pill needs to say what it is some other way, so each top pill takes
+   a title in the compact state and gives it back in the others (a title duplicating a
+   visible word would only double up on hover). */
+const UI_PILL_TITLES = {
+  catchToggle:'Catches', labelsToggle:'Labels', launchToggle:'Launches'
+};
+function applyUIPillTitles(compact){
+  Object.entries(UI_PILL_TITLES).forEach(([id,word])=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(compact) el.title = word; else el.removeAttribute('title');
+  });
+  document.querySelectorAll('#metaRow .chip[data-zone]').forEach(el=>{
+    const w = el.querySelector('.chip-word');
+    if(compact && w) el.title = w.textContent; else el.removeAttribute('title');
+  });
+}
+const UI_EYE_TITLES = {
+  // Each title names what the NEXT tap does, the way a button label should.
+  full   : 'Hide the button words and species pills',
+  compact: 'Hide the buttons and species pills',
+  hidden : 'Show the buttons and species pills'
+};
+function applyUIState(state){
+  uiState = UI_STATES.includes(state) ? state : 'full';
+  const hidden = uiState === 'hidden', compact = uiState === 'compact';
+  document.body.classList.toggle('ui-hidden', hidden);
+  document.body.classList.toggle('ui-compact', compact);
+  applyUIPillTitles(compact);
   const b = document.getElementById('uiEyeBtn');
   if(b){
-    b.title = hidden ? 'Show the buttons and species pills' : 'Hide the buttons and species pills';
+    b.title = UI_EYE_TITLES[uiState];
     b.setAttribute('aria-label', b.title);
-    b.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+    // Not a plain on/off any more, so the pressed state reads as "showing less than all".
+    b.setAttribute('aria-pressed', uiState === 'full' ? 'false' : 'true');
   }
   // A gauge popup left open would hang over a map whose gauge pins have just gone, so those
   // close on the way out. Everything else is left alone.
@@ -13530,10 +13612,13 @@ function applyUIHidden(hidden){
   // been laid out around furniture that is now gone.
   if(typeof map !== 'undefined' && map._popup) map._popup.update();
 }
+/* Kept for the older call site (and any saved '1'/'0' cookie): true still means all the way
+   shut, false all the way open. */
+function applyUIHidden(hidden){ applyUIState(hidden ? 'hidden' : 'full'); }
 document.getElementById('uiEyeBtn').addEventListener('click', async ()=>{
-  const hidden = !document.body.classList.contains('ui-hidden');
-  applyUIHidden(hidden);
-  try{ await storeSet(UI_HIDDEN_KEY, hidden ? '1' : '0'); }catch(e){}
+  const next = UI_STATES[(UI_STATES.indexOf(uiState) + 1) % UI_STATES.length];
+  applyUIState(next);
+  try{ await storeSet(UI_HIDDEN_KEY, next); }catch(e){}
 });
 
 const themeSheet = document.getElementById('themeSheet');

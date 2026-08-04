@@ -7,6 +7,69 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 3:45 AM EDT · v413 · Half Shut Eye
+------------------------------------------------------------------------------
+Jan: put a half-closed eye between the open and the closed one, and use it
+to take the words off the top filter pills and the button stack, leaving
+the icons and the totals where a total is needed — and hide the species
+pills until Catches is tapped, tapping again to hide them.
+
+The Eye cookie is now a three-state cycle instead of an on/off:
+
+  open eye       everything showing (unchanged)
+  half-shut eye  words off the top pills and the FAB stack; icons only,
+                 plus the pills' live totals. Species column rides with
+                 the Catches switch — on brings it out, off puts it away.
+  shut eye       FAB column, species pills and gauge pins off the map
+                 (the old "closed" state, unchanged)
+
+The half-shut drawing is the lid down to the middle: a flat lid line, the
+lower lash curve and the bottom half of the pupil. It sits between the
+other two because its state does.
+
+How the words come off:
+
+- FAB labels are bare text nodes, and the map-mode writer needs its label
+  to STAY one (it sets this.lastChild), so they are collapsed with
+  font-size:0 on .fab rather than hidden by selector. .fab-tip declares
+  its own font-size, so the hover tips still read at full size. Padding
+  evens out to 4px 7px so an icon-only button is not lopsided.
+- The top pills' words were bare text nodes too; they are now wrapped in
+  <span class="chip-word"> by the four builders (Catches, the two zone
+  pills, Launches, Labels) so CSS can take just the word. The .fic icon
+  margin and the .chip-total margin close up to keep the icon/number pair
+  tight. Labels, the one top pill with no total, gets even padding so its
+  lone icon centres.
+- Words gone means a pill needs to say what it is some other way, so each
+  top pill takes a title attribute in the compact state only and gives it
+  back in the other two (a title duplicating a visible word would just
+  double up on hover).
+
+The species column hangs off a new body.catches-on class, toggled in
+setShowCatches() — which is already the one and only writer of
+showCatches, so the class cannot drift. It is kept up to date in every
+Eye state, so the column is already right the moment the Eye changes.
+
+Storage: the cookie saves the state NAME now ('full' / 'compact' /
+'hidden') under the same ui-hidden key. The startup read accepts the old
+'1'/'0' shape too, so a device coming from v412 or earlier starts where
+it left off. applyUIHidden(bool) is kept as a thin wrapper on
+applyUIState() for the old call shape.
+
+Note for the next person: loadAll() runs at the very bottom of the script,
+which is why the startup restore can call applyUIState() at all — the
+state machine's const/let and the filter pills it titles are both live by
+then. Moving that restore earlier would land it in the temporal dead zone
+and, inside its try/catch, fail silently.
+
+Help's Eye topic is rewritten as three illustrated lines (each with its
+own eye drawing inline), and the Compass topic's aside now says to tap the
+Eye twice to clear the map.
+
+Side effect worth having: at phone width the filter row stops wrapping to
+two lines in the compact state — all five pills fit on one.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 3:30 AM EDT · v412 · Offshore Wave Flipped
 ------------------------------------------------------------------------------
 Jan: point the Offshore pill's wave opposite the Waves (buoy) icon. The

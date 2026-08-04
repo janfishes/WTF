@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v413** — Half Shut Eye
 - **v412** — Offshore Wave Flipped
 - **v411** — Pill Icons Refined
 - **v410** — Filter Pill Icons
