@@ -1119,7 +1119,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #speciesCol .chip .dot{width:6px; height:6px; border-radius:1px; transform:rotate(45deg);}
 
   /* ---------- Map ---------- */
-  #map{flex:1 1 auto; position:relative; background:var(--map-bg); min-height:200px;}
+  /* The press-and-hold that toggles depth contours is a long press on the chart,
+     and iOS answers a long press with the copy/share callout and a selection
+     loupe unless it is told not to. Popups and controls keep their own text
+     selectable — this is only the map surface. */
+  #map{flex:1 1 auto; position:relative; background:var(--map-bg); min-height:200px;
+       -webkit-touch-callout:none; -webkit-user-select:none; user-select:none;}
+  #map .leaflet-popup-pane, #map .leaflet-control-container{-webkit-user-select:text; user-select:text;}
   .leaflet-container{background:var(--map-bg); font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
   /* Force pane stacking so markers/labels always render above tiles */
   .leaflet-tile-pane{z-index:200 !important;}
@@ -2775,7 +2781,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="fab" id="mapModeBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
       <!-- tip sits BEFORE the label: the mode writer sets this.lastChild, which must stay the label text node -->
-      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> switches the map view —</span><span>Topo Satellite, Hi Res &amp; ICW, Street Map.</span></span>
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> switches the map view —</span><span>Topo Satellite, Hi Res &amp; ICW, Street Map.</span><span><b>PRESS AND HOLD THE MAP:</b> depth contours in feet.</span></span>
       Topo Satellite
     </button>
     <button class="fab" id="trackBtn">
@@ -2989,6 +2995,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>The numbers start again on every waterway</b>, which is worth knowing before you go looking for one. There are <b>five marks numbered 47</b> in Volusia County alone — on the Halifax River, at New Smyrna Beach, in Mosquito Lagoon and elsewhere — so "marker 47" on its own does not identify a spot. That is why every dot carries its full name rather than just a number. Positions come from NOAA's electronic navigational charts (Harbor-band cells); the light characteristics are matched to each mark by position from the charts' separate light records. Same caution as the channel itself: aids get moved, go missing, and change — so this app is for planning, not for navigating.</p>
       <p class="sheet-note">The ICW outlines come from the US Army Corps of Engineers' National Channel Framework — the Florida East survey published <b>June 2020</b>. <b>Treat its path as a general reference, not as true soundings.</b> It shows where the channel is authorized to be at that time, not where the water actually is now. Furthermore, shoaling moves the usable water around, and this coast gets plenty of it. Read and rely on your depth sounder and chartplotter — not this app — for navigation.</p>
       </div>
+      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-depth"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 7c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 12c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 17c3-3 6-3 9 0s6 3 9 0"></path></svg> Depth Contours<span class="ht-caret">▸</span></button>
+      <div class="help-body" id="hb-depth">
+      <p class="sheet-note"><b>PRESS AND HOLD anywhere on the map for about half a second</b> and the water fills with <b>depth contours in feet</b> — thin pale-cyan lines joining equal depths, each carrying its own number on a small dark tag (<span class="g-emph">3 ft</span>, <span class="g-emph">6 ft</span>, <span class="g-emph">12 ft</span>). <b>Press and hold again to clear them.</b> There is no button for it: the layer is meant to be flicked on to read a flat and flicked straight back off, and the chart has enough buttons. It works on <b>Topo Satellite</b> and <b>Hi Res &amp; ICW</b> — the satellite views, where the contours have a bottom to sit on; on the Street Map a hold just says so. The setting sticks, so if you leave them on they are on next time you open the app.</p>
+      <p class="sheet-note"><b>What you see changes with the zoom</b>, so the lines never bury the picture. Wide out, only the <b>heavy lines</b> draw — <b>6, 12, 20, 30, 50, 100 and 200 ft</b> — which is the shape of the water: the run of the channel, the deep holes, the drop off the beach. Zoom in a step and the <b>3 and 9 ft</b> lines join them, the ones that fence the flats. A step closer brings the <b>2 ft steps</b>, and at the closest zooms <b>every single foot</b> from 1 to 12 draws — fine enough to pick out the one-foot lip a redfish sits on. Zoom back out and they thin away again. The lines draw <b>under</b> your pins, your track and the compass, so nothing you put on the chart is ever hidden by them.</p>
+      <p class="sheet-note"><b>Where the numbers come from.</b> The contours are built from <b>NOAA's own surveys</b> and stored <b>in the app</b>, so they draw with the signal off, anywhere in the county, with nothing to download first. The bottom comes from <b>NOAA BlueTopo</b> — the Office of Coast Survey's "best available" compiled bathymetry for navigable US water, which already includes the <b>2022 Indian River Lagoon lidar</b> — with <b>NOAA NCEI's CUDEM</b> survey filling the skinny water BlueTopo does not reach. Only water gets lines: land, spoil islands and the inland ponds are masked off.</p>
+      <p class="sheet-note"><b>Be advised: these are not chart soundings, and this is not for navigation.</b> The depths are measured to <b>NAVD88</b> — near enough to <b>average water level</b> — while a nautical chart's soundings are to <b>mean lower low water</b>, which around Ponce Inlet runs <b>a foot or two lower</b> than what you see here. So a line marked <span class="g-emph">3 ft</span> can be closer to <b>2 ft</b> of water on a low tide, and less than that on a hard north wind. Surveys are also years old in places and this coast <b>shoals and moves</b>. Use these lines to find an edge, a hole or a drop worth fishing — read your <b>depth sounder and chartplotter</b>, not this app, for the water under your boat.</p>
+      </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-track"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg> Track My Path<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-track">
       <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c227d6" stroke-width="2" style="vertical-align:-7px;"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="#c227d6" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="#c227d6" stroke="none"></circle></svg> Tap <b>TRACK MY PATH</b> and the app records your path as a <b>magenta line</b> on the map. The map <b>zooms into your position</b> as soon as the first GPS fix lands. A slim bar at the top shows the distance covered and the time; <b>tap the bar</b> to fit the whole track on screen, and tap <b>STOP</b> (or TRACK MY PATH again) to finish. Stopped tracks are <b>saved automatically</b> — the stop card offers <b>STOP — KEEP ON MAP</b>, <b>STOP — CLEAR OFF MAP</b> (saved, line hidden until you SHOW it), <b>KEEP TRACKING</b>, and a separate <b>DELETE</b> that asks before discarding. Kept tracks <b>show on the map</b> every time the app opens, and <b>tapping a track's line zooms the map to it</b>. They are saved under <b>Your tracks</b> in <b>+ Spot</b> — the app keeps your last 10, each with <b>SHOW/HIDE 🗺</b>, <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons. <b>EDIT ✎</b> renames a track and takes <b>notes</b> — bait, tide, speed, what worked along that path. HIDE sticks until you SHOW it again, and a deleted track is restorable with <b>UNDO</b> for 14 days like anything else. Recording needs <b>no signal</b> — GPS works far offshore; download the offline map first if you want imagery under the line out there. Two honest limits: the app can only record <b>while it is on the screen</b> (it keeps the screen awake for you; locking the phone or switching apps pauses the track until you return), and keeping GPS and the screen on <b>uses real battery</b> — on phones that allow it the bar shows a live battery % and warns when it runs low; iPhones don't let a web app read the battery, so mind the gauge and bring a charging cable for a long day. Tracks live on this device only and are not in backup files.</p>
@@ -3060,7 +3073,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-credits"><span class="ht-g">ⓘ</span>Map Credits<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-credits">
-      <p class="sheet-note"><b>Map credits.</b> The bottom-right corner has a small <b>ⓘ</b> cookie. Tap it and the map credits open above it — <b>USGS</b>, <b>USDA NAIP</b> and <b>Sentinel-2/EOX</b> on the satellite views, <b>OpenStreetMap</b> on the street map — and tapping it again, or tapping open water, hides the credits.</p>
+      <p class="sheet-note"><b>Map credits.</b> The bottom-right corner has a small <b>ⓘ</b> cookie. Tap it and the map credits open above it — <b>USGS</b>, <b>USDA NAIP</b> and <b>Sentinel-2/EOX</b> on the satellite views, <b>OpenStreetMap</b> on the street map — and tapping it again, or tapping open water, hides the credits. With the <b>depth contours</b> up the credits also carry <b>NOAA Office of Coast Survey</b> (BlueTopo) and <b>NOAA NCEI</b> (CUDEM), and the reminder that those depths are at <b>average water level</b> and <b>not for navigation</b>.</p>
       </div>
 
       <div class="subhead">Tide Stations &amp; Offline Maps</div>
@@ -4131,10 +4144,10 @@ function showToast(msg, duration=2400){
    build spelled out by hand in five places, which is why those messages still said
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
-const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 404;
+const BUILD_DATE = '08/04/26';                          // map stamp form
+const BUILD_NUM  = 405;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
-const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
+const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
    made same-day updates look unchanged. */
 { const bs = document.getElementById('buildStamp');
@@ -13516,6 +13529,414 @@ document.getElementById('themeClose').addEventListener('click', ()=>{ themeSheet
 themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); themeScrim.classList.remove('open'); });
 
 /* (bubble effect removed) */
+
+/* ===================== DEPTH CONTOURS =====================
+   Water-depth contour lines in FEET, drawn over either satellite view and
+   turned on and off by a PRESS AND HOLD on the map itself.
+
+   Where the numbers come from. The lines are built offline from NOAA's own
+   surveys and shipped with the app as static files, so no depth service has to
+   be reachable on the water: NOAA BlueTopo (the Office of Coast Survey's "best
+   available" compiled bathymetry for navigable US water, 4 m and 8 m tiles,
+   which already folds in the 2022 Indian River Lagoon topobathy lidar) is the
+   authority, and NCEI's CUDEM 1/9 arc-second topobathy fills the skinny water
+   BlueTopo does not reach, feathered across BlueTopo's rim so the two surveys
+   don't step against each other. Both are metres on NAVD88, so nothing had to
+   be shifted between them; the build converts to feet and flips the sign.
+
+   Two things follow from NAVD88 that the help and the toast both say out loud:
+   these are depths at roughly AVERAGE water level, not at chart datum (a
+   chart's soundings are MLLW, which near Ponce runs a foot or two lower), and
+   this is a fishing layer, not a navigation layer.
+
+   Land is masked three ways over: elevation must be below the datum, the pixel
+   must sit in a body of water that connects to BlueTopo's surveyed water (a
+   coarse connected-component gate built in the same offline pass — without it
+   every borrow pit and wet pasture in Volusia grew contours), and BlueTopo's
+   own coverage counts as water on its own account.
+
+   Delivery is vector, not pre-rendered tiles: 17 quarter-degree blocks of
+   delta-encoded integer polylines, 2 MB for the whole county, fetched only for
+   the blocks you actually look at and then cache-first forever like the
+   imagery. Labels are drawn here rather than baked in, so they stay upright,
+   stay the same size at every zoom, and can step aside from each other. */
+
+const DEPTH_DATA_V = 1;         // bump to bust the on-device cache after a rebuild
+const DEPTH_DIR = 'depth/';
+// Which blocks exist, and the exact box each one covers. Written by the offline
+// build (pass_b_contours.py) — an embedded index costs nothing and saves the
+// app a round trip and a 404 dance before it can draw anything.
+const DEPTH_BLOCKS = [
+  ['c3_2',-81.2,28.5,-81,28.75],   ['c3_3',-81.2,28.75,-81,29],
+  ['c3_4',-81.2,29,-81,29.25],     ['c3_5',-81.2,29.25,-81,29.48],
+  ['c4_1',-81,28.4,-80.75,28.5],   ['c4_2',-81,28.5,-80.75,28.75],
+  ['c4_3',-81,28.75,-80.75,29],    ['c4_4',-81,29,-80.75,29.25],
+  ['c4_5',-81,29.25,-80.75,29.48], ['c5_1',-80.75,28.4,-80.5,28.5],
+  ['c5_2',-80.75,28.5,-80.5,28.75],['c5_3',-80.75,28.75,-80.5,29],
+  ['c5_4',-80.75,29,-80.5,29.25],  ['c5_5',-80.75,29.25,-80.5,29.48],
+  ['c6_3',-80.5,28.75,-80.3,29],   ['c6_4',-80.5,29,-80.3,29.25],
+  ['c6_5',-80.5,29.25,-80.3,29.48]
+];
+/* Contour intervals are cut to this water, which is mostly ankle-to-chest deep
+   with a few dredged cuts and the shelf offshore. Each level carries a tier,
+   and a tier is the zoom it starts drawing at:
+     tier 0 (from z11)  6, 12, 20, 30, 50, 100, 200 ft — the frame
+     tier 1 (from z13)  3 and 9 ft, then 16/25/40/60/80/150
+     tier 2 (from z14)  the 2 ft steps through the lagoon, 14/18/35/70
+     tier 3 (from z15)  every remaining foot, 1 through 12, and the deep in-fills
+   So a wide view shows the shape of the basin and a close one the foot-by-foot
+   edge of a flat. The 3 ft line is deliberately NOT in tier 0: it is the
+   busiest line in this water, and at z12 the Halifax is ten pixels wide and its
+   own 3 ft wiggle filled the river solid cyan. */
+const DEPTH_TIER_MINZOOM = [11, 13, 14, 15];
+const DEPTH_LABEL_MINZOOM = [11, 13, 15, 16];   // labelling lags drawing by a zoom
+/* Zoomed out, a contour can be shorter than the pen that draws it, and a
+   thousand of those specks read as a stain over the photo rather than as lines.
+   A line has to span at least this many screen pixels to be worth drawing. */
+const DEPTH_MIN_PX = { 11:38, 12:34, 13:28, 14:22 };
+/* Cyan/white: the one bathymetric family the app had not already spent. Red is
+   MARK, magenta is TRACK, purple is offshore, blue is inshore, amber is
+   marinas, orange is Labels — a depth line must not read as any of those. Thin,
+   and laid under a dark hairline so it holds over pale sand without becoming
+   the brightest thing on the chart. */
+const DEPTH_LINE   = 'rgba(158,238,255,';
+const DEPTH_HALO   = 'rgba(4,22,34,0.55)';
+const DEPTH_LABEL_BG = 'rgba(4,22,34,0.80)';
+const DEPTH_LABEL_FG = '#d3f4ff';
+
+let depthOn = false;
+let depthLayer = null;
+const depthBlocks = new Map();   // key -> {b:[w,s,e,n], lines:[{lv,t,pts:Float64Array,bb:[w,s,e,n]}]} | 'loading'
+
+function depthPersist(){ try{ localStorage.setItem('wtf:depth-on', depthOn ? '1' : '0'); }catch(e){} }
+
+/* The block files store each line as [ft, tier, x0, y0, dx, dy, dx, dy, ...] in
+   hundred-thousandths of a degree from the block's SW corner — integers, so the
+   deltas are mostly one or two digits and gzip does the rest. Unpacked once, on
+   load, into a flat lon/lat Float64Array plus a bounding box for cheap culling. */
+function depthDecode(raw){
+  const w = raw.b[0], s = raw.b[1], q = raw.q, out = [];
+  for(const L of raw.L){
+    const n = (L.length - 2) >> 1;
+    if(n < 2) continue;
+    const pts = new Float64Array(n * 2);
+    let x = L[2], y = L[3], minx = x, maxx = x, miny = y, maxy = y;
+    pts[0] = w + x / q; pts[1] = s + y / q;
+    for(let i = 1; i < n; i++){
+      x += L[2 + i * 2]; y += L[3 + i * 2];
+      if(x < minx) minx = x; else if(x > maxx) maxx = x;
+      if(y < miny) miny = y; else if(y > maxy) maxy = y;
+      pts[i * 2] = w + x / q; pts[i * 2 + 1] = s + y / q;
+    }
+    out.push({ lv:L[0], t:L[1], pts:pts,
+               bb:[w + minx / q, s + miny / q, w + maxx / q, s + maxy / q] });
+  }
+  return { b:raw.b, lines:out };
+}
+
+// Cache-first through the same Cache Storage the offline imagery uses, so a
+// block you have looked at once is still there with the signal off.
+function depthLoadBlock(key){
+  if(depthBlocks.has(key)) return;
+  depthBlocks.set(key, 'loading');
+  fetchTileCacheFirst(DEPTH_DIR + key + '.json?v=' + DEPTH_DATA_V)
+    .then(r => (r && r.ok) ? r.json() : null)
+    .then(j => {
+      depthBlocks.set(key, j ? depthDecode(j) : null);
+      if(depthOn && depthLayer) depthLayer.redraw();
+    })
+    .catch(()=> { depthBlocks.set(key, null); });
+}
+
+function depthEnsureBlocks(){
+  const b = map.getBounds().pad(0.25);
+  for(const [k, w, s, e, n] of DEPTH_BLOCKS){
+    if(e < b.getWest() || w > b.getEast() || n < b.getSouth() || s > b.getNorth()) continue;
+    depthLoadBlock(k);
+  }
+}
+
+/* The layer draws itself into one canvas the size of the viewport, in its own
+   pane between the imagery and the app's own vectors — so contours sit over the
+   photo but under the track, the compass and every pin. It lives in a
+   leaflet-zoom-hide pane, which means Leaflet blanks it for the length of a zoom
+   animation and it comes back drawn correctly at the new scale instead of being
+   scaled up and blurred. */
+const DepthLayer = L.Layer.extend({
+  // Leaflet assembles the ⓘ credits from whatever layers are on the map, so the
+  // bathymetry credit — and the caveat that belongs beside any depth figure —
+  // appear only while the contours are up, and leave with them.
+  getAttribution: function(){
+    return 'Bathymetry: <a href="https://www.nauticalcharts.noaa.gov/" target="_blank" rel="noopener noreferrer">NOAA Office of Coast Survey</a> (BlueTopo) / <a href="https://www.ncei.noaa.gov/" target="_blank" rel="noopener noreferrer">NOAA NCEI</a> (CUDEM) &mdash; depths in feet at average water level, <b>not for navigation</b>';
+  },
+  onAdd: function(m){
+    this._map = m;
+    if(!m.getPane('depthPane')){
+      const p = m.createPane('depthPane');
+      p.style.zIndex = 350;
+      p.classList.add('leaflet-zoom-hide');
+    }
+    const c = this._canvas = L.DomUtil.create('canvas', 'leaflet-layer');
+    c.style.pointerEvents = 'none';                 // never eats a map gesture
+    m.getPane('depthPane').appendChild(c);
+    m.on('moveend zoomend resize', this._reset, this);
+    this._reset();
+  },
+  onRemove: function(m){
+    m.off('moveend zoomend resize', this._reset, this);
+    if(this._canvas && this._canvas.parentNode) this._canvas.parentNode.removeChild(this._canvas);
+    this._canvas = null;
+  },
+  redraw: function(){ if(this._canvas) this._draw(); },
+  _reset: function(){
+    if(!this._canvas) return;
+    const m = this._map, size = m.getSize(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const tl = m.containerPointToLayerPoint([0, 0]);
+    L.DomUtil.setPosition(this._canvas, tl);
+    this._tl = tl;
+    if(this._canvas.width !== Math.round(size.x * dpr) || this._canvas.height !== Math.round(size.y * dpr)){
+      this._canvas.width = Math.round(size.x * dpr);
+      this._canvas.height = Math.round(size.y * dpr);
+      this._canvas.style.width = size.x + 'px';
+      this._canvas.style.height = size.y + 'px';
+    }
+    this._dpr = dpr;
+    depthEnsureBlocks();
+    this._draw();
+  },
+  _draw: function(){
+    const m = this._map, c = this._canvas;
+    const ctx = c.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, c.width, c.height);
+    if(!depthOn || !satMode) return;
+    const z = m.getZoom();
+    if(z < DEPTH_TIER_MINZOOM[0]) return;
+    ctx.scale(this._dpr, this._dpr);
+
+    // Straight Web Mercator arithmetic rather than latLngToLayerPoint per point:
+    // a busy view is a couple of hundred thousand vertices and the object churn
+    // showed up as a stutter on the pan that follows a zoom.
+    const scale = 256 * Math.pow(2, z), o = m.getPixelOrigin();
+    const ox = o.x + this._tl.x, oy = o.y + this._tl.y;
+    const size = m.getSize(), W = size.x, H = size.y;
+    const b = m.getBounds(), pad = 0.02 * (b.getNorth() - b.getSouth()) + 0.005;
+    const bw = b.getWest() - pad, be = b.getEast() + pad;
+    const bs = b.getSouth() - pad, bn = b.getNorth() + pad;
+    let maxTier = 0;
+    while(maxTier + 1 < DEPTH_TIER_MINZOOM.length && z >= DEPTH_TIER_MINZOOM[maxTier + 1]) maxTier++;
+    const minPx = DEPTH_MIN_PX[z] || 16;
+    // A degree is worth this many pixels at this zoom — lets the length test run
+    // on the stored bounding box without projecting the line first.
+    const pxPerLonDeg = scale / 360;
+    const pxPerLatDeg = pxPerLonDeg / Math.cos(m.getCenter().lat * Math.PI / 180);
+    const thin = z <= 13;
+    const D2R = Math.PI / 180;
+    const px = lon => scale * (lon / 360 + 0.5) - ox;
+    const py = lat => scale * (0.5 - Math.log(Math.tan(Math.PI / 4 + lat * D2R / 2)) / (2 * Math.PI)) - oy;
+
+    const labelable = [];
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    // Two passes over the same geometry — every halo first, then every line —
+    // so a crossing line's halo can't cut a notch out of a line already drawn.
+    for(let pass = 0; pass < 2; pass++){
+      for(const val of depthBlocks.values()){
+        if(!val || val === 'loading') continue;
+        const bb = val.b;
+        if(bb[2] < bw || bb[0] > be || bb[3] < bs || bb[1] > bn) continue;
+        for(const ln of val.lines){
+          if(ln.t > maxTier) continue;
+          const lb = ln.bb;
+          if(lb[2] < bw || lb[0] > be || lb[3] < bs || lb[1] > bn) continue;
+          if(Math.hypot((lb[2] - lb[0]) * pxPerLonDeg, (lb[3] - lb[1]) * pxPerLatDeg) < minPx) continue;
+          const p = ln.pts, n = p.length >> 1;
+          ctx.beginPath();
+          for(let i = 0; i < n; i++){
+            const X = px(p[i * 2]), Y = py(p[i * 2 + 1]);
+            if(i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+          }
+          const wide = thin ? (ln.t === 0 ? 1.3 : 0.9) : (ln.t === 0 ? 1.7 : 1.0);
+          if(pass === 0){
+            ctx.strokeStyle = DEPTH_HALO;
+            ctx.lineWidth = wide + (thin ? 1.0 : 1.5);
+          }else{
+            ctx.strokeStyle = DEPTH_LINE + (ln.t === 0 ? '0.95' : ln.t === 1 ? '0.78' : ln.t === 2 ? '0.66' : '0.58') + ')';
+            ctx.lineWidth = wide;
+            if(z >= DEPTH_LABEL_MINZOOM[ln.t]) labelable.push(ln);
+          }
+          ctx.stroke();
+        }
+      }
+    }
+    this._labels(ctx, labelable, px, py, W, H);
+  },
+  /* Labels last, over finished lines. Horizontal, not run along the line: this
+     is read one-handed on a rocking boat, and a number tilted to a contour's
+     own angle is the hardest thing on a chart to read. Each one is a small dark
+     pill so it holds over sand as well as over water, spaced out along the line
+     and skipped where it would land on a pill already placed. */
+  _labels: function(ctx, lines, px, py, W, H){
+    if(!lines.length) return;
+    const placed = [];
+    // Far apart on purpose. One number every few hundred pixels is a chart; one
+    // every ninety is a wall of tags with the photo somewhere behind it.
+    const FIRST = 170, GAP = 620;  // px along the line before the first label, and between
+    ctx.font = '700 11.5px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const fits = (x, y, w, h) => {
+      if(x - w / 2 < 2 || x + w / 2 > W - 2 || y - h / 2 < 2 || y + h / 2 > H - 2) return false;
+      for(const r of placed){
+        if(Math.abs(x - r[0]) < (w + r[2]) / 2 + 5 && Math.abs(y - r[1]) < (h + r[3]) / 2 + 5) return false;
+      }
+      return true;
+    };
+    for(const ln of lines){
+      const p = ln.pts, n = p.length >> 1;
+      const txt = ln.lv + ' ft';
+      const tw = ctx.measureText(txt).width + 11, th = 15;
+      let run = 0, next = FIRST;
+      let prevX = px(p[0]), prevY = py(p[1]);
+      for(let i = 1; i < n; i++){
+        const X = px(p[i * 2]), Y = py(p[i * 2 + 1]);
+        const d = Math.hypot(X - prevX, Y - prevY);
+        run += d;
+        if(run >= next){
+          if(X > -40 && X < W + 40 && Y > -40 && Y < H + 40 && fits(X, Y, tw, th)){
+            placed.push([X, Y, tw, th]);
+            ctx.fillStyle = DEPTH_LABEL_BG;
+            const rx = X - tw / 2, ry = Y - th / 2;
+            ctx.beginPath();
+            if(ctx.roundRect) ctx.roundRect(rx, ry, tw, th, 4);
+            else ctx.rect(rx, ry, tw, th);
+            ctx.fill();
+            ctx.fillStyle = DEPTH_LABEL_FG;
+            ctx.fillText(txt, X, Y + 0.5);
+          }
+          next = run + GAP;
+        }
+        prevX = X; prevY = Y;
+      }
+    }
+  }
+});
+
+function depthSetOn(on, quiet){
+  if(on === depthOn) return;
+  depthOn = on;
+  depthPersist();
+  if(on){
+    depthEnsureBlocks();
+    if(!depthLayer) depthLayer = new DepthLayer();
+    if(!map.hasLayer(depthLayer)) depthLayer.addTo(map);
+    else depthLayer.redraw();
+    if(!quiet){
+      showToast(map.getZoom() < DEPTH_TIER_MINZOOM[0]
+        ? 'Depth contours on — zoom in to see them.'
+        : 'Depth contours on — feet at average water level. Not for navigation.', 3600);
+    }
+  }else{
+    if(depthLayer && map.hasLayer(depthLayer)) map.removeLayer(depthLayer);
+    if(!quiet) showToast('Depth contours off');
+  }
+}
+
+/* ---- The gesture: PRESS AND HOLD the map ----
+   There is no button for this, on purpose — the chart is already full of them,
+   and the layer is something you flick on to read a flat and straight back off.
+   The help says so in words, and the map-view button's hover tip repeats it.
+
+   Three traps, all of them handled here rather than hoped about:
+
+   1. A plain tap on the map already means something: it clears a pinned compass
+      route, and it places a pin while +Spot, +Catch or Tides is waiting for one.
+      A hold must not fall through into any of that. Placing modes bow out
+      entirely (the press is meant for the pin), and for everything else the
+      click that ends the hold is swallowed by a CAPTURE-phase listener on the
+      document — capture runs before Leaflet's own listener on the map
+      container, so Leaflet never fires map 'click' at all and no downstream
+      handler has to know this layer exists.
+   2. Leaflet turns an iOS long press into 'contextmenu', and desktop right-click
+      into the same event. Neither is used to toggle — a manual pointer timer is
+      the single trigger, so the behaviour is identical on a phone, on a desktop
+      and under a headless mouse — but contextmenu is still swallowed on the map
+      so iOS shows no callout and no selection loupe over the chart.
+   3. A hold that turns into a drag, a pinch, or a press that starts on a pin,
+      a popup or a control is not a hold. Movement over 12 px disarms it, a
+      second finger disarms it, and a press landing anywhere but the map surface
+      is ignored so pin popups and the ICW marks behave exactly as before.
+
+   The toggle fires on RELEASE, not the instant the half second is up. Firing on
+   the timer read better in the hand but was wrong on the water: rest a thumb on
+   the chart for a moment and then pan, and the layer had already flipped before
+   the pan began. Waiting for the finger to lift means a hold that turns into a
+   drag — however long the pause before it — is just a drag. (Caught in headless
+   verify: press, wait 700 ms, drag, and the contours came on.) */
+const DEPTH_HOLD_MS = 550;
+const DEPTH_HOLD_SLOP = 12;
+(function(){
+  const el = map.getContainer();
+  let armed = false, t0 = 0, sx = 0, sy = 0, pid = null, swallow = false;
+
+  const disarm = ()=> { armed = false; pid = null; };
+
+  function placingSomething(){
+    return (typeof placingPin !== 'undefined' && placingPin)
+        || (typeof placingSpotPin !== 'undefined' && placingSpotPin)
+        || (typeof placingTidePin !== 'undefined' && placingTidePin);
+  }
+
+  el.addEventListener('pointerdown', (e)=>{
+    if(pid !== null){ disarm(); return; }        // second finger: this is a pinch
+    if(!e.isPrimary || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    if(e.target.closest('.leaflet-marker-pane, .leaflet-popup-pane, .leaflet-control-container, button, a, input')) return;
+    if(placingSomething()) return;
+    pid = e.pointerId; sx = e.clientX; sy = e.clientY; t0 = Date.now(); armed = true;
+  }, { passive:true });
+
+  el.addEventListener('pointermove', (e)=>{
+    if(!armed || e.pointerId !== pid) return;
+    if(Math.abs(e.clientX - sx) > DEPTH_HOLD_SLOP || Math.abs(e.clientY - sy) > DEPTH_HOLD_SLOP) disarm();
+  }, { passive:true });
+
+  function finish(e){
+    if(!armed || e.pointerId !== pid) return;
+    const held = Date.now() - t0;
+    disarm();
+    if(held < DEPTH_HOLD_MS) return;
+    if(!satMode) showToast('Depth contours are on the satellite map views.');
+    else depthSetOn(!depthOn);
+    swallow = true;                              // eat the click this hold ends with
+    setTimeout(()=> { swallow = false; }, 700);
+  }
+  el.addEventListener('pointerup', finish, { passive:true });
+  // pointercancel counts as a release, not a wash-out: iOS fires it the moment
+  // the system claims a press as its own long press, which is the very gesture
+  // being made here — the movement guard above has already disarmed anything
+  // that was really a drag or a pinch by the time it arrives.
+  el.addEventListener('pointercancel', finish, { passive:true });
+
+  document.addEventListener('click', (e)=>{
+    if(!swallow) return;
+    swallow = false;
+    if(!el.contains(e.target)) return;
+    e.stopPropagation();
+    e.preventDefault();
+  }, true);
+
+  el.addEventListener('contextmenu', (e)=>{
+    if(e.target.closest('.leaflet-popup-pane, .leaflet-control-container, button, a, input')) return;
+    e.preventDefault();
+  });
+})();
+
+// The layer belongs to the satellite views; switching to the street map takes
+// it off the screen without forgetting that it was on.
+map.on('baselayerchange', ()=> { if(depthLayer) depthLayer.redraw(); });
+document.getElementById('mapModeBtn').addEventListener('click', ()=> {
+  if(depthOn && depthLayer) setTimeout(()=> depthLayer.redraw(), 0);
+});
+try{ if(localStorage.getItem('wtf:depth-on') === '1') depthSetOn(true, true); }catch(e){}
 
 /* ===================== INIT ===================== */
 

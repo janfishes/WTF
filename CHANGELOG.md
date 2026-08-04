@@ -3,6 +3,10 @@
 One line per build, newest first. Full build notes with dates, times, and
 details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
+## 2026-08-04
+
+- **v405** — Depth Contours
+
 ## 2026-08-03
 
 - **v404** — Eraser Inpainting

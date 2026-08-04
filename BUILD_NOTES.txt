@@ -7,6 +7,149 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 12:36 AM EDT · v405 · Depth Contours
+------------------------------------------------------------------------------
+New layer: water-depth contour lines in FEET over either satellite view,
+turned on and off by a PRESS AND HOLD on the map itself. No button — the
+layer is meant to be flicked on to read a flat and flicked straight back
+off, and the chart is already full of buttons. The gesture is written up
+in Help under its own topic, and the map-view button's hover tip now
+carries a third line saying so.
+
+WHERE THE NUMBERS COME FROM. Built offline from NOAA's own surveys and
+shipped inside the repo, so the layer draws with the signal off and needs
+no depth service to be reachable on the water. NOAA BlueTopo — the Office
+of Coast Survey's "best available" compiled bathymetry for navigable US
+water, 66 tiles at 4 m and 8 m, which already folds in the 2022 Indian
+River Lagoon topobathy lidar — is the authority. NOAA NCEI's CUDEM 1/9
+arc-second topobathy (8 tiles, 1.5 GB) fills the skinny water BlueTopo
+does not reach. Both are metres on NAVD88, so nothing had to be shifted
+between them, and they cross-checked to within a fifth of a foot offshore
+where they overlap — which is what gave any confidence in the result at
+all. Spot checks against known water: Ponce Inlet mouth bottoms at 48 ft
+in the scour hole, the Halifax at Daytona at 50 ft under the bridges,
+Haulover Canal's cut at 29 ft, Mosquito Lagoon median 2.7 ft. Those are
+the right numbers.
+
+The two surveys are FEATHERED across BlueTopo's rim rather than butted
+together — 15 cells of blend wherever CUDEM is there to blend with — or
+the seam laddered every contour that crossed it.
+
+MASKING LAND took three passes, not one. Elevation below the datum is not
+enough on its own: CUDEM is topobathy, it carries the land too, and half
+the borrow pits, retention ponds and wet pasture in Volusia sit below
+NAVD88 zero. So a coarse (37 m) water mask is built first over the whole
+county, connected components are labelled, and only the components that
+actually touch BlueTopo's surveyed water survive — 199 components in,
+4 out, 195 inland ponds dropped. BlueTopo's own coverage counts as water
+on its own account, since it only maps navigable water in the first place.
+
+INTERVALS are cut to this water — mostly ankle-to-chest deep with a few
+dredged cuts and the shelf offshore — and open out with the zoom so the
+lines never bury the photo:
+    from z11   6, 12, 20, 30, 50, 100, 200 ft — the frame
+    from z13   3 and 9 ft, then 16/25/40/60/80/150
+    from z14   the 2 ft steps through the lagoon, 14/18/35/70
+    from z15   every remaining foot, 1 through 12, and the deep in-fills
+The 3 ft line is deliberately NOT in the first group. It is the busiest
+line in this water, and the first cut had it drawing at z11: at the 1-mile
+scale the Halifax is ten pixels wide and its own 3 ft wiggle filled the
+river solid cyan (caught in headless verify — the wide shot was a stain,
+not a chart). A second guard came out of the same shot: zoomed out, a
+contour can be shorter than the pen that draws it, so a line now has to
+span 22-38 screen pixels, depending on zoom, to be worth drawing at all.
+
+DELIVERY is vector, not pre-rendered tiles. 17 quarter-degree blocks of
+delta-encoded integer polylines in depth/ — 2.1 MB for the whole county,
+against the 60-120 MB a z12-z16 PNG pyramid would have cost, and the app
+fetches only the blocks you actually look at. They go through the same
+cache-first path as the offline imagery, so a block you have looked at
+once is still there with the signal off. Labels are drawn by the app
+rather than baked in, so they stay upright, stay one size at every zoom,
+and step aside from each other; they are HORIZONTAL on purpose, because a
+number tilted to a contour's own angle is the hardest thing on a chart to
+read one-handed on a rocking boat.
+
+COLOUR: pale cyan on a dark hairline. That is the one bathymetric family
+the app had not already spent — red is MARK, magenta is TRACK, purple is
+offshore, blue is inshore, amber is marinas, orange is Labels — and the
+dark under-stroke is what lets a 1 px line hold over pale sand without
+becoming the brightest thing on the screen. The layer sits in its own
+pane between the imagery and the app's vectors, so contours draw over the
+photo but UNDER every pin, the track and the compass.
+
+THE GESTURE, and the three traps in it. A plain tap on the map already
+means something — it clears a pinned compass route, and it places a pin
+while +Spot, +Catch or Tides is waiting for one — so a hold must not fall
+through into any of that. Placing modes bow out entirely (the press is
+meant for the pin), and the click that ends a hold is swallowed by a
+CAPTURE-phase listener on the document, which runs before Leaflet's own
+listener on the map container: Leaflet never fires map 'click' at all, and
+no downstream handler has to know this layer exists. Verified both ways —
+a hold leaves a pinned route standing, an ordinary tap still clears it.
+
+Leaflet turns an iOS long press (and a desktop right-click) into
+'contextmenu'. That is NOT the trigger — a manual pointer timer is, so the
+behaviour is identical on a phone, on a desktop and under a headless
+mouse — but contextmenu is still swallowed on the map surface, and the map
+pane now sets -webkit-touch-callout:none, so iOS shows no copy callout and
+no selection loupe over the chart. Popups and controls keep their text
+selectable.
+
+The toggle fires on RELEASE, not the instant the half second is up.
+Firing on the timer read better in the hand but was wrong on the water:
+rest a thumb on the chart for a moment and then pan, and the layer had
+already flipped before the pan began. Headless verify caught exactly that
+— press, wait 700 ms, drag, and the contours came on. Waiting for the
+finger to lift means a hold that turns into a drag, however long the pause
+before it, is just a drag. Movement over 12 px disarms it, a second finger
+disarms it, and a press landing on a pin, a popup or a control is ignored,
+so pin popups and the ICW marks behave exactly as before.
+
+On the Street Map a hold says "Depth contours are on the satellite map
+views" instead of toggling, and the layer paints nothing there. The
+setting is remembered across reloads.
+
+CREDITS. The ⓘ cookie now carries "Bathymetry: NOAA Office of Coast
+Survey (BlueTopo) / NOAA NCEI (CUDEM) — depths in feet at average water
+level, not for navigation" while the contours are up, and loses it when
+they come down: it is the layer's own getAttribution, so Leaflet
+assembles and drops it the same way it does every other source. The Map
+Credits help topic says so too.
+
+NOT FOR NAVIGATION, and said plainly in three places (the toast on
+switch-on, the credits, and the help topic) because there is a real trap
+here: these depths are to NAVD88, near enough to AVERAGE water level,
+while a nautical chart's soundings are to mean lower low water — which
+around Ponce runs a foot or two LOWER than what this layer shows. A line
+marked 3 ft can be closer to 2 ft of water on a low tide. The help says
+that in words.
+
+QUIRKS AND LIMITS, recorded for whoever picks this up next:
+  · CUDEM stops at latitude 29.25 — there is no CUDEM tile north of it,
+    so from Ormond up to Bulow the contours are BlueTopo alone. BlueTopo
+    reaches to 29.70, so there is no gap, only one survey instead of two.
+  · indian_river_S190_2018.nc went unused. It covers lat 28.13-28.81 at
+    10 m — coarser than both other sources everywhere it overlaps, and it
+    does not reach Mosquito Lagoon at all. Nothing it could add.
+  · The contour blocks are NOT part of the "Download Map For Offline Use"
+    set. They cache themselves on first view, and 2.1 MB did not seem
+    worth another checkbox in the Offline sheet. Easy to add later if it
+    ever matters.
+  · Bump DEPTH_DATA_V in index.html after any rebuild of depth/ — the
+    block files are fetched cache-first and would otherwise be served
+    stale off the device forever.
+
+Verified headless (puppeteer-core + installed Chrome, fresh profile,
+local server): node --check on all three script blocks; the hold turns
+the layer on and off; screenshots over Mosquito Lagoon at z14 and z16,
+the Halifax and Ponce at z12/z13/z14, Daytona beach at z16, and the
+Hi Res & ICW view — where the 2 ft line traces the sandbars you can see
+in the photo, which is the best check there is that the data landed in
+the right place. Off-state screenshot is completely clear. No console
+errors anywhere.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 11:27 PM EDT · v404 · Eraser Inpainting
 ------------------------------------------------------------------------------
 Jan: "across from Rose Bay, Ponce Inlet is still showing through at
