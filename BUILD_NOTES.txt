@@ -7,6 +7,62 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 12:10 PM EDT · v417 · Bolder Cookies
+------------------------------------------------------------------------------
+Jan: bold the cookies in the upper-right banner, and see whether there is room
+to grow them with the text when the A control is tapped. Also: lower the wave
+icon in the Offshore pill, or give it more padding at the top.
+
+BOLDER COOKIES. The five round header buttons — search, help, theme, text
+size and the eye — now carry the heaviest weight the app can print. Space
+Grotesk stops at 800, so the drawn glyphs (the ? and the A pair) take 800
+plus a .4px stroke in currentColor on top of it, the same trick the title
+lines use over the fish: it thickens the glyph rather than ringing it. The
+stroke is scoped to those two buttons on purpose — on the search and theme
+emoji it would trace the emoji artwork rather than embolden it. The eye is
+line art, so it takes its extra weight where line art should, as stroke
+width: 2 to 2.6.
+
+THEY GROW WITH THE A CONTROL NOW. There was room, and this is the answer to
+the second half of the question. The circle itself was flat px — 29 on a wide
+screen, 24 on a phone — so the A control grew the title, the tagline, the
+fish and every button on the map, and left the cookie row sitting at one
+size through all three steps. The circles, the ? , the A pair, the emoji and
+the eye drawing all ride --tsb now, the same half-strength scale the rest of
+the header uses: 29 -> 33px wide, 24 -> 27.6px on a phone, at the 130% step.
+The header is a content-height flex row, so it simply grows those few pixels
+taller and the map takes them.
+
+The phone rules were the reason it had to be done in two places: every size
+in the max-width:600px block was flat px and would have won over the scaled
+values above it, so those are on --tsb too.
+
+ROOM, MEASURED. Header overflow was checked at all three A steps at 320, 360,
+375, 393 and 430px. Every current iPhone (375px and up) fits at every step
+with room to spare. Below that the bar was already tight before this build —
+at 320px the old header overflowed at ALL THREE steps — so the cookie group
+gets its own narrow-screen rule: under 375px the gap between the circles
+closes from 8px to 4px, which buys back the 16px the bigger circles take.
+That fixes 360px outright at every step, and fixes 320px at 100%. A 320px
+screen at the two larger steps still overflows, as it did before. Scoped at
+374px so no current iPhone is touched. The gap moved out of an inline style
+into a .cookie-row class to make that possible — a media query cannot beat an
+inline style without !important.
+
+OFFSHORE WAVE, NUDGED DOWN. The pills centre their children on the text line,
+which centres the drawing geometrically — but the buoy wave is top-heavy: the
+big breaking crest fills the upper two thirds and the swash band under it is
+a pair of thin lines. So its optical centre sits above its geometric one and
+it read as riding high against the pill's top edge. It gets a 1.5px downward
+nudge (scaled by --tsb), applied as position/top rather than margin or
+padding, so it costs the pill no height and the other four pill icons are
+untouched. 1.5px was picked off a rendered three-way comparison at 0, 1.5 and
+2.5px: at 2.5 the swash lines fall below the word's baseline and it reads low.
+
+Help's text-size paragraph now names the header buttons in the list of things
+that grow at 130%.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 5:20 AM EDT · v415 · Calm Water Line
 ------------------------------------------------------------------------------
 Jan: closed eye should hide it ALL; the Offshore wave is way too small; use

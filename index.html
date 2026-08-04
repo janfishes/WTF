@@ -1014,6 +1014,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
      into the lower edge and left a band of dead bar above. Centred in the bar's height now,
      which is where a row of round buttons belongs. */
   .hdr-right{display:flex; align-items:center; align-self:center; gap:12px;}
+  /* The cookie group. Was an inline style until v417; it needs a class because the
+     narrow-screen rule below has to close the gap up, and a media query cannot beat
+     an inline style without !important. */
+  .cookie-row{display:flex; gap:8px; align-items:center;}
+  /* Below 375px the bar is genuinely tight: title block + fish + five cookies, and the
+     fish is shrink-wrapped to its artwork so its auto margins have nothing left to give.
+     Closing the gap between the cookies buys 16px, which is what the circles take when
+     the A control is at its top step. Scoped to 374px so it never touches a current
+     iPhone (375px and up all fit at all three A steps, measured). */
+  @media (max-width:374px){ .cookie-row{gap:4px;} }
   /* The A steps 100 -> 115 -> 130 -> 100. Drawn as a large A beside a half-size A, the pair
      optically centred; the percentage lives on the tooltip, not on the glyph. */
   #sizeBtn{
@@ -1070,15 +1080,29 @@ svg.leaflet-image-layer.leaflet-interactive path {
      gauge goes hit area and all and cannot be tapped by accident. The class starts ON the
      body in the markup, so the pins are never drawn and then taken away on load. */
   body.gauges-off .tide-station-icon{display:none !important;}
-  #sizeBtn .a-lg, #sizeBtn .a-sm{display:block; height:15px; line-height:15px;}
-  #sizeBtn .a-lg{font-size:15px;}
-  #sizeBtn .a-sm{font-size:7.5px;}
+  /* The A pair rides --tsb like everything else in the header, so the control that
+     scales the type scales its own glyph too. */
+  #sizeBtn .a-lg, #sizeBtn .a-sm{display:block; height:calc(15px * var(--tsb)); line-height:calc(15px * var(--tsb));}
+  #sizeBtn .a-lg{font-size:calc(15px * var(--tsb));}
+  #sizeBtn .a-sm{font-size:calc(7.5px * var(--tsb));}
+  /* ---- Header cookies ----
+     v417: the CIRCLE now rides the A control at the same half strength (--tsb) as the
+     title block beside it, so the whole bar grows as one piece instead of the type
+     growing around a fixed row of buttons. 29px -> 33px at the 130% step; the header is
+     a content-height flex row, so it simply gets that much taller.
+     Weight: 800 is the heaviest Space Grotesk carries, so - exactly as the title lines
+     do over the fish - the rest of the boldness is stroked on in currentColor, which
+     thickens the glyph rather than ringing it. Stroke is scoped to the DRAWN glyphs
+     (? and the A pair): on the emoji cookies it would trace the emoji artwork. The eye
+     is line art, so it takes its extra weight as stroke-width instead. */
   .help-btn{
-    flex:0 0 auto; width:29px; height:29px; border-radius:50%; padding:0;
+    flex:0 0 auto; width:calc(29px * var(--tsb)); height:calc(29px * var(--tsb)); border-radius:50%; padding:0;
     display:inline-flex; align-items:center; justify-content:center;
     background:var(--navy-800); border:1px solid var(--line); color:var(--teal);
-    font-family:'Space Grotesk',sans-serif; font-size:calc(16px * var(--tsb)); font-weight:700; cursor:pointer; line-height:1;
+    font-family:'Space Grotesk',sans-serif; font-size:calc(16px * var(--tsb)); font-weight:800; cursor:pointer; line-height:1;
   }
+  #helpBtn, #sizeBtn{-webkit-text-stroke:.4px currentColor;}
+  #uiEyeBtn svg{width:calc(17px * var(--tsb)); height:calc(17px * var(--tsb)); stroke-width:2.6;}
   #searchBtn{font-size:calc(13px * var(--tsb));}
   #themeBtn{font-size:calc(15px * var(--tsb));}
   .help-btn:active{background:var(--navy-700);}
@@ -1450,8 +1474,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      Same specificity as the rule above, so these must stay BELOW it. */
   .chip .fic-big{height:calc(15px * var(--tsb));}
   /* The buoy's wave is a wide, low drawing, so pinning its HEIGHT like the others left it
-     reading small next to them (Jan). It gets its own taller pin. */
-  .chip .fic-wave{height:calc(18px * var(--tsb));}
+     reading small next to them (Jan). It gets its own taller pin.
+     v417: and its own vertical nudge DOWN. The chips centre their children on the text
+     line, which centres this drawing GEOMETRICALLY — but its ink is top-heavy (the big
+     breaking crest fills the upper two thirds, the swash band under it is a pair of thin
+     lines), so the optical centre sits above the geometric one and the icon read as riding
+     high in the pill against its top edge. position/top rather than margin or padding, so
+     the nudge costs the pill no height and the other four icons are untouched. */
+  .chip .fic-wave{height:calc(18px * var(--tsb)); position:relative; top:calc(1.5px * var(--tsb));}
   /* Inshore's calm-water line is the one drawing that is wider than it is tall by a long
      way — pinning its height would blow it out to ~33px of width. It is pinned by WIDTH
      instead and lets its height follow, which is why its stroke is solved against the
@@ -1861,14 +1891,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
        the A control at half strength like it, lettering following proportionally. */
     .logo-mini{width:calc(75px * var(--tsb,1));}
     .logo-wtf{font-size:calc(13px * var(--tsb,1)); letter-spacing:calc(2.83px * var(--tsb,1)); margin-left:calc(1.41px * var(--tsb,1)); -webkit-text-stroke:.45px currentColor;}
-    .help-btn{width:24px; height:24px; font-size:12px;}
+    /* v417: the phone sizes ride --tsb too (they were flat px, so on a phone the A
+       control grew the title and left the cookies behind). 24px -> 27.6px at 130%,
+       which the bar has room for — the fish between the two blocks carries auto
+       margins and simply gives up the slack. */
+    .help-btn{width:calc(24px * var(--tsb)); height:calc(24px * var(--tsb)); font-size:calc(12px * var(--tsb));}
     /* Shrink the emoji glyphs too (id beats the class font-size above) so they
        centre inside the smaller circle instead of overflowing it. */
-    #searchBtn{font-size:11px;}
-    #themeBtn{font-size:12px;}
-    #sizeBtn .a-lg, #sizeBtn .a-sm{height:12px; line-height:12px;}
-    #sizeBtn .a-lg{font-size:12px;}
-    #sizeBtn .a-sm{font-size:6px;}
+    #searchBtn{font-size:calc(11px * var(--tsb));}
+    #themeBtn{font-size:calc(12px * var(--tsb));}
+    #sizeBtn .a-lg, #sizeBtn .a-sm{height:calc(12px * var(--tsb)); line-height:calc(12px * var(--tsb));}
+    #sizeBtn .a-lg{font-size:calc(12px * var(--tsb));}
+    #sizeBtn .a-sm{font-size:calc(6px * var(--tsb));}
     .hdr-right{min-width:0;}
     /* Top toggles: pills for Catches, Inshore, Offshore, Launches, Labels —
        centered between the species column (left) and the zoom buttons (right) */
@@ -2805,7 +2839,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <span class="logo-wtf">WTF</span>
   </div>
   <div class="hdr-right">
-    <div style="display:flex; gap:8px; align-items:center;">
+    <div class="cookie-row">
       <button class="help-btn" id="searchBtn" title="Search">🔍</button>
       <button class="help-btn" id="helpBtn" title="Help">?</button>
       <button class="help-btn" id="themeBtn" title="Theme">🎨</button>
@@ -3178,7 +3212,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-size"><span class="ht-g">A<span style="font-size:.62em;">A</span></span>Text Size<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-size">
-      <p class="sheet-note">The text size control sits in the top-right corner of the header. Tap the <b>A<span style="font-size:.62em;">A</span></b> icon to set the reading text size (100%, 115% or 130%). The buttons follow along at half strength. At 130%, the map buttons, map filter buttons, species switches, pins' labels, count badges, and catch diamonds print about 15% bigger, growing their pills a little to fit rather than wrapping. The size is saved on your device until you change it.</p>
+      <p class="sheet-note">The text size control sits in the top-right corner of the header. Tap the <b>A<span style="font-size:.62em;">A</span></b> icon to set the reading text size (100%, 115% or 130%). The buttons follow along at half strength. At 130%, the map buttons, map filter buttons, species switches, pins' labels, count badges, catch diamonds, and the round header buttons themselves print about 15% bigger, growing their pills a little to fit rather than wrapping. The size is saved on your device until you change it.</p>
       <p class="sheet-note"><b>Odd iOS Size Quirk.</b> On a computer, if the whole app suddenly looks tiny, the browser has zoomed the page out (usually an accidental Ctrl+scroll or trackpad pinch while moving the map). Press <b>Ctrl+0</b> — <b>⌘0</b> on a Mac — to reset it to 100%. The browser remembers the fix.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-eye"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.6 12S5.5 5.4 12 5.4 22.4 12 22.4 12 18.5 18.6 12 18.6 1.6 12 1.6 12Z"></path><circle cx="12" cy="12" r="3.1"></circle></svg> Eye<span class="ht-caret">▸</span></button>
@@ -4266,7 +4300,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 416;
+const BUILD_NUM  = 417;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

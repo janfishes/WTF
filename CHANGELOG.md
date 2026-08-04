@@ -5,6 +5,8 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v417** — Bolder Cookies
+- **v416** — Locate Pin Sized
 - **v415** — Calm Water Line
 - **v414** — Bolder Pill Icons
 - **v413** — Half Shut Eye
