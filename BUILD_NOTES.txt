@@ -7,6 +7,34 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 9:46 PM EDT · v399 · Inward Feather + Ormond Window
+------------------------------------------------------------------------------
+Three Jan reports, one root cause. The dark wedges right of Gaines
+Slough / off south Mosquito Lagoon (Topo) and the "triangles from
+old tiles" on Hi Res zoomed out were both the v397/v398 feather
+erasing SEAWARD of the pad: past the painted edge the erase reveals
+USGS's junk offshore photo on fetched tiles, and on locally rendered
+open-sea tiles there is no photo at all, so it cut through to the
+dark Sentinel fallback (Topo) or the layer below (Hi Res), printing
+their scene seams as hard wedges/triangles. Fix: the feather moved
+INSIDE the pad — the ramp now runs across the outer 1000 m of the
+1300 m pad zone (guaranteed-good nearshore photo), 0 paint at
+pad-1000 m to full paint AT the pad; seaward of the pad the paint is
+always opaque, so nothing can ever ghost through. Same telescoping
+alphas (the width origin just moved); the v398 nearFeather search is
+gone (the feather now lives inside the `near` tile set); 'limit'
+clip (pad 1000, unused) falls back to the unfeathered stroke — and
+SEA_EDGE_FEATHER_M must stay < SHORE_PAD_M (canvas silently ignores
+lineWidth <= 0). Close up the look improves too: clear beach photo
+tinting progressively seaward, no line anywhere.
+Also: the Ormond-by-the-Sea label window dropped its z11 entry (kept
+z12) — at the 2-mi scale it punched a raw-photo box showing the
+chart's original dashed line and cut the label ("Ormond-by-the-").
+Verified headless: Gaines/Mosquito-south/Ormond/Ponce clean at
+z13-z14, Hi Res z11 no triangles, Ormond z11 no window box, Massey
+land 0 blue pixels, z9 byte-identical 41,88,144.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 9:33 PM EDT · v398 · Consistent Coast Smudge
 ------------------------------------------------------------------------------
 Jan: the fade and smudge are not consistent along the coast. Two
