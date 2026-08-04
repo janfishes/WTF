@@ -7,6 +7,18 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:47 PM EDT · v393 · Amber Marina Tags
+------------------------------------------------------------------------------
+Follow-on to v392 at Jan's yes: the marina/boatyard NAME TAGS now
+match their amber pins. New .spot-label.lbl-marina class (#FFC400
+fill, BLACK text — 13.2:1; white is 1.6:1 on amber, the reason the
+old offshore tags were black too) assigned in applySpotLabels via
+isMarinaSpot(), ahead of the zone branch. Ramp tags stay launch
+brown, inshore tags blue, offshore tags purple/white. Verified
+headless: 22 lbl-marina tags, computed amber/black, screenshot at
+z13 with Labels + Launches on.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:45 PM EDT · v392 · Amber Marina Pins
 ------------------------------------------------------------------------------
 Jan: everything under the Launches switch that is not an actual
