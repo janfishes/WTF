@@ -7,6 +7,41 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 8:10 PM EDT · v431 · Navy Blue Suede
+------------------------------------------------------------------------------
+Jan: make the blue in Blue Suede Shoes more navy — the grounds, not the accent.
+
+All four of the theme's surfaces drop about 45% in luminance, keeping this
+theme's own inverted order (navy-900 is the LIGHTEST of the four here — it is
+the sheet body — and 700 the darkest):
+
+    --navy-950  #0f3a61 -> #071f38
+    --navy-900  #154a7c -> #0b2c4e     (sheet body / header)
+    --navy-800  #0d3050 -> #061a2f
+    --navy-700  #0a2540 -> #04121f
+    --map-bg    #1d5688 -> #0e3052
+
+The bright #4ecbff accent, the #007caf deep fill and the paler #7fd4ff compass
+rose are all untouched — the theme keeps its signature blue, it just sits on
+deep water now, and every one of them reads harder for it.
+
+Measured on the new sheet ground: white body copy 9.12 -> 14.15:1, --muted
+6.11 -> 9.48:1, --line 3.13 -> 4.86:1, accent ink 4.91 -> 7.22:1.  Contrast in
+direct sunlight is the entire premise of this theme, so deeper ground is the
+right direction for it.
+
+It also retires v430's one known limit.  The --accent-deep sheet head stood
+only 1.96:1 off the old mid-blue ground — the ceiling, since no colour can
+clear 4.5:1 with white and still stand off a #154a7c ground — and now stands
+3.03:1, past the 3:1 UI-component threshold.  The note at --accent-deep was
+rewritten to say so, keeping the constraint on record for any future theme
+whose ground gets lightened toward its own accent.
+
+The theme picker's swatch pair for this theme carried the OLD ground colour as
+sw[0] (#154a7c) — it is the ground, by design, so it moved with it.  Any
+future change to a theme's --navy-900 has to move its swatch too.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 7:35 PM EDT · v430 · Deep Accent Fills
 ------------------------------------------------------------------------------
 Jan: change the hue or saturation on the themes so the white text meets the

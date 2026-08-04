@@ -796,10 +796,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
                        one step for the same treatment.
          --accent-lite the accent lightened for TEXT ON BLACK (filter pills, the FAB stack's
                        off state). Unchanged.
-       Known limit, Blue Suede Shoes: nothing can clear 4.5:1 with white AND stand more than
-       1.9:1 off that theme's own #154a7c sheet ground — its ground IS a mid blue. 1.96:1 is
-       the ceiling and that is what it gets; the sheet head still reads by its border and its
-       bold white type.
+       Blue Suede Shoes used to be the sore spot here: nothing can clear 4.5:1 with white AND
+       stand more than 1.9:1 off a #154a7c ground, because that ground was itself a mid blue.
+       v431 took the theme's grounds navy (#0b2c4e), which lifts the sheet head to 3.03:1 and
+       settles it — but the constraint is worth remembering if any theme's ground is ever
+       lightened toward its own accent again.
        Text/icon colour to use ON TOP of an --accent-deep fill: white everywhere now. */
     --on-accent:#ffffff;
     --accent-deep:#078278;
@@ -842,8 +843,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
       --brass:#d9a955; --emph:#ffc06a; --link:#6fb8ff; --accent-lite:#ff7a3d;
   }
   body[data-theme="bluesuedeshoes"]{
-    --navy-950:#0f3a61; --navy-900:#154a7c; --navy-800:#0d3050; --navy-700:#0a2540;
-    --line:#5e9ec9; --fog:#ffffff; --muted:#bcd7ec; --teal:#4ecbff; --map-bg:#1d5688;
+    /* v431: the grounds went NAVY (Jan). The four surfaces keep this theme's own inverted
+       order — navy-900 is the LIGHTEST here, it is the sheet body, and 700 the darkest — but
+       every one drops about 45% in luminance: #154a7c -> #0b2c4e and so on. What that buys,
+       besides the look: white body copy on the sheet goes 9.1:1 -> 14.2:1, and the v430 known
+       limit is GONE — the --accent-deep sheet head stood only 1.96:1 off the old mid-blue
+       ground and now stands 3.03:1, clearing the 3:1 UI-component threshold. Contrast in
+       sunlight is the whole point of this theme, so deeper ground is the right direction; the
+       bright #4ecbff accent and the paler #7fd4ff rose are untouched and now read harder. */
+    --navy-950:#071f38; --navy-900:#0b2c4e; --navy-800:#061a2f; --navy-700:#04121f;
+    --line:#5e9ec9; --fog:#ffffff; --muted:#bcd7ec; --teal:#4ecbff; --map-bg:#0e3052;
     --on-accent:#ffffff; --accent-deep:#007caf;
       --brass:#f0cf8a; --emph:#ffd98f; --link:#b3e2ff; --accent-lite:#4ecbff;
     /* Light blue, stated outright rather than inherited: this is the swatch blue the picker
@@ -4357,7 +4366,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 430;
+const BUILD_NUM  = 431;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -13773,7 +13782,7 @@ const THEMES = [
   { id:'purplehaze',     name:'Purple Haze',      sw:['#0d1017','#7c6cff'] },
   { id:'greeneyedlady',  name:'Green-Eyed Lady',  sw:['#0e2015','#3fae6b'] },
   { id:'tequilasunrise', name:'Tequila Sunrise',  sw:['#2a141d','#ff8c5a'] },
-  { id:'bluesuedeshoes', name:'Blue Suede Shoes', sw:['#154a7c','#7fd4ff'] },
+  { id:'bluesuedeshoes', name:'Blue Suede Shoes', sw:['#0b2c4e','#7fd4ff'] },  // sw[0] IS the theme's --navy-900 ground; keep the two in step (v431 took it navy)
   { id:'brownsugar',     name:'Brown Sugar',      sw:['#fdfcf9','#8a4b0f'] }
 ];
 /* Every id this app has ever written to storage, mapped to what it is called now. A function
