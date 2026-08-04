@@ -2335,6 +2335,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
      a circle inside the svg (its own stroke attr, so the stroke:none below can't touch it).
      21px box = the old 16px figure plus the ring's shell. */
   #locateBtn svg.mark-hint{color:var(--teal) !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
+  /* The Locate Me PIN matches the mark badge's height (v416) — 21px tall, 18px wide off its
+     24x28 viewBox. Overrides the stack's 15px `.fab svg` box; keep the two heights equal if
+     either changes. */
+  #locateBtn svg:not(.mark-hint){width:calc(18px * var(--tsb)); height:calc(21px * var(--tsb));}
   #locateBtn.active-locate svg.mark-hint{color:var(--on-accent) !important;}
   /* Holding the pill floods it red over the full hold — the "am I doing it?" feedback.
      Let go early and it snaps straight back (no transition without the class). */
@@ -4262,7 +4266,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 415;
+const BUILD_NUM  = 416;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
