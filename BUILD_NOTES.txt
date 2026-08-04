@@ -7,6 +7,19 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:15 PM EDT · v388 · Pill Text Shadow Removed
+------------------------------------------------------------------------------
+Jan: the shadow makes the text hard to read on dark fills too. The
+0 2px 3px dark text-shadow on the top zone/Launches pills dated from
+when off-state text was saturated colour on black; with v387's white
+text it only blurred the letterforms (off-state pills, and lit
+Launches white-on-brown — the bright lit fills had already killed it).
+Removed from the top row and from the inshore/offshore sub-rows,
+where a dark shadow on a black chip was doing nothing. No pill text
+carries a shadow now. Verified headless: computed text-shadow is
+none on every #metaRow and sub-row chip in both states.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:00 PM EDT · v387 · White Top-Pill Text
 ------------------------------------------------------------------------------
 Jan asked for white text on the top pills wherever the contrast ratio

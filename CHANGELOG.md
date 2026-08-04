@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v388** — Pill Text Shadow Removed
 - **v387** — White Top-Pill Text
 - **v386** — Brighter Launches Pill
 - **v385** — Gauge Blurbs + Jump To End

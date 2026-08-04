@@ -1452,10 +1452,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
      text-shadow from #metaRow below is killed on these two, since it existed to lift WHITE
      text off a bright ground and only muddies black text. */
   .chip[data-zone="inshore"].active{background:var(--inshore) !important; color:#000 !important; border-color:#fff !important; text-shadow:none !important;}
-  /* Shadow on the zone/launch chip text (both states) — the states whose text
-     sits on the weakest ground (saturated colour on black, or filled colour). */
+  /* v388: NO text-shadow on the zone/launch chips any more. The 0 2px 3px dark shadow
+     dated from when off-state text was saturated colour on black; with v387's white
+     text a dark shadow only blurs the letterforms (Jan: "hard to read on dark fills
+     too" — same lesson as the Labels OFF comment below). The lit bright fills already
+     killed it; now no state carries it. */
   #metaRow .chip[data-zone],
-  #metaRow #launchToggle{text-shadow:0 2px 3px rgba(0,0,0,.55) !important;}
+  #metaRow #launchToggle{text-shadow:none !important;}
   /* No shadow on lit Labels - it is BLACK text on the bright orange fill (v306), same as the
      lit zone pills, and a dark shadow only muddies black text. */
   #metaRow #labelsToggle.active{text-shadow:none !important;}
@@ -1484,7 +1487,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     padding:5px 8px 4px; font-size:calc(13px * var(--tsb));
     background:#000 !important; color:var(--inshore) !important;
     border:1px solid #0f4a80 !important; box-shadow:none !important;
-    text-shadow:0 2px 3px rgba(0,0,0,.55);
+    text-shadow:none;   /* v388: dark shadow on a black chip does nothing but blur */
   }
   #inshoreSubRow .chip .chip-total{font-size:calc(12px * var(--tsb));}
   #inshoreSubRow .chip.active{
@@ -1499,7 +1502,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     padding:5px 8px 4px; font-size:calc(13px * var(--tsb));
     background:#000 !important; color:var(--offshore) !important;
     border:1px solid #806013 !important; box-shadow:none !important;
-    text-shadow:0 2px 3px rgba(0,0,0,.55);
+    text-shadow:none;   /* v388: dark shadow on a black chip does nothing but blur */
   }
   #offshoreSubRow .chip .chip-total{font-size:calc(12px * var(--tsb));}
   #offshoreSubRow .chip.active{
@@ -4112,7 +4115,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 387;
+const BUILD_NUM  = 388;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
