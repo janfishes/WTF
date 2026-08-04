@@ -7,6 +7,18 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:58 PM EDT · v395 · 2px Pin Ring
+------------------------------------------------------------------------------
+Jan picked the 2px ring from a shore + open-ocean side-by-side. All
+marker rings go 3px -> 2px (round spot pins, catch diamonds, egg
+pin). With the v391 16px border-box pins that hands the freed pixels
+to the colour centre: 10px -> 12px diameter, ~44% more colour per
+pin, footprint and anchors unchanged. Partially walks back v389's
+brightest-ring call — the bigger colour centre compensates on the
+open blue (verified in the comparison shots). Verified headless:
+16px outer, 2px #fff border, drop shadow only.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:51 PM EDT · v394 · Darker Marina Amber
 ------------------------------------------------------------------------------
 Jan: darken the hue so the amber pins (and their tag pill) stand

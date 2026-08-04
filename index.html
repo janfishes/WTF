@@ -754,7 +754,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
        amber could only reach bronze #927000 before white passed). This walks back part of
        the v302 water measurement above: purple on the flat #295890 ocean is ~1.6:1 (better
        than the old #7a2fd6's 1.11:1 but nowhere near amber's 4.5:1), so the pin's white
-       ring carries the separation — widened to 3px the same build for exactly that reason.
+       ring carries the separation (2px since v395; the 16px pin's 12px colour centre and
+       the ring together keep it visible on the blue — verified side-by-side).
        Bluer than TRACK's magenta #c227d6 so the two stay tellable apart. */
     --inshore:#1e90ff; --offshore:#9e3cff; --launch:#4f1d0a; --mark:#e02020;
     /* Not a pin colour: catch pins are filled per SPECIES (see SPECIES below), never with
@@ -2132,11 +2133,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Markers ---------- */
   .spot-marker{
-    /* v389: ring widened 2px -> 3px (Jan: "as bright white as possible"). The colour was
-       already pure #fff; at 14px pin size width is what reads as brightness, and the ring
-       carries the pin's separation from the water now that offshore is purple (~1.6:1 on
-       the flat ocean fill — see the --offshore note in :root). */
-    border-radius:50%; border:3px solid #fff;
+    /* v389 widened the ring 2px -> 3px for brightness; v395 took it back to 2px after a
+       side-by-side over the open ocean (Jan's pick) — at the v391 16px pin the 12px colour
+       centre compensates: more hue showing, pin footprint unchanged, still clearly visible
+       on the flat #295890 blue where purple alone is ~1.6:1. */
+    border-radius:50%; border:2px solid #fff;
     box-shadow:0 2px 6px rgba(0,0,0,.5);   /* v390: dark 2px outer ring removed (Jan) — soft drop shadow stays */
   }
   .spot-marker.dim{opacity:.2;}
@@ -2161,7 +2162,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      dark river water, the flat blue ocean, white chart areas and pale sand alike - which no
      single species colour did. The white border is what separates it from everything
      (v390 removed the dark outer ring at Jan's request; the soft drop shadow remains). */
-  .catch-marker{width:14px; height:14px; background:#000; border:3px solid #fff; transform:rotate(45deg); box-shadow:0 2px 6px rgba(0,0,0,.5);}   /* v389: 3px ring; v390: dark outer ring removed */
+  .catch-marker{width:14px; height:14px; background:#000; border:2px solid #fff; transform:rotate(45deg); box-shadow:0 2px 6px rgba(0,0,0,.5);}   /* v390: dark outer ring removed; v395: back to the 2px ring with the round pins */
   .catch-marker.dim{opacity:.18;}
   /* ---- Count badges on map pins ----
      .catch-count sits on a merged catch diamond (several catches within 50 ft);
@@ -2533,7 +2534,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      a literal. */
   .egg-pin{
     width:16px; height:16px; box-sizing:border-box; border-radius:50%;   /* v391: tracks spotPinSize 16 */
-    background:var(--offshore); border:3px solid #fff;
+    background:var(--offshore); border:2px solid #fff;
     box-shadow:0 2px 5px rgba(0,0,0,.5);   /* v390: dark outer ring removed, matching .spot-marker */
   }
   .egg-img{
@@ -4131,7 +4132,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 394;
+const BUILD_NUM  = 395;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
