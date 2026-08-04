@@ -7,6 +7,128 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 1:24 AM EDT · v407 · Offshore Depth
+------------------------------------------------------------------------------
+The depth contours no longer stop at the beach. v407 runs them east to
+-79.2 — past every offshore waypoint in the app, over the reef grounds,
+down the shelf break the Steeples and Rolldown sit on, and out onto the
+Blake Plateau where the bottom is near enough 3,000 ft. It also renames
+the button, fixes the press-and-hold Jan still could not make fire, and
+puts the not-for-navigation line where it cannot be missed.
+
+OFFSHORE CONTOURS. NOAA's 2026-08-04 BlueTopo pull added 19 tiles east of
+the old coverage — 8 m over the reef grounds, 4 m in the nearshore
+Atlantic, 16 m on the shelf and the Gulf Stream slope. From them the
+offline build (pass_c_offshore.py, a second pass beside the inshore
+pass_b_contours.py) cuts 22 new blocks: 39 in all now, 2.4 MB for the
+county AND the ocean off it, up from 17 blocks and 2.1 MB. Every inshore
+block is byte-for-byte the file v406 shipped — the lagoon design is
+settled and nothing was allowed to move it.
+
+Offshore is its own pass because offshore is its own problem. There is no
+CUDEM out there and no need for the connected-water gate that keeps
+contours out of Volusia's borrow pits: BlueTopo only maps navigable
+water, so past the beach its own coverage IS the water mask. The grid is
+matched to the source rather than to the lagoon — about 9 m where the 8 m
+tiles reach, about 19 m past -79.80 where only the 16 m tiles do —
+because contouring a 16 m tile on a 7 m grid manufactures wiggle that
+isn't in the survey. The deep plateau, which is nearly flat at 2,400 to
+2,800 ft, is smoothed and simplified harder than the ledges, where the
+wiggle in the line IS the ledge.
+
+THE INTERVALS. Every level at or under 200 ft is shared with the inshore
+set and keeps its inshore tier, so the lines run through the -80.3 seam
+without a step — the 100 and 200 ft lines simply carry on. Above that a
+deep set takes over, tight where the fishing is and opening out as the
+bottom falls away:
+
+  from z11   250, 300, 400, 600, 900, 1500, 2400 ft
+  from z13   220, 350, 500, 700, 1200, 1800, 2700
+  from z14   260, 325, 450, 550, 800, 1000, 1350, 2100, 3000
+  from z15   the 10 ft in-fills through 210-275, then the rest
+
+The 200-400 ft band is where the ledges are, so it gets the closest
+spacing; at z11 the steepest part of the break still comes out around 35
+to 45 px between lines, which is a chart and not a smear. Drawing still
+starts at z11, the same as inshore — one rule, and the launch view stays
+clean.
+
+Two holes closed along the way. The Atlantic off Canaveral (lat 28.40 to
+28.75, lon -80.5 to -80.3) came out empty in v405: there was no BlueTopo
+there when the water gate was built, so its water never entered the gate.
+The new pull covers it, and it is built by the offshore pass — BlueTopo
+only, gate-free — so the gate every inshore block depends on did not have
+to be touched. The other is the seam itself: the offshore blocks' west
+column starts at exactly -80.3, butting onto the inshore column with no
+gap and no overlap.
+
+DEPTH_DATA_V is 2. It must be — the on-device cache keys off it, and a
+phone that has looked at these blocks once would otherwise serve the old
+set forever.
+
+THE BUTTON IS NOW "DEPTH CONTOURS". "Depth" alone read like a number
+readout rather than a layer. The longer label was measured across the
+stack: 145 px against TRACK MY PATH's 134, no wrap and no overflow at
+--tsb 0.85, 1, 1.25 and 1.5, and on phone, tablet and desktop widths.
+
+THE PRESS AND HOLD, AGAIN. v406 hardened the release and shipped; Jan's
+report came back "the button works, not the long press on a satellite
+map". The most likely answer is that it worked the whole time and said
+nothing. The app opens at z10. The layer starts drawing at z11. A hold at
+the opening view turned the layer on, lit a pill in a stack you are not
+looking at, floated a toast, and drew NOTHING — and holding again turned
+it back off. So: a hold that turns the layer on below z11 now zooms to
+z11 about the point held. The gesture always has a visible answer.
+
+Three other things that could each swallow the press on a satellite view,
+all fixed:
+  - the PRESS is now armed from a capture listener on window, matching
+    the release v406 already moved there. A bubble listener on the map
+    container only hears what the panes above it let through, and the
+    satellite views stack several — tiles, the sea paint, the depth
+    canvas, the state-waters SVG — any of which can keep the event from
+    reaching the container, as can a pointer capture Leaflet takes for a
+    drag.
+  - moves are watched on window too, so a hold that becomes a pan is
+    still disarmed once Leaflet has the pointer.
+  - contextmenu now ACTIVATES as well as being swallowed. It is the
+    platform's own long press: iOS fires it when it decides a press has
+    been held, macOS fires it on a two-finger tap, a ctrl-click or a
+    right-click, and a Mac trackpad's force click can end a press as a
+    contextmenu with no ordinary pointerup behind it. No timer of ours
+    has to be right for it to work. It is a silent alias — the help and
+    the tip still describe one gesture, press and hold, because that is
+    the one gesture a person makes on a boat.
+The slop is 22 px, not 14: a hand resting on a trackpad drifts further
+than a finger resting on glass.
+
+NOT FOR NAVIGATION, IN GOLD. Jan's ask. Wherever the depth layer's
+caveat appears in a popup — the map-credits panel and the toast the layer
+raises when you turn it on — the warning now sits on its OWN second line,
+in ALL CAPS, BOLD (weight 900), in the palette's #FFC400. On those dark
+panels that gold reads as a warning rather than as a marina pin's colour,
+and nothing new enters the palette. Brownsugar is the one light theme, so
+its toast alone gets a darker gold (#8a5b00) that holds on the cream.
+The help's and the gate's own not-for-navigation language is untouched.
+
+HELP. The Depth Contours topic gains a paragraph on the offshore
+intervals, the shelf break under the offshore waypoints, and how far the
+coverage reaches; the sources paragraph says plainly that the surveys get
+coarser the further out you go, so the deep lines are the SHAPE of the
+bottom rather than a survey of it. The NAVD88 / not-chart-datum caveat is
+word for word what it was.
+
+TURNBULL CREEK. Jan asked why there are no contours there. Checked
+against the sources: the data says there is barely a foot of water in it.
+BlueTopo covers about a third of the upper creek and 4% of the lower, and
+where it does cover, the median depth is 0.7 ft up top and 0.6 ft below —
+so the only line that could ever cross it is the 1 ft, which is a z15
+line. Turnbull BAY is better: two thirds surveyed, median 2.1 ft, and it
+draws its 3 ft outline from z13. Nothing was faked in. Rose Bay, Spruce
+Creek, Strickland Bay and the Tomoka Basin all carry proper contours from
+z13; the upper Tomoka River is thin for the same reason the creek is.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 12:56 AM EDT · v406 · Depth Button
 ------------------------------------------------------------------------------
 v405 gave the depth contours a press-and-hold on the map and no button at
