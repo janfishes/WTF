@@ -7,8 +7,33 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-04 · 2:15 AM EDT · v409 · Ten Fathom Curve
+Build 2026-08-04 · 3:05 AM EDT · v410 · Filter Pill Icons
 ------------------------------------------------------------------------------
+Every top filter pill now carries a small outline icon after its name, drawn
+in the same simple-outline style as the FAB icons (Jan's picks): Catches a
+diamond (the shape of its own catch pins on the map), Inshore a winding
+waterway, Offshore the inlet jetties with a wave beyond them, Launches a
+boat hull on a ramp, Labels a name-tag pill. Word-then-icon order, per the
+app-wide rule; only the FAB stack leads with the icon.
+
+Four FAB icons redrawn at the same time: + Catch trades its plus for a
+proper fish (body, forked tail, eye); Bite trades the old fish for a clock
+face with hands; Compass is now a basic outline of the compass rose (circle
+with a four-point star — Jan: "just a basic outline of the compass"); My Log
+trades its diamond for an open log book — the diamond now belongs to the
+Catches pill, matching the diamonds it switches.
+
+Help kept in sync: the Bite / Compass / My Log / + Catch topic buttons and
+the two inline Bite and Compass glyphs in the prose carry the new drawings,
+and the five Map Filter topic buttons (Catches / Inshore / Offshore /
+Launches / Labels) now show the same icons as their pills. The + Spot button
+keeps its plus. Icon svgs for the pills live in the FILTER_ICONS table next
+to the pill builders; the pill copies scale with the A text-size control via
+the shared .fic rule (14px · --tsb).
+
+Verified headless (Chrome 1280×800, fresh profile): pills off and lit, both
+sub-rows, the FAB stack, and both help sections; all three script blocks
+pass node --check.
 Jan: "I don't see depths around the 10 fathom area." He was right, and the
 reason was not the data. The 60 ft contour — the ten fathom curve, the line
 every boat off this beach runs to — was in every offshore block all along, and
