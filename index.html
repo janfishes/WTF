@@ -1494,8 +1494,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #inshoreSubRow.show{display:flex;}
   #inshoreSubRow .chip{
     padding:5px 8px 4px; font-size:calc(13px * var(--tsb));
-    background:#000 !important; color:var(--inshore) !important;
-    border:1px solid #0f4a80 !important; box-shadow:none !important;
+    background:#000 !important; color:#fff !important;   /* v390: white like the parent row */
+    border:1px solid #0f4a80 !important; box-shadow:none !important;   /* dimmed ring keeps the row subordinate when off; LIT fill matches the parent */
     text-shadow:none;   /* v388: dark shadow on a black chip does nothing but blur */
   }
   #inshoreSubRow .chip .chip-total{font-size:calc(12px * var(--tsb));}
@@ -1509,8 +1509,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #offshoreSubRow.show{display:flex;}
   #offshoreSubRow .chip{
     padding:5px 8px 4px; font-size:calc(13px * var(--tsb));
-    background:#000 !important; color:var(--offshore) !important;
-    border:1px solid #55229c !important; box-shadow:none !important;   /* v389: dimmed purple, was amber #806013 */
+    background:#000 !important; color:#fff !important;   /* v390: white like the parent row */
+    border:1px solid #55229c !important; box-shadow:none !important;   /* dimmed ring keeps the row subordinate when off; LIT fill matches the parent */
     text-shadow:none;   /* v388: dark shadow on a black chip does nothing but blur */
   }
   #offshoreSubRow .chip .chip-total{font-size:calc(12px * var(--tsb));}
@@ -2136,7 +2136,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
        carries the pin's separation from the water now that offshore is purple (~1.6:1 on
        the flat ocean fill — see the --offshore note in :root). */
     border-radius:50%; border:3px solid #fff;
-    box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.5);
+    box-shadow:0 2px 6px rgba(0,0,0,.5);   /* v390: dark 2px outer ring removed (Jan) — soft drop shadow stays */
   }
   .spot-marker.dim{opacity:.2;}
   /* Spots the user dropped themselves. Dashed ring outside the white border, in the zone
@@ -2158,9 +2158,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Solid black fill since v303 (was an inline per-species colour). Black against the white
      border is the highest-contrast pair there is, and it holds on every ground the map has -
      dark river water, the flat blue ocean, white chart areas and pale sand alike - which no
-     single species colour did. The outer rgba(0,0,0,.6) ring still separates it from dark
-     water; the white border is what separates it from everything else. */
-  .catch-marker{width:14px; height:14px; background:#000; border:3px solid #fff; transform:rotate(45deg); box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.5);}   /* v389: 3px ring like .spot-marker */
+     single species colour did. The white border is what separates it from everything
+     (v390 removed the dark outer ring at Jan's request; the soft drop shadow remains). */
+  .catch-marker{width:14px; height:14px; background:#000; border:3px solid #fff; transform:rotate(45deg); box-shadow:0 2px 6px rgba(0,0,0,.5);}   /* v389: 3px ring; v390: dark outer ring removed */
   .catch-marker.dim{opacity:.18;}
   /* ---- Count badges on map pins ----
      .catch-count sits on a merged catch diamond (several catches within 50 ft);
@@ -2533,7 +2533,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .egg-pin{
     width:14px; height:14px; box-sizing:border-box; border-radius:50%;
     background:var(--offshore); border:3px solid #fff;
-    box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 2px 5px rgba(0,0,0,.5);
+    box-shadow:0 2px 5px rgba(0,0,0,.5);   /* v390: dark outer ring removed, matching .spot-marker */
   }
   .egg-img{
     display:block; width:100%; height:auto; border-radius:8px; margin-top:0;
@@ -4130,7 +4130,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 389;
+const BUILD_NUM  = 390;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

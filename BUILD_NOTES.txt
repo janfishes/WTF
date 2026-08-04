@@ -7,6 +7,22 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:35 PM EDT · v390 · White Sub-Pill Text + Ringless Pins
+------------------------------------------------------------------------------
+Two Jan requests. (1) The sub-row ("children") pills under Inshore /
+Offshore now use WHITE text in the off state like the parent row
+(was zone-coloured text on black); their dimmed zone-colour rings
+stay, keeping the rows visually subordinate when off. When LIT the
+children already fill with the parent pill's exact lit colour
+(#0073e3 / the v389 purple) — verified byte-identical computed
+values. (2) The 2px dark outer ring (box-shadow 0 0 0 2px
+rgba(0,0,0,.6)) is REMOVED from all map pins — spot pins, catch
+diamonds, and the easter-egg pin — so the 3px white ring sits
+directly on the water; the soft 0 2px drop shadow stays. Verified
+headless: sub-pill computed colours both states, pin box-shadow is
+drop-shadow only, screenshots over the water at z12.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:26 PM EDT · v389 · Purple Offshore + White Lit Text
 ------------------------------------------------------------------------------
 Jan picked purple from the white-text mockup and asked for the pins
