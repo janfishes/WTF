@@ -7,6 +7,29 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 9:17 PM EDT · v396 · Nearshore Sea Fade
+------------------------------------------------------------------------------
+Jan (from the greener-ocean mockup): green the sea near the land,
+fading to the ocean blue offshore and at wide zooms — with no seams.
+The painted sea is no longer one flat #295890. New nearshore fade in
+paintSeaOverlay(): teal #2A7070 at the painted edge relaxing to
+OCEAN_DEEP over SEA_FADE_M (5 km) seaward, drawn as 8 concentric
+ring strokes along the SHORE_RINGS (widest/bluest first, ~3-4 RGB
+per step — no visible banding) BEFORE the destination-out punch, so
+band and base clip to the same smooth coastline. Two seam guards:
+seaFadeT(z) scales the teal to 0 at z9 (measured: z9 tiles are
+byte-identical 41,88,144, so the z8 USGS handoff is exactly as
+before), full strength from z13 in; and the fade is distance-based
+so there are no spatial steps. seaNearRings() grew an extraM param —
+fully-open-sea tiles within 5 km of the coast still render locally
+(no request): both flat-fill shortcuts now run paintSeaOverlay over
+the flat canvas to lay the band. Purple offshore pins pop harder on
+the green (the reason this started). Help's Topo Satellite paragraph
+updated ("green-blue along the coast, deepening to ocean blue").
+Verified headless at z14/z12/z10/z9/z8 with screenshots + pixel
+samples.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:58 PM EDT · v395 · 2px Pin Ring
 ------------------------------------------------------------------------------
 Jan picked the 2px ring from a shore + open-ocean side-by-side. All

@@ -2985,7 +2985,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mapview"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite / Hi Res &amp; ICW / Street Map<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-mapview">
-      <p class="sheet-note">The button toggles between three map views, showing whichever map view is currently active. In <b>Topo Satellite</b>, Florida's <b>state-waters limit</b> (3 nm on the Atlantic, 9 nm in the Gulf) is drawn as a <b>dashed line</b> at every zoom, over a clean deep-blue Atlantic that begins about a mile off the beach. Zooming in to the 1-mile scale shows the paddling-trail routes, the Intracoastal's course through the sounds and bays, and every island chain. The <b>Hi Res &amp; ICW</b> map is a hi-res aerial photo — one continuous image of the land and every inside water, the sharpest view of the flats, bars and nearshore bottom. The <b>Intracoastal Waterway (ICW)</b> is mapped as cyan shading through the entire county — it is the channel <i>area</i>, not a centerline. Both maps are stored on your device, so they still draw with the signal off. The Hi Res &amp; ICW view also plots the <b>240 charted aids to navigation</b> along those channels — 217 fixed day beacons and 23 buoys — as small red and green dots, red for the marks on your starboard hand coming in from sea, green to port, and amber for the two or three preferred-channel junction marks. <b>Tap a dot</b> for its full charted name and, where it is lit, its light characteristic (e.g., <span class="g-emph">Halifax River Light 47 · Fl G 4s</span>). The name stays put until you tap another mark or tap open water to clear it. These markers appear with the channel shading, and do not show in the other map views.</p>
+      <p class="sheet-note">The button toggles between three map views, showing whichever map view is currently active. In <b>Topo Satellite</b>, Florida's <b>state-waters limit</b> (3 nm on the Atlantic, 9 nm in the Gulf) is drawn as a <b>dashed line</b> at every zoom, over a clean Atlantic that begins about a mile off the beach — green-blue along the coast, deepening to ocean blue a few miles out. Zooming in to the 1-mile scale shows the paddling-trail routes, the Intracoastal's course through the sounds and bays, and every island chain. The <b>Hi Res &amp; ICW</b> map is a hi-res aerial photo — one continuous image of the land and every inside water, the sharpest view of the flats, bars and nearshore bottom. The <b>Intracoastal Waterway (ICW)</b> is mapped as cyan shading through the entire county — it is the channel <i>area</i>, not a centerline. Both maps are stored on your device, so they still draw with the signal off. The Hi Res &amp; ICW view also plots the <b>240 charted aids to navigation</b> along those channels — 217 fixed day beacons and 23 buoys — as small red and green dots, red for the marks on your starboard hand coming in from sea, green to port, and amber for the two or three preferred-channel junction marks. <b>Tap a dot</b> for its full charted name and, where it is lit, its light characteristic (e.g., <span class="g-emph">Halifax River Light 47 · Fl G 4s</span>). The name stays put until you tap another mark or tap open water to clear it. These markers appear with the channel shading, and do not show in the other map views.</p>
       <p class="sheet-note"><b>The numbers start again on every waterway</b>, which is worth knowing before you go looking for one. There are <b>five marks numbered 47</b> in Volusia County alone — on the Halifax River, at New Smyrna Beach, in Mosquito Lagoon and elsewhere — so "marker 47" on its own does not identify a spot. That is why every dot carries its full name rather than just a number. Positions come from NOAA's electronic navigational charts (Harbor-band cells); the light characteristics are matched to each mark by position from the charts' separate light records. Same caution as the channel itself: aids get moved, go missing, and change — so this app is for planning, not for navigating.</p>
       <p class="sheet-note">The ICW outlines come from the US Army Corps of Engineers' National Channel Framework — the Florida East survey published <b>June 2020</b>. <b>Treat its path as a general reference, not as true soundings.</b> It shows where the channel is authorized to be at that time, not where the water actually is now. Furthermore, shoaling moves the usable water around, and this coast gets plenty of it. Read and rely on your depth sounder and chartplotter — not this app — for navigation.</p>
       </div>
@@ -4132,7 +4132,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 395;
+const BUILD_NUM  = 396;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -4492,6 +4492,26 @@ async function fetchTileRetrying(url){
 const OCEAN_DEEP = '#295890';
 const OCEAN_DEEP_R = 41, OCEAN_DEEP_G = 88, OCEAN_DEEP_B = 144;
 const OCEAN_MIN_Z = 9;             // z<=8: USGS's own ocean rendering; leave it alone
+/* v396: NEARSHORE FADE (Jan) — the painted sea is no longer one flat blue. A teal band
+   hugs the painted edge along the coast and relaxes to OCEAN_DEEP over SEA_FADE_M
+   seaward, so nearshore water reads greener (where real water is greener, and where the
+   purple offshore pins pop hardest) and the open ocean keeps the USGS-matched blue.
+   Two seam guards: (1) the fade is drawn as SEA_FADE_STEPS concentric ring strokes with
+   ~3-4 RGB per step — no visible banding; (2) seaFadeT() scales the teal DOWN with zoom,
+   reaching 0 at z9, so the z8/z9 handoff to USGS's own ocean stays byte-identical
+   (the whole reason OCEAN_DEEP equals USGS's z<=8 ocean — see the note above). */
+const SEA_FADE_M = 5000;                 // teal fully relaxed to OCEAN_DEEP this far past the painted edge
+const SEA_FADE_NEAR_R = 42, SEA_FADE_NEAR_G = 112, SEA_FADE_NEAR_B = 112;   // #2A7070 at the edge
+const SEA_FADE_STEPS = 8;
+function seaFadeT(z){                    // fade strength by zoom: 0 at z<=9, full from z13 in
+  return z <= 9 ? 0 : (z >= 13 ? 1 : (z - 9)/4);
+}
+function seaFadeColor(f, t){             // f: 0 at painted edge -> 1 at SEA_FADE_M out
+  const m = (1 - f)*t;
+  return 'rgb(' + Math.round(OCEAN_DEEP_R + (SEA_FADE_NEAR_R - OCEAN_DEEP_R)*m) + ','
+                + Math.round(OCEAN_DEEP_G + (SEA_FADE_NEAR_G - OCEAN_DEEP_G)*m) + ','
+                + Math.round(OCEAN_DEEP_B + (SEA_FADE_NEAR_B - OCEAN_DEEP_B)*m) + ')';
+}
 const FILLER_TOL = 8;                       // JPEG wiggle around exact #004C74
 function isFillerPixel(r,g,b){
   return r <= FILLER_TOL && g >= 76-FILLER_TOL && g <= 76+FILLER_TOL && b >= 116-FILLER_TOL && b <= 116+FILLER_TOL;
@@ -4586,8 +4606,8 @@ function pointInRings(clip, lng, lat){
 // Edge-level, not ring-bbox-level, on purpose: the mainland ring's bbox spans
 // the whole gate, so a bbox test alone would flag every tile as coastal and
 // kill the open-sea shortcut.
-function seaNearRings(clip, lonW, latS, lonE, latN){
-  const padM = Math.max(clip.pad, 50);       // a little slack even for a zero pad
+function seaNearRings(clip, lonW, latS, lonE, latN, extraM){
+  const padM = Math.max(clip.pad, 50) + (extraM || 0);   // a little slack even for a zero pad; extraM widens the search for the v396 fade band
   const padLon = padM/(111320*Math.cos(latN*Math.PI/180));
   const padLat = padM/110540;
   const w=lonW-padLon, e=lonE+padLon, s=latS-padLat, n=latN+padLat;
@@ -4677,9 +4697,13 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
   const gx0 = Math.max(0, lng2px(SHORE_GATE.w)), gx1 = Math.min(size, lng2px(SHORE_GATE.e));
   const gy0 = Math.max(0, lat2px(SHORE_GATE.n)), gy1 = Math.min(size, lat2px(SHORE_GATE.s));
   if(gx1 <= gx0 || gy1 <= gy0) return;
+  const fadeT = seaFadeT(coords.z);
   const near = seaNearRings(clip, lonW, latS, lonE, latN);
+  // Rings whose fade band reaches this tile — a wider search than the punch pad,
+  // so fully-open-sea tiles within SEA_FADE_M of the coast still get their teal.
+  const nearBand = fadeT ? seaNearRings(clip, lonW, latS, lonE, latN, SEA_FADE_M) : [];
   const wins = labelWindows ? seaLabelWindows(coords, size) : [];
-  if(!near.length){
+  if(!near.length && !nearBand.length){
     if(pointInRings(clip, (lonW+lonE)/2, (latS+latN)/2)) return;   // wholly inside — untouched
     if(!wins.length){
       g.fillStyle = OCEAN_DEEP; g.fillRect(gx0, gy0, gx1-gx0, gy1-gy0);
@@ -4691,6 +4715,27 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
   const og = o.getContext('2d');
   og.fillStyle = OCEAN_DEEP;
   og.fillRect(gx0, gy0, gx1-gx0, gy1-gy0);
+  const mPerPx = 40075016.686*Math.cos(((latN+latS)/2)*Math.PI/180)/(n*size);
+  /* v396 nearshore fade: concentric strokes along the coast rings, widest/bluest first,
+     narrowest/tealest last, so the water greens toward the painted edge. Drawn BEFORE the
+     destination-out punch — the punch then trims band and base blue to the same smooth
+     boundary. The stroke's landward half is either punched out (coastal tiles) or beyond
+     this tile (open-sea band tiles). */
+  if(fadeT && nearBand.length){
+    og.lineJoin = 'round'; og.lineCap = 'round';
+    og.beginPath();
+    for(const k of nearBand){
+      const r = clip.rings[k];
+      og.moveTo(lng2px(r[0]), lat2px(r[1]));
+      for(let i=2;i<r.length;i+=2) og.lineTo(lng2px(r[i]), lat2px(r[i+1]));
+      og.closePath();
+    }
+    for(let s=SEA_FADE_STEPS; s>=1; s--){
+      og.strokeStyle = seaFadeColor((s-0.5)/SEA_FADE_STEPS, fadeT);
+      og.lineWidth = 2*(clip.pad + SEA_FADE_M*s/SEA_FADE_STEPS)/mPerPx;
+      og.stroke();
+    }
+  }
   og.globalCompositeOperation = 'destination-out';
   if(near.length){
     og.beginPath();
@@ -4703,7 +4748,6 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows){
     og.fill();
     if(clip.pad > 0){
       og.lineJoin = 'round'; og.lineCap = 'round';
-      const mPerPx = 40075016.686*Math.cos(((latN+latS)/2)*Math.PI/180)/(n*size);
       og.lineWidth = 2*clip.pad/mPerPx;
       og.stroke();
     }
@@ -4717,6 +4761,9 @@ const OfflineTileLayer = L.TileLayer.extend({
   createTile(coords, done){
     if(this.options.oceanFill && isOpenSeaTile(coords, tileClipName(this.options, coords.z), this.options.labelWindows)){
       const t = oceanTileElement(this.options.oceanFill, this.getTileSize());
+      // v396: open-sea tiles inside the fade band still render locally (no request) —
+      // paintSeaOverlay re-fills the flat blue and lays the teal strokes over it.
+      try{ paintSeaOverlay(t.getContext('2d'), coords, this.getTileSize().x, tileClipName(this.options, coords.z), this.options.labelWindows); }catch(e){}
       setTimeout(()=>done(null, t), 0);
       return t;
     }
@@ -4903,6 +4950,7 @@ const OfflineWMSTileLayer = L.TileLayer.extend({
   createTile(coords, done){
     if(this.options.oceanFill && isOpenSeaTile(coords, tileClipName(this.options, coords.z))){
       const t = oceanTileElement(this.options.oceanFill, this.getTileSize());
+      try{ paintSeaOverlay(t.getContext('2d'), coords, this.getTileSize().x, tileClipName(this.options, coords.z)); }catch(e){}   // v396 fade band
       setTimeout(()=>done(null, t), 0);
       return t;
     }
