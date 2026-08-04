@@ -2335,41 +2335,50 @@ svg.leaflet-image-layer.leaflet-interactive path {
     box-shadow:0 0 0 1.5px rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center;
     font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; color:#fff; line-height:1;
   }
-  /* All bottom buttons: white bg + black text when off; colored fill + black text when active (like Tides) */
-  .fab{background:#fff !important; border-color:#fff !important; color:#000 !important;}
+  /* v429: the stack matches the filter pills' language — BLACK when off, the theme accent when
+     lit. Off: black fill, WHITE label, var(--accent-lite) ring + icons (accent-lite, not
+     --teal, for the same reason the black pills use it: Brown Sugar's chocolate --teal
+     vanishes on black while its accent-lite amber reads). Lit: var(--teal) fill with
+     var(--on-accent) label AND icons — on-accent is black in five themes and white in Brown
+     Sugar, which is the only pairing that clears the contrast rule on every accent (white on
+     Blue Suede's #4ecbff is 1.9:1, on Parrot Head's #19cec0 1.9:1 — both fail; black clears
+     10:1+ on all five bright accents and Brown Sugar's dark accent takes the white). */
+  .fab{background:#000 !important; border-color:var(--accent-lite) !important; color:#fff !important;}
   /* v415: stroke-width bumped 2.6 -> 3.2 (Jan: bold the FAB icons) — that renders ~2.0px of
      line at the 15px icon size, the same weight the filter pills went to in v414. THIS is
      the rule that wins for the whole stack; an earlier `.fab svg` further up the sheet is
      overridden by it, so bolden here, not there. */
-  .fab svg{stroke:var(--teal) !important; stroke-width:3.2;}
-  /* Selected white buttons all adopt the current theme's accent color (--teal),
+  .fab svg{stroke:var(--accent-lite) !important; stroke-width:3.2;}
+  /* Selected buttons all adopt the current theme's accent color (--teal),
      so they follow whatever theme the user picks. */
   #tidePinBtn.tide-active{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
   #tidePinBtn.tide-active svg{stroke:var(--on-accent) !important;}
   .fab.pressed{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
-  .fab.pressed svg{stroke:#fff !important;}
+  .fab.pressed svg{stroke:var(--on-accent) !important;}
   /* The wave glyph is a FILLED path, unlike every other FAB icon, which is stroked line art.
      Without its own rule it falls back to currentColor — black at rest — and picks up the
      shared 2.6px stroke as an outline. Matches the neighbouring icons' pressed white. */
-  #waveBtn svg{fill:var(--teal) !important; stroke:none !important;}
-  #waveBtn.pressed svg{fill:#fff !important;}
+  #waveBtn svg{fill:var(--accent-lite) !important; stroke:none !important;}
+  #waveBtn.pressed svg{fill:var(--on-accent) !important;}
   #locateBtn.active-locate{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
   #locateBtn svg{color:var(--accent-lite);}
-  #locateBtn.active-locate svg{color:#fff;}
+  #locateBtn.active-locate svg{color:var(--on-accent);}
   #mapModeBtn.street-on{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
-  #mapModeBtn.street-on svg{stroke:#fff !important;}
+  #mapModeBtn.street-on svg{stroke:var(--on-accent) !important;}
   /* Channel state gets the same lit treatment as Street, in the channel's own cyan rather
-     than the theme accent, so the button matches what is drawn on the water. */
+     than the theme accent, so the button matches what is drawn on the water. This is the ONE
+     lit FAB that keeps a fixed colour after v429 (Depth Lines gave its cyan up for the accent):
+     mapModeBtn has TWO lit states on one button, and in ui-compact the labels collapse to
+     font-size:0 — if icw-on and street-on shared the accent fill there would be nothing left
+     to tell the two modes apart. */
   #mapModeBtn.icw-on{background:#39d6ff !important; border-color:#39d6ff !important; color:#04141e !important;}
   #mapModeBtn.icw-on svg{stroke:#04141e !important;}
   /* DEPTH LINES lit state (v406). Its own class, NOT .pressed — closeAllOverlays sweeps .pressed
-     and this is a sticky map layer, not an overlay. The fill is the contour lines' own pale
-     cyan (DEPTH_LINE #9eeeff) on the labels' near-black (#04141e), so the button matches what
-     is drawn on the water — deliberately paler than the ICW state's vivid #39d6ff on the
-     button directly above it, and clear of red (MARK), magenta (TRACK), purple/blue (zones),
-     amber (marinas) and orange (Labels). */
-  #depthBtn.depth-on{background:#9eeeff !important; border-color:#9eeeff !important; color:#04141e !important;}
-  #depthBtn.depth-on svg{stroke:#04141e !important;}
+     and this is a sticky map layer, not an overlay. v429: the fill is the THEME ACCENT like the
+     rest of the lit stack (it was the contour lines' own pale cyan #9eeeff, Jan's call to bring
+     it into line); only the ICW state above keeps a fixed colour, and for the reason noted there. */
+  #depthBtn.depth-on{background:var(--teal) !important; border-color:var(--teal) !important; color:var(--on-accent) !important;}
+  #depthBtn.depth-on svg{stroke:var(--on-accent) !important;}
   /* Coastal place names the app prints over the flat ocean blue in the Topo
      Satellite view (USGS's own labels get cut off by the ocean repair at wide
      zooms) — styled after USGS's white-on-halo label look. */
@@ -2393,7 +2402,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* The badge wears the same dashed ring shape as the map mark (.mark-pin .disc) — drawn as
      a circle inside the svg (its own stroke attr, so the stroke:none below can't touch it).
      21px box = the old 16px figure plus the ring's shell. */
-  #locateBtn svg.mark-hint{color:var(--teal) !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
+  #locateBtn svg.mark-hint{color:var(--accent-lite) !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
   /* The Locate Me PIN matches the mark badge's height (v416) — 21px tall, 18px wide off its
      24x28 viewBox. Overrides the stack's 15px `.fab svg` box; keep the two heights equal if
      either changes. */
@@ -3181,7 +3190,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
 
       <div class="subhead">Action Buttons</div>
-      <p class="sheet-note">Twelve white buttons along the right side of the map are the app’s actions.</p>
+      <p class="sheet-note">Twelve black buttons along the right side of the map are the app’s actions. A button fills with your <b>theme color</b> while its action is on.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12c2.5-3.5 6-5.3 9.2-5.3 2.6 0 4.8 2 6.3 5.3-1.5 3.3-3.7 5.3-6.3 5.3-3.2 0-6.7-1.8-9.2-5.3Z"></path><path d="M18.5 12 22 8.6v6.8Z"></path><circle cx="7" cy="10.7" r=".7" fill="currentColor" stroke="none"></circle></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
       <p class="sheet-note">Tap <b>+ Catch</b> to open the catch dialog window and then pick <b>one or more species</b> from the list. The first one you tap is that entry's main fish, but every one you pick will be stored for that particular log entry. Set date and time (shown in local 12-hour time — on a computer just type the date, like 6/15/1988; phones get a scroll picker), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by tapping <b>High</b>, <b>Low</b>, <b>Falling</b>, or <b>Rising</b> — or tap <b>Auto-detect from NOAA</b> once a location and date/time are set. The app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too, but needs internet). <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only (e.g., 30 inches records the fish as 2 ft 6 in).</p>
@@ -3242,7 +3251,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-depth"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 7c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 12c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 17c3-3 6-3 9 0s6 3 9 0"></path></svg> Depth Lines<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-depth">
-      <p class="sheet-note">Tap <b>Depth Lines</b> and the water fills with <b>depth contours in feet</b> — thin pale-cyan lines joining equal depths, each carrying its own number on a small dark tag (<span class="g-emph">3 ft</span>, <span class="g-emph">6 ft</span>, <span class="g-emph">12 ft</span>). The button lights up in that same pale cyan while the lines are up; <b>tap Depth Lines again to clear them.</b> There is also a shortcut for a hand already on the chart: <b>press and hold anywhere on the map for about half a second</b> and let go, and the lines come on and off the same way. It works on <b>Topo Satellite</b> and <b>Hi Res &amp; ICW</b> — the satellite views, where the contours have a bottom to sit on; on the Street Map nothing is drawn and the app says so. The setting sticks, so if you leave them on they are on next time you open the app. If nothing appears, check the zoom. From the <b>opening view the ocean is already drawn</b> — the offshore contours are there the moment you switch them on, and you can see the shelf run away from the beach without zooming at all — but the <b>rivers and the lagoon</b> need a couple of steps in before their lines start, because at that scale the Halifax is a few pixels wide and its own wiggle would fill it solid. The app says which of the two you are looking at when you turn the lines on. Wider still than the opening view nothing is drawn anywhere, and a <b>press and hold</b> from out there steps the map in for you, centred on the spot you held.</p>
+      <p class="sheet-note">Tap <b>Depth Lines</b> and the water fills with <b>depth contours in feet</b> — thin pale-cyan lines joining equal depths, each carrying its own number on a small dark tag (<span class="g-emph">3 ft</span>, <span class="g-emph">6 ft</span>, <span class="g-emph">12 ft</span>). The button lights up in your theme color while the lines are up; <b>tap Depth Lines again to clear them.</b> There is also a shortcut for a hand already on the chart: <b>press and hold anywhere on the map for about half a second</b> and let go, and the lines come on and off the same way. It works on <b>Topo Satellite</b> and <b>Hi Res &amp; ICW</b> — the satellite views, where the contours have a bottom to sit on; on the Street Map nothing is drawn and the app says so. The setting sticks, so if you leave them on they are on next time you open the app. If nothing appears, check the zoom. From the <b>opening view the ocean is already drawn</b> — the offshore contours are there the moment you switch them on, and you can see the shelf run away from the beach without zooming at all — but the <b>rivers and the lagoon</b> need a couple of steps in before their lines start, because at that scale the Halifax is a few pixels wide and its own wiggle would fill it solid. The app says which of the two you are looking at when you turn the lines on. Wider still than the opening view nothing is drawn anywhere, and a <b>press and hold</b> from out there steps the map in for you, centred on the spot you held.</p>
       <p class="sheet-note"><b>What you see changes with the zoom</b>, so the lines never bury the picture. Wide out, only the <b>heavy lines</b> draw — <b>4, 6, 12, 20, 30, 50, 100 and 200 ft</b> — which is the shape of the water: the run of the channel, the deep holes, the drop off the beach, and with the <b>4 ft</b> line in that set the shallow west-side bays — <b>Turnbull</b>, <b>Rose</b>, <b>Strickland</b>, the <b>Tomoka Basin</b> — show their outline from the wide view instead of reading as empty water. Zoom in a step and the <b>3 and 9 ft</b> lines join them, the ones that fence the flats. A step closer brings the <b>2 ft steps</b>, and at the closest zooms <b>every single foot</b> from 1 to 12 draws — fine enough to pick out the one-foot lip a redfish sits on. Zoom back out and they thin away again. <b>Every line carries its own depth wherever there is room to print it</b>, repeated along the long ones so you are never far from a number; where the water is busy the <b>heavier lines are numbered first</b>, and at the closest zooms the every-foot lines take turns so the chart does not disappear under its own tags. The lines draw <b>under</b> your pins, your track and the compass, so nothing you put on the chart is ever hidden by them.</p>
       <p class="sheet-note"><b>Offshore the lines change their step</b>, because a one-foot line means nothing once you are off the beach. The <b>fathom curves</b> are drawn as the heavy lines out here — <b>60 ft is ten fathoms</b>, <b>120 is twenty</b>, <b>180 is thirty</b> — so the ten-fathom curve runs down the whole beach from Flagler to Titusville <b>from the widest view onward</b>, labelled the length of it, and you can follow it to the grounds without zooming in and hunting for it. Out past the three-mile line the contours open up to <b>60, 80, 100, 120, 150 and 200 ft</b>, and beyond that they carry the deep water: <b>250, 300, 400, 600, 900, 1500 and 2400 ft</b> wide out, with <b>10 ft steps through the 210-275 ft band</b> — the ledge depths — as you zoom in. That is the <b>shelf break</b> drawn as contours, and the offshore waypoints sit right on it: bring up <b>Steeples (North)</b> or the <b>South Ledge</b> and you can see the ledge itself running under the pin, the drop it faces and which way it lies. Coverage runs east past every offshore spot in the app — past <b>Rolldown</b>, the furthest mark on the chart — and about <b>13 miles beyond it</b> down the slope, which is as far out as this is worth drawing. The lines are pale cyan over the painted blue ocean out there the same as they are over the photo inshore.</p>
       <p class="sheet-note"><b>Where the numbers come from.</b> The contours are built from <b>NOAA's own surveys</b> and stored <b>in the app</b>, so they draw with the signal off, anywhere in the county and all the way out to the offshore grounds, with nothing to download first. The bottom comes from <b>NOAA BlueTopo</b> — the Office of Coast Survey's "best available" compiled bathymetry for navigable US water, which already includes the <b>2022 Indian River Lagoon lidar</b> — with <b>NOAA NCEI's CUDEM</b> survey filling the skinny water BlueTopo does not reach. Only water gets lines: land, spoil islands and the inland ponds are masked off. Offshore the surveys get coarser the further out you go, so the deep lines are the <b>shape</b> of the bottom rather than a survey of it — the ledges are drawn from the close-in surveys, the 2,000 ft lines from the wide ones.</p>
@@ -4331,7 +4340,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 428;
+const BUILD_NUM  = 429;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

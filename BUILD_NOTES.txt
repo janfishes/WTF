@@ -7,6 +7,58 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 6:50 PM EDT · v429 · Black FAB Stack
+------------------------------------------------------------------------------
+Jan: make the FAB stack's backgrounds black when off and the theme color when
+on, including Depth Lines; text black when off and white when on, except Blue
+Suede Shoes, and they have to meet the contrast rule.
+
+The stack was the last white furniture on the map.  Everything else the app
+draws over the chart had already moved to the black-off / lit-on language: the
+top filter pills (v304/v381), the species column (v303-v305), the + Catch
+species pills (v375).  The twelve buttons on the right were still white plates
+with black words and accent icons.  They are now black.
+
+  · OFF — black fill, WHITE label, var(--accent-lite) ring and icons.  White
+    on black is 21:1.  The ring and the icons take accent-lite rather than
+    --teal for exactly the reason the black pills do: Brown Sugar's --teal is
+    a dark chocolate that disappears on black, while its accent-lite amber
+    reads at 8.5:1.  The ring also keeps the plate off a dark chart - a black
+    button on deep water needs an edge.
+
+  · ON — var(--teal) fill with var(--on-accent) label AND icons.
+
+The contrast rule is what settles the lit text, and it does not come out the
+way the ask reads.  White on a lit button fails in five of the six themes:
+1.9:1 on Parrot Head's #19cec0, 2.8:1 on Purple Haze, 2.0:1 on Green-Eyed
+Lady, 2.7:1 on Tequila Sunrise, and 1.9:1 on Blue Suede Shoes' #4ecbff.  Black
+clears 10:1 on all five.  Brown Sugar is the one dark accent and takes white
+at 6.6:1.  That pairing already has a name in this file - it is --on-accent,
+black in five themes and white in Brown Sugar - so the lit stack simply wears
+it, and Blue Suede Shoes lands on black like the other bright themes.
+
+Icons follow the same split, so the lit ones went from #fff to --on-accent
+(the pressed rule, Street Map, Locate Me, the wave's filled glyph).  The
+Locate Me MARK badge and the off-state stroke moved --teal -> --accent-lite.
+
+Depth Lines gave up its pale cyan #9eeeff and lights in the theme accent with
+the rest of the stack, as asked.
+
+ONE lit button keeps a fixed colour: Hi Res & ICW stays its channel cyan
+#39d6ff.  mapModeBtn carries TWO lit states on one plate, and in the Eye's
+compact state the labels collapse to font-size:0 - if icw-on and street-on
+shared the accent fill there would be nothing left to tell the two map modes
+apart.  Say the word and it goes too.
+
+Help updated in two places: the Action Buttons intro reads "Twelve black
+buttons ... a button fills with your theme color while its action is on" (it
+said "Twelve white buttons"), and the Depth Lines topic no longer promises the
+button lights in pale cyan.
+
+Verified headless at 1200px in Parrot Head, Blue Suede Shoes, Brown Sugar and
+Tequila Sunrise, off and lit.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 5:45 PM EDT · v428 · Route Home Inlet
 ------------------------------------------------------------------------------
 Jan: make the Ponce de Leon Inlet inshore waypoint a spot that can be navigated
