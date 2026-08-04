@@ -7,8 +7,26 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
-Build 2026-08-04 · 3:05 AM EDT · v410 · Filter Pill Icons
+Build 2026-08-04 · 3:20 AM EDT · v411 · Pill Icons Refined
 ------------------------------------------------------------------------------
+Jan's follow-ups on the v410 filter-pill icons, same night: the icons moved
+IN FRONT of the words (like the FAB stack; the rest of the app stays
+word-then-icon), Offshore trades the jetties for a wave (two stacked
+swells — the jetty walls read poorly at pill size), and the Inshore
+waterway got visibly curvier bends.
+
+"Make all top icons same height as the numbers": every FILTER_ICONS entry
+now carries a viewBox trimmed tight to its ink, and the shared .fic rule
+pins height (10px · --tsb, the cap height of the 14px count digits) with
+width:auto — so every icon's drawn ink lands at exactly numeral height,
+wide icons wide and tall icons narrow. Stroke-widths differ per icon
+(3.2 down to 2) to keep the rendered line weight even across the
+different viewBox scales; keep that in mind when editing a drawing.
+
+Help synced: the Inshore and Offshore filter-topic buttons show the new
+drawings (help copies keep plain 0 0 24 24 boxes at 14px like every other
+help icon). Verified at 3x device scale headless: all five icons sit on
+the digit cap line, off and lit states both.
 Every top filter pill now carries a small outline icon after its name, drawn
 in the same simple-outline style as the FAB icons (Jan's picks): Catches a
 diamond (the shape of its own catch pins on the map), Inshore a winding

@@ -1402,11 +1402,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip.filter-count .chip-total{
     display:inline; margin-left:6px; font-size:calc(14px * var(--tsb)); font-weight:800; letter-spacing:0;
   }
-  /* v410: each top filter pill carries a small outline icon right after its name
-     (word-then-icon, the app-wide order; only the FAB stack leads with the icon) —
-     the same simple-outline drawing family as the FAB icons. The chips are
+  /* v410/v411: each top filter pill carries a small outline icon BEFORE its name
+     (Jan asked for icon-then-word here, like the FAB stack; the rest of the app
+     stays word-then-icon). Every icon's viewBox in FILTER_ICONS is trimmed tight
+     to its ink, so pinning the height here renders every icon's ink at the same
+     height as the pill's count numerals (14px digits ≈ 10px cap height), width
+     following each drawing's own aspect. Per-icon stroke-widths in the table
+     compensate for the differing viewBox scales. The chips are
      flex/align-items:center, so the svg self-centres on the text line. */
-  .chip .fic{width:calc(14px * var(--tsb)); height:calc(14px * var(--tsb)); flex:0 0 auto; margin-left:6px;}
+  .chip .fic{height:calc(10px * var(--tsb)); width:auto; flex:0 0 auto; margin-right:6px;}
   .chip.active:not(.sp){color:var(--fog); background:rgba(20,42,61,.95);}
   .chip.util:not(.active){opacity:1; background:#000 !important; color:#ffffff !important; border-color:#6b7688 !important;}
   /* v304: Catches drops the theme accent from its OFF state too. v303 had already taken
@@ -3061,12 +3065,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">The <b>Catches</b> button is a toggle switch that shows and hides your catches as <b>diamonds</b> on the map, every fish in your log. The number beside it is your total number of catches. It is the <b>master switch</b> for the diamonds: none shows when it is off, even if a species button along the left edge is selected (lit).</p>
       <p class="sheet-note">Catches within 50&nbsp;ft of each other merge into one diamond with a count badge. Tap it and every fish logged at that spot opens as a scrolling list of log cards, newest first, each with its own <b>EDIT ✎</b> and <b>DELETE ✕</b> button.</p>
       </div>
-      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-inshore"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M8.5 2C6 5.5 11 8.5 8.5 12S11 18.5 8.5 22"></path><path d="M15.5 2C13 5.5 18 8.5 15.5 12S18 18.5 15.5 22"></path></svg> Inshore<span class="ht-caret">▸</span></button>
+      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-inshore"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M8.5 2C4 6 13 8 8.5 12S13 18 8.5 22"></path><path d="M15.5 2C11 6 20 8 15.5 12S20 18 15.5 22"></path></svg> Inshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-inshore">
       <p class="sheet-note">This is the <b>master switch</b> for filtering the <b>inshore pins</b>. Tapping this button opens a <b>category row</b> just below, allowing you to pick which groups of pins to show: <b>My Spots</b>, <b>Landmarks</b>, or <b>Waypoints</b>, each with its own total pin count. <b>My Spots</b> shows the location pins you saved west of the beach line, MARKs included. Once you've given the app your name when opening the app the first time or in My Log, the name of this button will use your name here (Ace’s Spots). <b>Landmarks</b> show locations (pins) you would steer to/by (e.g., bridges, train trestle, islands, cities, towns, flats, shoals, jetties). <b>Waypoints</b> show navigable waterways (e.g., named creeks, rivers, bays, coves, cuts, sloughs, canals, lagoon, holes, and the inlet).</p>
       <p class="sheet-note">After tapping <b>Inshore</b>, tap one of its three pills to bring open that group, tap another pill to add those pins to the map, and tapping the third one does the same. Tapping a pill again removes its pins from the map. Turn Inshore off and all three filters close.</p>
       </div>
-      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-offshore"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M2 7l9 1.8M2 17l9-1.8"></path><path d="M13.5 12c1.4-1.8 2.9-1.8 4.3 0s2.9 1.8 4.3 0"></path></svg> Offshore<span class="ht-caret">▸</span></button>
+      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-f-offshore"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M2 9c2.8-3.2 5.6-3.2 8.4 0s5.6 3.2 8.4 0"></path><path d="M2 17c2.8-3.2 5.6-3.2 8.4 0s5.6 3.2 8.4 0"></path></svg> Offshore<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-f-offshore">
       <p class="sheet-note">This is the <b>master switch</b> for the <b>offshore pins</b>; the artificial sites (wrecks included), natural reefs, and any offshore spot you’ve added yourself. The number beside it is how many offshore sites there are. Like Inshore, tapping it opens a <b>category row</b> just below: <b>My Spots</b>, <b>Artificial</b>, and <b>Natural</b>, each with its own total count. <b>My Spots</b> are the offshore spots you saved yourself, MARKs included. (This label will also carry your name once added to the app). <b>Artificial</b> is the man-made bottom; showing pins for the CR sites and deployments, wrecks, barges, etc. <b>Natural</b> is the real bottom: showing pins for the natural reefs, ledges, ridges, holes etc. After tapping <b>Offshore</b>, tap a pill to show those pins on the map, tap another to add it, and so on. Turn Offshore off and the row and pins leave with it.</p>
       <p class="sheet-note">Offshore pins have a <b>Show drops</b> button that lists every individual deployment for the county reefs and their GPS coordinates, depth, distance, and bearing to/from the inlet, all sorted from closest to farthest from the inlet, and it plots them on the map while the popup is open. Each drop pin is <b>numbered to match its position in the list</b>, so you can verify GPS numbers pin-by-pin. Each row is wider than the popup — <b>swipe or scroll sideways</b> within the list or drag the double arrows at the bottom corners of the popup until you see the details that interest you. You can <b>tap in any row to give that drop a name</b>. That name then prints at the end of the row and is saved on your device. If a popup covers the pins, simply <b>drag it by its title area</b> and drop on a different spot on the map.</p>
@@ -4181,7 +4185,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 410;
+const BUILD_NUM  = 411;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -7616,23 +7620,27 @@ function setShowCatches(on){
 // zoomed out, now always visible instead of only appearing at low zoom.
 const FILTER_ZONE_LABELS = { inshore: 'Inshore', offshore: 'Offshore' };
 
-/* v410: the top filter pills wear small outline icons (Jan's picks): Catches a
-   diamond (the shape of its own map pins), Inshore a winding waterway, Offshore
-   the inlet jetties with a wave beyond, Launches a boat hull on a ramp, Labels a
-   name-tag pill. The same drawings repeat on the matching help topics — keep the
-   two sets in sync. */
+/* v410/v411: the top filter pills wear small outline icons (Jan's picks): Catches
+   a diamond (the shape of its own map pins), Inshore a winding waterway (curvier
+   since v411), Offshore a wave (v411 — the v410 jetties read poorly small), Launches
+   a boat hull on a ramp, Labels a name-tag pill. viewBoxes are TIGHT to each
+   drawing's ink so the .fic height rule can equalize every icon's rendered ink
+   height with the count numerals; stroke-widths differ per icon to land ~the same
+   rendered line weight despite the different viewBox scales. The same drawings (in
+   plain 0 0 24 24 boxes) repeat on the matching help topics — keep the two sets in
+   sync. */
 const FILTER_ICONS = {
-  catches : '<svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 21 12 12 21 3 12Z"></path></svg>',
-  inshore : '<svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M8.5 2C6 5.5 11 8.5 8.5 12S11 18.5 8.5 22"></path><path d="M15.5 2C13 5.5 18 8.5 15.5 12S18 18.5 15.5 22"></path></svg>',
-  offshore: '<svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M2 7l9 1.8M2 17l9-1.8"></path><path d="M13.5 12c1.4-1.8 2.9-1.8 4.3 0s2.9 1.8 4.3 0"></path></svg>',
-  launch  : '<svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3.5 8.5c.4 3 2.6 5 5.7 5h5.6c3.1 0 5.3-2 5.7-5Z"></path><path d="M2 20.5 22 13.5"></path></svg>',
-  labels  : '<svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3.5" y="8" width="17" height="8" rx="4"></rect></svg>'
+  catches : '<svg class="fic" viewBox="1 1 22 22" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M12 3 21 12 12 21 3 12Z"></path></svg>',
+  inshore : '<svg class="fic" viewBox="4.3 -0.5 15.4 25" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M8.5 2C4 6 13 8 8.5 12S13 18 8.5 22"></path><path d="M15.5 2C11 6 20 8 15.5 12S20 18 15.5 22"></path></svg>',
+  offshore: '<svg class="fic" viewBox="0.5 4.4 19.8 16.2" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M2 8.6c2.8-3.2 5.6-3.2 8.4 0s5.6 3.2 8.4 0"></path><path d="M2 16.6c2.8-3.2 5.6-3.2 8.4 0s5.6 3.2 8.4 0"></path></svg>',
+  launch  : '<svg class="fic" viewBox="0.6 7.1 22.8 14.8" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3.5 8.5c.4 3 2.6 5 5.7 5h5.6c3.1 0 5.3-2 5.7-5Z"></path><path d="M2 20.5 22 13.5"></path></svg>',
+  labels  : '<svg class="fic" viewBox="2.1 6.6 19.8 10.8" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="8" width="17" height="8" rx="4"></rect></svg>'
 };
 
 const catchToggle = document.createElement('div');
 catchToggle.className = 'chip util filter-count';
 catchToggle.id = 'catchToggle';
-catchToggle.innerHTML = 'Catches' + FILTER_ICONS.catches + '<span class="chip-total" id="catchCount">0</span>';
+catchToggle.innerHTML = FILTER_ICONS.catches + 'Catches<span class="chip-total" id="catchCount">0</span>';
 metaRow.appendChild(catchToggle);
 
 Object.entries(ZONES).forEach(([key,z])=>{
@@ -7640,7 +7648,7 @@ Object.entries(ZONES).forEach(([key,z])=>{
   chip.className = 'chip filter-count';
   chip.dataset.zone = key;
   chip.style.color = z.color;
-  chip.innerHTML = `${FILTER_ZONE_LABELS[key] || z.label}${FILTER_ICONS[key] || ''}<span class="chip-total" id="${key}Count">0</span>`;
+  chip.innerHTML = `${FILTER_ICONS[key] || ''}${FILTER_ZONE_LABELS[key] || z.label}<span class="chip-total" id="${key}Count">0</span>`;
   chip.addEventListener('click', ()=>{
     if(activeZones.has(key)){ activeZones.delete(key); chip.classList.remove('active'); }
     else {
@@ -7728,13 +7736,13 @@ metaRow.appendChild(chipBreak);
 const launchToggle = document.createElement('div');
 launchToggle.className = 'chip util filter-count';
 launchToggle.id = 'launchToggle';
-launchToggle.innerHTML = 'Launches' + FILTER_ICONS.launch + '<span class="chip-total" id="launchCount">0</span>';
+launchToggle.innerHTML = FILTER_ICONS.launch + 'Launches<span class="chip-total" id="launchCount">0</span>';
 metaRow.appendChild(launchToggle);
 
 const labelsToggle = document.createElement('div');
 labelsToggle.className = 'chip util filter-count';
 labelsToggle.id = 'labelsToggle';
-labelsToggle.innerHTML = 'Labels' + FILTER_ICONS.labels;
+labelsToggle.innerHTML = FILTER_ICONS.labels + 'Labels';
 metaRow.appendChild(labelsToggle);
 
 /* v211: the species column starts below the filter row, which owns the full top edge.
