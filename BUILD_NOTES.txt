@@ -7,6 +7,34 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 3:05 PM EDT · v425 · Filters Under Cookies
+------------------------------------------------------------------------------
+Jan: in Help, the Map Filter section goes under the Cookies section, then the
+Species section, then the Action Buttons and the rest.
+
+Help's directory is re-ordered.  Group order in #panel-help is now:
+
+  Read This Section to Get Fishing
+  Search, Help & View          (the header cookies)
+  Map Filter Buttons           (was below Species)
+  Species Buttons              (was below Action Buttons)
+  Action Buttons
+  Tide Stations & Offline Maps
+  Updates / Warning / Disclaimer / Copyright
+
+That is the order a reader meets the controls on screen: the cookies across
+the top of the header, the five filter pills on the row under it, the species
+column down the left, then the white button stack on the right.
+
+Pure markup move — the three groups (subhead, intro paragraph, topic buttons
+and their .help-body writeups) were relocated whole; no wording, ids, icons or
+script changed.  helpSections() walks #panel-help's children in DOM order, so
+Help search and goToHelpSection() re-index themselves and needed no edit.
+
+Note for the record: v421, v422, v424 shipped without notes here, and v421-v424
+never reached CHANGELOG.md.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 12:50 PM EDT · v420 · Sticky Section Title Bar
 ------------------------------------------------------------------------------
 Jan: in Help, move the section windows' CLOSE buttons up to the title bar, and
