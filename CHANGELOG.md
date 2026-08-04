@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v408** — Four Foot Line
 - **v407** — Offshore Depth
 - **v406** — Depth Button
 - **v405** — Depth Contours

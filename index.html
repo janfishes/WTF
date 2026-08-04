@@ -2242,7 +2242,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      than the theme accent, so the button matches what is drawn on the water. */
   #mapModeBtn.icw-on{background:#39d6ff !important; border-color:#39d6ff !important; color:#04141e !important;}
   #mapModeBtn.icw-on svg{stroke:#04141e !important;}
-  /* DEPTH CONTOURS lit state (v406). Its own class, NOT .pressed — closeAllOverlays sweeps .pressed
+  /* DEPTH LINES lit state (v406). Its own class, NOT .pressed — closeAllOverlays sweeps .pressed
      and this is a sticky map layer, not an overlay. The fill is the contour lines' own pale
      cyan (DEPTH_LINE #9eeeff) on the labels' near-black (#04141e), so the button matches what
      is drawn on the water — deliberately paler than the ICW state's vivid #39d6ff on the
@@ -2797,16 +2797,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
       Compass
       <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> shows bearings from Ponce Inlet to the offshore sites.</span><span>Tap a site to pin its route.</span></span>
     </button>
+    <!-- Depth Lines sits ABOVE the map-mode button (v408): the depth layer is the
+         thing you reach for while already looking at a satellite view, so it wants
+         the easier thumb position of the two. -->
+    <button class="fab" id="depthBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 12c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 17c3-3 6-3 9 0s6 3 9 0"></path></svg>
+      Depth Lines
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> draws depth contours in feet on the water.</span><span>Tap again to clear them.</span><span><b>PRESS AND HOLD THE MAP</b> for about half a second does the same.</span></span>
+    </button>
     <button class="fab" id="mapModeBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg>
       <!-- tip sits BEFORE the label: the mode writer sets this.lastChild, which must stay the label text node -->
       <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> switches the map view —</span><span>Topo Satellite, Hi Res &amp; ICW, Street Map.</span></span>
       Topo Satellite
-    </button>
-    <button class="fab" id="depthBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 12c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 17c3-3 6-3 9 0s6 3 9 0"></path></svg>
-      Depth Contours
-      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> draws depth contours in feet on the water.</span><span>Tap again to clear them.</span><span><b>PRESS AND HOLD THE MAP</b> for about half a second does the same.</span></span>
     </button>
     <button class="fab" id="trackBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg>
@@ -2953,7 +2956,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Section to Get Fishing</div>
-      <p class="sheet-note">Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. Tap any spot pin on the map for its coordinates and details. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. Tap <b>DEPTH</b> to lay depth contours in feet over the water on either satellite view — or press and hold the map for about half a second, which does the same. Tap <b>TRACK MY PATH</b> to record your path as a line on the map while the app is on screen — tap it again to stop. The track is <b>saved automatically</b> under Your tracks in + SPOT. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, back up your catch log and photos, and see the print options at the end of this Help.</p>
+      <p class="sheet-note">Tap <b>+ CATCH</b> to log a fish — one species or several — where you caught it and details. <b>+ SPOT</b> saves your actual position or any place you drop a pin on the map and details you add. Tap any spot pin on the map for its coordinates and details. <b>BITE</b> shows 3-day feeding times. With <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <b>WAVES</b> provides NOAA's offshore buoy data. <b>MY LOG</b> shows all your catches' info. <b>SEASONS</b> show feeding times by month and fishing regs. Tap <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. Tap <b>Depth Lines</b> to lay depth contours in feet over the water on either satellite view — or press and hold the map for about half a second, which does the same. Tap <b>TRACK MY PATH</b> to record your path as a line on the map while the app is on screen — tap it again to stop. The track is <b>saved automatically</b> under Your tracks in + SPOT. A short <b>TAP</b> on <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. With Catches on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. Everything is only stored on your device. Read further to learn how to add your own tide station, download the offline map, back up your catch log and photos, and see the print options at the end of this Help.</p>
       <p class="sheet-note"><b>Be advised, this app is not for navigation or emergency use!</b> The <b>MARK</b> function is a memory aid only — not navigation, safety, or rescue equipment, and no substitute for the safety gear and safe-boating practice the law and good seamanship require (see <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>).</p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Ace, get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <!-- v344: CLOSE stays bold here but NOT gold (Jan) — a plain <b> in a sheet-note
@@ -3019,10 +3022,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>The numbers start again on every waterway</b>, which is worth knowing before you go looking for one. There are <b>five marks numbered 47</b> in Volusia County alone — on the Halifax River, at New Smyrna Beach, in Mosquito Lagoon and elsewhere — so "marker 47" on its own does not identify a spot. That is why every dot carries its full name rather than just a number. Positions come from NOAA's electronic navigational charts (Harbor-band cells); the light characteristics are matched to each mark by position from the charts' separate light records. Same caution as the channel itself: aids get moved, go missing, and change — so this app is for planning, not for navigating.</p>
       <p class="sheet-note">The ICW outlines come from the US Army Corps of Engineers' National Channel Framework — the Florida East survey published <b>June 2020</b>. <b>Treat its path as a general reference, not as true soundings.</b> It shows where the channel is authorized to be at that time, not where the water actually is now. Furthermore, shoaling moves the usable water around, and this coast gets plenty of it. Read and rely on your depth sounder and chartplotter — not this app — for navigation.</p>
       </div>
-      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-depth"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 7c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 12c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 17c3-3 6-3 9 0s6 3 9 0"></path></svg> Depth Contours<span class="ht-caret">▸</span></button>
+      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-depth"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 7c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 12c3-3 6-3 9 0s6 3 9 0"></path><path d="M2 17c3-3 6-3 9 0s6 3 9 0"></path></svg> Depth Lines<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-depth">
-      <p class="sheet-note">Tap <b>Depth Contours</b> and the water fills with <b>depth contours in feet</b> — thin pale-cyan lines joining equal depths, each carrying its own number on a small dark tag (<span class="g-emph">3 ft</span>, <span class="g-emph">6 ft</span>, <span class="g-emph">12 ft</span>). The button lights up in that same pale cyan while the lines are up; <b>tap Depth Contours again to clear them.</b> There is also a shortcut for a hand already on the chart: <b>press and hold anywhere on the map for about half a second</b> and let go, and the lines come on and off the same way. It works on <b>Topo Satellite</b> and <b>Hi Res &amp; ICW</b> — the satellite views, where the contours have a bottom to sit on; on the Street Map nothing is drawn and the app says so. The setting sticks, so if you leave them on they are on next time you open the app. If nothing appears, check the zoom — the lines start drawing a step or two in from the widest view, and the app tells you to zoom in when you turn them on too far out. <b>Press and hold from the wide opening view</b> and the map steps in for you, to the first zoom that draws, centred on the spot you held.</p>
-      <p class="sheet-note"><b>What you see changes with the zoom</b>, so the lines never bury the picture. Wide out, only the <b>heavy lines</b> draw — <b>6, 12, 20, 30, 50, 100 and 200 ft</b> — which is the shape of the water: the run of the channel, the deep holes, the drop off the beach. Zoom in a step and the <b>3 and 9 ft</b> lines join them, the ones that fence the flats. A step closer brings the <b>2 ft steps</b>, and at the closest zooms <b>every single foot</b> from 1 to 12 draws — fine enough to pick out the one-foot lip a redfish sits on. Zoom back out and they thin away again. The lines draw <b>under</b> your pins, your track and the compass, so nothing you put on the chart is ever hidden by them.</p>
+      <p class="sheet-note">Tap <b>Depth Lines</b> and the water fills with <b>depth contours in feet</b> — thin pale-cyan lines joining equal depths, each carrying its own number on a small dark tag (<span class="g-emph">3 ft</span>, <span class="g-emph">6 ft</span>, <span class="g-emph">12 ft</span>). The button lights up in that same pale cyan while the lines are up; <b>tap Depth Lines again to clear them.</b> There is also a shortcut for a hand already on the chart: <b>press and hold anywhere on the map for about half a second</b> and let go, and the lines come on and off the same way. It works on <b>Topo Satellite</b> and <b>Hi Res &amp; ICW</b> — the satellite views, where the contours have a bottom to sit on; on the Street Map nothing is drawn and the app says so. The setting sticks, so if you leave them on they are on next time you open the app. If nothing appears, check the zoom — the lines start drawing a step or two in from the widest view, and the app tells you to zoom in when you turn them on too far out. <b>Press and hold from the wide opening view</b> and the map steps in for you, to the first zoom that draws, centred on the spot you held.</p>
+      <p class="sheet-note"><b>What you see changes with the zoom</b>, so the lines never bury the picture. Wide out, only the <b>heavy lines</b> draw — <b>4, 6, 12, 20, 30, 50, 100 and 200 ft</b> — which is the shape of the water: the run of the channel, the deep holes, the drop off the beach, and with the <b>4 ft</b> line in that set the shallow west-side bays — <b>Turnbull</b>, <b>Rose</b>, <b>Strickland</b>, the <b>Tomoka Basin</b> — show their outline from the wide view instead of reading as empty water. Zoom in a step and the <b>3 and 9 ft</b> lines join them, the ones that fence the flats. A step closer brings the <b>2 ft steps</b>, and at the closest zooms <b>every single foot</b> from 1 to 12 draws — fine enough to pick out the one-foot lip a redfish sits on. Zoom back out and they thin away again. The lines draw <b>under</b> your pins, your track and the compass, so nothing you put on the chart is ever hidden by them.</p>
       <p class="sheet-note"><b>Offshore the lines change their step</b>, because a one-foot line means nothing once you are off the beach. Out past the three-mile line the contours open up to <b>60, 80, 100, 120, 150 and 200 ft</b>, and beyond that they carry the deep water: <b>250, 300, 400, 600, 900, 1500 and 2400 ft</b> wide out, with <b>10 ft steps through the 210-275 ft band</b> — the ledge depths — as you zoom in. That is the <b>shelf break</b> drawn as contours, and the offshore waypoints sit right on it: bring up <b>Steeples (North)</b> or the <b>South Ledge</b> and you can see the ledge itself running under the pin, the drop it faces and which way it lies. Coverage runs east past every offshore spot in the app, out over the reef grounds and down the drop into the Gulf Stream, where the bottom is near enough to <b>3,000 ft</b>. The lines are pale cyan over the painted blue ocean out there the same as they are over the photo inshore.</p>
       <p class="sheet-note"><b>Where the numbers come from.</b> The contours are built from <b>NOAA's own surveys</b> and stored <b>in the app</b>, so they draw with the signal off, anywhere in the county and all the way out to the offshore grounds, with nothing to download first. The bottom comes from <b>NOAA BlueTopo</b> — the Office of Coast Survey's "best available" compiled bathymetry for navigable US water, which already includes the <b>2022 Indian River Lagoon lidar</b> — with <b>NOAA NCEI's CUDEM</b> survey filling the skinny water BlueTopo does not reach. Only water gets lines: land, spoil islands and the inland ponds are masked off. Offshore the surveys get coarser the further out you go, so the deep lines are the <b>shape</b> of the bottom rather than a survey of it — the ledges are drawn from the close-in surveys, the 2,000 ft lines from the wide ones.</p>
       <p class="sheet-note"><b>Be advised: these are not chart soundings, and this is not for navigation.</b> The depths are measured to <b>NAVD88</b> — near enough to <b>average water level</b> — while a nautical chart's soundings are to <b>mean lower low water</b>, which around Ponce Inlet runs <b>a foot or two lower</b> than what you see here. So a line marked <span class="g-emph">3 ft</span> can be closer to <b>2 ft</b> of water on a low tide, and less than that on a hard north wind. Surveys are also years old in places and this coast <b>shoals and moves</b>. Use these lines to find an edge, a hole or a drop worth fishing — read your <b>depth sounder and chartplotter</b>, not this app, for the water under your boat.</p>
@@ -4173,7 +4176,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 407;
+const BUILD_NUM  = 408;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -8399,7 +8402,7 @@ document.addEventListener('click', ev=>{
 (function(){
   const NAMES = new Set([
     '+ catch', '+catch', 'catch', '+ spot', '+spot', 'spot', 'bite', 'tides', 'waves',
-    'my log', 'seasons', 'compass', 'depth contours', 'locate me', 'topo satellite', 'hi res & icw',
+    'my log', 'seasons', 'compass', 'depth lines', 'locate me', 'topo satellite', 'hi res & icw',
     'street map', 'catches', 'inshore', 'offshore', 'launches', 'labels', 'species',
     'search', 'help', 'themes', 'a', 'accept', 'cancel', 'close', 'edit', 'delete',
     'print this help', 'mark', 'track my path', 'save this tide station', 'download map for offline use',
@@ -13560,9 +13563,8 @@ themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); 
 
 /* ===================== DEPTH CONTOURS =====================
    Water-depth contour lines in FEET, drawn over either satellite view and
-   turned on and off by the DEPTH CONTOURS button in the FAB stack (v406, renamed v407)
-   or, as a
-   shortcut, by a PRESS AND HOLD on the map itself.
+   turned on and off by the DEPTH LINES button in the FAB stack (added v406, named
+   Depth Contours until v408) or, as a shortcut, by a PRESS AND HOLD on the map itself.
 
    Where the numbers come from. The lines are built offline from NOAA's own
    surveys and shipped with the app as static files, so no depth service has to
@@ -13603,7 +13605,7 @@ themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); 
    imagery. Labels are drawn here rather than baked in, so they stay upright,
    stay the same size at every zoom, and can step aside from each other. */
 
-const DEPTH_DATA_V = 2;         // bump to bust the on-device cache after a rebuild
+const DEPTH_DATA_V = 3;         // bump to bust the on-device cache after a rebuild
 const DEPTH_DIR = 'depth/';
 // Which blocks exist, and the exact box each one covers. Written by the offline
 // build (pass_b_contours.py inshore, pass_c_offshore.py from -80.3 out) — an
@@ -13638,14 +13640,24 @@ const DEPTH_BLOCKS = [
 /* Contour intervals are cut to this water, which is mostly ankle-to-chest deep
    with a few dredged cuts and the shelf offshore. Each level carries a tier,
    and a tier is the zoom it starts drawing at:
-     tier 0 (from z11)  6, 12, 20, 30, 50, 100, 200 ft — the frame
+     tier 0 (from z11)  4, 6, 12, 20, 30, 50, 100, 200 ft — the frame
      tier 1 (from z13)  3 and 9 ft, then 16/25/40/60/80/150
-     tier 2 (from z14)  the 2 ft steps through the lagoon, 14/18/35/70
+     tier 2 (from z14)  the 2 ft step through the lagoon, 8/10/14/18/35/70
      tier 3 (from z15)  every remaining foot, 1 through 12, and the deep in-fills
    So a wide view shows the shape of the basin and a close one the foot-by-foot
    edge of a flat. The 3 ft line is deliberately NOT in tier 0: it is the
    busiest line in this water, and at z12 the Halifax is ten pixels wide and its
    own 3 ft wiggle filled the river solid cyan.
+   4 ft IS in tier 0, as of v408. The shallow west-side bays — Turnbull, Rose,
+   Strickland, Tomoka Basin — sit in 2-3 ft over most of their area, so with 6 ft
+   as the shallowest wide-zoom line they had nothing at all to draw and read as
+   empty water until z13. 4 ft is one step off 3 but a far quieter line: it runs
+   out in open basin rather than along the ripple at the water's edge, and it is
+   844 lines county-wide against the 3 ft line's 1,174. The Halifax stays clean
+   because DEPTH_MIN_PX still culls anything shorter than the pen, and 4 ft comes
+   through it at about the rate 6 ft already does — over the river at z12, 20
+   segments drawn and 76 culled, against 6 ft's 12 and 37. Measured, not assumed:
+   the same view with 4 ft demoted is all but indistinguishable.
 
    Offshore (v407) the same four tiers carry a deeper set, because past the
    beach a 1 ft step is meaningless and a 200 ft one is the whole story:
@@ -13889,7 +13901,7 @@ const DepthLayer = L.Layer.extend({
   }
 });
 
-/* The DEPTH CONTOURS button's lit state. It reads depthOn AND satMode: the layer remembers it is on
+/* The DEPTH LINES button's lit state. It reads depthOn AND satMode: the layer remembers it is on
    while the Street Map is up, but nothing is drawn there, so the button must not claim
    otherwise. Switching back to a satellite view relights it. */
 function depthSyncFab(){
@@ -13897,10 +13909,10 @@ function depthSyncFab(){
   if(b) b.classList.toggle('depth-on', depthOn && satMode);
 }
 
-/* The one toggle. Both the DEPTH CONTOURS button and the press-and-hold come through here, so the
+/* The one toggle. Both the DEPTH LINES button and the press-and-hold come through here, so the
    two can never disagree about the state or the lit button. */
 function depthToggle(){
-  if(!satMode){ showToast('Depth contours are on the satellite map views.'); return; }
+  if(!satMode){ showToast('Depth Lines are on the satellite map views.'); return; }
   depthSetOn(!depthOn);
 }
 
@@ -13916,18 +13928,18 @@ function depthSetOn(on, quiet){
     else depthLayer.redraw();
     if(!quiet){
       showToast(map.getZoom() < DEPTH_TIER_MINZOOM[0]
-        ? 'Depth contours on \u2014 zoom in to see them.<b class="nav-warn">Not for navigation</b>'
-        : 'Depth contours on \u2014 feet at average water level.<b class="nav-warn">Not for navigation</b>',
+        ? 'Depth Lines on \u2014 zoom in to see them.<b class="nav-warn">Not for navigation</b>'
+        : 'Depth Lines on \u2014 feet at average water level.<b class="nav-warn">Not for navigation</b>',
         3600, true);
     }
   }else{
     if(depthLayer && map.hasLayer(depthLayer)) map.removeLayer(depthLayer);
-    if(!quiet) showToast('Depth contours off');
+    if(!quiet) showToast('Depth Lines off');
   }
 }
 
 /* ---- The gesture: PRESS AND HOLD the map ----
-   SECONDARY since v406. The DEPTH CONTOURS button in the stack is the control people find;
+   SECONDARY since v406. The DEPTH LINES button in the stack is the control people find;
    the hold is the shortcut for a hand already on the chart. Both call depthToggle().
    (v405 shipped the hold alone, with no button — Jan couldn't get it to fire on
    either the Mac or the phone, so the button is now the primary way in and the

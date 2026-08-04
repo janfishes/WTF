@@ -7,6 +7,47 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 1:40 AM EDT · v408 · Four Foot Line
+------------------------------------------------------------------------------
+The shallow bays on the west side of the lagoon — Turnbull, Rose, Strickland,
+the Tomoka Basin — sit in two and three feet of water over most of their area.
+The widest depth-contour tier started at 6 ft, so those bays had nothing at all
+to draw and read as empty water until you zoomed to z13. v408 puts the 4 ft
+line into that tier. They outline from z11 now, and the run of shallow water
+along the back of the Intracoastal is legible from the wide view for the first
+time.
+
+The 3 ft line stays out of the wide zooms, and stays out for the reason it was
+evicted in v405: it is the busiest line in this water, and at z12 the Halifax is
+about ten pixels wide and its own 3 ft wiggle filled the river solid cyan. 4 ft
+is one step off it but a much quieter line — 844 segments county-wide against
+3 ft's 1,174, and they run out in open basin rather than along the ripple at the
+water's edge. Checked rather than assumed: over the Halifax at Daytona at z12
+the 4 ft line puts 20 segments through the screen-length cull and loses 76,
+which is the rate the 6 ft line already in that tier comes through at (12 and
+37). The same view with 4 ft demoted back to where v407 had it is all but
+indistinguishable. Nothing else about the contour design moved.
+
+The blocks themselves did not need re-contouring: the 4 ft geometry was already
+in the files, carrying a tier that said "z14". Only that tier byte changed, in
+the eleven inshore blocks that have 4 ft water in them (c3_2-c3_5, c4_1-c4_4,
+c5_1-c5_3). Every offshore block is byte-identical to v407 — none of them has a
+4 ft line to retag. Proven equivalent to a rebuild: re-running the contour pass
+with the new tier table reproduces the retagged files exactly. DEPTH_DATA_V goes
+2 -> 3 so the cache-first blocks on a phone are refetched instead of serving the
+old tiers forever.
+
+Two changes to the button while the layer was open. It is called DEPTH LINES
+now, not Depth Contours — shorter, and it is the lines people are asking for
+rather than the word for them. And it has moved up one place in the stack, above
+TOPO SATELLITE: the depth layer is the thing you reach for while already looking
+at a satellite view, so it takes the easier thumb position of the two. Stack
+order around there is now Compass, Depth Lines, Topo Satellite, Track My Path,
+Locate Me. Verified for order, fit and overflow at three text sizes and on a
+phone-width screen; the shorter name makes the button narrower than the one
+below it, so the stack keeps its widening-downward shape.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 1:24 AM EDT · v407 · Offshore Depth
 ------------------------------------------------------------------------------
 The depth contours no longer stop at the beach. v407 runs them east to
