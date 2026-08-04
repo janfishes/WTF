@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v401** — Wrong Label Erased
 - **v400** — Labels On Top
 - **v399** — Inward Feather Fix
 - **v398** — Consistent Coast Smudge

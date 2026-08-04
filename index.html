@@ -4132,7 +4132,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 400;
+const BUILD_NUM  = 401;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -4681,10 +4681,42 @@ const SEA_LABEL_WINDOWS = [
   [29.058,-80.905,75,20,11,16],  // New Smyrna Beach Municipal Airport
   [29.348,-81.047,68,14,12,16],  // Ormond-by-the-Sea (v399: z11 dropped — its z11 window revealed the chart's original dashed line at the 2-mi scale)
   [29.080,-80.930,65,16,11,16],  // Ponce de Leon Inlet
-  [29.0991,-80.9234,45,14,11,16],  // Ponce Inlet (town — v400, measured at z13; the tail ran into the tint)
   [29.901,-81.278,62,14,11,16],  // St. Augustine
   [29.859,-81.253,64,14,11,16]   // St. Augustine Beach
 ];
+/* v401: LABEL ERASERS — the inverse of the windows. USGS prints some names in flatly
+   WRONG places (the ICW "Bulow Creek" mislabels are the old example; this one prints
+   the town name "Ponce Inlet" ~700 m out in the OCEAN across from Live Oak Creek —
+   Jan: "it is wrong on the topo map, delete it"). Each rect is flattened into the water
+   with a 'darken' fill after the sea overlay composites: only pixels BRIGHTER than the
+   local water colour (i.e. the white label text, whole or ghosting through the feather)
+   are pulled down to it; the water beneath keeps its own darker texture, so there is no
+   box. Entry: [lat, lng, halfW px, halfH px, zMin, zMax, fillR, fillG, fillB] — the fill
+   is the sampled local water colour. Two hard lessons from tuning this one: (1) USGS
+   left-anchors the text, so the label's LEFT EDGE is the geo-stable point (measured
+   −80.9314 at z13/z15/z16 alike while the center drifts west with zoom) — entries carry
+   the left-edge lng plus PIXEL extents; (2) 'darken' only vanishes over WATER — over
+   bright beach sand it prints a dark box, so scope zMin/zMax to the zooms where the
+   label actually sits in open water (this one: z15–16; at z13–14 it lies over the beach
+   and stays alone). The v400 Ponce Inlet (town) WINDOW was removed with this — it
+   existed to pop that exact wrong label through. */
+const SEA_LABEL_ERASERS = [
+  // [lat, lngLeftEdge, leftPad px, width px, halfH px, zMin, zMax, r, g, b]
+  [29.10018,-80.93139,14,92,22,15,16, 52,105,118]   // "Ponce Inlet" printed in the ocean off Live Oak Creek (lat/lng read off the actual z16 tile pixels)
+];
+function seaLabelErasers(coords, size){
+  const z = coords.z, out = [];
+  const n = Math.pow(2, z);
+  for(const w of SEA_LABEL_ERASERS){
+    if(z < w[5] || z > w[6]) continue;
+    const cx = ((w[1]+180)/360*n - coords.x)*size;
+    const p = w[0]*Math.PI/180;
+    const cy = ((1 - Math.log(Math.tan(p) + 1/Math.cos(p))/Math.PI)/2*n - coords.y)*size;
+    if(cx + w[3] < 0 || cx - w[2] > size || cy + w[4] < 0 || cy - w[4] > size) continue;
+    out.push([cx - w[2], cy - w[4], w[2] + w[3], 2*w[4], 'rgb(' + w[7] + ',' + w[8] + ',' + w[9] + ')']);
+  }
+  return out;
+}
 // Pixel rects of the windows that touch this tile at its zoom (empty array
 // when none do).
 function seaLabelWindows(coords, size){
@@ -4838,6 +4870,16 @@ function paintSeaOverlay(g, coords, size, clipName, labelWindows, photo){
       g.drawImage(photo, x*sx, y*sy, ww*sx, wh*sy, x, y, ww, wh);
     }
     g.restore();
+  }
+  // v401 label erasers: flatten wrongly-placed printed names into the water (see table).
+  if(labelWindows){
+    const eras = seaLabelErasers(coords, size);
+    if(eras.length){
+      g.save();
+      g.globalCompositeOperation = 'darken';
+      for(const e of eras){ g.fillStyle = e[4]; g.fillRect(e[0], e[1], e[2], e[3]); }
+      g.restore();
+    }
   }
 }
 

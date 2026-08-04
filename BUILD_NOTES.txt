@@ -7,6 +7,30 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 10:21 PM EDT · v401 · Wrong Label Erased
+------------------------------------------------------------------------------
+Jan: at the 500-ft zoom across from Live Oak Creek, delete the
+"Ponce Inlet" label in the water — it is wrong on the topo map
+(USGS anchors the town name ~700 m out in the ocean; same class as
+the ICW "Bulow Creek" mislabels from v266). New SEA_LABEL_ERASERS —
+the inverse of the label windows: each rect is flattened into the
+water with a 'darken' fill of the sampled local colour after the sea
+overlay composites, so only pixels brighter than the water (the
+white text) are pulled down; the water keeps its texture, no box.
+The v400 Ponce Inlet (town) WINDOW was removed — it existed to pop
+that exact wrong label through. Hard-won tuning lessons, in the
+table comment: USGS left-anchors its labels (the LEFT edge is the
+geo-stable point; the center drifts west as you zoom in), entries
+carry left-edge lng + pixel extents; 'darken' only vanishes over
+water, so zMin/zMax scope to zooms where the label sits in open
+water (z15-16 here; at z13-14 it lies over the bright beach and is
+left alone — a darken rect there printed a dark box on the sand);
+and the label's true lat/lng were read off actual z16 tile pixels
+(screen estimates were ~36 px off because the map pane starts below
+the header). Verified headless z13-z16: label flattened to a faint
+watermark at z15/16, untouched beach at z13/14, no box anywhere.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 9:59 PM EDT · v400 · Labels On Top Of The Water
 ------------------------------------------------------------------------------
 Jan: labels extended into the water are partially obscured by the
