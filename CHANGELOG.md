@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v394** — Darker Marina Amber
 - **v393** — Amber Marina Tags
 - **v392** — Amber Marina Pins
 - **v391** — Bigger Round Pins

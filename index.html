@@ -1285,7 +1285,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .spot-label.lbl-inshore{background:var(--inshore) !important; color:#000 !important;}
   .spot-label.lbl-launch{background:var(--launch) !important;}
   .spot-label.lbl-offshore{background:var(--offshore) !important; color:#fff !important;}   /* v389: white on the purple (4.6:1; black is 4.56:1) */
-  .spot-label.lbl-marina{background:#FFC400 !important; color:#000 !important;}   /* v393: matches the v392 MARINA_FILL amber pins; black ink 13.2:1 (white is 1.6:1) */
+  .spot-label.lbl-marina{background:#d99a00 !important; color:#000 !important;}   /* v393 amber, darkened v394 with MARINA_FILL (sand contrast); black ink 8.6:1 */
   .spot-label::before{display:none !important;}
   /* Compass rose overlay: brass-on-navy bearing pills strung along each line out to an
      offshore site, and the rose graphic itself (fixed pixel size, doesn't scale with zoom). */
@@ -4131,7 +4131,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 393;
+const BUILD_NUM  = 394;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -5897,7 +5897,9 @@ function spotPinSize(s){ return 16; }   /* v391: 14 -> 16 (Jan; round pins only 
    (duplicated here rather than called: inshoreCat lives ~1300 lines down and leans on
    customSpotMarkers; this one needs only the meta). These pins still ride the LAUNCHES
    switch (v322) and keep zone:'inshore' for the catch picker — fill only. */
-const MARINA_FILL = '#FFC400';
+const MARINA_FILL = '#d99a00';   /* v394: darkened from #FFC400, which measured 1.01:1 against the pale
+   sand — near-invisible ashore. #d99a00 is 1.5:1 on sand, still unmistakably amber,
+   black tag text still 8.6:1. Keep .spot-label.lbl-marina on the same value. */
 function isMarinaSpot(s){ return !s.ramp && /marina|yacht club/i.test(s.meta || ''); }
 
 const markers = SPOTS.map(s=>{

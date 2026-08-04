@@ -7,6 +7,17 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:51 PM EDT · v394 · Darker Marina Amber
+------------------------------------------------------------------------------
+Jan: darken the hue so the amber pins (and their tag pill) stand
+out better. Measured the problem: #FFC400 is 1.01:1 against the
+pale shore sand — the marina pins effectively vanished ashore.
+MARINA_FILL and .spot-label.lbl-marina both darken to #d99a00
+(1.5:1 on sand, still unmistakably amber, black tag ink 8.6:1).
+Verified headless: pins + tags computed rgb(217,154,0), screenshot
+at z13 over the shoreline.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:47 PM EDT · v393 · Amber Marina Tags
 ------------------------------------------------------------------------------
 Follow-on to v392 at Jan's yes: the marina/boatyard NAME TAGS now
