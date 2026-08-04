@@ -7,6 +7,55 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 5:20 AM EDT · v415 · Calm Water Line
+------------------------------------------------------------------------------
+Jan: closed eye should hide it ALL; the Offshore wave is way too small; use
+a single horizontal line for the Inshore icon — smooth water; bold the FAB
+icons.
+
+SHUT EYE now hides everything. The filter wrap joins the button stack, the
+species pills and the gauge pins in the ui-hidden display:none list, so the
+only things left over the chart are your pins and the map's own controls.
+It hides the switches, it does not flip them — every filter comes back set
+exactly as it was.
+
+INSHORE is one smooth horizontal line now — a lazy S, calm water, and the
+deliberate opposite of the breaking wave sitting beside it on Offshore. It
+is the one drawing in the set that is far wider than it is tall, so it is
+the one pinned by WIDTH (.fic-wide, 24px) with its height following;
+pinning its height like the others would have blown it out to ~33px wide.
+That also means its stroke is solved against the viewBox WIDTH:
+  stroke-width = 2.0 x viewBoxWidth / renderedWidth
+Two earlier drawings are now retired and not worth re-trying: a two-bank
+channel with a hard dogleg (v414) and a run of small wiggles (v411). A
+first cut of this one came out a single HUMP rather than an S — the S in
+the path data reflects the previous control point, so a symmetric first
+curve sends the second one back the way it came.
+
+OFFSHORE keeps the mirrored buoy wave but gets its own taller size pin
+(.fic-wave, 18px). It is a wide, low drawing, so sharing the others' height
+left it reading small next to them.
+
+FAB ICONS bolded from 2.6 to 3.2, which renders ~2.0px of line at the 15px
+icon size — the same weight the filter pills went to in v414. IMPORTANT for
+anyone bolding these again: there are TWO `.fab svg` rules in the sheet and
+the LATER one (in the white-button block, search "bold the FAB icons")
+wins. A rule added higher up does nothing at all, silently — that is
+exactly what happened first try here, and the measured stroke stayed 2.6
+while the new rule sat there looking correct. The stroke lives in CSS
+rather than in each drawing's markup because CSS beats the stroke-width
+presentation attribute on the <svg> and every path inside inherits it; the
+MARK hint's ring keeps its own width, and the filled drawings (the buoy
+wave, the Locate pin) are untouched because they carry no stroke.
+
+Testing note: python -m http.server sends no cache headers Chrome respects
+here, and a headless run picked up a STALE copy of the page even with a
+fresh user-data-dir — the measurements came back as the previous build's
+and read as "the edit did nothing". page.setCacheEnabled(false) plus a
+cache-busting query string fixed it. Check the build stamp in the shot
+before believing a measurement.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 4:35 AM EDT · v414 · Bolder Pill Icons
 ------------------------------------------------------------------------------
 Jan, over the course of the build: make the diamond and the inshore icons

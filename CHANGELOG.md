@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v415** — Calm Water Line
 - **v414** — Bolder Pill Icons
 - **v413** — Half Shut Eye
 - **v412** — Offshore Wave Flipped
