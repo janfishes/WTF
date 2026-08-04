@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-04
 
+- **v419** — Cookies Above Actions
 - **v418** — Phone Launch View
 - **v417** — Bolder Cookies
 - **v416** — Locate Pin Sized

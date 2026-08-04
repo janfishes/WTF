@@ -7,6 +7,46 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 12:25 PM EDT · v419 · Cookies Above Actions
+------------------------------------------------------------------------------
+Jan: move the cookie section in help above the action buttons section; and
+when you open help, open a section, then tap that window's CLOSE, the banner
+gets pushed up under the phone's status icons (battery, wifi, clock).
+
+HELP ORDER. The "Search, Help & View" block — the five header cookies plus the
+map-credits cookie — now sits directly under the opening "Read This Section to
+Get Fishing" text, above "Action Buttons". Pure markup move: every topic keeps
+its id, so the remembered-last-topic key, the help search results and the
+print layout all follow along untouched.
+
+BANNER SHOVED UNDER THE STATUS BAR. Closing a writeup with its own CLOSE ✕ ran
+`topic.scrollIntoView({block:'center'})` to put the directory row back under
+the eye. scrollIntoView scrolls EVERY scrollable ancestor of the element, not
+just the nearest one — and on iOS WebKit that includes the document itself,
+even though html,body are overflow:hidden. So the page scrolled with the sheet
+and the header banner went up under the battery/wifi/clock. It never showed on
+desktop Chrome, which honours the overflow:hidden root.
+
+New `scrollIntoSheet(el, mode)` does the same job by hand: it measures the
+element against its own `.sheet-body` box and sets that container's scrollTop,
+touching nothing else, with a belt-and-braces reset of the document's own
+scrollTop in case something else already nudged the page off the top. Modes
+are 'center' (help writeup close) and 'nearest' (the Season Guide's
+collapsible boxes, which closed the same way). Elements outside a .sheet-body
+fall through to plain scrollIntoView.
+
+Left alone deliberately: the focusin keyboard-dodge handler at the top of the
+sheet code still uses scrollIntoView with behavior:'smooth' — it fires only on
+input focus and is paired with applyKeyboardInset(); changing it risks the
+keyboard fix for no reported symptom.
+
+Verified headless at 393×852 with touch: build stamp v419, help subheads read
+Read This Section / Search, Help & View / Action Buttons / Species Buttons /
+Map Filter Buttons; opening the Catch writeup, scrolling to its end and
+tapping CLOSE leaves document.scrollingElement.scrollTop at 0, the header's
+top at 0 (unmoved), and the Catch row back inside the visible sheet body.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 12:16 PM EDT · v418 · Phone Launch View
 ------------------------------------------------------------------------------
 Jan: make the iPhone open with Ponce de Leon Inlet horizontally lined up with
