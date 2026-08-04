@@ -7,6 +7,56 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 11:10 PM EDT · v402 · Coastwide Label Sweep
+------------------------------------------------------------------------------
+Jan: "lots of labels have this problem [half-dimmed printed names]. do i
+have to identify all or can you fix these errors along the coastline" —
+and, at Patrick AFB, "line is also showing through."
+
+SEA_LABEL_WINDOWS is now GENERATED, not hand-spotted. New
+tools/scan_sea_labels.py sweeps every coastal ImageryTopo tile z11-16
+from Wabasso to Ponte Vedra (~5,700 tiles, cached), reproduces the app's
+painted-water zone exactly (SHORE_RINGS + 1300 m pad, 1000 m inward
+feather), detects the bright printed-label ink the paint dims, clusters
+it into label boxes, and names each box from the GNIS gazetteer (the
+file USGS labels from — a real label always has an anchor just west of
+its box, since USGS left-anchors). tools/gen_sea_windows.py turns the
+scan into the table: 39 tight per-zoom windows (was 11 hand-measured
+spanning z11-16 each). Dimmed labels only exist at z11-14 — at z15/16
+the topo prints names close to their anchors over land.
+
+Fixes shipped with the sweep:
+- The v400 close-zoom drift growth (+34/38 px at z>=13) is REMOVED from
+  seaLabelWindows(): boxes are measured per zoom, so the slack is gone —
+  it was reaching the charted white dashed lines near some labels and
+  'lighten' popped the dashes through the paint (Jan's Patrick report).
+- Patrick Air Force Base, Ormond-by-the-Sea, Wilbur-by-the-Sea, Bethune
+  Beach, Melbourne Beach, St. Augustine (+Beach), Summer Haven, Beverly
+  Beach, Painters Hill, Canaveral Bight, Ponte Vedra and more now pop
+  whole at every zoom that dims them.
+- The wrong ocean "Ponce Inlet" label (v401) turns out to sit in open
+  water at z13/z14 too — that was Jan's half-dimmed screenshot. The
+  ERASER now covers z13/z14 with per-zoom boxes measured off the tiles
+  (same geo-stable left edge -80.931). Eraser fills are sampled from the
+  APP-RENDERED water (headless screenshot median), not the raw tile —
+  the app lays extra paint there, and the raw-tile fill printed a faint
+  teal chip against it ('darken' is only invisible while fill >=
+  ambient).
+- Two hand-fixes on the generated table, both dash-line collisions the
+  scanner flagged: the z11 Northeast Florida Regional Airport window was
+  trimmed off the St. Johns County dashes hugging the shore there, and
+  the z11 Ponce De Leon Inlet / NSB Municipal Airport pair box was split
+  in two around the county line that crosses between them.
+- County names riding the charted lines (Brevard/Volusia/Flagler/St.
+  Johns) stay buried by design (v343 call) — the scanner classifies them
+  as avoid-boxes and windows must never contain them.
+
+Verified headless at Ponce Inlet z13/14/15, Patrick z11/13, Ormond
+z12/13, the inlet pair z11, St. Augustine z11, Canaveral z13, Wilbur
+z13, Wabasso z13. When a newly dimmed name shows up, re-run the scanner
+(usage in its header) rather than hand-adding a window.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 10:21 PM EDT · v401 · Wrong Label Erased
 ------------------------------------------------------------------------------
 Jan: at the 500-ft zoom across from Live Oak Creek, delete the

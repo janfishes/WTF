@@ -4132,7 +4132,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 401;
+const BUILD_NUM  = 402;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -4664,25 +4664,60 @@ function seaNearRings(clip, lonW, latS, lonE, latN, extraM){
    halves, not degrees, because a printed label is a fixed number of pixels
    at any zoom. Only the Topo USGS layer honours these (labelWindows option);
    the ICW photo has no printed names to save. */
-/* v400: every entry's zMax extends to 16 — the v399 inward feather tints the pad zone at
-   ALL zooms, so printed names running into that strip were dimming mid-word at z13+
-   (Jan: "labels extended into the water are being partially obscured by the fade; they
-   need to sit on top"). A window where no paint/tint sits is a no-op (destination-out
-   against nothing), so the wide ranges cost nothing where a label doesn't print. The
-   punches also gained SOFT EDGES (see the wins loop in paintSeaOverlay) so a window in
-   the smudged water melts in instead of printing a raw-photo box. */
+/* v402: the table is now GENERATED — tools/scan_sea_labels.py sweeps every coastal
+   tile z11-16 (Wabasso to Ponte Vedra), finds the printed names the paint dims, and
+   tools/gen_sea_windows.py emits one TIGHT per-zoom box per label, measured off the
+   tile pixels (+5 px slack). The v400 hand-measured entries with z11-16 ranges and
+   runtime +34/38 px drift growth are gone: the slack swallowed the charted white
+   dashed lines near some labels and 'lighten' popped the dashes through (Jan's
+   Patrick screenshots). Rules that must survive a re-scan: windows stay tight to the
+   ink; no window over the charted county/limit-line dashes or the county names that
+   ride them (buried by design since v343); the wrongly-placed ocean "Ponce Inlet"
+   label gets ERASERS, never a window. Labels only dim at z11-14 as of the 2026-08
+   sweep — z15/16 print close to their anchors over land. When Jan spots a newly
+   dimmed name, re-run the scanner rather than hand-adding.
+   Some comments are the nearest-GNIS guess; hand-corrected where the printed text
+   is known to differ. */
 const SEA_LABEL_WINDOWS = [
-  [28.386,-80.594,70,26,11,16],  // Cape Canaveral
-  [28.263,-80.581,70,22,11,16],  // Patrick Space Force Base
-  [28.219,-80.599,60,18,11,16],  // South Patrick Shores
-  [28.186,-80.585,60,16,11,16],  // Satellite Beach
-  [28.168,-80.582,65,16,11,16],  // Indian Harbour Beach
-  [28.336,-80.615,62,14,11,16],  // Cocoa Beach
-  [29.058,-80.905,75,20,11,16],  // New Smyrna Beach Municipal Airport
-  [29.348,-81.047,68,14,12,16],  // Ormond-by-the-Sea (v399: z11 dropped — its z11 window revealed the chart's original dashed line at the 2-mi scale)
-  [29.080,-80.930,65,16,11,16],  // Ponce de Leon Inlet
-  [29.901,-81.278,62,14,11,16],  // St. Augustine
-  [29.859,-81.253,64,14,11,16]   // St. Augustine Beach
+  [30.243646,-81.377106,61,28,13,13],  // Ponte Vedra Beach
+  [30.024516,-81.317368,38,15,13,13],  // South Ponte Vedra Beach
+  [29.968617,-81.299515,60,21,11,11],  // Northeast Florida Regional Airport (hand-trimmed: the scan box reached the St. Johns County dashes/text hugging the shore there)
+  [29.953968,-81.298656,39,11,13,13],  // Usina Beach
+  [29.936565,-81.291962,20,9,13,13],   // Vilano Beach
+  [29.901675,-81.278572,48,11,11,11],  // St. Augustine
+  [29.853449,-81.250076,32,22,11,11],  // Saint Augustine Beach
+  [29.846153,-81.264067,84,32,12,13],  // City of Saint Augustine Beach
+  [29.799092,-81.255655,21,9,13,13],   // Butler Beach
+  [29.700001,-81.216516,52,13,13,14],  // Summer Haven
+  [29.533549,-81.152101,62,31,14,14],  // Painters Hill
+  [29.51738,-81.140471,43,16,13,13],   // Beverly Beach
+  [29.347467,-81.026917,60,11,11,11],  // Ormond-by-the-Sea
+  [29.344923,-81.040478,41,11,12,12],  // Ormond-by-the-Sea
+  [29.3441,-81.053438,37,11,13,13],    // Ormond-by-the-Sea
+  [29.32023,-81.072578,51,19,11,11],   // Ormond Beach Division
+  [29.148863,-80.963831,28,20,13,13],  // Halifax Estates
+  [29.132033,-80.949798,64,13,13,14],  // Wilbur-by-the-Sea
+  [29.079576,-80.921087,65,41,13,13],  // Ponce Park + Ponce De Leon Inlet
+  [29.074325,-80.919456,36,27,12,12],  // Ponce De Leon Inlet
+  [29.062199,-80.926286,41,22,11,11],  // Ponce De Leon Inlet (hand-split: the scanned pair box straddled the county dashes crossing between the two labels)
+  [29.04209,-80.896074,70,25,11,11],   // New Smyrna Beach Municipal Airport
+  [28.94995,-80.832081,68,12,13,14],   // Bethune Beach
+  [28.431185,-80.56386,36,19,13,13],   // Canaveral Bight
+  [28.382641,-80.597763,32,35,12,12],  // City of Cape Canaveral
+  [28.381433,-80.587463,31,16,11,11],  // City of Cape Canaveral
+  [28.254796,-80.58403,38,31,11,11],   // Patrick Space Force Base (z11; GNIS: Indian River Lagoon)
+  [28.24474,-80.595961,34,18,13,13],   // Patrick Air Force Base
+  [28.237708,-80.596132,15,9,13,13],   // Patrick AFB
+  [28.214567,-80.59742,23,22,11,11],   // South Patrick Shores
+  [28.199213,-80.590596,23,9,14,14],   // South Patrick
+  [28.186428,-80.582314,27,15,11,11],  // Satellite Beach
+  [28.164033,-80.578537,26,20,11,11],  // Indian Harbour Beach
+  [28.140062,-80.572143,52,13,13,14],  // Eau Gallie Beach
+  [28.069557,-80.554676,43,17,13,13],  // Melbourne Beach
+  [27.94854,-80.490732,30,16,13,13],   // Floridana Beach
+  [27.916767,-80.473416,59,13,13,14],  // Ballard Pines
+  [27.789504,-80.404644,20,9,13,13],   // North Beach
+  [27.761254,-80.392027,51,37,13,13]   // Wabasso Beach
 ];
 /* v401: LABEL ERASERS — the inverse of the windows. USGS prints some names in flatly
    WRONG places (the ICW "Bulow Creek" mislabels are the old example; this one prints
@@ -4702,7 +4737,17 @@ const SEA_LABEL_WINDOWS = [
    existed to pop that exact wrong label through. */
 const SEA_LABEL_ERASERS = [
   // [lat, lngLeftEdge, leftPad px, width px, halfH px, zMin, zMax, r, g, b]
-  [29.10018,-80.93139,14,92,22,15,16, 52,105,118]   // "Ponce Inlet" printed in the ocean off Live Oak Creek (lat/lng read off the actual z16 tile pixels)
+  [29.10018,-80.93139,14,92,22,15,16, 52,105,118],  // "Ponce Inlet" printed in the ocean off Live Oak Creek (lat/lng read off the actual z16 tile pixels)
+  /* v402: same wrong label at z13/z14 — there it sits in OPEN WATER too (not
+     over the beach as v401 assumed), half-dimmed by the paint (Jan's "Ponce
+     Inlet" screenshot). Smaller font at these zooms (61x9 px), same geo-stable
+     left edge (-80.931 measured at z13 AND z14). Boxes measured by
+     tools/scan_sea_labels.py off the tile pixels. Fill = the APP-RENDERED ambient
+     water (headless screenshot median +2), NOT the raw tile's — the app lays extra
+     paint there, and a raw-tile fill printed a teal chip against it ('darken' is
+     only invisible while fill >= ambient). */
+  [29.10118,-80.93079,10,71,12,13,13, 44,109,123],
+  [29.10061,-80.93122,10,71,12,14,14, 51,108,122]
 ];
 function seaLabelErasers(coords, size){
   const z = coords.z, out = [];
@@ -4722,19 +4767,18 @@ function seaLabelErasers(coords, size){
 function seaLabelWindows(coords, size){
   const z = coords.z, out = [];
   const n = Math.pow(2, z);
-  /* v400: at z>=13 USGS prints these labels offset from where the z11-12-measured
-     anchors put them (observed: Ormond-by-the-Sea ~30px south, Ponce Inlet ~west), so
-     the close-zoom windows GROW and shift to cover the placement drift instead of
-     per-zoom re-measured anchors. The extra area is soft-edged good nearshore photo. */
-  const close = z >= 13;
-  const dx = close ? -12 : 0, dy = close ? 14 : 0;
-  const gw = close ? 34 : 0,  gh = close ? 38 : 0;   // generous: the lighten window is invisible except where bright label pixels sit
+  /* v402: the v400 close-zoom grow/shift (+34/38 px at z>=13) is GONE — every entry
+     is now a per-zoom box measured off the actual tile pixels by
+     tools/scan_sea_labels.py, so no drift slack is needed. The slack was actively
+     harmful: near some labels it reached the charted white dashed lines and the
+     'lighten' composite popped the dashes through the paint (Jan's Patrick AFB
+     report, "line is also showing through"). Windows must stay TIGHT to the ink. */
   for(const w of SEA_LABEL_WINDOWS){
     if(z < w[4] || z > w[5]) continue;
-    const cx = ((w[1]+180)/360*n - coords.x)*size + dx;
+    const cx = ((w[1]+180)/360*n - coords.x)*size;
     const p = w[0]*Math.PI/180;
-    const cy = ((1 - Math.log(Math.tan(p) + 1/Math.cos(p))/Math.PI)/2*n - coords.y)*size + dy;
-    const hw = w[2] + gw, hh = w[3] + gh;
+    const cy = ((1 - Math.log(Math.tan(p) + 1/Math.cos(p))/Math.PI)/2*n - coords.y)*size;
+    const hw = w[2], hh = w[3];
     if(cx + hw < 0 || cx - hw > size || cy + hh < 0 || cy - hh > size) continue;
     out.push([cx - hw, cy - hh, 2*hw, 2*hh]);
   }
