@@ -7,6 +7,23 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:00 PM EDT · v387 · White Top-Pill Text
+------------------------------------------------------------------------------
+Jan asked for white text on the top pills wherever the contrast ratio
+still holds. OFF-state text on all five map filter pills (Catches,
+Inshore, Offshore, Launches, Labels) is now white — on the black chip
+white is 21:1, better than any zone hue — and the zone colour moves to
+the border alone (blue / amber / #d08c4c tan / orange rings), matching
+the species column's accent-ring pattern. The LIT fills keep black
+text, because there the ratio can NOT be met with white: 3.2:1 on the
+inshore blue, 1.6:1 on the amber, 2.9:1 on Labels' orange (the v303
+unreadable-pills lesson). Lit Launches was already white on its dark
+brown and stays. The + Catch sheet's zone pills inherit the same rules
+by design (v243) so they match. The + Spot sheet's dimmed type pills
+and the inshore/offshore sub-rows are unchanged. Verified headless in
+both states: computed colours and screenshots.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 7:52 PM EDT · v386 · Brighter Launches Pill
 ------------------------------------------------------------------------------
 Jan reported the top filter pills looked like different heights.

@@ -1405,13 +1405,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      v306: Labels is ORANGE (Jan's request) - it took the #FF6A00 that Inshore gave up when
      it went back to blue, so the swap keeps orange/blue both in play and Labels still wears
      a hue no pin or zone uses. Orange reads 6.5:1 on black, so OFF needs no lifted shade. */
-  #labelsToggle{font-weight:800; background:#000 !important; color:#FF6A00 !important; border:1px solid #FF6A00 !important; box-shadow:none !important;}
+  #labelsToggle{font-weight:800; background:#000 !important; color:#fff !important; border:1px solid #FF6A00 !important; box-shadow:none !important;}
   /* .chip padding is bottom-heavy (5 top / 8 bottom), which lifts the text ~1.5px above centre.
      Invisible on the translucent chips, obvious on Labels-ON because it is the one solid white
      fill. Same total vertical padding, so the pill height and the row layout do not move.
      Doubled selector: #metaRow .chip (1,1,0) would otherwise outrank a bare #labelsToggle (1,0,0). */
   #metaRow #labelsToggle{padding:6px 9px 7px;}
-  #labelsToggle:not(.active){background:#000 !important; color:#FF6A00 !important; border-color:#FF6A00 !important; opacity:1;}
+  /* v387: white text off (see the zone-pill note below) — orange stays on the border. */
+  #labelsToggle:not(.active){background:#000 !important; color:#fff !important; border-color:#FF6A00 !important; opacity:1;}
   /* v303: the species buttons carry NO species colour any more - white text on the black chip
      in both states, at Jan's request. They used to fill with var(--spc) when lit, which meant
      25 different fills competing with the zone pills beside them and with the pins. The state
@@ -1442,7 +1443,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     filter:none; text-shadow:none !important;
   }
   #speciesCol .chip .dot{background:currentColor !important;}
-  .chip[data-zone="inshore"]{background:#000 !important; color:var(--inshore) !important; font-weight:800; border:1px solid var(--inshore) !important; box-shadow:none !important;}
+  .chip[data-zone="inshore"]{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid var(--inshore) !important; box-shadow:none !important;}
   /* PURE BLACK text on the lit zone fills, not white and not a near-black (v303, Jan could not
      read the pills). These fills are bright - white sits at 1.60:1 on the amber and 3.2:1 on
      the v306 inshore blue - so the text has to be dark. v302 used the #04141e near-black;
@@ -1460,13 +1461,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #metaRow #labelsToggle.active{text-shadow:none !important;}
   /* OFF gets no shadow at all - it is orange text on black, where a dark shadow does nothing. */
   #metaRow #labelsToggle:not(.active){text-shadow:none !important;}
-  /* Off-state is text+outline on a BLACK chip, so it needs its own value only when the zone
-     colour is too dark there. The old #1636ff blue and purple both needed a lift
-     (#6b8cff / #b478ff); the v306 blue is 6.5:1 and amber 13.1:1 on black, so both use the
-     zone colour itself and the off state matches the pin exactly. */
-  .chip[data-zone="inshore"]:not(.active){opacity:1; color:var(--inshore) !important; border-color:var(--inshore) !important;}
-  .chip[data-zone="offshore"]{background:#000 !important; color:var(--offshore) !important; font-weight:800; border:1px solid var(--offshore) !important; box-shadow:none !important;}
-  .chip[data-zone="offshore"]:not(.active){opacity:1; color:var(--offshore) !important; border-color:var(--offshore) !important;}
+  /* v387: OFF-state TEXT is WHITE on every top pill (Jan's request — white wherever the
+     contrast ratio still holds; on the black chip white is 21:1, better than any zone hue).
+     The zone colour moves to the BORDER alone, which still says which pin family the pill
+     switches — same pattern as the species column's accent rings. The LIT fills keep BLACK
+     text: white is only 3.2:1 on the inshore blue, 1.6:1 on the amber, 2.9:1 on the orange
+     (the v303 unreadable-pills lesson), so there the ratio can NOT be met and black stays. */
+  .chip[data-zone="inshore"]:not(.active){opacity:1; color:#fff !important; border-color:var(--inshore) !important;}
+  .chip[data-zone="offshore"]{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid var(--offshore) !important; box-shadow:none !important;}
+  .chip[data-zone="offshore"]:not(.active){opacity:1; color:#fff !important; border-color:var(--offshore) !important;}
   .chip[data-zone="offshore"].active{background:var(--offshore) !important; color:#000 !important; border-color:#fff !important; box-shadow:none; text-shadow:none !important;}
   .chip[data-zone="launch"]{background:#000 !important; color:var(--launch) !important; font-weight:800; border:1px solid var(--launch) !important; box-shadow:none !important;}
   .chip[data-zone="launch"]:not(.active){opacity:1; color:#b5713a !important; border-color:#b5713a !important;}
@@ -1574,9 +1577,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
      #b5713a (~4.2:1 on black) -> #d08c4c (~6.6:1) - the row's other off-state rings run
      6.4:1 (Inshore) to 13:1 (Offshore), and the one dim outline read as a smaller pill.
      Still a muted tan next to Labels' vivid #FF6A00, so the two stay apart by saturation.
-     (--launch is fixed in :root, not per-theme.) */
-  #launchToggle{background:#000 !important; color:#d08c4c !important; font-weight:800; border:1px solid #d08c4c !important; box-shadow:none !important;}
-  #launchToggle:not(.active){opacity:1; color:#d08c4c !important; border-color:#d08c4c !important;}
+     (--launch is fixed in :root, not per-theme.)
+     v387: the OFF-state TEXT went white with the rest of the top row (see the zone-pill
+     note above); the #d08c4c brown survives on the border only. */
+  #launchToggle{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid #d08c4c !important; box-shadow:none !important;}
+  #launchToggle:not(.active){opacity:1; color:#fff !important; border-color:#d08c4c !important;}
   #launchToggle.active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
 
   /* ---------- Floating action buttons ---------- */
@@ -4107,7 +4112,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 386;
+const BUILD_NUM  = 387;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
