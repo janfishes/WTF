@@ -7,6 +7,25 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-04 · 3:50 PM EDT · v427 · Help Icons Lead
+------------------------------------------------------------------------------
+Jan: in Help, put the icons in front of their labels, just like they are on
+the map.
+
+Help's opening paragraph is the one place that still ran WORD-then-icon.  Every
+button named there now reads ICON-then-word, the way the FAB stack and the top
+filter pills read on the chart: CATCH, SPOT, BITE, TIDES, WAVES, MY LOG,
+SEASONS, COMPASS, TOPO SATELLITE, DEPTH LINES, TRACK MY PATH, LOCATE ME, and
+the five filter buttons CATCHES / INSHORE / OFFSHORE / LAUNCHES / LABELS — 17
+glyphs moved ahead of their labels.  The EYE cookie's three state glyphs (open,
+half, shut) moved with them, so the sentence opens "The <eyes> EYE cookie".
+
+Everything else is unchanged.  The Help topic buttons and the writeups inside
+them already drew their icons first, so they needed no edit.  Command glyphs
+that are NOT map buttons keep the app-wide word-then-icon form — CLOSE ✕,
+UNDO ↺, EDIT ✎, DELETE ✕ and the rest.  Text only; no CSS, no script.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 3:25 PM EDT · v426 · One Plus By Spot
 ------------------------------------------------------------------------------
 Jan: delete the extra + by SPOT in the Help intro's first paragraph.
