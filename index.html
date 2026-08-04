@@ -2531,7 +2531,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      of the offshore pins rather than as a separate kind of marker. Keep it on the var, not
      a literal. */
   .egg-pin{
-    width:14px; height:14px; box-sizing:border-box; border-radius:50%;
+    width:16px; height:16px; box-sizing:border-box; border-radius:50%;   /* v391: tracks spotPinSize 16 */
     background:var(--offshore); border:3px solid #fff;
     box-shadow:0 2px 5px rgba(0,0,0,.5);   /* v390: dark outer ring removed, matching .spot-marker */
   }
@@ -4130,7 +4130,7 @@ function showToast(msg, duration=2400){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/03/26';                          // map stamp form
-const BUILD_NUM  = 390;
+const BUILD_NUM  = 391;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-03 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -5889,7 +5889,7 @@ const launchColor = resolveVar('var(--launch)');
    out of step with the data (reef-site2 carries 19 drops and was never flagged big, while
    jan-longjohns was flagged big on a single drop), so size was signalling nothing reliable.
    `s.big` and `s.wp` are still read elsewhere; they just no longer drive diameter. */
-function spotPinSize(s){ return 14; }
+function spotPinSize(s){ return 16; }   /* v391: 14 -> 16 (Jan; round pins only — catch diamonds stay 14) */
 
 const markers = SPOTS.map(s=>{
   const sz = spotPinSize(s);
@@ -7529,7 +7529,7 @@ function syncEggMarker(){
   }
   if(!eggMarker){
     eggMarker = L.marker([28.938607, -80.487613], {
-      icon: L.divIcon({ className:'egg-icon', html:'<div class="egg-pin"></div>', iconSize:[14,14], iconAnchor:[7,7], popupAnchor:[0,-8] }),
+      icon: L.divIcon({ className:'egg-icon', html:'<div class="egg-pin"></div>', iconSize:[16,16], iconAnchor:[8,8], popupAnchor:[0,-9] }),
       zIndexOffset:-150
     }).bindPopup(
       '<div class="pop egg-pop"><img class="egg-img" src="' + EGG_CARTOON + '" alt="Cartoon: a diver beside a Spear Gun Rentals sign under a boat full of anglers"></div>',

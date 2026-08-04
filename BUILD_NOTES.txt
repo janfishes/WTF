@@ -7,6 +7,18 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-03 · 8:39 PM EDT · v391 · Bigger Round Pins
+------------------------------------------------------------------------------
+Round spot pins grow 14px -> 16px (Jan's request; the app's global
+border-box sizing means that is the pin's full outer size, so the
+coloured centre gets the 2px back that the v389 3px ring had taken).
+One change in spotPinSize() covers built-ins, edited built-ins and
+custom spots (the mine-ring box rides sz+8); the easter-egg pin's
+hardcoded 14s in CSS + divIcon follow to 16 as always. Catch
+diamonds deliberately stay 14. Verified headless: computed 16x16
+with the 3px white ring, screenshots at z12.
+
+------------------------------------------------------------------------------
 Build 2026-08-03 · 8:35 PM EDT · v390 · White Sub-Pill Text + Ringless Pins
 ------------------------------------------------------------------------------
 Two Jan requests. (1) The sub-row ("children") pills under Inshore /

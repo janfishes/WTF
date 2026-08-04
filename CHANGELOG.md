@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-03
 
+- **v391** — Bigger Round Pins
 - **v390** — White Sub-Pills, Ringless Pins
 - **v389** — Purple Offshore Family
 - **v388** — Pill Text Shadow Removed
