@@ -7,6 +7,31 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 7:55 PM EDT · v448 · Catch Wears A Plus
+------------------------------------------------------------------------------
+The Catch button in the stack down the right side of the map carried a small
+fish drawing (it took that icon in v411, when the plus it had been wearing was
+handed over to Spot alone). Jan asked for the plus back: Catch and Spot are the
+app's two "add something" buttons, and a matching + on both says so at a glance
+where the fish said only "fishing".
+
+Catch now draws the SAME plus as Spot, at the stack's shared 15px icon size, so
+the two read as a pair. The fish is gone from all three places it was drawn:
+the button itself, the Catch topic button in Help's Action Buttons list, and
+the run of glyphs in the Help intro paragraph. Nothing in the wording had to
+change — Help already called the button "+ Catch" everywhere it named it, and
+now the button on the map actually shows that plus.
+
+One CSS note for later: v445 had matched Catch's pill width to Spot's two ways
+at once, with tighter side padding (8px -> 6px) AND a shrunken 15px -> 12px
+fish. The size cut is dropped here — two pluses at two different sizes, one
+above the other, read as a mistake. The padding cut stays, and it carries the
+match on its own: Catch measures 73.6px against Spot's 70.2px and Tides' 74.1px
+at 100% text size, so it sits inside the stack's natural width ladder instead of
+sticking out of it. If Catch ever needs to lose width again, take it out of the
+padding, not the icon.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 6:45 PM EDT · v441 · Search Finds A Date
 ------------------------------------------------------------------------------
 Jan asked whether search only goes back to the earliest year of a logged catch.
