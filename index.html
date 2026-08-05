@@ -3049,20 +3049,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div id="tidePanelBody"></div>
   </div>
   <div class="fab-col">
-    <button class="fab primary" id="logCatchFab">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c2.5-3.5 6-5.3 9.2-5.3 2.6 0 4.8 2 6.3 5.3-1.5 3.3-3.7 5.3-6.3 5.3-3.2 0-6.7-1.8-9.2-5.3Z"></path><path d="M18.5 12 22 8.6v6.8Z"></path><circle cx="7" cy="10.7" r=".7" fill="currentColor" stroke="none"></circle></svg>
-      Catch
-      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the form to log a catch.</span><span>Logged catches show as diamonds on the map.</span></span>
+    <button class="fab" id="biteFab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg>
+      Bite
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the bite forecast —</span><span>today's best fishing times.</span></span>
     </button>
     <button class="fab" id="addSpotBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
       Spot
       <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the form to save your own fishing spot.</span><span>Your saved spots and tracks live here too.</span></span>
     </button>
-    <button class="fab" id="biteFab">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg>
-      Bite
-      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the bite forecast —</span><span>today's best fishing times.</span></span>
+    <button class="fab primary" id="logCatchFab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c2.5-3.5 6-5.3 9.2-5.3 2.6 0 4.8 2 6.3 5.3-1.5 3.3-3.7 5.3-6.3 5.3-3.2 0-6.7-1.8-9.2-5.3Z"></path><path d="M18.5 12 22 8.6v6.8Z"></path><circle cx="7" cy="10.7" r=".7" fill="currentColor" stroke="none"></circle></svg>
+      Catch
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the form to log a catch.</span><span>Logged catches show as diamonds on the map.</span></span>
     </button>
     <button class="fab" id="tidePinBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
@@ -3354,12 +3354,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="subhead">Action Buttons</div>
       <p class="sheet-note">Twelve black buttons along the right side of the map are the app’s actions. A button fills with your <b>theme color</b> while its action is on.</p>
-      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12c2.5-3.5 6-5.3 9.2-5.3 2.6 0 4.8 2 6.3 5.3-1.5 3.3-3.7 5.3-6.3 5.3-3.2 0-6.7-1.8-9.2-5.3Z"></path><path d="M18.5 12 22 8.6v6.8Z"></path><circle cx="7" cy="10.7" r=".7" fill="currentColor" stroke="none"></circle></svg> Catch<span class="ht-caret">▸</span></button>
-      <div class="help-body" id="hb-catch">
-      <p class="sheet-note">Tap <b>+ Catch</b> to open the catch dialog window and then pick <b>one or more species</b> from the list. The first one you tap is that entry's main fish, but every one you pick will be stored for that particular log entry. Set date and time (shown in local 12-hour time — on a computer just type the date, like 6/15/1988; phones get a scroll picker), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by tapping <b>High</b>, <b>Low</b>, <b>Falling</b>, or <b>Rising</b> — or tap <b>Auto-detect from NOAA</b> once a location and date/time are set. The app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too, but needs internet). <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only (e.g., 30 inches records the fish as 2 ft 6 in).</p>
-      <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g., 29°04.672′ N). A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. A photo with embedded GPS fills the position automatically. You can key or paste numbers in by hand. If you save the location in <b>+ Spot</b> first, that spot will appear in the dropdown list for catch locations.</p>
-      <p class="sheet-note">The <b>+ Catch</b> button allows you to store a photo from your gallery — and stores them on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect. Everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't. If a photo is refused on an iPhone, set <b>Settings → Camera → Formats → Most Compatible</b> so new photos save as JPEG.</p>
-      <p class="sheet-note"><b>To edit or delete a catch:</b> tap a catch diamond on the map and use <b>EDIT ✎</b> or <b>DELETE ✕</b> in its popup — or use the same buttons on the entry in My Log. Editing reopens the form with everything filled in.</p>
+      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-bite"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg> Bite<span class="ht-caret">▸</span></button>
+      <div class="help-body" id="hb-bite">
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg> <b>Bite</b> opens a 3-day solunar feeding forecast — the moon phase and % lit at the top, then Major and Minor feeding windows for that day. Bite times are computed fully offline from moon-position astronomy — no internet is needed.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-spot"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Spot<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-spot">
@@ -3374,9 +3371,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">If you type numbers with no hemisphere letters at all, give <b>exactly two, four or six</b> of them — two for decimal degrees, four for DM, six for DMS. Anything else is ambiguous and the box will say it could not read it. Latitude always comes first unless an <b>E</b> or <b>W</b> letter says otherwise.</p>
       <p class="sheet-note">Tap any pin, then tap <b>＋ Add my note</b> at the bottom of its popup. Type your details — bait, rig, tide, timing — and Save. Notes persist between sessions and can be edited or cleared anytime with <b>✎ Edit my note</b>.</p>
       </div>
-      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-bite"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg> Bite<span class="ht-caret">▸</span></button>
-      <div class="help-body" id="hb-bite">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg> <b>Bite</b> opens a 3-day solunar feeding forecast — the moon phase and % lit at the top, then Major and Minor feeding windows for that day. Bite times are computed fully offline from moon-position astronomy — no internet is needed.</p>
+      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12c2.5-3.5 6-5.3 9.2-5.3 2.6 0 4.8 2 6.3 5.3-1.5 3.3-3.7 5.3-6.3 5.3-3.2 0-6.7-1.8-9.2-5.3Z"></path><path d="M18.5 12 22 8.6v6.8Z"></path><circle cx="7" cy="10.7" r=".7" fill="currentColor" stroke="none"></circle></svg> Catch<span class="ht-caret">▸</span></button>
+      <div class="help-body" id="hb-catch">
+      <p class="sheet-note">Tap <b>+ Catch</b> to open the catch dialog window and then pick <b>one or more species</b> from the list. The first one you tap is that entry's main fish, but every one you pick will be stored for that particular log entry. Set date and time (shown in local 12-hour time — on a computer just type the date, like 6/15/1988; phones get a scroll picker), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by tapping <b>High</b>, <b>Low</b>, <b>Falling</b>, or <b>Rising</b> — or tap <b>Auto-detect from NOAA</b> once a location and date/time are set. The app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too, but needs internet). <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only (e.g., 30 inches records the fish as 2 ft 6 in).</p>
+      <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g., 29°04.672′ N). A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. A photo with embedded GPS fills the position automatically. You can key or paste numbers in by hand. If you save the location in <b>+ Spot</b> first, that spot will appear in the dropdown list for catch locations.</p>
+      <p class="sheet-note">The <b>+ Catch</b> button allows you to store a photo from your gallery — and stores them on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect. Everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't. If a photo is refused on an iPhone, set <b>Settings → Camera → Formats → Most Compatible</b> so new photos save as JPEG.</p>
+      <p class="sheet-note"><b>To edit or delete a catch:</b> tap a catch diamond on the map and use <b>EDIT ✎</b> or <b>DELETE ✕</b> in its popup — or use the same buttons on the entry in My Log. Editing reopens the form with everything filled in.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-tides"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> Tides<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-tides">
@@ -4533,7 +4533,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 442;
+const BUILD_NUM  = 443;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
