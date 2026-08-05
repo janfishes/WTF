@@ -1641,19 +1641,59 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Log-sheet species picker: matches the map's left-column buttons — white text on black
      when off, and since v375 the selected pill REVERSES exactly like the map stack's lit
      species (v305): white fill, black lettering, black check. The glow and scale-up stay. */
-  #logSpeciesRow .chip.sp{
+  #logSpeciesRow .chip.sp, .pi-species .chip.sp{
     font-size:14px; font-weight:800; background:#000 !important;
     color:#fff !important;
     border:1px solid rgba(255,255,255,.38); opacity:1 !important;
     filter:none; transition:transform .1s ease, filter .1s ease;
   }
-  #logSpeciesRow .chip.sp .dot{width:7px; height:7px; border-radius:1px; transform:rotate(45deg); background:currentColor !important;}
-  #logSpeciesRow .chip.sp.active{
+  #logSpeciesRow .chip.sp .dot, .pi-species .chip.sp .dot{width:7px; height:7px; border-radius:1px; transform:rotate(45deg); background:currentColor !important;}
+  #logSpeciesRow .chip.sp.active, .pi-species .chip.sp.active{
     background:#fff !important; color:#000 !important;
     border-color:#fff !important; box-shadow:0 0 8px rgba(255,255,255,.45);
     filter:none; transform:scale(1.05); text-shadow:none !important;
   }
-  #logSpeciesRow .chip.sp.active::after{content:"✓"; margin-left:5px; color:#000; font-weight:800;}
+  #logSpeciesRow .chip.sp.active::after, .pi-species .chip.sp.active::after{content:"✓"; margin-left:5px; color:#000; font-weight:800;}
+  /* ---- Photo importer review cards (v434) ----
+     One card per photo that cleared the GPS + timestamp gate. The card is the whole
+     review: what the photo says about where and when, and the one thing EXIF can
+     never supply — which fish it is. Nothing saves without a species picked. */
+  .pi-card{
+    border:1px solid var(--line); border-radius:10px; padding:10px 12px 12px;
+    margin:0 0 12px; background:rgba(255,255,255,.03);
+  }
+  .pi-card.saved{opacity:.55;}
+  .pi-card.saved .pi-species, .pi-card.saved .pi-actions, .pi-card.saved .pi-size{display:none;}
+  .pi-top{display:flex; gap:10px; align-items:flex-start;}
+  .pi-thumb{
+    width:96px; height:96px; object-fit:cover; border-radius:8px; flex:0 0 auto;
+    border:1px solid var(--line); background:#000;
+  }
+  .pi-facts{flex:1 1 auto; min-width:0; font-size:calc(12.5px * var(--ts)); line-height:1.6; color:var(--fog);}
+  .pi-facts .pi-when{font-weight:800; color:var(--emph);}
+  .pi-facts .pi-where{color:var(--muted); word-break:break-word;}
+  .pi-facts .pi-tide{color:var(--teal);}
+  .pi-warn{
+    font-size:calc(11.5px * var(--ts)); line-height:1.55; color:var(--muted);
+    border-left:3px solid var(--brass); padding-left:8px; margin:8px 0 0;
+  }
+  .pi-species{margin-top:10px;}
+  .pi-size{display:flex; gap:8px; margin-top:8px;}
+  .pi-size input{flex:1 1 0; min-width:0; box-sizing:border-box;}
+  .pi-actions{display:flex; gap:8px; margin-top:10px;}
+  /* v435: the drop zone is the way past a file dialog that won't multi-select. */
+  .pi-drop{
+    margin:10px 0 0; padding:14px 14px; border:2px dashed var(--line); border-radius:10px;
+    font-size:calc(12px * var(--ts)); line-height:1.6; color:var(--muted);
+    background:rgba(255,255,255,.02); transition:border-color .12s ease, background .12s ease;
+  }
+  .pi-drop b{color:var(--fog);}
+  .pi-drop.over{border-color:var(--teal); background:rgba(255,255,255,.07); color:var(--fog);}
+  .pi-reject{
+    font-size:calc(12px * var(--ts)); line-height:1.6; color:var(--muted);
+    padding:4px 0; border-bottom:1px solid var(--line);
+  }
+  .pi-reject b{color:var(--fog); font-weight:700;}
   /* v306: lit Labels is ORANGE (was blue v303-v305) - Inshore went back to blue, so Labels
      took the orange Inshore vacated; still a hue no pin or zone uses, so Labels cannot be
      mistaken for a filter. v389: the lit fill darkens to the rust #c45200 so it takes WHITE
@@ -3111,16 +3151,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Tap <b>JUMP TO END</b> below (or scroll to the bottom of your log) to reach the two ways to export/import your log.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Add catches from photos</b> and the two ways to export and import your log.</p>
       <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Ace’s Catch Log”)</span></label>
       <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
       <div class="loc-btns" style="margin:0 0 10px;">
         <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, catch or spot">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
-        <button class="mini-btn" onclick="jumpToLogEnd()" title="Skip past the catch list to the backup and import buttons">JUMP TO END <span class="bi bi-sm">⬇</span></button>
+        <button class="mini-btn" onclick="jumpToLogEnd()" title="Skip to the end of your catch list — the photo, backup and import buttons are just below it">JUMP TO END <span class="bi bi-sm">⬇</span></button>
       </div>
       <p class="sheet-note" id="trashNoteLog" style="margin:-2px 0 10px;">Recently deleted: none.</p>
       <div id="catchListBody"></div>
       <div style="height:12px;"></div>
+
+      <div class="backup-head" id="photoImportSection">Add catches from photos</div>
+      <p class="backup-sub">Pick a batch of fish photos and the app reads each one's own <b>GPS position and timestamp</b> and offers it as a catch for you to check. Only <b>JPEG</b> photos that carry <b>both</b> a location and a date/time can be used — anything missing either one is listed with the reason and left alone. Photos you have already logged are recognized and skipped. Nothing is read anywhere but on this device, and nothing saves until you name the fish.</p>
+      <div class="loc-btns">
+        <button class="mini-btn" id="photoImportBtn">Choose photos <span class="bi bi-sm">⬆</span></button>
+      </div>
+      <div id="photoDropZone" class="pi-drop">
+        <b>Or drag photos here.</b> On a Mac, select as many as you like in Finder or Photos and drop them on this box — it takes the whole selection at once and doesn't go through the file dialog.
+      </div>
+      <!-- accept is image/* on purpose (v435). Narrowing it to image/jpeg made some pickers —
+           iOS's especially — drop back to letting you choose ONE photo at a time, and it grayed
+           out files by extension rather than by what's really in them. The JPEG rule is enforced
+           by the gate, which reads the file's own first two bytes and says why it refused. -->
+      <input type="file" id="photoImportFile" accept="image/*" multiple style="display:none;">
 
       <div class="backup-head">Full backup — everything, photos included</div>
       <p class="backup-sub">Your catch log with its <b>photos</b>, your spot notes, the <b>spots and launches you added yourself</b>, any <b>edits or deletions</b> you made to built-in spots, your <b>drop labels</b>, and the <b>tide gauges you created</b>. This is the file to keep. Photos make it large — often tens of megabytes — so it usually will <b>not</b> go through email. Use <b>Share</b> → AirDrop, Save to Files, or iCloud Drive.</p>
@@ -3267,6 +3321,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note">This action button opens your full catch history, listed by <b>date caught</b>, not by the order you added them. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses. Every catch card and spot popup carries <b>EDIT</b> and <b>DELETE</b> buttons. The <b>UNDO</b> button sits at the top of the log.</p>
       <p class="sheet-note"><b>Put your name on it.</b> Type your name in the box at the top of My Log — or on the app's initial Acceptance screen — and the sheet becomes <b>“Ace’s Catch Log”</b> instead of “My Catch Log”, with your own name in Ace's place. It's entirely optional: leave the box blank and nothing changes, clear it later and the title goes back to “My Catch Log”. Like everything else in the app, your name is stored only on your device, nowhere else. On a phone, use <b>Add to Home Screen</b> to launch it like an app.</p>
       <p class="sheet-note">The <b>My Log</b> sheet has two exports. <b>Full backup</b> as <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> carries everything, photos included, along with the spots you added, your edits to built-in spots, your drop labels, and the tide stations you created. Photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. The <b>Log only</b> backup is called <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span>. It is the same data with the <b>photos stripped out</b>, small enough to email or text, so catches restored from this backup have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what the device hasn't seen. If the backup fails, it says exactly which check failed rather than shrugging.</p>
+      <p class="sheet-note"><b>Add catches from photos.</b> Fish you photographed but never logged can be brought in a batch at a time. In My Log, tap <b>Choose photos</b> and pick as many as you like — the app reads each photo's <b>own GPS position and its own date and time</b> and offers it to you as a catch to check over. Each one arrives as a card showing the picture, when it was taken, and where, with the tide for that exact moment looked up from NOAA. <b>You name the fish</b> — no photo can say what species it is — and then tap <b>SAVE CATCH</b>, or <b>SKIP</b> to pass it by. <b>SAVE ALL NAMED</b> takes every card you have picked a fish on in one go. Nothing is saved until you say so, and the photos on your phone are never changed, moved or uploaded — they are read on this device and nowhere else.</p>
+      <p class="sheet-note"><b>Check the position before you save.</b> A photo's GPS records <b>where you were standing when you took the picture</b>, not where the fish was hooked. Photograph a red back at the ramp and the catch lands at the ramp. Every card prints its coordinates for that reason — a glance is usually enough to catch one that has wandered.</p>
+      <p class="sheet-note"><b>Which photos can be used.</b> A photo has to be a <b>JPEG</b> and it has to carry <b>both</b> a location and a date and time of its own. That is not a preference — a photo missing either one would put a catch in the wrong place or on the wrong day, and a guess is worse than a gap. Photos that don't qualify are listed under <b>Not used</b> with the reason, and are otherwise left completely alone. The usual reasons are: it came through <b>Messages, WhatsApp or Facebook</b>, which strip this information out; it is a <b>screenshot</b>, which never had a position; it was taken <b>before Location Services was turned on</b> for the Camera; or it is a <b>HEIC</b> file rather than a JPEG. Photos already in your log are recognized by their time and place and skipped, so importing the same batch twice does no harm.</p>
+      <p class="sheet-note"><b>Exporting from Photos on a Mac.</b> iPhones save as HEIC, so export a JPEG copy first: select the photos, then <b>File → Export → Export Photos…</b>, set <b>Photo Kind</b> to <b>JPEG</b> and Quality to High, and make sure <b>Location Information</b> is <b>ticked</b> — that one box is the difference between a photo that can be used and one that can't. On an iPhone, <b>Settings → Camera → Formats → Most Compatible</b> makes new photos JPEG from then on. Photos are read <b>60 at a time</b>; if you pick more, the rest are named at the bottom and you can choose them again.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-seasons"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> Seasons<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-seasons">
@@ -3426,6 +3484,28 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="biteClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body" id="biteBody"></div>
+</div>
+
+<!-- ===================== PHOTO IMPORT SHEET (review before saving) ===================== -->
+<div class="scrim" id="photoImportScrim"></div>
+<div class="sheet" id="photoImportSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2>Catches From Photos</h2>
+    <button class="close" id="photoImportClose">CLOSE <span class="bi bi-x">✕</span></button>
+  </div>
+  <div class="sheet-body">
+    <p class="sheet-note" id="piSummary"></p>
+    <div class="loc-btns" id="piBulkRow" style="display:none;">
+      <button class="mini-btn" id="piSaveAll">SAVE ALL NAMED <span class="bi bi-sm">⬇</span></button>
+    </div>
+    <div id="piCards"></div>
+    <div id="piRejectWrap" style="display:none;">
+      <div class="backup-head">Not used</div>
+      <p class="backup-sub">These photos are untouched — nothing was changed or removed. A photo needs its own GPS position <b>and</b> its own date/time, and it has to be a JPEG.</p>
+      <div id="piRejects"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ===================== SEARCH SHEET ===================== -->
@@ -4378,9 +4458,9 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 433;
+const BUILD_NUM  = 437;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
-const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
+const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
    made same-day updates look unchanged. */
 { const bs = document.getElementById('buildStamp');
@@ -7138,6 +7218,12 @@ function photoIsDrawable(src){
   const head = src.slice(0, 40).toLowerCase();
   return head.indexOf('heic') < 0 && head.indexOf('heif') < 0;
 }
+/* Catch cards and map popups draw the photo about an inch tall. Since v434 a 400px
+   thumbnail is saved next to the full photo for exactly that, so a long log doesn't
+   decode a full-size image per row. Catches saved before v434 — and any restored
+   from an older backup — have no thumb and fall back to the photo itself. */
+function catchThumbSrc(c){ return (c.thumb && photoIsDrawable(c.thumb)) ? c.thumb : c.photo; }
+
 const BROKEN_PHOTO_NOTE =
   '<div class="cc-notes" style="border-left:3px solid var(--rust); padding-left:8px;">' +
   '\u26a0 This photo was saved in a format the browser can\u2019t display. Tap <b>EDIT \u270e</b> and add it again as a JPEG.' +
@@ -7150,7 +7236,7 @@ function catchPopupHTML(c){
   const tide = catchTideStr(c);
   const moon = catchMoonStr(c);
   return `<div class="pop">
-    ${c.photo? (photoIsDrawable(c.photo) ? `<img class="pop-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
+    ${c.photo? (photoIsDrawable(c.photo) ? `<img class="pop-photo" src="${catchThumbSrc(c)}">` : BROKEN_PHOTO_NOTE):''}
     <div class="pop-top"><div class="pop-name">${spList.map(k=>speciesOf(k).label).join(' · ')}</div><div class="pop-zone" style="background:${sp.color}; color:#04141e;">Catch</div></div>
     <div class="pop-meta"><span>${fmtDate(c.date)}${c.time? ' \u00b7 '+fmtTime(c.time):''}</span>${tide? `<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> ${tide}</span>`:''}${moon? `<span>${moon}</span>`:''}<span>${toDMS(c.lat, c.lng)}</span></div>
     <div class="pop-desc">${escapeHTML(c.locationLabel)}${sizeBits.length? ' \u00b7 '+sizeBits.join(' \u00b7 '):''}</div>
@@ -7719,7 +7805,7 @@ function catchCardHTML(c, showCoords){
       ${sizeBits.length? `<div class="cc-size">${sizeBits.join(' · ')}</div>`:''}
       ${(seasonBar => seasonBar ? `<div style="margin-top:6px;">${seasonBar}</div>` : '')(speciesSeasonBlock(catchSpeciesList(c), ''))}
       ${c.notes? `<div class="cc-notes">Note: ${escapeHTML(c.notes)}</div>`:''}
-      ${c.photo? (photoIsDrawable(c.photo) ? `<img class="cc-photo" src="${c.photo}">` : BROKEN_PHOTO_NOTE):''}
+      ${c.photo? (photoIsDrawable(c.photo) ? `<img class="cc-photo" src="${catchThumbSrc(c)}">` : BROKEN_PHOTO_NOTE):''}
     </div>`;
 }
 /* Newest first by DATE CAUGHT, not by the order entries were added — a fish logged
@@ -8476,7 +8562,8 @@ const INFO_BTNS = ['guideBtn','myLogBtn'];
 const OVERLAY_PAIRS = [
   ['searchSheet','searchScrim'], ['infoSheet','infoScrim'], ['themeSheet','themeScrim'],
   ['logSheet','logScrim'], ['addSpotSheet','addSpotScrim'], ['biteSheet','biteScrim'],
-  ['tideCalSheet','tideCalScrim'], ['offlineSheet','offlineScrim'], ['aboutSheet','aboutScrim']
+  ['tideCalSheet','tideCalScrim'], ['offlineSheet','offlineScrim'], ['aboutSheet','aboutScrim'],
+  ['photoImportSheet','photoImportScrim']
 ];
 function closeAllOverlays(exceptId){
   OVERLAY_PAIRS.forEach(([s,sc])=>{
@@ -9622,7 +9709,9 @@ document.getElementById('saveCatch').addEventListener('click', async ()=>{
     length: readSizeInputs().length,
     weight: readSizeInputs().weight,
     notes: document.getElementById('logNotes').value.trim() || '',
-    photo: pendingPhotoThumb || null
+    photo: pendingPhotoThumb || null,
+    // Built here rather than at upload so a crop or a revert is reflected in it.
+    thumb: await makeThumbFromDataURL(pendingPhotoThumb)
   };
   // Grab this before anything below resets it (closing/reopening the sheet clears
   // editingCatchId), and disable the button so a second tap can't fire a duplicate
@@ -10015,6 +10104,47 @@ function applyExifOrientation(ctx, orientation, w, h){
     default: break; // 1 or unknown: no transform needed
   }
 }
+/* ---- Saved-photo dimensions (v434) ----
+   Was 2000px at q0.90, which ran ~940KB a photo and took a 41-catch full backup
+   past 45MB — big enough that Mail refuses it. Measured against Jan's own log
+   photos: at 1600/q0.85 a photo is ~500KB, and 1600 on the long edge puts 1200px
+   on the short edge of a portrait shot, which is exactly the device width of an
+   iPhone 12 or 14 Pro. The screen has no more pixels to show, so nothing visible
+   is being given up — below 1400 the fine texture does start to soften. The
+   0.8/900 pair below this is the old localStorage fallback and is left alone;
+   that path has 5MB total to work with, not gigabytes.
+   THUMB_MAX_DIM is a separate small copy saved alongside, so the catch list and
+   map popups draw a 400px image at the inch they display it at instead of
+   decoding the full photo for every row. */
+const PHOTO_MAX_DIM = 1600;
+const PHOTO_QUALITY  = 0.85;
+const THUMB_MAX_DIM  = 400;
+const THUMB_QUALITY  = 0.72;
+
+/* Shrinks an already-decoded data URL. The full photo is made from the original
+   file, but the thumbnail is made from whatever the photo ENDED as — after any
+   crop or revert — so the two always show the same picture. */
+function makeThumbFromDataURL(dataURL){
+  if(!dataURL || dataURL.indexOf('data:image') !== 0) return Promise.resolve(null);
+  return new Promise(resolve=>{
+    try{
+      const img = new Image();
+      img.onload = ()=>{
+        try{
+          const scale = Math.min(1, THUMB_MAX_DIM / Math.max(img.naturalWidth, img.naturalHeight));
+          const c = document.createElement('canvas');
+          c.width  = Math.max(1, Math.round(img.naturalWidth  * scale));
+          c.height = Math.max(1, Math.round(img.naturalHeight * scale));
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          resolve(c.toDataURL('image/jpeg', THUMB_QUALITY));
+        }catch(e){ resolve(null); }   // no thumb is fine — the render falls back to the photo
+      };
+      img.onerror = ()=> resolve(null);
+      img.src = dataURL;
+    }catch(e){ resolve(null); }
+  });
+}
+
 async function resizeToDataURL(file, maxDim, quality, orientation){
   const dec = await decodeImageFile(file);
   try{
@@ -10069,11 +10199,9 @@ photoInput.addEventListener('change', async ()=>{
   photoStatus.textContent = 'Reading photo\u2026';
 
   let previewUrl;
-  // With IndexedDB there's room for near-original quality; the old 5MB
-  // localStorage fallback keeps the smaller legacy size so it doesn't overflow.
   const hiRes = (storageMode === 'idb');
-  const maxDim = hiRes ? 2000 : 900;
-  const jpegQ  = hiRes ? 0.9 : 0.8;
+  const maxDim = hiRes ? PHOTO_MAX_DIM : 900;
+  const jpegQ  = hiRes ? PHOTO_QUALITY : 0.8;
   // Read EXIF up front (once) so the Orientation tag is available before the photo
   // is resized — some Android/Chrome builds don't reliably auto-rotate on decode,
   // which was saving portrait photos sideways. The buffer is reused below for the
@@ -10151,6 +10279,358 @@ photoInput.addEventListener('change', async ()=>{
   }
   if(gotLoc && gotTime) autoTide(true);
 });
+
+/* ===================== PHOTO IMPORT — bulk catches from camera-roll JPEGs =====================
+   The single-photo path above fills in one catch from one photo. This does the same thing to a
+   whole batch, for fish that were photographed but never logged.
+
+   THE GATE (Jan's rule, and it is absolute): a photo is only used if it carries BOTH its own
+   GPS position AND its own date/time. No guessing a position from a neighbouring photo, no
+   falling back to the file's modification date — a file date is when the file was copied, not
+   when the fish was caught, and it would quietly poison the log with wrong dates. Anything that
+   fails is listed with the reason and otherwise left completely alone.
+
+   WHAT SURVIVES IS A PROPOSAL, NOT A CATCH. Nothing saves on its own, for two reasons that are
+   both about being wrong in ways EXIF can't see. Species is the obvious one — no photo says
+   what fish it is. Position is the quieter one: GPS records where the CAMERA stood, so a fish
+   photographed back at the ramp lands at the ramp. Each card shows the coordinates so that is
+   caught by eye before it is saved rather than found months later in the log.
+
+   Files are held as File references and only decoded to a full-size photo at Save. Only the
+   400px review thumbnail is kept in memory per item, so a big batch costs a few megabytes
+   instead of a few hundred. Everything happens on this device; no photo is uploaded anywhere. */
+const PI_MAX_BATCH   = 60;    // stated out loud when a batch is trimmed — never silently
+const PI_DUP_SECONDS = 120;
+const PI_DUP_METERS  = 15;    // ~50ft; a photo of the same fish won't move further than this
+
+let piItems = [];
+let piBusy  = false;
+let piRejectCount = 0;    // shown in the top summary, not only in the list below
+let piChosenCount = 0;
+
+/* EXIF's "2026:06:07 10:58:31" into the log's own date/time fields, plus a
+   comparable local timestamp. Anything unparseable fails the gate. */
+function piExifWhen(exif){
+  if(!exif || !exif.dateTime) return null;
+  const m = String(exif.dateTime).match(/(\d{4}):(\d{2}):(\d{2})[ T](\d{2}):(\d{2})/);
+  if(!m) return null;
+  const t = new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5]).getTime();
+  if(!isFinite(t)) return null;
+  return { date:`${m[1]}-${m[2]}-${m[3]}`, time:`${m[4]}:${m[5]}`, t };
+}
+function piCatchTime(c){
+  const m = String(c.date||'').match(/(\d{4})-(\d{2})-(\d{2})/);
+  if(!m) return null;
+  const tm = String(c.time||'').match(/(\d{1,2}):(\d{2})/);
+  const t = new Date(+m[1], +m[2]-1, +m[3], tm?+tm[1]:0, tm?+tm[2]:0).getTime();
+  return isFinite(t) ? t : null;
+}
+/* Every catch in the log to date came in through the photo path, so a bulk import of a
+   camera roll would otherwise re-add most of them. Same minute AND same place is the same
+   fish; either one alone is not enough to say so. */
+function piAlreadyLogged(lat, lng, t){
+  return catches.some(c=>{
+    const ct = piCatchTime(c);
+    if(ct == null || Math.abs(ct - t) > PI_DUP_SECONDS*1000) return false;
+    if(c.lat == null || c.lng == null) return true;
+    try{ return map.distance([c.lat, c.lng], [lat, lng]) <= PI_DUP_METERS; }
+    catch(e){ return true; }
+  });
+}
+
+function piOpenSheet(){
+  closeAllOverlays('photoImportSheet');
+  document.getElementById('photoImportSheet').classList.add('open');
+  document.getElementById('photoImportScrim').classList.add('open');
+  const body = document.querySelector('#photoImportSheet .sheet-body');
+  if(body) body.scrollTop = 0;
+}
+/* Opening the review sheet closes My Log under it — one page at a time, like every other
+   sheet. Closing it puts My Log back, because that is where the button was pressed and
+   the freshly saved catches are sitting right there in the list. */
+function piCloseSheet(){
+  blurActive();
+  document.getElementById('photoImportSheet').classList.remove('open');
+  document.getElementById('photoImportScrim').classList.remove('open');
+  openInfoSheet('catches', 'myLogBtn');
+}
+
+function piRenderRejects(rejects){
+  piRejectCount = rejects.length;
+  const wrap = document.getElementById('piRejectWrap');
+  const box  = document.getElementById('piRejects');
+  box.innerHTML = rejects.map(r=>
+    `<div class="pi-reject"><b>${escapeHTML(r.name)}</b> — ${escapeHTML(r.why)}</div>`).join('');
+  wrap.style.display = rejects.length ? 'block' : 'none';
+}
+
+function piCardEl(it, idx){
+  const card = document.createElement('div');
+  card.className = 'pi-card';
+  card.id = 'piCard-' + idx;
+  card.innerHTML = `
+    <div class="pi-top">
+      <img class="pi-thumb" src="${it.thumb}" alt="">
+      <div class="pi-facts">
+        <div class="pi-when">${fmtDate(it.date)} · ${fmtTime(it.time)}</div>
+        <div class="pi-where">${toDMS(it.lat, it.lng)}</div>
+        <div class="pi-tide" id="piTide-${idx}">Checking NOAA tide predictions…</div>
+      </div>
+    </div>
+    <p class="pi-warn">A photo's GPS is where <b>you</b> were standing when you took it — check the position reads right for where the fish actually came from before you save.</p>
+    <div class="chiprow wrap pi-species" id="piSp-${idx}"></div>
+    <div class="pi-size">
+      <input type="number" inputmode="decimal" step="0.5" min="0" id="piLen-${idx}" placeholder="Length (inches)">
+    </div>
+    <div class="pi-actions">
+      <button class="mini-btn" id="piSave-${idx}">SAVE CATCH <span class="bi bi-sm">⬇</span></button>
+      <button class="mini-btn" id="piSkip-${idx}">SKIP <span class="bi">✕</span></button>
+    </div>`;
+
+  // Same picker as the log sheet: tap to toggle, first tap stays the primary species.
+  const row = card.querySelector('#piSp-' + idx);
+  Object.entries(SPECIES).forEach(([key, sp])=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip sp';
+    chip.dataset.species = key;
+    chip.innerHTML = `<span class="dot"></span><span class="lbl">${sp.label}</span>`;
+    chip.style.color = sp.color;
+    chip.style.setProperty('--spc', sp.color);
+    chip.addEventListener('click', ()=>{
+      const at = it.species.indexOf(key);
+      if(at >= 0){ it.species.splice(at, 1); chip.classList.remove('active'); }
+      else { it.species.push(key); chip.classList.add('active'); }
+    });
+    row.appendChild(chip);
+  });
+
+  card.querySelector('#piSave-' + idx).addEventListener('click', ()=> piSaveItem(idx, false));
+  card.querySelector('#piSkip-' + idx).addEventListener('click', ()=>{
+    it.skipped = true;
+    card.remove();
+    piUpdateSummary();
+  });
+  return card;
+}
+
+/* The rejected count is said HERE, at the top, as well as in the list further down.
+   v435: choose six photos, have five turn out to be HEIC, and one card appears — which
+   reads as "it only took one photo" unless the reason is in front of you. */
+function piUpdateSummary(){
+  const live  = piItems.filter(i=> !i.saved && !i.skipped).length;
+  const saved = piItems.filter(i=> i.saved).length;
+  const bits = [];
+  if(live)  bits.push(`<b>${live}</b> photo${live===1?'':'s'} ready to review — pick the fish on each one, then save it.`);
+  if(saved) bits.push(`<b>${saved}</b> saved to your log.`);
+  if(!live && !saved) bits.push('Nothing left to review.');
+  if(piRejectCount) bits.push(`<b>${piRejectCount}</b> of the ${piChosenCount} photos you chose could not be used — see <b>Not used</b> below for the reason on each.`);
+  document.getElementById('piSummary').innerHTML = bits.join(' ');
+  document.getElementById('piBulkRow').style.display = live ? 'flex' : 'none';
+}
+
+/* Best-effort, one at a time so a big batch doesn't open sixty connections. The tide is a
+   convenience, not part of the gate — offline, the catch still saves with no tide on it,
+   exactly as a manually logged catch does. */
+async function piFillTides(){
+  for(const it of piItems){
+    if(it.skipped || it.saved || it.tideDone) continue;
+    const line = document.getElementById('piTide-' + it.idx);
+    try{
+      const r = await fetchTideState(it.lat, it.lng, it.date, it.time);
+      it.tide = r.state; it.tideDetail = r.detail;
+      if(line) line.textContent = `${r.detail} — NOAA ${r.station} station`;
+    }catch(e){
+      if(line) line.textContent = 'No tide — NOAA couldn’t be reached. It saves without one.';
+    }
+    it.tideDone = true;
+  }
+}
+
+async function piSaveItem(idx, quiet){
+  const it = piItems[idx];
+  if(!it || it.saved || it.skipped) return false;
+  if(!it.species.length){
+    if(!quiet) showToast('Pick a species for this one first.');
+    return false;
+  }
+  const btn = document.getElementById('piSave-' + idx);
+  if(btn) btn.disabled = true;
+  try{
+    // The full-size photo is built HERE, from the original file, so a batch of sixty
+    // never holds sixty full photos in memory at once.
+    const hiRes  = (storageMode === 'idb');
+    const photo  = await resizeToDataURL(it.file, hiRes ? PHOTO_MAX_DIM : 900,
+                                         hiRes ? PHOTO_QUALITY : 0.8, it.orientation);
+    const thumb  = await makeThumbFromDataURL(photo);
+    const lenEl  = document.getElementById('piLen-' + idx);
+    const lenVal = lenEl && lenEl.value !== '' ? Math.max(0, Number(lenEl.value) || 0) : null;
+    await addCatch({
+      species: it.species[0],
+      speciesList: it.species.slice(),
+      date: it.date,
+      time: it.time,
+      tide: it.tide || null,
+      tideDetail: it.tideDetail || null,
+      lat: it.lat, lng: it.lng, locationLabel: 'Photo location',
+      length: lenVal,
+      weight: null,
+      notes: '',
+      photo: photo,
+      thumb: thumb
+    });
+    it.saved = true;
+    const card = document.getElementById('piCard-' + idx);
+    if(card) card.classList.add('saved');
+    piUpdateSummary();
+    if(!quiet) showToast('Catch logged ✓');
+    return true;
+  }catch(e){
+    if(btn) btn.disabled = false;
+    if(!quiet) showToast("Couldn't read that photo — it may be a format this browser can't open.");
+    return false;
+  }
+}
+
+async function piSaveAllNamed(){
+  if(piBusy) return;
+  const ready = piItems.filter(i=> !i.saved && !i.skipped && i.species.length);
+  if(!ready.length){ showToast('Pick a species on at least one photo first.'); return; }
+  piBusy = true;
+  const btn = document.getElementById('piSaveAll');
+  if(btn) btn.disabled = true;
+  let n = 0;
+  for(const it of ready){ if(await piSaveItem(it.idx, true)) n++; }
+  if(btn) btn.disabled = false;
+  piBusy = false;
+  showToast(`${n} catch${n===1?'':'es'} logged ✓`);
+}
+
+async function piProcessFiles(fileList){
+  let files = Array.from(fileList || []);
+  if(!files.length) return;
+  let trimmed = 0;
+  if(files.length > PI_MAX_BATCH){
+    trimmed = files.length - PI_MAX_BATCH;
+    files = files.slice(0, PI_MAX_BATCH);
+  }
+
+  piItems = [];
+  piChosenCount = files.length + trimmed;
+  const rejects = [];
+  document.getElementById('piCards').innerHTML = '';
+  piRenderRejects([]);
+  piOpenSheet();
+  const summary = document.getElementById('piSummary');
+
+  for(let n = 0; n < files.length; n++){
+    const file = files[n];
+    summary.textContent = `Reading photo ${n+1} of ${files.length}…`;
+    // Yield between files so the count actually paints on a phone.
+    await new Promise(r=> setTimeout(r, 0));
+
+    let exif = null, isJpeg = false;
+    try{
+      const buf = await readFileAsArrayBuffer(file);
+      const head = new DataView(buf);
+      isJpeg = head.byteLength > 3 && head.getUint16(0) === 0xFFD8;
+      if(isJpeg) exif = readExif(buf);
+    }catch(e){ /* falls through to the rejects below */ }
+
+    if(!isJpeg){
+      rejects.push({ name:file.name, why: isHeicFile(file)
+        ? 'HEIC, not JPEG — re-export it from Photos as JPEG (see Help → My Log).'
+        : 'not a JPEG — re-export it from Photos as JPEG.' });
+      continue;
+    }
+    const hasLoc = !!(exif && exif.lat != null && exif.lng != null);
+    const when   = piExifWhen(exif);
+    if(!hasLoc && !when){
+      rejects.push({ name:file.name, why:'no location and no date/time — sharing apps and screenshots strip both.' });
+      continue;
+    }
+    if(!hasLoc){
+      rejects.push({ name:file.name, why:'no location — check that Location Information is ticked when you export.' });
+      continue;
+    }
+    if(!when){ rejects.push({ name:file.name, why:'no date/time in the photo.' }); continue; }
+    if(piAlreadyLogged(exif.lat, exif.lng, when.t)){
+      rejects.push({ name:file.name, why:'already in your log — same minute, same place.' });
+      continue;
+    }
+
+    let thumb = null;
+    try{ thumb = await resizeToDataURL(file, THUMB_MAX_DIM, THUMB_QUALITY, exif.orientation); }
+    catch(e){
+      rejects.push({ name:file.name, why:"this browser couldn't open the image itself." });
+      continue;
+    }
+
+    const it = {
+      idx: piItems.length, file, thumb,
+      lat: exif.lat, lng: exif.lng, orientation: exif.orientation,
+      date: when.date, time: when.time,
+      species: [], tide: null, tideDetail: null,
+      saved: false, skipped: false, tideDone: false
+    };
+    piItems.push(it);
+    document.getElementById('piCards').appendChild(piCardEl(it, it.idx));
+  }
+
+  if(trimmed){
+    rejects.push({ name:`${trimmed} more photo${trimmed===1?'':'s'}`,
+      why:`not read this time — a batch is capped at ${PI_MAX_BATCH}. Choose them again to do the rest.` });
+  }
+  piRenderRejects(rejects);
+  piUpdateSummary();
+  if(!piItems.length){
+    summary.innerHTML = rejects.length
+      ? 'None of those photos could be used. Every one is listed below with the reason — they were not changed.'
+      : 'No photos chosen.';
+  }
+  piFillTides();
+}
+
+document.getElementById('photoImportBtn').addEventListener('click', ()=>{
+  document.getElementById('photoImportFile').click();
+});
+document.getElementById('photoImportFile').addEventListener('change', async (ev)=>{
+  const input = ev.target;
+  const files = input.files;
+  // Cleared BEFORE the await so picking the same batch twice still fires a change event.
+  const list = files ? Array.from(files) : [];
+  input.value = '';
+  await piProcessFiles(list);
+});
+/* Drag-and-drop, added in v435 because a file dialog that refuses to multi-select leaves
+   no other way in. A drop carries the whole Finder selection at once and never opens the
+   picker. Only this box accepts a drop; a photo let go anywhere else on the page is
+   ignored rather than being opened by the browser in place of the app. */
+(function(){
+  const zone = document.getElementById('photoDropZone');
+  if(!zone) return;
+  const stop = e =>{ e.preventDefault(); e.stopPropagation(); };
+  ['dragenter','dragover'].forEach(ev=> zone.addEventListener(ev, e=>{
+    stop(e);
+    if(e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+    zone.classList.add('over');
+  }));
+  ['dragleave','dragend'].forEach(ev=> zone.addEventListener(ev, e=>{ stop(e); zone.classList.remove('over'); }));
+  zone.addEventListener('drop', async e=>{
+    stop(e);
+    zone.classList.remove('over');
+    const files = e.dataTransfer && e.dataTransfer.files ? Array.from(e.dataTransfer.files) : [];
+    if(!files.length){ showToast('Nothing came through in that drop — try again from Finder.'); return; }
+    await piProcessFiles(files);
+  });
+  // A photo dropped anywhere ELSE would otherwise replace the app with the photo.
+  ['dragover','drop'].forEach(ev=> window.addEventListener(ev, e=>{
+    if(!zone.contains(e.target)) e.preventDefault();
+  }));
+})();
+
+document.getElementById('photoImportClose').addEventListener('click', piCloseSheet);
+document.getElementById('photoImportScrim').addEventListener('click', piCloseSheet);
+document.getElementById('piSaveAll').addEventListener('click', piSaveAllNamed);
 
 /* Gold-on-dark glyphs. Declared here, above the WAVES block, because the buoy marker is built
    at module load and a `const` declared further down would sit in the temporal dead zone. */
@@ -12016,11 +12496,22 @@ document.getElementById('shareLogBtn')  .addEventListener('click', ()=> exportBa
    cannot even be selected -- which read, from the outside, as "the app can't
    import". Everything is selectable now; what the file actually contains is
    checked below, and each check has its own message. */
-/* JUMP TO END atop My Log: the catch list can run long, and the export/import
-   buttons live below it. Scrolls the sheet body, not the window. */
+/* JUMP TO END atop My Log: the catch list can run long, and everything you'd want after it
+   lives below. Scrolls the sheet body, not the window.
+   v437 (Jan): it used to fly to the very bottom of the sheet, which overshot — you landed
+   in the backup buttons with the log itself off the top of the screen and no idea whether
+   you had actually reached its end. It now stops at the FOOT OF THE CATCH LIST: the tail of
+   the last catch is left showing above "Add catches from photos", so the end of the log is
+   something you can see rather than something you have to infer. The 56px is that glimpse.
+   Falls back to the old behaviour if the section isn't in the DOM. */
 function jumpToLogEnd(){
   const body = document.querySelector('#infoSheet .sheet-body');
-  if(body) body.scrollTo({top: body.scrollHeight, behavior: 'smooth'});
+  if(!body) return;
+  const target = document.getElementById('photoImportSection');
+  if(!target){ body.scrollTo({top: body.scrollHeight, behavior:'smooth'}); return; }
+  const delta = target.getBoundingClientRect().top - body.getBoundingClientRect().top;
+  const top = Math.max(0, Math.min(body.scrollTop + delta - 56, body.scrollHeight - body.clientHeight));
+  body.scrollTo({top, behavior:'smooth'});
 }
 
 document.getElementById('importBtn').addEventListener('click', ()=> document.getElementById('importFile').click());

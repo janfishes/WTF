@@ -3,6 +3,15 @@
 One line per build, newest first. Full build notes with dates, times, and
 details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
+## 2026-08-05
+
+- **v437** — Jump Lands On The Log
+- **v436** — Drop Them On The Box
+- **v435** — Pick As Many As You Like
+- **v434** — Catches From Photos
+- **v433** — Waves Through Our Own Proxy
+- **v432** — FAB Stack Flips Black/White
+
 ## 2026-08-04
 
 - **v431** — Navy Blue Suede

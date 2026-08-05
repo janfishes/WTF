@@ -7,6 +7,169 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 3:50 PM EDT · v437 · Jump Lands On The Log
+------------------------------------------------------------------------------
+Jan: make JUMP TO END land just under the last photo, above the add-photos box.
+
+It was scrolling to `body.scrollHeight` — the absolute bottom of the sheet — so
+it flew past the log entirely and dropped you among the backup buttons with the
+last catch somewhere off the top of the screen. Fine when the buttons were the
+only thing down there; wrong now that "Add catches from photos" sits between
+the list and the backups, and wrong in principle: the button is called JUMP TO
+END OF THE LOG, and the end of the log was the one thing you couldn't see.
+
+Now it measures the "Add catches from photos" head against the scroll
+container and stops 56px short of it, so the tail of the last catch card is
+still showing above the divide. The end of the log becomes something you can
+SEE rather than something you infer from the scrollbar having stopped.
+
+Measured through getBoundingClientRect on both the target and the scroller
+rather than offsetTop, because .sheet-body is not a positioned offsetParent and
+offsetTop would be measured against the wrong ancestor. Clamped to the
+scrollable range at both ends, and it falls back to the old jump-to-bottom if
+the section is ever absent from the DOM.
+
+Button tooltip and the My Log help paragraph both say where it lands now.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 3:35 PM EDT · v436 · Drop Them On The Box
+------------------------------------------------------------------------------
+Jan, on v435: the file dialog only let him pick one. So it was the picker and
+not the gate — the photos he chose were fine, he was never allowed to choose
+more than one of them.
+
+v435 widened `accept` back to image/*, which is the most likely cause and may
+well be the whole of it. This build stops the importer depending on that being
+true. A DROP ZONE sits under the Choose photos button: select as many photos as
+you like in Finder or Photos, drag them onto the box, and the whole selection
+arrives at once without a file dialog being involved at all.
+
+Same code path from there — same gate, same de-duplication, same review cards.
+The drop is only accepted on the box itself. A dragover/drop anywhere else on
+the page is swallowed, because the browser's default behaviour there is to
+NAVIGATE to the dropped photo, which would throw the app away mid-import and
+look like a crash.
+
+Kept the button as well. The dialog is still the right route on a phone, where
+there is nothing to drag from.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 3:20 PM EDT · v435 · Pick As Many As You Like
+------------------------------------------------------------------------------
+Jan, testing v434: it works, but it will only take one photo at a time.
+
+The input already carried `multiple`, so two different things could produce
+that, and this build addresses both because there was no way to tell which one
+he hit without watching over his shoulder.
+
+1. ACCEPT IS image/* AGAIN (was image/jpeg,image/jpg,.jpg,.jpeg)
+
+Narrowing `accept` to JPEG is the kind of thing that looks like helpfulness and
+behaves like a bug. Some pickers — iOS's in particular — quietly drop back to
+single selection when `accept` is restrictive, and a list of file EXTENSIONS is
+meaningless to a picker that indexes photos by what they actually are. The JPEG
+rule never lived in that attribute anyway: the gate reads the file's own first
+two bytes and says why it refused. Letting the picker offer everything and
+having the gate turn things away WITH A REASON is both more permissive and more
+honest than graying files out and explaining nothing.
+
+2. THE REJECTED COUNT MOVED UP TO THE TOP LINE
+
+The other way to see "it only took one photo" is to choose six, have five of
+them be HEIC, and get one card — with the explanation sitting below the fold.
+The summary now leads with "N of the 6 photos you chose could not be used", so
+the count is in front of you before you go looking for a bug that isn't there.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 3:00 PM EDT · v434 · Catches From Photos
+------------------------------------------------------------------------------
+Jan: fish get photographed and never logged. Bring them in a batch at a time —
+and only use photos that carry the date, the time AND the location.
+
+TWO CHANGES, one of them behind the other.
+
+1. ADD CATCHES FROM PHOTOS  (My Log -> "Choose photos")
+
+The single-photo path has read EXIF since early on: drop one photo into the
+Catch sheet and it fills in the position, the date, the time and the tide. This
+does the same thing to sixty photos at once.
+
+THE GATE is absolute, and it is Jan's rule, not a default:
+
+    JPEG  +  its own GPS position  +  its own date/time     -> offered
+    anything missing any one of those                       -> listed, untouched
+
+No guessing a position from a neighbouring photo. No falling back to the file's
+modification date — a file date is when the file was COPIED, not when the fish
+was caught, and it would quietly seed the log with wrong dates that look right.
+A gap is honest; a plausible wrong answer is not.
+
+Rejects are named on screen with the reason: not a JPEG, no location, no
+date/time, or already in the log. Nothing about the photos on the phone is
+changed, moved or uploaded — the bytes are read on-device and nowhere else.
+
+WHAT SURVIVES IS A PROPOSAL, NOT A CATCH. Two things EXIF cannot get right:
+
+  - Species. No photo says what fish it is. Nothing saves without one picked.
+  - Position. GPS records where the CAMERA stood. A red photographed back at
+    the ramp lands at the ramp. Every card prints its coordinates and says so
+    in as many words, so it is caught by eye now instead of found months later.
+
+DE-DUPLICATION matters more here than it sounds: every catch in the log to date
+arrived through the photo path, so importing a camera roll would otherwise
+re-add most of them. Same minute AND same place (120s, 15m) is the same fish;
+either alone is not enough. Checked against the real 41-catch log — all 41
+self-match, and the three catches of 2026-06-07 (10:58, 11:16, 11:58) stay
+distinct: the closest pair is 18 minutes and 17m apart.
+
+Files are held as File references, not decoded photos. Only the 400px review
+thumbnail lives in memory per item; the full-size photo is built at Save, one
+at a time. A batch of sixty therefore costs a few megabytes rather than a few
+hundred. Batches are capped at 60 and the remainder is NAMED at the bottom —
+a silent truncation would read as "that was all of them".
+
+Tide for each photo's moment comes from the same NOAA lookup the Catch sheet
+uses, fetched one at a time in the background. It is a convenience, not part of
+the gate: offline, the catch still saves with no tide, exactly as a hand-logged
+one does.
+
+2. SAVED PHOTOS ARE 1600px / q0.85, PLUS A 400px THUMBNAIL
+
+Was 2000px at q0.90. Measured on Jan's own log photos:
+
+    2000 / q0.90     939 KB      41 photos = 24 MB      300 = 175 MB
+    1600 / q0.85     501 KB      41 photos = 13 MB      300 =  93 MB
+    1400 / q0.82     363 KB
+    1200 / q0.82     276 KB      visibly softer on fine texture
+     900 / q0.80     155 KB      mushy — this is the old localStorage size
+
+1600 is not a round number picked for the sound of it. An iPhone 12 and a 14
+Pro are both ~1170 device pixels wide; a portrait photo at 1600 on the long
+edge is 1200px on the short edge, so it lands at full screen width with nothing
+to upscale. Below 1400 the skin speckle on a flounder starts to smooth over.
+The screen has no more pixels to show, so nothing visible is being given up —
+and a 300-photo library goes from a backup email refuses to one it accepts.
+
+The 900/q0.80 pair is the old localStorage fallback and is deliberately left
+alone: that path has 5MB in total to work with, not gigabytes.
+
+THUMBNAILS: catch cards and map popups draw the photo about an inch tall and
+were decoding the full image to do it. A 400px copy is now saved alongside and
+used there — the bigger speed win on a phone, in a long log, than the resize
+itself. Built from what the photo ENDED as, after any crop or revert, so the
+two can never show different pictures. Catches saved before v434, and any
+restored from an older backup, have no thumb and fall back to the photo.
+
+Existing photos are not re-compressed. The savings are not worth a second
+generation of loss on the ones already saved.
+
+VERIFIED: the gate run over real files on this Mac — two iPhone 12 JPEGs
+accepted with position and timestamp, an LG-D801 photo rejected for no GPS,
+Photoshop-saved and logo JPEGs rejected for neither, HEIC rejected as not a
+JPEG. De-duplication run against the real 41-catch log as described above.
+Not yet clicked through in a browser.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 8:10 PM EDT · v431 · Navy Blue Suede
 ------------------------------------------------------------------------------
 Jan: make the blue in Blue Suede Shoes more navy — the grounds, not the accent.
