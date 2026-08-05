@@ -7,6 +7,77 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 6:05 PM EDT · v440 · Filter The Log By When And Where
+------------------------------------------------------------------------------
+Jan: how best to filter catches by when and where caught.
+
+Until now the only filter a catch answered to was its species. The log was one
+flat list, newest first, and a hundred fish deep it stops being a record you can
+ask a question of.
+
+Two selects now sit above the catch list, WHEN CAUGHT and WHERE CAUGHT, and
+whatever they leave showing is also what the map draws — the same predicate
+feeds the card list, the black diamonds and the number on the Catches pill, so
+the log and the chart can never report two different things. It ANDs with the
+species buttons, which stay the only writer of activeSpecies (v310): a fish has
+to pass the pills AND the filter to appear.
+
+WHEN is built around the TIME OF YEAR rather than recency, because that is the
+question a fishing log is actually for, and because the list is already
+newest-first with JUMP TO END for the recent view.
+
+  All dates · This week, any year · Every <current month> · Last 30 days ·
+  then one entry per year the log contains, newest first.
+
+"This week, any year" gathers every fish caught within SEASON_WINDOW_D (10) days
+of today's date whatever the year — the day-of-year gap wraps across New Year, so
+Dec 28 and Jan 3 are six days apart, not a year. Help spells the ten days out in
+prose; the number there and the constant have to stay in step. An undated record
+can't answer a date question and drops out of all of them.
+
+WHERE goes by view, by coastline, or by proximity to a pin:
+
+  Anywhere · In the map view · Inshore · N · Beach & offshore · N ·
+  then every pin with a fish on it, "<name> · N", most fish first.
+
+"In the map view" re-answers itself on moveend — pan the chart behind the sheet
+and the list keeps up. Inshore/offshore is pointInRings against SEA_CLIPS.shore,
+the same coastline envelope the ocean paint is clipped to: the ICW, the rivers,
+the lagoons and the bays are inside it by construction, so a surf fish files as
+offshore rather than as inshore the way a 3-mile-line test would have it.
+
+The pin list is the one that needed a decision. A catch stores lat/lng and a
+free-text locationLabel but NO spot id, so matching a catch to a spot by its
+typed name is guesswork — it goes by distance instead, CATCH_NEAR_M = 200 ft.
+Only pins that actually carry a fish are listed (a picker of 225 spots, nearly
+all of them zero, is worse than no picker), and the counts in the WHERE menu are
+computed against the current WHEN selection, so the numbers in it are what you
+would really get. The pin you have selected stays listed even at zero, or a WHEN
+change would silently reset the menu out from under you.
+
+Three things keep the filter from reading as lost data:
+
+  · The line under the menus always says where you stand — "84 catches logged."
+    unfiltered, "Showing 12 of 84 catches." in the accent with a SHOW ALL ✕
+    button the moment anything is held back.
+  · It is NOT persisted. A filter that survives a reload and hides two thirds of
+    the log is a "my catches disappeared" report; every open starts whole.
+  · Saving or editing a catch the filter would have hidden clears the filter,
+    not the fish — otherwise Save looks like it failed.
+
+Both controls hide themselves while the log is empty, and a filter that matches
+nothing says so and points at SHOW ALL rather than showing the never-logged-a-
+fish note.
+
+Verified headless in Chrome at 1280 and 393 px against a seeded five-catch log:
+every WHEN and WHERE branch returns the expected card count, pill count and
+diamond count (diamonds fewer than cards where catches merge at one spot, as
+they should); the map-view branch tracks setView live; a save under a 1988
+filter drops the filter and shows the new fish; the empty log hides the row.
+Help gets four paragraphs under My Log, and the sheet's own intro names the two
+menus.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 4:30 PM EDT · v439 · Catch Log Buttons Take The Accent
 ------------------------------------------------------------------------------
 Jan: make the buttons in the catch log the brighter colour of the selected

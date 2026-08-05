@@ -2252,6 +2252,34 @@ svg.leaflet-image-layer.leaflet-interactive path {
   #panel-catches .cc-edit:hover, #panel-catches .cc-edit:active{background:var(--accent-lite); color:#000;}
   #panel-catches .cc-del:hover, #panel-catches .cc-del:active{background:var(--rust); border-color:var(--rust); color:#fff;}
 
+  /* v440: the WHEN / WHERE filter above the catch list. Two selects side by side,
+     stacking to one column on a narrow phone. The count line under them is not
+     decoration — a filter you can't see reads as "my catches disappeared", so the
+     showing-N-of-M line is always present and turns accent the moment a filter is
+     narrowing anything. CLEAR only exists while there is something to clear. */
+  .log-filter{display:flex; gap:8px; margin:0 0 6px;}
+  .log-filter .lf-cell{flex:1 1 0; min-width:0; display:block;}
+  .log-filter .lf-lbl{
+    display:block; font-size:calc(11px * var(--ts)); letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 3px;
+  }
+  /* No font-size of its own on purpose: every select in the app sits at the base
+     16px, which is also what stops iOS zooming the page when one is tapped. The
+     option labels are kept short instead, so they don't ellipsise in half a sheet. */
+  .log-filter select{width:100%; box-sizing:border-box; margin:0;}
+  @media (max-width:400px){ .log-filter{flex-direction:column; gap:6px;} }
+  .log-count{
+    font-size:calc(12.5px * var(--ts)); color:var(--muted); margin:0 0 10px;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .log-count.narrowed{color:var(--accent-lite); font-weight:700;}
+  #logFilterClear{
+    background:#000; border:1px solid var(--accent-lite); color:var(--accent-lite);
+    border-radius:6px; padding:2px 8px; font:inherit; font-weight:700; cursor:pointer;
+    font-size:calc(11.5px * var(--ts));
+  }
+  #logFilterClear:hover, #logFilterClear:active{background:var(--accent-lite); color:#000;}
+
   /* ---------- Popup ---------- */
   .leaflet-popup-content-wrapper{background:var(--navy-900); color:var(--fog); border:1px solid var(--line); border-radius:12px; padding:0;}
   /* Logged-catch popups (a single catch, or the scrolling list when several
@@ -3177,7 +3205,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Add catches from photos</b> and the two ways to export and import your log.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Add catches from photos</b> and the two ways to export and import your log.</p>
       <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Ace’s Catch Log”)</span></label>
       <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
       <div class="loc-btns" style="margin:0 0 10px;">
@@ -3185,6 +3213,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <button class="mini-btn" onclick="jumpToLogEnd()" title="Skip to the end of your catch list — the photo, backup and import buttons are just below it">JUMP TO END <span class="bi bi-sm">⬇</span></button>
       </div>
       <p class="sheet-note" id="trashNoteLog" style="margin:-2px 0 10px;">Recently deleted: none.</p>
+      <!-- v440: narrow the log by WHEN and WHERE the fish were caught. Both selects
+           are built at runtime (the year list and the spot list come out of the log
+           itself), and whatever they show is what the map's catch diamonds show. -->
+      <div class="log-filter" id="logFilterRow">
+        <label class="lf-cell"><span class="lf-lbl">When caught</span>
+          <select id="logWhen" title="Narrow the log by when the fish were caught"></select></label>
+        <label class="lf-cell"><span class="lf-lbl">Where caught</span>
+          <select id="logWhere" title="Narrow the log by where the fish were caught"></select></label>
+      </div>
+      <p class="log-count" id="logFilterCount"></p>
       <div id="catchListBody"></div>
       <div style="height:12px;"></div>
 
@@ -3345,6 +3383,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mylog"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 6.2C10 4.6 7.4 4 4 4v14.4c3.4 0 6 .6 8 2.2 2-1.6 4.6-2.2 8-2.2V4c-3.4 0-6 .6-8 2.2Z"></path><path d="M12 6.2v14.4"></path></svg> My Log<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-mylog">
       <p class="sheet-note">This action button opens your full catch history, listed by <b>date caught</b>, not by the order you added them. Each catch also shows the <b>moon phase</b> for the moment it was caught — a moon icon plus % lit and whether it was waxing or waning — computed on-device from the same astronomy the Bite forecast uses. Every catch card and spot popup carries <b>EDIT</b> and <b>DELETE</b> buttons. The <b>UNDO</b> button sits at the top of the log.</p>
+      <p class="sheet-note"><b>Narrow the log by when and where.</b> Above the list sit two menus, <b>When caught</b> and <b>Where caught</b>. Whatever they leave showing is also what the map draws — the black diamonds and the number on the <b>Catches</b> button follow the same set, so the log and the chart never tell you two different things. The species buttons still apply on top of it: a fish has to pass the filter <b>and</b> have its species lit to appear.</p>
+      <p class="sheet-note"><b>When caught</b> is built around the <b>time of year</b>, because that is the question a fishing log is really for. <b>This week, any year</b> gathers every fish you have ever caught within ten days of today's date, whatever year it was — a straight answer to "what was biting this week last season, and the one before". <b>Every August</b> — named for whichever month you are in — widens that to the whole month, and each year you have fished is listed on its own. <b>Last 30 days</b> is there for the plain recent view. A catch saved without a date can't answer a date question, so it drops out of all of them.</p>
+      <p class="sheet-note"><b>Where caught</b> has four ways to cut it and then your pins. <b>In the current map view</b> shows only the fish inside the map's current window — pan or zoom the chart behind the sheet and the list keeps up. <b>Inshore</b> is everything caught inside the shoreline: the Intracoastal, the rivers, the lagoons and the bays. <b>Beach &amp; offshore</b> is everything on the ocean side of it, surf fish included. Below those, every pin with a fish logged on it is listed with its count — picking one shows the catches <b>within 200 feet</b> of that pin, which is how the app matches a catch to a spot: by position, not by the name you typed.</p>
+      <p class="sheet-note"><b>You can always see that a filter is on.</b> The line under the menus reads <b>Showing 12 of 84 catches</b> in the theme colour whenever anything is being held back, with <b>SHOW ALL ✕</b> beside it to put the whole log back in one tap. The filter is <b>not</b> remembered between sessions — every time you open the app the log starts whole — and saving or editing a catch that the filter would have hidden clears the filter rather than the fish.</p>
       <p class="sheet-note"><b>Put your name on it.</b> Type your name in the box at the top of My Log — or on the app's initial Acceptance screen — and the sheet becomes <b>“Ace’s Catch Log”</b> instead of “My Catch Log”, with your own name in Ace's place. It's entirely optional: leave the box blank and nothing changes, clear it later and the title goes back to “My Catch Log”. Like everything else in the app, your name is stored only on your device, nowhere else. On a phone, use <b>Add to Home Screen</b> to launch it like an app.</p>
       <p class="sheet-note">The <b>My Log</b> sheet has two exports. <b>Full backup</b> as <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> carries everything, photos included, along with the spots you added, your edits to built-in spots, your drop labels, and the tide stations you created. Photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. The <b>Log only</b> backup is called <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span>. It is the same data with the <b>photos stripped out</b>, small enough to email or text, so catches restored from this backup have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what the device hasn't seen. If the backup fails, it says exactly which check failed rather than shrugging.</p>
       <p class="sheet-note"><b>Add catches from photos.</b> Fish you photographed but never logged can be brought in a batch at a time. In My Log, tap <b>Choose photos</b> and pick as many as you like — the app reads each photo's <b>own GPS position and its own date and time</b> and offers it to you as a catch to check over. Each one arrives as a card showing the picture, when it was taken, and where, with the tide for that exact moment looked up from NOAA. <b>You name the fish</b> — no photo can say what species it is — and then tap <b>SAVE CATCH</b>, or <b>SKIP</b> to pass it by. <b>SAVE ALL NAMED</b> takes every card you have picked a fish on in one go. Nothing is saved until you say so, and the photos on your phone are never changed, moved or uploaded — they are read on this device and nowhere else.</p>
@@ -4484,7 +4526,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 439;
+const BUILD_NUM  = 440;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -6910,6 +6952,9 @@ async function addCatch(entry){
   entry.id = newId();
   entry.createdAt = Date.now();
   catches.push(entry);
+  // v440: a fish that the log's when/where filter would hide is a fish that looks
+  // like it didn't save. Saving one always drops the filter rather than the fish.
+  if(logFilterActive() && !catchPassesLogFilter(entry)){ catchWhen = 'all'; catchWhere = 'all'; }
   await persistCatches();
   renderCatchMarkers();
   renderCatchList();
@@ -6922,6 +6967,7 @@ async function updateCatch(id, fields){
   Object.keys(fields).forEach(k=>{ before[k] = c[k]; });
   pushUndo({kind:'catch-edit', id, before});
   Object.assign(c, fields);
+  if(logFilterActive() && !catchPassesLogFilter(c)){ catchWhen = 'all'; catchWhere = 'all'; }
   await persistCatches();
   renderCatchMarkers();
   renderCatchList();
@@ -7125,12 +7171,15 @@ function updateStorageNote(){
    showing. v310: with Catches on the lit species set is the shown set, so the
    count is exactly the catches whose fish are lit (the whole log in the normal
    all-lit state, 0 with everything unchecked). With Catches off it previews:
-   the total for any pre-picked species, or the whole log. */
+   the total for any pre-picked species, or the whole log.
+   v440: My Log's when/where filter narrows this too — the number on the pill is
+   the number of diamonds actually on the map, filter and all. */
 function catchFilterCount(){
-  if(showCatches) return catches.filter(c=> catchSpeciesList(c).some(k=>activeSpecies.has(k))).length;
+  const pool = catches.filter(catchPassesLogFilter);
+  if(showCatches) return pool.filter(c=> catchSpeciesList(c).some(k=>activeSpecies.has(k))).length;
   return activeSpecies.size
-    ? catches.filter(c=> catchSpeciesList(c).some(k=>activeSpecies.has(k))).length
-    : catches.length;
+    ? pool.filter(c=> catchSpeciesList(c).some(k=>activeSpecies.has(k))).length
+    : pool.length;
 }
 function updateCatchCount(){ document.getElementById('catchCount').textContent = catchFilterCount(); }
 
@@ -7806,6 +7855,184 @@ function wirePopup(popup){
 /* One catch card, shared by the My Log sheet and the stacked-diamond popup so the two
    can never drift apart. showCoords is off in the popup, where every catch in the list
    is at the same spot and the coordinates are already in the header. */
+/* ===================== CATCH LOG FILTER (v440) ===================== */
+/* Two dropdowns above the catch list narrow it by WHEN and WHERE a fish was
+   caught, and the map's catch diamonds follow the same set — there is one
+   definition of "the catches being shown", not a log one and a map one. It
+   ANDs with the species pills, which stay the only writer of activeSpecies
+   (v310): a fish has to pass the pills AND this filter to draw.
+
+   WHEN is built around the time of YEAR, not recency, because that is the
+   question a fishing log gets asked — "what was biting the first week of
+   August" — and because the list is already newest-first with JUMP TO END
+   for the recency question. Last 30 days is there anyway; it is cheap.
+
+   WHERE goes by map view, by the coastline, or by proximity to a pin.
+   A catch stores coordinates and a free-text locationLabel but NO spot id,
+   so matching a catch to a spot by name would be guesswork on typed text —
+   distance is exact and needs no new field on the record.
+
+   Deliberately NOT persisted. A filter that survives a reload and quietly
+   hides two thirds of the log is a "my catches disappeared" report; it
+   resets to All dates / Anywhere every time the app opens. */
+const CATCH_NEAR_M   = 60.96;   // 200 ft — the "near this spot" radius
+/* ± days around today for "This week, any year". Help spells this out as "within
+   ten days of today's date" — the number in the prose and this constant have to
+   stay in agreement, the way the long-press hold time does. */
+const SEASON_WINDOW_D = 10;
+let catchWhen  = 'all';
+let catchWhere = 'all';
+
+function catchDateObj(c){
+  const m = (c.date||'').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? new Date(+m[1], +m[2]-1, +m[3]) : null;
+}
+/* Day-of-year distance that ignores the year and wraps across New Year, so
+   Dec 28 and Jan 3 are six days apart rather than a year. The reference year
+   is a non-leap one; a Feb 29 catch lands on Mar 1, which is close enough. */
+function dayOfYearIdx(d){
+  return Math.round((Date.UTC(2001, d.getMonth(), d.getDate()) - Date.UTC(2001,0,1)) / 86400000);
+}
+function seasonDayGap(a, b){
+  const g = Math.abs(dayOfYearIdx(a) - dayOfYearIdx(b));
+  return Math.min(g, 365 - g);
+}
+function catchPassesWhen(c){
+  if(catchWhen === 'all') return true;
+  const d = catchDateObj(c);
+  if(!d) return false;                       // an undated record can't answer a date question
+  const now = new Date();
+  if(catchWhen === 'week')  return seasonDayGap(d, now) <= SEASON_WINDOW_D;
+  if(catchWhen === 'month') return d.getMonth() === now.getMonth();
+  if(catchWhen === 'd30'){
+    const cut = new Date(); cut.setHours(0,0,0,0); cut.setDate(cut.getDate() - 29);
+    return d >= cut;
+  }
+  const y = catchWhen.match(/^y(\d{4})$/);
+  if(y) return d.getFullYear() === +y[1];
+  return true;
+}
+/* Inside the SHORE_RINGS coastline envelope (the same one the ocean paint is
+   clipped to) = inshore: the ICW, the lagoons, the rivers and the bays are all
+   inside it by construction. Outside it = the beach and the ocean. This is a
+   truer inshore/offshore split for a catch than the 3-mile line, which would
+   file every surf fish as inshore. */
+function catchIsInshore(c){
+  try{ return pointInRings(SEA_CLIPS.shore, c.lng, c.lat); }catch(e){ return true; }
+}
+function allSpotRefs(){
+  const out = [];
+  try{ markers.forEach(m=>{ const s = m.spotRef; if(s && !s._deleted) out.push(s); }); }catch(e){}
+  return out;
+}
+function spotRefById(id){ return allSpotRefs().find(s=> s.id === id) || null; }
+function catchNearSpot(c, s){
+  try{ return map.distance([s.lat, s.lng], [c.lat, c.lng]) <= CATCH_NEAR_M; }catch(e){ return false; }
+}
+function catchPassesWhere(c){
+  if(catchWhere === 'all') return true;
+  if(catchWhere === 'view'){
+    try{ return map.getBounds().contains([c.lat, c.lng]); }catch(e){ return true; }
+  }
+  if(catchWhere === 'inshore')  return catchIsInshore(c);
+  if(catchWhere === 'offshore') return !catchIsInshore(c);
+  const m = catchWhere.match(/^spot:(.+)$/);
+  if(m){
+    const s = spotRefById(m[1]);
+    return s ? catchNearSpot(c, s) : true;   // a deleted pin stops filtering rather than emptying the log
+  }
+  return true;
+}
+function catchPassesLogFilter(c){ return catchPassesWhen(c) && catchPassesWhere(c); }
+function logFilterActive(){ return catchWhen !== 'all' || catchWhere !== 'all'; }
+
+/* The WHERE menu counts against the WHEN selection, not the whole log, so the
+   numbers in it are what you would actually get if you picked that line. */
+function buildLogWhenOptions(){
+  const sel = document.getElementById('logWhen');
+  if(!sel) return;
+  const now = new Date();
+  const opts = [
+    ['all',   'All dates'],
+    ['week',  'This week, any year'],
+    ['month', 'Every ' + now.toLocaleDateString('en-US',{month:'long'})],
+    ['d30',   'Last 30 days']
+  ];
+  const years = [...new Set(catches.map(c=> (c.date||'').slice(0,4)).filter(y=> /^\d{4}$/.test(y)))]
+                  .sort().reverse();
+  years.forEach(y=> opts.push(['y'+y, y]));
+  if(!opts.some(o=> o[0] === catchWhen)) catchWhen = 'all';
+  sel.innerHTML = opts.map(([v,l])=>
+    `<option value="${v}">${escapeHTML(l)}</option>`).join('');
+  sel.value = catchWhen;
+}
+function buildLogWhereOptions(){
+  const sel = document.getElementById('logWhere');
+  if(!sel) return;
+  const pool = catches.filter(catchPassesWhen);
+  let inshore = 0;
+  pool.forEach(c=>{ if(catchIsInshore(c)) inshore++; });
+  const opts = [
+    ['all',  'Anywhere'],
+    ['view', 'In the map view'],
+    ['inshore',  'Inshore · ' + inshore],
+    ['offshore', 'Beach & offshore · ' + (pool.length - inshore)]
+  ];
+  /* Only pins that actually have a fish on them are listed — a picker of 225
+     spots, nearly all of them zero, is a worse tool than no picker. The pin
+     currently selected stays listed even at zero so the menu can't silently
+     reset itself out from under a WHEN change. */
+  const spots = [];
+  allSpotRefs().forEach(s=>{
+    const n = pool.filter(c=> catchNearSpot(c, s)).length;
+    if(n || catchWhere === 'spot:'+s.id) spots.push([s, n]);
+  });
+  spots.sort((a,b)=> b[1] - a[1] || String(a[0].name).localeCompare(String(b[0].name)));
+  const spotHTML = spots.map(([s,n])=>
+    `<option value="spot:${escapeHTML(s.id)}">${escapeHTML(s.name)} · ${n}</option>`).join('');
+  if(!spots.some(([s])=> 'spot:'+s.id === catchWhere) && /^spot:/.test(catchWhere)) catchWhere = 'all';
+  sel.innerHTML = opts.map(([v,l])=> `<option value="${v}">${escapeHTML(l)}</option>`).join('')
+    + (spotHTML ? `<optgroup label="Within 200 ft of a pin">${spotHTML}</optgroup>` : '');
+  sel.value = catchWhere;
+}
+function updateLogFilterCount(){
+  const el = document.getElementById('logFilterCount');
+  if(!el) return;
+  const total = catches.length;
+  const shown = catches.filter(catchPassesLogFilter).length;
+  const on = logFilterActive();
+  el.classList.toggle('narrowed', on);
+  el.innerHTML = on
+    ? `Showing <b>${shown}</b> of ${total} ${total===1?'catch':'catches'}. <button type="button" id="logFilterClear">SHOW ALL <span class="bi bi-xs">✕</span></button>`
+    : `${total} ${total===1?'catch':'catches'} logged.`;
+  const btn = document.getElementById('logFilterClear');
+  if(btn) btn.addEventListener('click', clearLogFilter);
+}
+function syncLogFilterUI(){
+  const row = document.getElementById('logFilterRow');
+  const cnt = document.getElementById('logFilterCount');
+  const empty = catches.length === 0;           // nothing to narrow — don't show the controls
+  if(row) row.style.display = empty ? 'none' : '';
+  if(cnt) cnt.style.display = empty ? 'none' : '';
+  if(empty) return;
+  buildLogWhenOptions();
+  buildLogWhereOptions();
+  updateLogFilterCount();
+}
+function applyLogFilter(){
+  renderCatchList();
+  applyFilter();          // the map's diamonds and the Catches count read the same predicate
+}
+function clearLogFilter(){
+  catchWhen = 'all'; catchWhere = 'all';
+  applyLogFilter();
+}
+/* "In the current map view" has to re-answer itself as the map moves. Only the
+   catch list needs redrawing — a diamond outside the view is off-screen anyway. */
+function logFilterOnMapMove(){
+  if(catchWhere === 'view'){ renderCatchList(); updateCatchCount(); }
+}
+
 function catchCardHTML(c, showCoords){
   const spTags = catchSpeciesList(c).map(k=>{
     const s = speciesOf(k);
@@ -7842,11 +8069,17 @@ function byDateCaughtDesc(a,b){
 
 function renderCatchList(){
   const body = document.getElementById('catchListBody');
+  syncLogFilterUI();
   if(catches.length===0){
     body.innerHTML = `<p class="empty-note">No catches logged yet. Tap <b>+ Catch</b> to add your first one.</p>`;
     return;
   }
-  body.innerHTML = [...catches].sort(byDateCaughtDesc).map(c=> catchCardHTML(c, true)).join("");
+  const shown = catches.filter(catchPassesLogFilter).sort(byDateCaughtDesc);
+  if(!shown.length){
+    body.innerHTML = `<p class="empty-note">No catches match <b>when</b> and <b>where</b> you've picked above. <b>SHOW ALL ✕</b> puts the whole log back.</p>`;
+    return;
+  }
+  body.innerHTML = shown.map(c=> catchCardHTML(c, true)).join("");
   body.querySelectorAll('.cc-del').forEach(btn=> btn.addEventListener('click', ()=> deleteCatch(btn.dataset.id)));
   body.querySelectorAll('.cc-edit').forEach(btn=> btn.addEventListener('click', ()=>{
     const c = catches.find(x=>x.id===btn.dataset.id);
@@ -8360,8 +8593,10 @@ function applyFilter(){
     // shown set — a catch shows only if one of its fish is lit, and unchecking every
     // pill genuinely empties the map rather than falling back to "show all".
     // Each merged marker shows only the catches that pass the filter, badge included.
+    // v440: ANDed with My Log's own when/where filter, so the diamonds on the map
+    // and the cards in the log are always the same set of fish.
     const vis = m.group.catches.filter(c=>
-      showCatches && catchSpeciesList(c).some(k=>activeSpecies.has(k))
+      showCatches && catchSpeciesList(c).some(k=>activeSpecies.has(k)) && catchPassesLogFilter(c)
     );
     m.visible = vis;
     if(!vis.length){ if(map.hasLayer(m)) map.removeLayer(m); return; }
@@ -8678,6 +8913,16 @@ function applyUserName(){
 }
 window.applyUserName = applyUserName;
 document.getElementById('logNameInput').addEventListener('input', function(){ setUserName(this.value); });
+
+/* v440: the catch log's when/where selects. Each change redraws the list AND the
+   map's diamonds through applyLogFilter, so the two never disagree. */
+document.getElementById('logWhen').addEventListener('change', function(){
+  catchWhen = this.value; applyLogFilter();
+});
+document.getElementById('logWhere').addEventListener('change', function(){
+  catchWhere = this.value; applyLogFilter();
+});
+map.on('moveend', logFilterOnMapMove);
 applyUserName();
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.addEventListener('click', ()=>{
