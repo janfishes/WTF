@@ -7,6 +7,38 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 4:30 PM EDT · v439 · Catch Log Buttons Take The Accent
+------------------------------------------------------------------------------
+Jan: make the buttons in the catch log the brighter colour of the selected
+theme, so they differentiate from the background.
+
+They didn't. A .mini-btn is --navy-800 on a --navy-900 sheet — one step of
+value apart — with a --line border and --fog text, so UNDO LAST CHANGE, JUMP
+TO END, Choose photos, the two Save/Share pairs and Import backup all read as
+paragraphs of text rather than as things you press.
+
+In My Log they now wear the accent-on-black pairing the filter pills and the
+FAB stack already use: black fill, var(--accent-lite) border, var(--accent-lite)
+label, weight 700; pressed inverts to an accent fill with black text. The
+EDIT / DELETE inside each logged entry get the same treatment at card scale —
+they were borderless --muted text on the --navy-800 card, the same "doesn't
+look like a button" problem — so they are now black pills with an accent ring
+and accent label. Pressed, EDIT fills accent; DELETE fills --rust with white
+text, so the destructive one still reads apart.
+
+--accent-lite, not --teal, for the reason v381 gives: it is the variant tuned
+to read on black, and Brown Sugar's --teal is a chocolate that would vanish
+there. Checked in Tequila Sunrise, Purple Haze and Brown Sugar — the last one
+is a light theme, where the black buttons land the same way the map's black
+pills already do, amber on black at about 7:1.
+
+Scoped to #panel-catches on purpose. The same .mini-btn in + Catch, + Spot,
+the tide-station form and the popups is untouched — this was a catch-log ask,
+not an app-wide restyle.
+
+CSS only; no behaviour change.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 4:20 PM EDT · v438 · Batch Import In The Intro
 ------------------------------------------------------------------------------
 Jan: name it in the first paragraph of Help, ahead of backing up.

@@ -2226,6 +2226,32 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .cc-size{font-size:calc(12px * var(--ts)); color:var(--teal); margin-top:3px;}
   .cc-notes{font-size:calc(12.5px * var(--ts)); color:var(--fog); margin-top:5px; line-height:1.5;}
 
+  /* v439 (Jan): the catch log's own buttons wear the BRIGHT theme accent so they
+     stand off the sheet. Plain .mini-btn is --navy-800 on a --navy-900 sheet --
+     nearly the same value as the background, so the buttons read as text blocks.
+     Here they get a black fill + var(--accent-lite) border and label, the same
+     accent-on-black pairing the filter pills and FAB stack use (v381/v405) --
+     accent-lite, not --teal, because it is the variant tuned to read on black
+     (Brown Sugar's --teal is chocolate and would vanish). Pressed = accent fill
+     with black text. Scoped to #panel-catches: the identical .mini-btn in
+     + Catch, + Spot and the popups is untouched. Same reasoning for the card's
+     EDIT/DELETE, which were --muted; their hover colours are unchanged. */
+  #panel-catches .mini-btn{
+    background:#000; border-color:var(--accent-lite); color:var(--accent-lite); font-weight:700;
+  }
+  #panel-catches .mini-btn:active{background:var(--accent-lite); color:#000;}
+  /* The per-entry EDIT / DELETE inside the list get the same treatment at card
+     scale — they were --muted borderless text sitting on the --navy-800 card,
+     which is exactly the "can't tell it's a button" complaint. Black fill +
+     accent ring + accent label; DELETE keeps its rust on press/hover so the
+     destructive one still reads apart. */
+  #panel-catches .cc-edit, #panel-catches .cc-del{
+    background:#000; border:1px solid var(--accent-lite); color:var(--accent-lite);
+    border-radius:6px; padding:3px 7px;
+  }
+  #panel-catches .cc-edit:hover, #panel-catches .cc-edit:active{background:var(--accent-lite); color:#000;}
+  #panel-catches .cc-del:hover, #panel-catches .cc-del:active{background:var(--rust); border-color:var(--rust); color:#fff;}
+
   /* ---------- Popup ---------- */
   .leaflet-popup-content-wrapper{background:var(--navy-900); color:var(--fog); border:1px solid var(--line); border-radius:12px; padding:0;}
   /* Logged-catch popups (a single catch, or the scrolling list when several
@@ -4458,7 +4484,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 438;
+const BUILD_NUM  = 439;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
