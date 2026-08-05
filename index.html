@@ -2361,50 +2361,56 @@ svg.leaflet-image-layer.leaflet-interactive path {
     box-shadow:0 0 0 1.5px rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center;
     font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; color:#fff; line-height:1;
   }
-  /* v429/v430: the stack matches the filter pills' language — BLACK when off, the theme accent
-     when lit, and the label is WHITE in both states. Off: black fill, var(--accent-lite) ring +
-     icons (accent-lite, not --teal, for the same reason the black pills use it: Brown Sugar's
-     chocolate --teal vanishes on black while its accent-lite amber reads). Lit:
-     var(--accent-deep) fill with white label AND icons — v429 had to use black type here
-     because white on the BRIGHT accent is 1.9:1; v430 deepened the fill instead (see
-     --accent-deep at the top of the sheet) so white clears 4.6:1 in every theme, which is what
-     Jan asked for. Nothing in this block hardcodes a colour: change the theme, change both. */
+  /* v432 (Jan's call, supersedes the v429/v430 scheme below): the stack now flips black<->white.
+     OFF: black fill, WHITE label AND icons, var(--accent-lite) ring (accent-lite, not --teal,
+     for the same reason the black pills use it: Brown Sugar's chocolate --teal vanishes on
+     black while its accent-lite amber reads). LIT: WHITE fill, BLACK label, icons in
+     var(--accent-deep) — the accent is what says "on" now, so it must be the DEEP one:
+     --accent-lite is tuned to read on black and stands only ~1.7:1 on white, while every
+     theme's --accent-deep clears 4.4:1 there. The RING stays var(--accent-lite) in BOTH states,
+     the same rule the white-lit filter pills follow since v381 — a white pill with a white
+     border loses its edge over bright sand. Nothing in this block hardcodes a theme colour:
+     change the theme, change both states. (History: v429/v430 had it black-off/accent-deep-fill-
+     lit with white labels in both states.) */
   .fab{background:#000 !important; border-color:var(--accent-lite) !important; color:#fff !important;}
   /* v415: stroke-width bumped 2.6 -> 3.2 (Jan: bold the FAB icons) — that renders ~2.0px of
      line at the 15px icon size, the same weight the filter pills went to in v414. THIS is
      the rule that wins for the whole stack; an earlier `.fab svg` further up the sheet is
      overridden by it, so bolden here, not there. */
-  .fab svg{stroke:var(--accent-lite) !important; stroke-width:3.2;}
-  /* Selected buttons all adopt the current theme's accent color (--teal),
-     so they follow whatever theme the user picks. */
-  #tidePinBtn.tide-active{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
-  #tidePinBtn.tide-active svg{stroke:var(--on-accent) !important;}
-  .fab.pressed{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
-  .fab.pressed svg{stroke:var(--on-accent) !important;}
+  .fab svg{stroke:#fff !important; stroke-width:3.2;}
+  /* Every lit state below is the same white card with accent icons — .pressed is the shared
+     one, the rest are buttons with their own sticky state class. Keep them in sync. */
+  #tidePinBtn.tide-active{background:#fff !important; border-color:var(--accent-lite) !important; color:#000 !important;}
+  #tidePinBtn.tide-active svg{stroke:var(--accent-deep) !important;}
+  .fab.pressed{background:#fff !important; border-color:var(--accent-lite) !important; color:#000 !important;}
+  .fab.pressed svg{stroke:var(--accent-deep) !important;}
   /* The wave glyph is a FILLED path, unlike every other FAB icon, which is stroked line art.
-     Without its own rule it falls back to currentColor — black at rest — and picks up the
-     shared 2.6px stroke as an outline. Matches the neighbouring icons' pressed white. */
-  #waveBtn svg{fill:var(--accent-lite) !important; stroke:none !important;}
-  #waveBtn.pressed svg{fill:var(--on-accent) !important;}
-  #locateBtn.active-locate{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
-  #locateBtn svg{color:var(--accent-lite);}
-  #locateBtn.active-locate svg{color:var(--on-accent);}
-  #mapModeBtn.street-on{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
-  #mapModeBtn.street-on svg{stroke:var(--on-accent) !important;}
-  /* Channel state gets the same lit treatment as Street, in the channel's own cyan rather
-     than the theme accent, so the button matches what is drawn on the water. This is the ONE
-     lit FAB that keeps a fixed colour after v429 (Depth Lines gave its cyan up for the accent):
-     mapModeBtn has TWO lit states on one button, and in ui-compact the labels collapse to
-     font-size:0 — if icw-on and street-on shared the accent fill there would be nothing left
-     to tell the two modes apart. */
+     Without its own rule it falls back to currentColor and picks up the shared 3.2px stroke
+     as an outline — so it states fill explicitly in both states. */
+  #waveBtn svg{fill:#fff !important; stroke:none !important;}
+  #waveBtn.pressed svg{fill:var(--accent-deep) !important;}
+  #locateBtn.active-locate{background:#fff !important; border-color:var(--accent-lite) !important; color:#000 !important;}
+  /* The pin body is currentColor; its outline/crosshair ride --locpin-ink (see the symbol).
+     Off = white body on the black pill, so the ink goes BLACK to keep the crosshair legible;
+     lit = accent body on the white pill with the usual white ink. */
+  #locateBtn svg{color:#fff; --locpin-ink:#000;}
+  #locateBtn.active-locate svg{color:var(--accent-deep); --locpin-ink:#fff;}
+  #mapModeBtn.street-on{background:#fff !important; border-color:var(--accent-lite) !important; color:#000 !important;}
+  #mapModeBtn.street-on svg{stroke:var(--accent-deep) !important;}
+  /* Channel state gets a lit treatment of its own, in the channel's own cyan rather than the
+     shared white card, so the button matches what is drawn on the water. This is the ONE lit
+     FAB that keeps a fixed colour (Depth Lines gave its cyan up in v429): mapModeBtn has TWO
+     lit states on one button, and in ui-compact the labels collapse to font-size:0 — if
+     icw-on and street-on shared the white fill there would be nothing left to tell the two
+     modes apart. */
   #mapModeBtn.icw-on{background:#39d6ff !important; border-color:#39d6ff !important; color:#04141e !important;}
   #mapModeBtn.icw-on svg{stroke:#04141e !important;}
   /* DEPTH LINES lit state (v406). Its own class, NOT .pressed — closeAllOverlays sweeps .pressed
-     and this is a sticky map layer, not an overlay. v429: the fill is the THEME ACCENT like the
-     rest of the lit stack (it was the contour lines' own pale cyan #9eeeff, Jan's call to bring
-     it into line); only the ICW state above keeps a fixed colour, and for the reason noted there. */
-  #depthBtn.depth-on{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
-  #depthBtn.depth-on svg{stroke:var(--on-accent) !important;}
+     and this is a sticky map layer, not an overlay. v429/v432: it takes the shared lit look of the
+     stack (it was the contour lines' own pale cyan #9eeeff, Jan's call to bring it into line);
+     only the ICW state above keeps a fixed colour, and for the reason noted there. */
+  #depthBtn.depth-on{background:#fff !important; border-color:var(--accent-lite) !important; color:#000 !important;}
+  #depthBtn.depth-on svg{stroke:var(--accent-deep) !important;}
   /* Coastal place names the app prints over the flat ocean blue in the Topo
      Satellite view (USGS's own labels get cut off by the ocean repair at wide
      zooms) — styled after USGS's white-on-halo label look. */
@@ -2420,20 +2426,21 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- MARK (instant waypoint; was MOB / man-overboard until v361 — internals renamed mob*->mark* in v370) ---------- */
   /* The badge on Locate Me: the ✕ itself is the affordance — a SHAPE, not a colour coding,
-     so it still reads whatever the theme accent is. The !importants outshout the theme
-     block's `.fab svg{stroke:var(--teal) !important}` above; being later at equal
-     specificity wins. Since v363 the badge wears the THEME ACCENT (Jan's call), not red —
-     the mark on the water stays red. */
+     so it reads in whatever colour the stack's icons are wearing. The !importants outshout
+     the theme block's `.fab svg` rules above; being later at equal specificity wins.
+     v363 put the badge on the THEME ACCENT (Jan's call), not red — the mark on the water
+     stays red — and v432 folded it into the stack's black/white flip: white on the black
+     off pill, var(--accent-deep) on the lit white one, same as its neighbouring pin icon. */
   #locateBtn{-webkit-touch-callout:none; -webkit-user-select:none; user-select:none; touch-action:manipulation;}
   /* The badge wears the same dashed ring shape as the map mark (.mark-pin .disc) — drawn as
      a circle inside the svg (its own stroke attr, so the stroke:none below can't touch it).
      21px box = the old 16px figure plus the ring's shell. */
-  #locateBtn svg.mark-hint{color:var(--accent-lite) !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
+  #locateBtn svg.mark-hint{color:#fff !important; stroke:none !important; margin:0 0 0 6px; width:calc(21px * var(--tsb)); height:calc(21px * var(--tsb));}
   /* The Locate Me PIN matches the mark badge's height (v416) — 21px tall, 18px wide off its
      24x28 viewBox. Overrides the stack's 15px `.fab svg` box; keep the two heights equal if
      either changes. */
   #locateBtn svg:not(.mark-hint){width:calc(18px * var(--tsb)); height:calc(21px * var(--tsb));}
-  #locateBtn.active-locate svg.mark-hint{color:var(--on-accent) !important;}
+  #locateBtn.active-locate svg.mark-hint{color:var(--accent-deep) !important;}
   /* Holding the pill floods it red over the full hold — the "am I doing it?" feedback.
      Let go early and it snaps straight back (no transition without the class). */
   #locateBtn.mark-arming{background:#c11a1a !important; border-color:#c11a1a !important; color:#fff !important;
@@ -2537,11 +2544,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   body.mark-active .leaflet-tooltip-pane, body.mark-active .leaflet-shadow-pane{display:none;}
 
   /* ---------- TRACK (breadcrumb recording, v370) ---------- */
-  /* Recording state wears the accent like every other lit pill. Its own class, not
+  /* Recording state wears the lit white card like every other lit FAB. Its own class, not
      .pressed — closeAllOverlays() sweeps .pressed off the stack, and a recording must
      survive sheets opening and closing. */
-  #trackBtn.rec{background:var(--accent-deep) !important; border-color:var(--accent-deep) !important; color:var(--on-accent) !important;}
-  #trackBtn.rec svg{stroke:var(--on-accent) !important;}
+  #trackBtn.rec{background:#fff !important; border-color:var(--accent-lite) !important; color:#000 !important;}
+  #trackBtn.rec svg{stroke:var(--accent-deep) !important;}
   /* The bar is slim and non-blocking — unlike the MARK banner, the chart stays fully
      usable while a track records. Same white-card-with-accent-border family as the
      banner; the track itself (line + REC dot) is magenta, a colour nothing else on the
@@ -2859,10 +2866,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <body class="gauges-off" data-theme="tequilasunrise">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="waveArt" viewBox="0 0 24 24"><g transform="translate(-5.839,-10.968) scale(0.064516)"><path d="M447.296,410.25c0,8.33,0,16.67,0,25c-14.39,1.86-27.67-9-42-9c-17.63,0-28.13,11.46-51,9c-11.23-1.21-22.55-8.79-34-9    c-16.85-0.31-28.34,11.52-51,9c-11.72-1.3-23.49-9.05-35-9c-18.54,0.08-33.43,12.87-56,8c-9.81-2.12-18.7-8-29-8    c-14.54,0-26.46,10.81-42,9c0-12.34,0-22.87,0-34c0-10.43-2.9-23.57,0-33c2.3-7.48,14.66-12.72,20-18    c45.67-45.19,73.34-134.06,167-125c44.03,4.26,79.84,36.32,90,77c3.13,12.54,2.16,19-4,20c-8.59,1.4-9.32-12.1-13-19    c-8-15-32.42-30-56-19c-14.79,6.9-26.32,26.11-27,48c-1.21,38.89,40.48,80.54,81,78c12.92-0.81,24.84-8.69,38-9    C420.606,400.85,430.977,409.1,447.296,410.25z"/><path d="M447.296,462.25c0,8.33,0,16.67,0,25c-14.54,0.5-28.51-10.32-43-10c-14.37,0.32-28.24,10-42,10    c-14.32,0-28.68-10.06-43-10c-13.95,0.06-28.08,10.04-42,10c-14.4-0.04-28.77-10.2-43-10c-13.66,0.19-27.95,9.91-42,10    c-14.44,0.09-29-10.3-44-10c-13.92,0.28-27.07,10.84-41,10c-2.22-6.45-0.42-16.92-1-25c13.39-1.37,25.75-9.21,39-10    c17.26-1.03,33.24,11.09,51,9c13.78-1.62,24.91-8.92,37-9c15.12-0.1,26.94,9.74,43,10c14.16,0.23,28.37-9.9,43-10    c13.63-0.09,27.41,9.66,42,10c14.05,0.33,27.39-9.89,43-10C420.676,452.14,430.696,459.85,447.296,462.25z"/></g></symbol>
 <!-- Locate-me pin: teardrop map pin with a crosshair/target glyph inside, filled with
-     currentColor so each usage can set the theme accent via CSS. -->
+     currentColor so each usage can set the theme accent via CSS. The outline + crosshair are
+     WHITE everywhere except where a usage overrides --locpin-ink (v432: the Locate Me FAB
+     flips it to black in the off state, where the body itself is white on the black pill —
+     white-on-white would collapse the pin to a blob). A custom property is the only hook
+     that reaches in here: CSS selectors can't cross the <use> shadow tree, but inherited
+     custom properties can. -->
 <symbol id="locatePin" viewBox="0 0 24 28">
-  <path d="M12 2C7.03 2 3 6.03 3 11c0 6.75 9 15 9 15s9-8.25 9-15c0-4.97-4.03-9-9-9z" fill="currentColor" stroke="#fff" stroke-width="1"></path>
-  <g stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round">
+  <path d="M12 2C7.03 2 3 6.03 3 11c0 6.75 9 15 9 15s9-8.25 9-15c0-4.97-4.03-9-9-9z" fill="currentColor" stroke="var(--locpin-ink, #fff)" stroke-width="1"></path>
+  <g stroke="var(--locpin-ink, #fff)" stroke-width="1.6" fill="none" stroke-linecap="round">
     <circle cx="12" cy="11" r="3.6"></circle>
     <line x1="12" y1="5.8" x2="12" y2="7.8"></line>
     <line x1="12" y1="14.2" x2="12" y2="16.2"></line>
@@ -3289,7 +3301,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-locate"><svg viewBox="0 0 24 28" width="13" height="15"><use href="#locatePin"></use></svg> Locate Me<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-locate">
-      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>LOCATE ME</b> button drops a pin at your location. A <b>TAP</b> on this button drops your GPS position on the map (tap again to remove it). The pin opens with your <b>coordinates</b> and the <b>distance and magnetic headings to/from Ponce Inlet</b> — the <b>second</b> number of the bearing pair is the course home from where you are. It's a straight-line figure, not a channel route. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The small ✕ in a dashed ring on the <svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> button — in your theme's accent color — signifies the MARK function: the same mark it drops on the water.</p>
+      <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>LOCATE ME</b> button drops a pin at your location. A <b>TAP</b> on this button drops your GPS position on the map (tap again to remove it). The pin opens with your <b>coordinates</b> and the <b>distance and magnetic headings to/from Ponce Inlet</b> — the <b>second</b> number of the bearing pair is the course home from where you are. It's a straight-line figure, not a channel route. This makes it easy to determine a heading back to the inlet when you're offshore and not at one of the app's saved spots. The small ✕ in a dashed ring on the <svg class="g-emph" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>Locate Me</b> button signifies the MARK function: the same mark it drops on the water.</p>
       <p class="sheet-note"><svg viewBox="0 0 24 24" width="30" height="30" style="color:#e5484d; vertical-align:-9px;"><use href="#markFig"></use></svg> <b>MARK function.</b> <b>PRESS AND HOLD Locate Me for at least 1 second</b> to activate — the pill floods red while you hold. The app drops a <b>MARK</b> at your position and starts guiding you back to it: a banner at the top of the screen shows the <b>bearing to steer</b> (magnetic, read it against your compass), the <b>distance</b> (feet when you're close, miles when you're not), and a <b>clock</b> running since the press. A dashed red line runs from your boat to the mark — a red ✕ in a dashed ring — and the screen stays awake while it's up. It works anywhere — <b>inshore, offshore, or the ICW</b>. Use it for anything you'll want to run straight back to <b>right now</b>: a hat that flew off, a fishing rod that plunked in the water, the spot where the bite was hot as you drifted over it. The chart <b>clears itself for the job</b>: the species pills, the buttons (all but Locate Me) and every other pin leave the screen while a MARK is active, and return when it's cleared. The mark takes the <b>first fix available, immediately</b>, then tightens itself if a sharper GPS fix lands within a few seconds; a boat under way covers a lot of water while a perfect fix is awaited, so fast-and-rough wins here. It survives a reload or a phone restart — the banner comes straight back. Tap the banner to see the boat and mark's positions together — a short note confirms what the tap did (or says the GPS hasn't locked on yet); <b>CLEAR</b> (it asks first) takes it down and <b>keeps the mark in your spots</b> as a record — a <b>red pin</b> named MARK with its date and time, filed under <b>Inshore</b> or <b>Offshore</b>&nbsp;by where it happened. To delete one later, tap its red pin and use <b>DELETE</b>, or open <b>+ Spot</b> and scroll to <b>Your saved spots</b>: MARK entries sit together alphabetically, each with <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons — <b>DELETE ✕</b> removes it. One thing to do <b>at the dock, not on the water</b>: the first time MARK (or Locate Me) is used, the phone asks permission to use your location — answer <b>Allow While Using App</b> now, so a press on the water drops the mark instead of showing a permission dialog.</p>
       <p class="sheet-note"><b>Caution.</b> A MARK is where the <b>phone</b> was when the button was pressed — anything in the water <b>drifts</b> from that point with current and wind, so the longer the clock runs, the farther away it may be. The function depends on the phone's GPS, battery, signal, and software, and <b>any of them can fail, lag, or be wrong exactly when needed</b>. This app is an aid to memory, <b>not navigation, safety, or rescue equipment</b>, and it is no substitute for the equipment and practices the situation and the law require — read up at <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>.</p>
       </div>
@@ -4366,7 +4378,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 431;
+const BUILD_NUM  = 432;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
