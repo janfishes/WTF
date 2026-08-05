@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-05
 
+- **v438** — Batch Import In The Intro
 - **v437** — Jump Lands On The Log
 - **v436** — Drop Them On The Box
 - **v435** — Pick As Many As You Like

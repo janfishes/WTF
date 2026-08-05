@@ -7,6 +7,23 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 4:20 PM EDT · v438 · Batch Import In The Intro
+------------------------------------------------------------------------------
+Jan: name it in the first paragraph of Help, ahead of backing up.
+
+"Read further to learn how to add your own tide station, download the offline
+map, BATCH IMPORT YOUR PHOTOS, back up your catch log and photos, and see the
+print options at the end of this Help."
+
+The importer was written up in full under My Log, but the Get Fishing intro is
+the one paragraph people actually read, and it is where they find out a feature
+exists at all. A capability nobody knows about is the same as one that is not
+there. Ahead of "back up" on purpose: importing is what you do to a log, backing
+up is what you do with one.
+
+Wording only — one sentence, no behaviour change.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 3:50 PM EDT · v437 · Jump Lands On The Log
 ------------------------------------------------------------------------------
 Jan: make JUMP TO END land just under the last photo, above the add-photos box.
