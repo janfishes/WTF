@@ -7,6 +7,27 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 8:10 PM EDT · v449 · Spot Sits Above Catch
+------------------------------------------------------------------------------
+Jan asked for Spot ahead of Catch, so the top of the button stack down the
+right side of the map now reads Bite, Spot, Catch, Tides — putting the button
+that saves WHERE you are above the one that logs WHAT you caught. This reverses
+v446, which had put Catch second; v443 had the same order this build restores.
+
+Updated everywhere the two are listed in that order:
+  - the stack itself (the Spot button markup moved above Catch's)
+  - Help > Action Buttons: the whole Spot topic, button and body, moved above
+    the Catch topic, so the help still reads straight down the stack
+  - the Help intro paragraph, which leads with the two action buttons before
+    it walks the rest of the stack: it now opens "Tap + SPOT to save your
+    actual position..." and Catch follows with "+ CATCH logs a fish..."
+
+Nothing reads the stack by position, so the move is markup-only. The one
+order-sensitive rule in that column is `.fab-col > .fab:last-child` (it kills
+the bottom margin) and Locate Me is still last. Catch keeps the white .primary
+plate; both buttons keep the matching + they took in v448.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 7:55 PM EDT · v448 · Catch Wears A Plus
 ------------------------------------------------------------------------------
 The Catch button in the stack down the right side of the map carried a small

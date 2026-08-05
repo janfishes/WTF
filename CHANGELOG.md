@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-05
 
+- **v449** — Spot Sits Above Catch
 - **v448** — Catch Wears A Plus
 - **v441** — Search Finds A Date
 - **v440** — Filter The Log By When And Where
