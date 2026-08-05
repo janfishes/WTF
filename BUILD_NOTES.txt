@@ -170,6 +170,94 @@ JPEG. De-duplication run against the real 41-catch log as described above.
 Not yet clicked through in a browser.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 12:57 AM EDT · v433 · Waves Through Our Own Proxy
+------------------------------------------------------------------------------
+Written up 2026-08-05 at 4:05 PM EDT — v432 and v433 shipped without their
+notes. Reconstructed from the commits (ec89d86, 5d3a20f, dba5dd7); the
+measurements below are the ones taken at the time, not re-run since.
+
+The Waves button had stopped answering, and it was neither the buoy nor NDBC.
+Measured from janfishes.github.io on 2026-08-05, every relay in the v82 chain
+was dead:
+
+    corsproxy        403
+    allorigins       timed out at 19.7 s
+    codetabs         CORS-blocked
+    NDBC direct      CORS-blocked
+
+The comment sitting above that list still read "corsproxy first — it is the one
+that reliably works." It had not been for some time, which is the quiet way a
+fallback chain rots: nothing announces that the primary has gone, the failures
+just take longer.
+
+WAVES NOW GOES THROUGH OUR OWN WORKER FIRST. ndbc-proxy is a ~40-line
+Cloudflare Worker on Jan's account, written for the Tide Board and shared here.
+Source is at worker/ndbc-proxy.js in the tideboard repo. No secrets in it. Ten
+minute cache, because 41070 reports every 30-60 minutes and anything shorter
+just hammers NDBC for readings that have not changed. The station id is
+validated so the proxy cannot be pointed at anything else.
+
+Measured at 115 ms against the four relays' 150 ms-to-9.7 s of failure.
+
+Its ALLOWED_ORIGINS already covered this app without a change: an origin is
+scheme and host only, so the /WTF/ path made no difference and one entry serves
+both apps.
+
+The four public relays stay behind it as a fallback. THE TRAP TO REMEMBER: if
+this app ever moves to another GitHub account, the new origin has to be added
+to ALLOWED_ORIGINS or Waves goes quiet again — the browser blocks the response,
+the chain falls through to the dead relays, and the user gets "couldn't reach
+NDBC" with the last saved reading underneath it. Nothing about that failure is
+loud. It looks exactly like a buoy having a bad day.
+
+A second commit the same minute (dba5dd7) fixed the wording rather than the
+behaviour. The help and the failure message both still described the old
+arrangement — "the relay, which goes down more often than the buoy" — and so
+told the user to suspect what is now the most reliable link in the chain. With
+the fetch going through our own worker first, a failure is more likely to be
+NDBC itself or the phone's signal, and the text says that now.
+
+------------------------------------------------------------------------------
+Build 2026-08-04 · 10:44 PM EDT · v432 · FAB Stack Flips Black/White
+------------------------------------------------------------------------------
+Written up 2026-08-05 at 4:05 PM EDT, from commit ec89d86.
+
+Jan's call, superseding the v429/v430 scheme. The FAB stack now flips between
+black and white rather than black and accent:
+
+    OFF   black fill, WHITE icon and label, --accent-lite ring
+    LIT   WHITE fill, BLACK label, icons in --accent-deep
+
+The accent is what says "on" now, so it has to be the DEEP one. --accent-lite
+is tuned to read on black and stands only ~1.7:1 on white; every theme's
+--accent-deep clears 4.4:1 there.
+
+THE RING STAYS --accent-lite IN BOTH STATES. That is the same rule the
+white-lit filter pills have followed since v381, and it exists because a white
+pill with a white border loses its edge entirely over bright sand.
+
+Applied to every lit state so they cannot drift apart: .pressed, tide-active,
+active-locate, street-on, depth-on, .rec. mapModeBtn's icw-on is the one
+exception and keeps its fixed cyan — that button carries TWO lit states, and in
+ui-compact the labels collapse to font-size:0, so if icw-on and street-on
+shared the white fill there would be nothing left to tell the two modes apart.
+
+LOCATE ME NEEDED A SHIM. Its pin body is currentColor, but the outline and
+crosshair were hardcoded #fff — on the black off-pill that would have collapsed
+the whole glyph into a white blob. The symbol's ink is now
+var(--locpin-ink, #fff), set black when off and white when lit, on the FAB
+only; every other place that pin is drawn is untouched. A custom property is
+the only hook that reaches inside a <use> shadow tree, which is why it is done
+this way rather than with a second symbol.
+
+Its MARK badge joins the stack as well — white when off, accent when lit —
+instead of always wearing the accent, and the Help line describing it drops the
+now-wrong "in your theme's accent color" clause.
+
+Nothing in the block hardcodes a theme colour. Change the theme, both states
+follow.
+
+------------------------------------------------------------------------------
 Build 2026-08-04 · 8:10 PM EDT · v431 · Navy Blue Suede
 ------------------------------------------------------------------------------
 Jan: make the blue in Blue Suede Shoes more navy — the grounds, not the accent.
