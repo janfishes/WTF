@@ -2111,7 +2111,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Form fields ---------- */
   .field-label{
-    display:block; font-family:'Space Grotesk',sans-serif; font-size:11.5px; font-weight:600;
+    display:block; font-family:'Space Grotesk',sans-serif; font-size:calc(11.5px * var(--ts)); font-weight:600;
     color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin:16px 0 6px;
   }
   .field-row{display:flex; gap:8px;}
@@ -2143,12 +2143,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background:var(--accent-deep); color:var(--on-accent); font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
   }
   .save-btn:active{filter:brightness(.86);}
-  .storage-note{font-size:10.5px; color:var(--muted); text-align:center; margin:10px 0 0; line-height:1.5;}
+  .storage-note{font-size:calc(10.5px * var(--ts)); color:var(--muted); text-align:center; margin:10px 0 0; line-height:1.5;}
   /* Backup panel. Two export shapes sit here, and a status line that stays put --
      a toast disappears before anyone can read why an import failed. */
-  .backup-head{font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:700; letter-spacing:.02em; color:var(--fog); margin:14px 0 4px;}
+  .backup-head{font-family:'Space Grotesk',sans-serif; font-size:calc(12.5px * var(--ts)); font-weight:700; letter-spacing:.02em; color:var(--fog); margin:14px 0 4px;}
   .backup-head:first-child{margin-top:2px;}
-  .backup-sub{font-size:11.5px; line-height:1.45; color:var(--muted); margin:0 0 7px;}
+  .backup-sub{font-size:calc(11.5px * var(--ts)); line-height:1.45; color:var(--muted); margin:0 0 7px;}
   .backup-warn{border:1px solid var(--brass); border-radius:8px; padding:9px 11px; margin-top:14px !important;}
   #backupStatus{margin-top:11px; word-break:break-word; line-height:1.5;}
   #backupStatus.bad{color:var(--rust); font-weight:600;}
@@ -4533,7 +4533,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 441;
+const BUILD_NUM  = 442;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
