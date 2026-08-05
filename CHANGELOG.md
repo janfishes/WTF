@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-05
 
+- **v441** — Search Finds A Date
 - **v440** — Filter The Log By When And Where
 - **v439** — Catch Log Buttons Take The Accent
 - **v438** — Batch Import In The Intro

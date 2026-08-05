@@ -2710,6 +2710,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Help-hit snippets can run ~80 chars; unlike the other .mt metas they must shrink. */
   .search-row .mt.snip{flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .search-row .sw{width:9px; height:9px; border-radius:50%; flex:0 0 auto; margin-right:2px;}
+  /* v441: the "there are more than this" line under a truncated My Log section.
+     Not a .search-row — it isn't tappable and must not look like a result. */
+  .search-note{
+    font-size:11.5px; color:var(--muted); line-height:1.45;
+    padding:2px 11px 8px; margin:-2px 0 4px;
+  }
   #tileHelp{
     position:absolute; inset:0; z-index:1150; display:flex; align-items:center; justify-content:center;
     padding:24px; background:rgba(3,9,15,.72);
@@ -3282,6 +3288,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-search"><span class="ht-g">🔍</span>Search<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-search">
       <p class="sheet-note">Tap the magnifying glass icon <b>🔍</b> next to Help and type a location name (e.g. "snook alley"), a launch (e.g. "swoop"), or a species (e.g. "pompano"). Results show matching location pins, every spot tagged for that species, and your own logged catches using that term. Tap any result to fly to it on the map with its popup open — hidden pins are switched on automatically.</p>
+      <p class="sheet-note"><b>Search by date, too.</b> Type a year — <b>1988</b> — and every fish you caught that year is listed. A whole date works in any of the forms the catch form itself takes: <b>8/13/26</b>, <b>08132026</b>, <b>2026-08-13</b>. A month on its own — <b>august</b>, or just <b>aug</b> — gathers that month across every year you have fished, <b>aug 2019</b> narrows it to one, and <b>8/13</b> or <b>august 13</b> gives you that day in any year. Search shows the <b>20 most recent</b> matches and says so when there are more; for the whole set with no limit, use <b>When caught</b> at the top of My Log.</p>
       <p class="sheet-note">Search also looks through <b>this Help</b>: type a topic (e.g. "tide station" or "offline") and matching Help sections are listed under their own heading. Tap one to open Help at that section. A writeup opened that way is just a visit: close Help (or leave the app) and it closes with it, so Help comes back to the directory or writeup you last opened by hand rather than to wherever a search dropped you. Search itself starts empty every time you open it.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-help"><span class="ht-g">?</span>Help<span class="ht-caret">▸</span></button>
@@ -4526,7 +4533,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 440;
+const BUILD_NUM  = 441;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -13030,6 +13037,63 @@ function goToCatch(id){
   flyThenOpen(m, [m.catchRef.lat, m.catchRef.lng], Math.max(map.getZoom(), 14));
 }
 
+/* v441: search matches a catch's DATE as well as its species, place and notes.
+   Before this it never looked at the date field at all, so typing a year found
+   nothing — the log was searchable by everything except when the fish was caught.
+
+   Returns a predicate, or null when the query isn't a date at all (the usual
+   case), so an ordinary word search costs one regex and nothing more. Accepted:
+
+     1988            a year on its own
+     8/13/26         a full date — parseDateEntry does the work, so it takes
+     08132026        every form the catch-date field does (v347)
+     2026-08-13
+     8/13            a month and day in any year
+     august          a month in any year — three letters is enough ("aug")
+     aug 2019        that month in one year
+     august 13       that day in any year
+
+   Dates are compared as ISO string slices rather than Date objects: c.date is
+   already 'YYYY-MM-DD', and slicing can't drift a day the way a parsed local
+   Date can. A month name that is also an ordinary word ("may", "march") still
+   searches notes and place names too — the date hits are added to those, never
+   swapped for them. */
+const MONTH_NAMES = ['january','february','march','april','may','june','july',
+                     'august','september','october','november','december'];
+const SEARCH_CATCH_CAP = 20;
+function catchDateMatcher(q){
+  const s = String(q||'').trim().toLowerCase();
+  if(s.length < 2) return null;
+
+  const iso = parseDateEntry(s);                       // a whole date, any accepted form
+  if(iso) return c => c.date === iso;
+
+  if(/^(19|20)\d{2}$/.test(s)) return c => (c.date||'').slice(0,4) === s;
+
+  let m = s.match(/^([a-z]{3,9})\.?(?:\s+(\d{1,4}))?$/);   // "august", "aug 2019", "august 13"
+  if(m){
+    const i = MONTH_NAMES.findIndex(n => n.startsWith(m[1]));
+    if(i >= 0){
+      const mm = String(i+1).padStart(2,'0');
+      const n  = m[2];
+      if(!n)                return c => (c.date||'').slice(5,7) === mm;
+      if(/^\d{4}$/.test(n)) return c => (c.date||'').slice(0,4) === n && (c.date||'').slice(5,7) === mm;
+      const dd = String(+n).padStart(2,'0');
+      return c => (c.date||'').slice(5,7) === mm && (c.date||'').slice(8,10) === dd;
+    }
+  }
+
+  m = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})$/);         // "8/13" — month and day, any year
+  if(m){
+    const mo = +m[1], d = +m[2];
+    if(mo >= 1 && mo <= 12 && d >= 1 && d <= 31){
+      const M = String(mo).padStart(2,'0'), D = String(d).padStart(2,'0');
+      return c => (c.date||'').slice(5,7) === M && (c.date||'').slice(8,10) === D;
+    }
+  }
+  return null;
+}
+
 searchInput.addEventListener('input', ()=>{
   const q = searchInput.value.trim().toLowerCase();
   if(q.length < 2){
@@ -13076,12 +13140,15 @@ searchInput.addEventListener('input', ()=>{
     }
   }
 
-  // Catch log: species, location label, or notes
-  const catchHits = catches.filter(c=>
+  // Catch log: species, location label, notes — or, since v441, the DATE.
+  const dateMatch = catchDateMatcher(q);
+  const catchAll = catches.filter(c=>
     catchSpeciesList(c).some(k=> speciesOf(k).label.toLowerCase().includes(q)) ||
     (c.locationLabel||'').toLowerCase().includes(q) ||
-    (c.notes||'').toLowerCase().includes(q)
-  ).sort((a,b)=> (b.date+' '+(b.time||'')).localeCompare(a.date+' '+(a.time||''))).slice(0, 20);
+    (c.notes||'').toLowerCase().includes(q) ||
+    (dateMatch && dateMatch(c))
+  ).sort((a,b)=> (b.date+' '+(b.time||'')).localeCompare(a.date+' '+(a.time||'')));
+  const catchHits = catchAll.slice(0, SEARCH_CATCH_CAP);
   if(catchHits.length){
     html += '<div class="subhead">My Log</div>';
     html += catchHits.map(c=>{
@@ -13092,6 +13159,12 @@ searchInput.addEventListener('input', ()=>{
         <div class="mt">${fmtDate(c.date)}</div>
       </div>`;
     }).join('');
+    /* Say so when the list is cut off rather than letting 20 read as "that's all
+       of them" — a year query is exactly the case that overruns it — and point at
+       the control that has no cap. */
+    if(catchAll.length > catchHits.length){
+      html += `<div class="search-note">Showing the ${catchHits.length} most recent of ${catchAll.length}. <b>My Log</b> → <b>When caught</b> lists them all.</div>`;
+    }
   }
 
   /* Help sections (v211). Matched on the section title and its body text; the row shows

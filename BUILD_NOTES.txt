@@ -7,6 +7,58 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 6:45 PM EDT · v441 · Search Finds A Date
+------------------------------------------------------------------------------
+Jan asked whether search only goes back to the earliest year of a logged catch.
+It doesn't go back at all: search never looked at the date field. It matched a
+catch by species, by location label and by notes, so the log was searchable by
+everything except when the fish was caught, and typing a year found nothing
+unless that year happened to appear in something you had typed.
+
+catchDateMatcher(q) now runs alongside the existing tests and adds date hits to
+them — it never replaces them, so a month name that is also an ordinary word
+still finds your notes and place names too. What it takes:
+
+  1988          a year on its own
+  8/13/26       a whole date, in every form the catch-date field accepts —
+  08132026      parseDateEntry (v347) does that work, so the two stay in step
+  2026-08-13
+  8/13          a month and day in any year
+  august, aug   a month across every year fished (three letters is enough)
+  aug 2019      that month in one year
+  august 13     that day in any year
+
+It returns a predicate, or null when the query isn't a date — which is almost
+every query — so an ordinary word search costs one regex and nothing more.
+Comparison is by ISO string slice off c.date rather than by Date object: the
+field is already 'YYYY-MM-DD' and a slice can't drift a day the way a parsed
+local Date can.
+
+Note the 8-digit form is mmddyyyy (08132026), the same as the catch form's.
+yyyymmdd is NOT accepted and shouldn't be added — 20260813 would collide with
+the bare-year branch's intent and parseDateEntry has never taken it.
+
+The My Log section of the results was already capped at 20 and said nothing
+about it, which is fine for "pompano" and wrong for "2021" — the query most
+likely to overrun it. It now prints, under the last row, "Showing the 20 most
+recent of 26. My Log -> When caught lists them all." — the truncation is stated
+and it points at the v440 control that has no cap. .search-note is deliberately
+not a .search-row: it isn't tappable and must not look like a result.
+
+Verified headless against a seeded log: every accepted form returns exactly the
+right catches, newest first; "march" and "aug" hit months without disturbing the
+species and place matches; a nonsense query still returns nothing; the cap note
+appears at 26 hits and not at 5.
+
+Also answered while testing, and worth writing down: every catch saved through
+the form carries a date whether or not the angler typed one (getLogDate() ||
+todayStr()), so nothing you log is invisible to the date search or to When
+caught. TIME is optional and no filter reads it — it only orders fish within a
+day — so a catch saved with no time filters exactly like any other. The only
+record that drops out of a WHEN pick is one with no date at all, which can only
+arrive from an outside backup; it still shows under All dates.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 6:05 PM EDT · v440 · Filter The Log By When And Where
 ------------------------------------------------------------------------------
 Jan: how best to filter catches by when and where caught.
