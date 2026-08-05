@@ -3260,7 +3260,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-waves"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><use href="#waveArt"></use></svg> Waves<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-waves">
-      <p class="sheet-note" style="margin-top:10px;">Tapping <svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to a National Data Buoy Center (NDBC 41070) buoy pin and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled from the NDBC — but it needs internet to <b>refresh</b>. The last reading it obtains is <b>kept on your device</b>, so if the fetch fails you still get the numbers with <b>how old they are</b> written on them (e.g., <i>Last reading 3h ago</i>). When it can’t refresh it also says <b>why</b>: <b>no internet</b> (nothing to retry until you have signal), <b>couldn’t reach NDBC</b> (the relay, which goes down more often than the buoy — try again in a minute), or <b>the station isn’t reporting</b> (NDBC answered and sent nothing, so it is the buoy rather than your connection, and it will not clear up in a minute). There is a <b>Try again</b> button under the message, and the proxy-and-error detail is folded away under <b>Details</b> when it needs diagnosing. The buoy’s GPS position is printed on the pin’s popup.</p>
+      <p class="sheet-note" style="margin-top:10px;">Tapping <svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>Waves</b> flies to a National Data Buoy Center (NDBC 41070) buoy pin and opens its live conditions: wave height, dominant and average wave period, mean wave direction, and water temperature, pulled from the NDBC — but it needs internet to <b>refresh</b>. The last reading it obtains is <b>kept on your device</b>, so if the fetch fails you still get the numbers with <b>how old they are</b> written on them (e.g., <i>Last reading 3h ago</i>). When it can’t refresh it also says <b>why</b>: <b>no internet</b> (nothing to retry until you have signal), <b>couldn’t reach NDBC</b> (the reading comes in through a small relay this app runs itself; if it or NDBC is having a moment, try again in a minute), or <b>the station isn’t reporting</b> (NDBC answered and sent nothing, so it is the buoy rather than your connection, and it will not clear up in a minute). There is a <b>Try again</b> button under the message, and the proxy-and-error detail is folded away under <b>Details</b> when it needs diagnosing. The buoy’s GPS position is printed on the pin’s popup.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mylog"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 6.2C10 4.6 7.4 4 4 4v14.4c3.4 0 6 .6 8 2.2 2-1.6 4.6-2.2 8-2.2V4c-3.4 0-6 .6-8 2.2Z"></path><path d="M12 6.2v14.4"></path></svg> My Log<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-mylog">
@@ -10962,7 +10962,9 @@ async function buoyVia(src, id){
    them is worth waiting out. Every failure used to read "Couldn't reach the buoy feed",
    which does not tell "you have no signal" apart from "the station is off station".
      offline     - the device says it has no network. Nothing to retry until it does.
-     unreachable - we are online but the relay or NDBC would not answer. Usually passes.
+     unreachable - we are online but our relay or NDBC would not answer. Usually passes.
+                   Since v433 the first relay tried is our own worker, so this pointing
+                   at the middleman is much less likely than it was.
      silent      - we DID reach NDBC and it sent nothing readable. That is the station,
                    not the connection, and it will not clear up in a minute.
    Whichever it is, the last reading saved on the device is shown underneath with its age
@@ -10976,7 +10978,7 @@ function buoyFailHTML(id, kind, fails){
   } else if(kind === 'silent'){
     head = '<b>'+id+' isn\u2019t reporting.</b> NDBC answered but sent nothing readable \u2014 the station may be off station or down for service. Check '+link+'.';
   } else {
-    head = '<b>Couldn\u2019t reach NDBC.</b> The reading comes in through a relay, and the relay goes down more often than the buoy does. Worth another try in a minute. '+link;
+    head = '<b>Couldn\u2019t reach NDBC.</b> The reading comes in through a small relay this app runs itself \u2014 it is not one of the free public ones any more, so this is now more likely to be NDBC than the middleman. Worth another try in a minute. '+link;
   }
   let html = '<div>'+head+'</div>';
   const last = loadBuoyReading(id);
