@@ -4377,8 +4377,8 @@ function showToast(msg, duration=2400, html){
    build spelled out by hand in five places, which is why those messages still said
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
-const BUILD_DATE = '08/04/26';                          // map stamp form
-const BUILD_NUM  = 432;
+const BUILD_DATE = '08/05/26';                          // map stamp form
+const BUILD_NUM  = 433;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-04 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -10919,8 +10919,35 @@ function fetchT(url, ms){
 }
 function ndbcTxt(id){ return 'https://www.ndbc.noaa.gov/data/realtime2/'+id+'.txt'; }
 function ndbcPage(id){ return 'https://www.ndbc.noaa.gov/station_page.php?station='+id; }
-/* corsproxy first — it is the one that reliably works. Order unchanged from v82. */
+/* OUR OWN PROXY FIRST, public relays behind it as a safety net.
+
+   The four relays below are the v82 chain, and the comment here used to say
+   "corsproxy first — it is the one that reliably works". Measured from
+   janfishes.github.io on 2026-08-05, none of them did: corsproxy returned 403,
+   allorigins timed out at 19.7 s, codetabs and the rest were CORS-blocked
+   outright. That is why Waves had stopped answering — not the buoy, not NDBC,
+   just four free services that gate on the calling origin and change their
+   minds without telling anyone.
+
+   ndbc-proxy is a ~40-line Cloudflare Worker on Jan's account. Source lives in
+   the tide-board repo at worker/ndbc-proxy.js; it holds no secrets, caches ten
+   minutes (41070 only reports every 30-60, so anything shorter just hammers
+   NDBC), and validates the station id so it cannot be pointed elsewhere.
+   Redeploy with:  cd ~/Documents/tides/worker && npx wrangler deploy
+
+   Its ALLOWED_ORIGINS lists https://janfishes.github.io, which is THIS app's
+   origin as well as the tide board's — an origin is scheme and host, so the
+   /WTF/ path makes no difference and no change was needed to serve both.
+
+   IF THIS APP EVER MOVES to another GitHub account, the new origin must be
+   added to ALLOWED_ORIGINS or the buoy goes quiet: the browser blocks the
+   response, the chain falls through to the four dead relays, and Waves shows
+   its "couldn't reach NDBC" message with the last saved reading underneath.
+   Nothing about that failure is loud. Same note is in the tide board's
+   HANDOFF.md. */
+const BUOY_PROXY = 'https://ndbc-proxy.janfishes.workers.dev';
 const BUOY_SOURCES = [
+  { name:'worker',     ms:5000, url:id=>BUOY_PROXY+'/?station='+encodeURIComponent(id) },
   { name:'corsproxy',  ms:9000, url:id=>'https://corsproxy.io/?url='+encodeURIComponent(ndbcTxt(id)) },
   { name:'ndbc',       ms:6000, url:id=>ndbcTxt(id) },
   { name:'codetabs',   ms:9000, url:id=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(ndbcTxt(id)) },
