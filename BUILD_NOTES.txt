@@ -7,6 +7,50 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 9:30 PM EDT · v452 · Select Measurement Units
+------------------------------------------------------------------------------
+Jan's wording for the pointer on the + Catch form, and the section heading
+renamed to match it.
+
+THE HINT
+  The size label's hint is now Jan's line, and it is STATIC markup:
+
+      SIZE (OPTIONAL) (SELECT MEASUREMENT UNITS AT FOOT OF MY LOG)
+
+  v451 had it naming the active pair too ("inches & pounds — change at the foot
+  of My Log"). Dropped: the boxes' own placeholders already say Length: ft /
+  + inches, or Length: cm, so the pair was the longest part of the line and the
+  only part that had to be rewritten on a switch. sizeUnitsApplyForm no longer
+  touches the span at all.
+
+SCALES -> UNITS
+  Jan first asked for "measurement scales", then asked whether units was the
+  better word. It is, and the reasons are worth keeping so this doesn't get
+  swapped back later:
+    - Units is simply the right term. Inches, pounds and miles are units; a
+      scale is a graduated system of marks.
+    - This app already uses "scale" for the Leaflet bar bottom-left (and the
+      launch-view notes talk in 300 ft / 1000 ft scales). Two meanings, one word.
+    - In a FISHING app, a scale is the thing you weigh the fish on. "Select
+      measurement scales" on a form where you type a weight reads as "pick which
+      scale you weighed it on".
+
+HEADING FOLLOWS THE HINT
+  The My Log section is headed "Measurement units" rather than "Units". The
+  whole job of the + Catch hint is to send someone to that heading, so the two
+  have to use the same words — a hint saying "select measurement units" landing
+  on a heading saying something else is a mismatch to hunt through. The id stays
+  logUnitsSection (jumpToLogEnd targets it — see v451).
+
+  Also reworded to match: the My Log intro note's walk-through of what sits
+  below the catch list, and the Help > My Log paragraph, which now opens
+  "Measurement units. At the foot of My Log...".
+
+VERIFIED headless at 375px, and at 375px with the A control two steps up: the
+hint reads the same on both unit settings while the placeholders switch, the
+label wraps to two lines with no clipping or overflow, no page errors.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 9:05 PM EDT · v451 · Units Move To The Foot
 ------------------------------------------------------------------------------
 Jan asked whether the units menus belonged at the top of My Log or the bottom.
