@@ -7,6 +7,109 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 8:35 PM EDT · v450 · Inches Lead, Units Are Yours
+------------------------------------------------------------------------------
+Three things Jan asked for in one go: fish length reads in inches with the
+feet-and-inches equivalent in parentheses beside it; catch size can be switched
+to metric; and a run can be read in nautical miles instead of statute.
+
+LENGTH READS INCHES FIRST
+  fmtFtIn used to swallow the inches figure once a fish passed a foot — 27.5
+  inches printed as "2 ft 3.5 inches" and the number you actually check against
+  the regulations was gone. It now prints
+
+      8 inches            (under a foot, unchanged)
+      24 inches (2')
+      27.5 inches (2' 3.5")
+
+  Inches leads because inches is the unit FWC writes the size limits in, so the
+  headline number on a catch card is the number that answers "is it legal".
+  The feet-and-inches reading rides along in parentheses because past a foot it
+  is the easier one to picture. Plain ' and " on purpose, matching the Season
+  Guide's own note ("Size is inches (") of total length").
+
+TWO UNITS MENUS AT THE TOP OF MY LOG
+  Under the name box, in the same .log-filter styling the When/Where menus use:
+
+    Catch size   Inches & pounds  |  Centimetres & kilograms
+    Distance     Statute miles (sm) |  Nautical miles (nm)
+
+  Both are DISPLAY ONLY. A catch is always STORED as total inches and decimal
+  pounds, exactly as every build since the log existed, and a run is always
+  worked out in metres or nautical miles. The preference is read at the moment
+  a figure is printed or a size box is filled. Consequences worth knowing:
+  switching back and forth never alters a record, and a backup file written on
+  one setting reads correctly on the other — the file has no unit in it.
+
+  Kept in raw localStorage (wtf:units-size / wtf:units-dist, like wtf:depth-on),
+  deliberately NOT APP_KEYS and NOT in backups: this is how THIS device likes to
+  read, not part of the log.
+
+WHAT METRIC CHANGES
+  - Catch cards and catch popups: "69.8 cm", "2.38 kg" (under a kilo, grams).
+  - The + Catch form: the second box of each pair is hidden and the first
+    becomes a single "Length: cm" / "Weight: kg" box, because centimetres and
+    kilograms are not written as two parts the way ft+in and lb+oz are. The
+    "Size (optional)" label carries the active pair as a hint.
+  - Switching the menu with the form open reads the boxes back in the OLD unit
+    first, then refills them in the new one, so a half-typed fish survives.
+
+  MEASURED, NOT GUESSED — don't "improve" these two roundings:
+  * cm/kg convert into the record at TWO decimals. At three, 2.27 kg stores as
+    5.004 lb and the US form then reads back "5 lb 0.1 oz" — a remainder that
+    isn't really there. At two it stores 5.00 lb, the US form reads "5 lb", and
+    the metric side still round-trips to what the user typed (69.8 cm ->
+    27.48 in -> 69.8 cm; 70 cm -> 27.56 -> 70.0 cm; 100 cm -> 39.37 -> 100.0).
+  * Under a kilo, grams go to the nearest 5 g. The record is pounds to two
+    decimals = 4.5 g of resolution, so a bare gram figure claims precision that
+    is not in the number (0.4 kg was coming back as "399 g").
+
+WHAT NM CHANGES
+  Only the SINGLE-unit distance readouts, because those were the ones with no
+  choice in them:
+  - the run on a Compass leg (compassLabelForms)
+  - the distance in the MARK banner (markUpdate)
+  - a recorded track's length, its bar, its toasts and the Your-tracks list
+    (trkFmtDist is now a one-line wrapper over the shared fmtRunM)
+  The PAIRED figures — the sm/nm in an offshore pin's popup, in a drop row, and
+  in a CR site's "measured" figure — are left alone: they already carry both
+  units, so nothing is hidden from an nm reader, and the baked meta strings in
+  SPOTS are static text anyway. Short distances stay in FEET up to 1000 ft
+  either way; that is the scale a boat is handled at, not a chart scale.
+
+  Two new shared helpers do all of it: fmtRunNm(nm) for a run already in
+  nautical miles, fmtRunM(metres) for the ft-then-unit form. Anything added
+  later that prints a lone distance should go through one of them rather than
+  hard-coding *1.15078.
+
+  The Leaflet scale bar is untouched — L.control.scale has imperial and metric
+  and no nautical option, so there is nothing to switch it to.
+
+SIZE LIMITS STAY IN INCHES
+  The Season Guide's regulation table does NOT follow the metric setting. FWC
+  writes the limits in inches and a converted limit is not the limit. Said so
+  in the new Help paragraphs so nobody reports it as a bug.
+
+REPAINTING
+  Neither menu touches stored data, so the change handlers only repaint what
+  PRINTS a figure: the size menu re-renders the catch list, the distance menu
+  redraws the compass, the track bar, the track list and the MARK readout. Both
+  close any open map popup rather than repainting it — popup HTML is built once
+  at open time, so a popup left open would otherwise show the old unit.
+
+HELP
+  Two new paragraphs in Help > My Log, after "Put your name on it": what each
+  menu changes, that the paired sm/nm figures carry both units regardless, that
+  feet are kept under 1000 ft, that nothing stored changes and backups travel
+  between settings, and that the Season Guide's limits stay in inches.
+
+VERIFIED headless (Chrome, fresh profile each run): fmtFtIn across 8/12/24/27.5/
+36.4/1 in; metric round-trips at 69.8/70/100/25 cm and 2.27/3/12.5/0.4 kg with
+no drift in either direction; both menus persisting across a reload and the
+form coming back with the cm/kg boxes already set; the compass label reading
+"3.7 nm"; trkFmtDist reading 394 ft / 4.86 nm. No page errors.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 8:10 PM EDT · v449 · Spot Sits Above Catch
 ------------------------------------------------------------------------------
 Jan asked for Spot ahead of Catch, so the top of the button stack down the
