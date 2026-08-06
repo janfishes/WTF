@@ -7,6 +7,28 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-06 · 1:15 PM EDT · v461 · Zero To One Foot
+------------------------------------------------------------------------------
+The drying-edge label is now "0 - 1 ft", Jan's call, and it settles a wording
+that moved three times in one day. The arc is worth keeping because each step
+fixed something real:
+  v459  "dries"          — says what happens AT the line, nothing about what you
+                           have just inside it.
+  v460  "dries < 1 ft"   — says both, but reads as two claims at once, and it is
+                           the only tag on the chart that is not a number.
+  v461  "0 - 1 ft"       — labels the BAND the line opens, in the same form as
+                           every other tag, so the eye takes it in without
+                           stopping. Inside it the bottom is at or above
+                           low-water level; between it and the 1 ft line you
+                           have under a foot.
+The help paragraph tracks the label, as it must — it opens "The line marked
+0 - 1 ft". If this label is ever changed again, change that sentence with it.
+The word "dries" now survives only in code comments and in this note.
+
+No data change: the 0 ft contour itself is untouched, DEPTH_DATA_V stays 6, and
+nothing on the tide board reads this label.
+
+------------------------------------------------------------------------------
 Build 2026-08-06 · 11:40 AM EDT · v460 · Dries Under A Foot
 ------------------------------------------------------------------------------
 Jan's edits to the v459 help, plus a wording rule that now applies app-wide.
