@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-06
 
+- **v463** — Green Tiles At Rockhouse
 - **v462** — Red Rectangles In Turnbull
 - **v461** — Zero To One Foot
 - **v460** — Dries Under A Foot

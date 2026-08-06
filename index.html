@@ -4647,7 +4647,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/06/26';                          // map stamp form
-const BUILD_NUM  = 462;
+const BUILD_NUM  = 463;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-06 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -5656,11 +5656,35 @@ function wmsTileUrl(base, layerName, x, y, z, tileSize){
             still be caught if it were a third as tall).
    Both rules were re-run over the same 1,935 tiles: 5 of 5 caught, nothing
    else flagged. If this ever needs retuning, re-measure the same way — the
-   headroom between 0% and a real cast is the whole reason it works. */
-const NAIP_FC_TRIES = 5;      // 1 initial + 4 cache-busted refetches
-const NAIP_FC_GRID  = 32;     // sample grid the tile is decoded down to
-const NAIP_FC_AREA  = 0.01;   // magenta share of the whole tile that flags it
-const NAIP_FC_BAND  = 0.50;   // ...or of any single row/column (edge seams)
+   headroom between 0% and a real cast is the whole reason it works.
+
+   v463 widened WHAT COUNTS AS A CAST, from Jan's "green tiles showing through
+   around Rockhouse Creek". The sick node's false colour is not always
+   magenta: at the inlet it renders vivid CYAN-GREEN — sand and mangrove come
+   back the colour of antifreeze. That scores 0.0% on the magenta rule and
+   sailed straight into the cache. Measured 2026-08-06 at z17 over Rockhouse
+   Creek: one whole tile plus a seam strip on two others, and refetching the
+   SAME url gave natural colour 6 times out of 8 — the same one-sick-node
+   signature, wearing a different band mapping.
+   A "greenish" rule is NOT the answer: natural teal inlet water measures 95%
+   green-dominant. What separates them is CHROMA — how far apart the strongest
+   and weakest channels sit. Measured over 950 z17 tiles (598 inlet, 352
+   Daytona/Halifax):
+     natural  bright turquoise 89 · dark tannic creek water 110–115 · marsh,
+              sand, roofs, deep ocean all well below;
+     cast     median 133, 90th percentile 182.
+   So a pixel is a cast pixel if it is magenta (the v326 rule) OR its chroma
+   is >= NAIP_FC_CHROMA. At 125 the entire 950-tile natural population scores
+   0.000 — including the worst dark-water tiles, which score 1.000 at a
+   chroma of 100 — while the three bad answers score 0.34–0.81 area with a
+   full 1.00 band. The area/band thresholds are unchanged; only the pixel
+   test grew. Retune the same way: sweep a box, refetch the outliers a few
+   times, and keep the natural population at zero. */
+const NAIP_FC_TRIES  = 5;     // 1 initial + 4 cache-busted refetches
+const NAIP_FC_GRID   = 32;    // sample grid the tile is decoded down to
+const NAIP_FC_AREA   = 0.01;  // false-colour share of the whole tile that flags it
+const NAIP_FC_BAND   = 0.50;  // ...or of any single row/column (edge seams)
+const NAIP_FC_CHROMA = 125;   // max channel - min channel: above this is no natural colour here
 function blobIsFalseColor(blob){
   return new Promise(resolve => {
     const obj = URL.createObjectURL(blob);
@@ -5675,16 +5699,19 @@ function blobIsFalseColor(blob){
         const d = g.getImageData(0, 0, N, N).data;
         const rowN = new Int32Array(N), rowM = new Int32Array(N),
               colN = new Int32Array(N), colM = new Int32Array(N);
-        let opaque = 0, magenta = 0;
+        let opaque = 0, cast = 0;
         for(let i = 0; i < N * N; i++){
           const k = i * 4;
           if(d[k+3] < 128) continue;               // off-coverage, not photo
+          const r = d[k], g = d[k+1], b = d[k+2];
           const row = (i / N) | 0, col = i % N;
           opaque++; rowN[row]++; colN[col]++;
-          if(d[k] > d[k+1] + 20 && d[k+2] > d[k+1] + 20){ magenta++; rowM[row]++; colM[col]++; }
+          const magenta = (r > g + 20 && b > g + 20);                        // v326 infrared cast
+          const vivid   = (Math.max(r,g,b) - Math.min(r,g,b)) >= NAIP_FC_CHROMA; // v463 any cast
+          if(magenta || vivid){ cast++; rowM[row]++; colM[col]++; }
         }
         if(!opaque){ resolve(false); return; }
-        if(magenta / opaque >= NAIP_FC_AREA){ resolve(true); return; }
+        if(cast / opaque >= NAIP_FC_AREA){ resolve(true); return; }
         // Edge seams: a band only counts if the tile is photo across most of
         // it, so a sliver of coverage in one corner can't trip the test.
         const half = N >> 1;

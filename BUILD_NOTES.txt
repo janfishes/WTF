@@ -7,6 +7,52 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-06 · 12:50 PM EDT · v463 · Green Tiles At Rockhouse
+------------------------------------------------------------------------------
+Jan: "green tiles showing through around Rockhouse Creek." Same USGS
+false-colour saga as v318/v326/v462 — one sick render node in the exportImage
+cluster — but wearing a colour the guard did not test for. At z17 (the 300 ft
+scale, where both satellite views hand off to NAIP) some answers around the
+inlet come back vivid CYAN-GREEN: sand and mangrove the colour of antifreeze.
+Reproduced on a 7x7 z17 block over Rockhouse Creek: one whole tile plus a seam
+strip and a corner on two others. Refetching the SAME url gave natural colour
+6 times out of 8 — the one-sick-node signature, different band mapping.
+
+Why v462 sailed past it: blobIsFalseColor() only ever tested for MAGENTA
+(r and b both well above g). A green cast scores 0.0% on that rule, so the bad
+answer was cached like any good one and stayed until "Clear offline map".
+
+A "greenish" test is not the fix — natural teal inlet water measures 95%
+green-dominant. What separates the cast from real photo is CHROMA, the gap
+between the strongest and weakest channel. Measured 2026-08-06 over 950 z17
+tiles (598 across the inlet, 352 over Daytona/Halifax as a built-up control):
+
+  natural   bright turquoise 89 · dark tannic creek water 110-115 · marsh,
+            sand, roofs and deep ocean all well below
+  cast      median 133, 90th percentile 182
+
+So a pixel now counts as cast if it is magenta (the v326 rule, kept) OR its
+chroma is >= NAIP_FC_CHROMA = 125. At 125 the whole 950-tile natural
+population scores 0.000-0.004 of tile area and never more than 0.09 of any
+row or column — including the dark-water tiles that score a full 1.000 at a
+chroma of 100, which is why the threshold is not lower. The three bad answers
+score 0.34 / 0.74 area with a full 1.00 band, and the weakest of them (a
+corner seam) 0.0117 — over the unchanged 1% AREA rule with the natural
+ceiling four times below it. The area and band thresholds did not move; only
+the pixel test grew.
+
+Verified by running the shipped blobIsFalseColor() itself in node over ten
+decoded tiles (3 bad answers, the good copy of one of them, and six natural
+tiles spanning turquoise, tannic water, marsh, houses, deep ocean and the
+highest-chroma tile in the Daytona sweep): 10 of 10 correct.
+
+Tiles already poisoned on a device repair themselves — the guard runs on the
+cached blob too, so the first visit after this build refetches and replaces
+them. Retune the same way if it ever needs it: sweep a box, refetch the
+outliers a few times to sort the sick node from real scenery, and keep the
+natural population at zero.
+
+------------------------------------------------------------------------------
 Build 2026-08-06 · 12:20 PM EDT · v462 · Red Rectangles In Turnbull
 ------------------------------------------------------------------------------
 Jan: "at 200 ft zoom getting red rectangles in Turnbull Bay." 200 ft on the
