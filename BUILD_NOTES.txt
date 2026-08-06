@@ -7,6 +7,35 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 11:20 PM EDT · v457 · A Tide Height Is Not A Depth
+------------------------------------------------------------------------------
+Came out of the same question on the tide board app: the number beside a high
+or low reads as depth to anyone who has not thought about datums, and this app
+is the one where that misread bites, because it also draws depth lines you
+might mentally add the tide to.
+
+The gap was lopsided. Since v455 the Depth Lines help does the datum properly
+— NAVD88, the measured 2.25 ft to MLLW, "a line marked 3 ft has about 9 inches
+over it at dead low". The tide panel printed a bare "3.4 ft" whose only hint
+was the phrase "heights relative to mean lower low water", buried mid-sentence
+in the 11px source note under the lag explanation, where nobody reads it.
+
+Two additions, no logic touched:
+
+  - A .td-note line directly UNDER the tide rows, in the panel: heights are
+    tide above MLLW, not depth under the boat, and a 0.5 ft low is not six
+    inches to run in. Under the numbers on purpose — the source note already
+    said a version of this and it did not land there.
+  - A second paragraph in the Tides help topic saying the same thing at
+    length, and pointing at Depth Lines for why a tide height cannot simply be
+    added to a depth line (different datums, 2.25 ft apart).
+
+Known limit: the tide heights are ALSO range-scaled per spot (scaleHeight),
+so upriver they are neither raw NOAA nor a depth. The note does not get into
+that; the source note's "scaled to this spot's own tidal range" still carries
+it.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 10:55 PM EDT · v456 · Trestle Tag Hangs Left
 ------------------------------------------------------------------------------
 Settles the known limit v455 flagged. The new Turnbull Bay Train Trestle pin

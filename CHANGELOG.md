@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-05
 
+- **v457** — A Tide Height Is Not A Depth
 - **v456** — Trestle Tag Hangs Left
 - **v455** — Two Trestles, True Datum
 - **v454** — Personal Best Trophy

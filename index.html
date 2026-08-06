@@ -2917,6 +2917,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
      now that --brass is theme-driven and goes dark on the light grounds. */
   .td-type.td-low{background:#c99a4b; color:#04141e;}
   .td-row .td-ht{margin-left:auto; color:var(--muted);}
+  /* v457: the tide rows print "3.4 ft" and the depth lines print "3 ft", and a
+     tide height read as water under the boat is the dangerous one of the two.
+     The depth layer has said what its numbers mean since v455 (Depth Lines help,
+     the 2.25 ft NAVD88->MLLW translation); this is the tide side of the same
+     sentence, sat directly under the numbers rather than in the source note,
+     where nobody was reading it. */
+  .td-note{
+    margin-top:6px; font-family:'JetBrains Mono',monospace;
+    font-size:calc(9.5px * var(--ts)); color:var(--muted); line-height:1.5;
+  }
   .feed-card{margin:6px 0 12px; padding:9px 11px; border:1px solid var(--brass); border-radius:10px; background:var(--navy-800);}
   .feed-head{display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding-bottom:6px; margin-bottom:8px; border-bottom:1px solid var(--line); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:calc(11.5px * var(--ts)); color:var(--teal);}
   .feed-moon{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:calc(10px * var(--ts)); color:var(--brass); white-space:nowrap;}
@@ -3453,6 +3463,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="help-body" id="hb-tides">
       <p class="sheet-note">The <svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> <b>Tides</b> action button lets you tap anywhere on the map to drop a Tide pin — you get a 3-day high/low forecast, built from official NOAA predictions for Ponce Inlet stored on your device. Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and interpolates the tide lag by distance between the calibrated stations on that arm — or extrapolates past the last one when you're farther upstream. Each forecast carries a confidence badge: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. Again, no internet is needed.</p>
       <p class="sheet-note"><b>Tapping Tides also brings up the tide gauge pins on the map.</b> They are the marks your forecast is timed from, so they show while it is lit. Tap on a tide gauge to read its offset (lag times). Heights are scaled as well as times: the tide swings about 2.7 ft at Ponce Inlet but only half a foot at Ormond and five inches at Turtle Mound, so the app seeks to match the water you're actually on. Each waterway has its own zero-lag reference, and the app carries a full year of official NOAA predictions for both, updated annually. The <b>Ponce Inlet</b> gauge anchors everything north up the Halifax River and the <b>Ponce De Leon Inlet South</b> gauge anchors the Indian River North and Mosquito Lagoon. Every other gauge is timed as an offset from whichever of those two its waterway belongs to. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is followed the way the water gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The bay has no measured gauge at present, so forecasts up that run are rough estimates and wear the low-confidence ⚠ — time the tide at your dock and save it under <b>Create &amp; Calibrate Tide Stations</b> and nearby forecasts pick up your timing. The Indian River North is measured the whole way down: <b>New Smyrna Beach</b>, <b>Packwood Place</b> and <b>Turtle Mound</b> are all real gauges, so spots between the inlet and Turtle Mound are timed by interpolation rather than guesswork. South of Turtle Mound there is nothing to measure against for a long way, so once you get more than about five miles past it the app stops guessing: it shows raw Ponce Inlet times, tells you it has done so, and flags the forecast low confidence. In any case, always read the water depth conditions rather than the clock.</p>
+      <p class="sheet-note"><b>A tide height is not a depth.</b> The <span class="g-emph">3.4 ft</span> beside a high or low is feet of tide above <b>mean lower low water</b> &mdash; how far the water has risen off its own zero &mdash; not how much water is under your boat. A <span class="g-emph">0.5 ft</span> low does not mean six inches to run in, and it is not a number to add to a depth line either: the <b>Depth Lines</b> topic below explains why (those lines are measured to a different datum, 2.25 ft higher). For the water under the boat, read your <b>depth sounder</b>.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-waves"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><use href="#waveArt"></use></svg> Waves<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-waves">
@@ -4634,7 +4645,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 456;
+const BUILD_NUM  = 457;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -14649,6 +14660,8 @@ function tideForecastHTML(latlng){
 
   return `<div class="pop-meta"><span>${toDMS(latlng.lat, latlng.lng)}</span>${badge}</div>
     <div class="td-wrap">${rows}</div>
+    <div class="td-note">Heights are <b>tide above MLLW</b> &mdash; how far the water has risen off its
+      own zero, <b>not</b> the depth under your boat. A 0.5 ft low is not six inches to run in.</div>
     <p style="font-size:calc(11px * var(--ts)); color:var(--fog); line-height:1.6; margin:10px 0 0;">${lagNote} ${srcNote}</p>${warnNote}${windNote}`;
 }
 
