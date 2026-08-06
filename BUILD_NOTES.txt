@@ -7,6 +7,32 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 9:03 PM EDT · v453 · Return To Top
+------------------------------------------------------------------------------
+Jan asked for a Return to Top button at the bottom of My Log.
+
+JUMP TO END (v385, retargeted v437 and v451) makes the foot of a long catch
+list one tap away, but there was no way back: the name box, UNDO, the
+"Recently deleted" line and the When/Where filters all live at the top of the
+sheet, and after a trip to the backup buttons you had to scroll the whole log
+past to reach them. RETURN TO TOP is the mirror of that button.
+
+Where it sits: last thing in #panel-catches, below the backup warning and the
+storage line, so it is where you actually end up rather than something else to
+scroll past. `returnToLogTop()` sits beside `jumpToLogEnd()` and scrolls the
+same container -- `#infoSheet .sheet-body`, NOT the window. That is the gotcha
+worth keeping: the sheet body is the scroll container in this app, and
+window.scrollTo does nothing here.
+
+Word-then-icon per the app's rule (RETURN TO TOP ⬆, `.bi-sm`), a plain
+`.mini-btn` in a `.loc-btns` row like every other button in the section. Help
+updated: the My Log paragraph's tour of the foot of the sheet now ends with
+the button that brings you back.
+
+Timestamp note: this build's clock time reads earlier than v452's above it --
+v452's note was stamped ahead of the machine clock. Order by build number.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 9:30 PM EDT · v452 · Select Measurement Units
 ------------------------------------------------------------------------------
 Jan's wording for the pointer on the + Catch form, and the section heading

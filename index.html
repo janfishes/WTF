@@ -3218,7 +3218,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Measurement units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Measurement units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log. <b>RETURN TO TOP</b> at the very bottom brings you straight back here.</p>
       <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Ace’s Catch Log”)</span></label>
       <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
       <div class="loc-btns" style="margin:0 0 10px;">
@@ -3304,6 +3304,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <p class="sheet-note backup-warn">⚠ <b>What each file does and doesn't carry.</b> <b>Photos</b> live only inside the full backup; the log-only file drops them on purpose and they cannot be recovered from it. <b>Your catch log</b> — species, date, time, tide, position, notes — is complete in both. <b>Spots</b> are in both as well: the ones you added, the built-in ones you renamed, moved or deleted, and the names you gave individual reef drops. <b>Your own tide stations</b> — the gauges you created and calibrated — ride along in both files too. Everything lives on this device only — clearing the browser's website data, or deleting the app from your home screen, takes it with it. Export something before you change phones.</p>
       <p class="storage-note" id="backupStatus"></p>
+      <!-- v453: the mirror of JUMP TO END. Getting to the foot of a long log is one tap;
+           getting back was a long scroll, and the name box, UNDO and the two log filters
+           all live at the top. Sits last, under everything, so it is where you end up. -->
+      <div class="loc-btns" style="margin-top:14px;">
+        <button class="mini-btn" onclick="returnToLogTop()" title="Back to the top of My Log — your name, UNDO and the When/Where filters">RETURN TO TOP <span class="bi bi-sm">⬆</span></button>
+      </div>
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Section to Get Fishing</div>
@@ -4574,7 +4580,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 452;
+const BUILD_NUM  = 453;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -12945,6 +12951,13 @@ function jumpToLogEnd(){
   const delta = target.getBoundingClientRect().top - body.getBoundingClientRect().top;
   const top = Math.max(0, Math.min(body.scrollTop + delta - 56, body.scrollHeight - body.clientHeight));
   body.scrollTo({top, behavior:'smooth'});
+}
+
+/* RETURN TO TOP (v453): the way back from the foot of My Log. Same scroll container as
+   jumpToLogEnd -- the sheet body, not the window. */
+function returnToLogTop(){
+  const body = document.querySelector('#infoSheet .sheet-body');
+  if(body) body.scrollTo({top:0, behavior:'smooth'});
 }
 
 document.getElementById('importBtn').addEventListener('click', ()=> document.getElementById('importFile').click());
