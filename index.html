@@ -4647,9 +4647,9 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/06/26';                          // map stamp form
-const BUILD_NUM  = 461;
+const BUILD_NUM  = 462;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
-const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
+const BUILD_TAG  = 'build 2026-08-06 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
    made same-day updates look unchanged. */
 { const bs = document.getElementById('buildStamp');
@@ -5629,13 +5629,38 @@ function wmsTileUrl(base, layerName, x, y, z, tileSize){
    tile until "Clear offline map". Every NAIP response is therefore decoded
    small and inspected: a pixel where BOTH red and blue sit well above green
    is the magenta cast (no natural scene does that in quantity — water and
-   vegetation run green-up, sand runs blue-down), and a tile at least 15%
-   such pixels is refetched through a cache-busting URL until a healthy node
-   answers (bad odds ~0.25^4 after the retries). The good copy replaces the
-   bad one under the tile's canonical cache key; a still-bad final answer is
-   shown (better a purple photo than a hole) but evicted from the cache so
-   the next visit tries again. */
-const NAIP_FC_TRIES = 5;   // 1 initial + 4 cache-busted refetches
+   vegetation run green-up, sand runs blue-down). A flagged tile is refetched
+   through a cache-busting URL until a healthy node answers (bad odds
+   ~0.25^4 after the retries). The good copy replaces the bad one under the
+   tile's canonical cache key; a still-bad final answer is shown (better a
+   purple photo than a hole) but evicted from the cache so the next visit
+   tries again.
+
+   v462 widened the flag, from Jan's "red rectangles in Turnbull Bay at the
+   200 ft zoom". The sick node does NOT always poison a whole tile: where a
+   NAIP mosaic footprint edge crosses the tile, only the strip or corner on
+   that footprint comes back false-colour — a red rectangle in an otherwise
+   healthy photo. Those sit under the old 15%-of-tile threshold and sailed
+   through into the cache. Measured 2026-08-06 over 1,935 z17 tiles from
+   Spruce Creek to Turnbull Bay: FIVE tiles carried any magenta at all, at
+   43.8 / 28.1 / 25.0 / 6.3 / 5.5 % — the old rule caught three, and the two
+   it missed are exactly the rectangles Jan saw. Every other tile measured
+   0.00%, as did 396 tiles over built-up Daytona (a false-colour cast is
+   simply not a thing natural NAIP does), so the threshold can drop a long
+   way with room to spare. Two rules now, either one flags:
+     AREA — 1% of the tile cast magenta (was 15%), sampled on a 32×32 grid
+            rather than 16×16 so a corner patch is tens of pixels, not four;
+     BAND — half of any one row or column of that grid, which is what a thin
+            false-colour SEAM along a tile edge looks like (the 6.3% tile is
+            a two-row strip across the top: 100% of its band, and it would
+            still be caught if it were a third as tall).
+   Both rules were re-run over the same 1,935 tiles: 5 of 5 caught, nothing
+   else flagged. If this ever needs retuning, re-measure the same way — the
+   headroom between 0% and a real cast is the whole reason it works. */
+const NAIP_FC_TRIES = 5;      // 1 initial + 4 cache-busted refetches
+const NAIP_FC_GRID  = 32;     // sample grid the tile is decoded down to
+const NAIP_FC_AREA  = 0.01;   // magenta share of the whole tile that flags it
+const NAIP_FC_BAND  = 0.50;   // ...or of any single row/column (edge seams)
 function blobIsFalseColor(blob){
   return new Promise(resolve => {
     const obj = URL.createObjectURL(blob);
@@ -5643,17 +5668,31 @@ function blobIsFalseColor(blob){
     img.onload = ()=>{
       URL.revokeObjectURL(obj);
       try{
-        const c = document.createElement('canvas'); c.width = 16; c.height = 16;
+        const N = NAIP_FC_GRID;
+        const c = document.createElement('canvas'); c.width = N; c.height = N;
         const g = c.getContext('2d');
-        g.drawImage(img, 0, 0, 16, 16);
-        const d = g.getImageData(0, 0, 16, 16).data;
+        g.drawImage(img, 0, 0, N, N);
+        const d = g.getImageData(0, 0, N, N).data;
+        const rowN = new Int32Array(N), rowM = new Int32Array(N),
+              colN = new Int32Array(N), colM = new Int32Array(N);
         let opaque = 0, magenta = 0;
-        for(let k = 0; k < d.length; k += 4){
-          if(d[k+3] < 128) continue;
-          opaque++;
-          if(d[k] > d[k+1] + 20 && d[k+2] > d[k+1] + 20) magenta++;
+        for(let i = 0; i < N * N; i++){
+          const k = i * 4;
+          if(d[k+3] < 128) continue;               // off-coverage, not photo
+          const row = (i / N) | 0, col = i % N;
+          opaque++; rowN[row]++; colN[col]++;
+          if(d[k] > d[k+1] + 20 && d[k+2] > d[k+1] + 20){ magenta++; rowM[row]++; colM[col]++; }
         }
-        resolve(opaque > 0 && magenta / opaque >= 0.15);
+        if(!opaque){ resolve(false); return; }
+        if(magenta / opaque >= NAIP_FC_AREA){ resolve(true); return; }
+        // Edge seams: a band only counts if the tile is photo across most of
+        // it, so a sliver of coverage in one corner can't trip the test.
+        const half = N >> 1;
+        for(let i = 0; i < N; i++){
+          if(rowN[i] >= half && rowM[i] / rowN[i] >= NAIP_FC_BAND){ resolve(true); return; }
+          if(colN[i] >= half && colM[i] / colN[i] >= NAIP_FC_BAND){ resolve(true); return; }
+        }
+        resolve(false);
       }catch(e){ resolve(false); }
     };
     img.onerror = ()=>{ URL.revokeObjectURL(obj); resolve(false); };

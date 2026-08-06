@@ -7,6 +7,67 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-06 · 12:20 PM EDT · v462 · Red Rectangles In Turnbull
+------------------------------------------------------------------------------
+Jan: "at 200 ft zoom getting red rectangles in Turnbull Bay." 200 ft on the
+scale bar is z17, which is where both satellite views hand off to USGS NAIP —
+so this is the false-colour saga of v318/v326 again, in a form the v326 guard
+was not built to catch.
+
+What the guard has always known: one render node in USGS's exportImage cluster
+answers with 4-band NAIP rendered in false-colour infrared, magenta instead of
+natural colour, on roughly a quarter of requests, and no URL parameter avoids
+it. blobIsFalseColor() decodes every NAIP response small and refetches through
+a cache-busting URL when the tile looks magenta.
+
+What it did NOT know: the sick node does not always poison a WHOLE tile. Where
+the edge of a NAIP mosaic footprint crosses the tile, only the strip or corner
+lying on that footprint comes back false-colour — a red rectangle sitting in an
+otherwise perfectly good photo. That is a small fraction of the tile's area, it
+fell under the old "at least 15% of the tile" threshold, and so it passed the
+guard and went straight into the tile cache, where it stayed.
+
+Measured before touching anything, 2026-08-06, 1,935 z17 tiles from Spruce
+Creek south through Turnbull Bay. Exactly FIVE carried any magenta at all:
+
+    36062/54469   43.8%    caught by the old rule
+    36078/54486   28.1%    caught
+    36076/54484   25.0%    caught
+    36076/54487    6.3%    MISSED — a two-row strip across the top edge
+    36062/54470    5.5%    MISSED — a patch in the top-left corner
+
+The two misses are Jan's red rectangles. Every one of the other 1,930 tiles
+measured 0.00% magenta, as did 396 tiles over built-up Daytona Beach — a
+false-colour cast is simply not something natural NAIP produces, which is why
+the threshold has enormous room to come down. (Every bad response was also a
+70-100 KB PNG where the good answer is a 15-20 KB JPEG. Tempting as a tell, but
+legitimate off-coverage tiles are PNG too, so the guard still reads pixels.)
+
+The guard now flags on either of two rules:
+  AREA  1% of the tile cast magenta, down from 15%, and sampled on a 32x32
+        grid instead of 16x16 so a corner patch is tens of pixels rather than
+        three or four that the downsample can average away.
+  BAND  half of any single row or column of that grid — which is exactly the
+        shape of a false-colour seam along a tile edge. The 6.3% tile is 100%
+        of its band and would still be caught at a third the height. A band
+        only counts where the tile is photo across most of it, so a sliver of
+        coverage in one corner cannot trip it.
+
+Re-run over the same 1,935 tiles: 5 of 5 caught, nothing else flagged.
+
+Two things worth knowing. Tiles already poisoned in a device's cache repair
+themselves — the guard runs on the cached blob too, so the next view of that
+tile now flags it, refetches a clean copy and writes it back under the
+canonical key. No "Clear offline map" needed. And if this ever needs retuning,
+re-measure the same way rather than nudging numbers: the whole reason a 1%
+threshold is safe is the empty gap between 0% and a real cast, and only a
+measurement shows whether that gap is still there.
+
+Constants are named at the top of the guard (NAIP_FC_GRID / NAIP_FC_AREA /
+NAIP_FC_BAND) instead of buried in the expression. No user-facing change, no
+help or credits change — imagery sources are the same.
+
+------------------------------------------------------------------------------
 Build 2026-08-06 · 1:15 PM EDT · v461 · Zero To One Foot
 ------------------------------------------------------------------------------
 The drying-edge label is now "0 - 1 ft", Jan's call, and it settles a wording
