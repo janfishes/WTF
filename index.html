@@ -3493,7 +3493,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>What you see changes with the zoom</b>, so the lines never bury the picture. Wide out, only the <b>heavy lines</b> draw — <b>4, 6, 12, 20, 30, 50, 100 and 200 ft</b> — which is the shape of the water: the run of the channel, the deep holes, the drop off the beach, and with the <b>4 ft</b> line in that set the shallow west-side bays — <b>Turnbull</b>, <b>Rose</b>, <b>Strickland</b>, the <b>Tomoka Basin</b> — show their outline from the wide view instead of reading as empty water. Zoom in a step and the <b>3 and 9 ft</b> lines join them, the ones that fence the flats. A step closer brings the <b>2 ft steps</b>, and at the closest zooms <b>every single foot</b> from 1 to 12 draws — fine enough to pick out the one-foot lip a redfish sits on. Zoom back out and they thin away again. <b>Every line carries its own depth wherever there is room to print it</b>, repeated along the long ones so you are never far from a number; where the water is busy the <b>heavier lines are numbered first</b>, and at the closest zooms the every-foot lines take turns so the chart does not disappear under its own tags. The lines draw <b>under</b> your pins, your track and the compass, so nothing you put on the chart is ever hidden by them.</p>
       <p class="sheet-note"><b>Offshore the lines change their step</b>, because a one-foot line means nothing once you are off the beach. The <b>fathom curves</b> are drawn as the heavy lines out here — <b>60 ft is ten fathoms</b>, <b>120 is twenty</b>, <b>180 is thirty</b> — so the ten-fathom curve runs down the whole beach from Flagler to Titusville <b>from the widest view onward</b>, labelled the length of it, and you can follow it to the grounds without zooming in and hunting for it. Out past the three-mile line the contours open up to <b>60, 80, 100, 120, 150 and 200 ft</b>, and beyond that they carry the deep water: <b>250, 300, 400, 600, 900, 1500 and 2400 ft</b> wide out, with <b>10 ft steps through the 210-275 ft band</b> — the ledge depths — as you zoom in. That is the <b>shelf break</b> drawn as contours, and the offshore waypoints sit right on it: bring up <b>Steeples (North)</b> or the <b>South Ledge</b> and you can see the ledge itself running under the pin, the drop it faces and which way it lies. Coverage runs east past every offshore spot in the app — past <b>Rolldown</b>, the furthest mark on the chart — and about <b>13 miles beyond it</b> down the slope, which is as far out as this is worth drawing. The lines are pale cyan over the painted blue ocean out there the same as they are over the photo inshore.</p>
       <p class="sheet-note"><b>Where the numbers come from.</b> The contours are built from <b>NOAA's own surveys</b> and stored <b>in the app</b>, so they draw with the signal off, anywhere in the county and all the way out to the offshore grounds, with nothing to download first. The bottom comes from <b>NOAA BlueTopo</b> — the Office of Coast Survey's "best available" compiled bathymetry for navigable US water, which already includes the <b>2022 Indian River Lagoon lidar</b> — with <b>NOAA NCEI's CUDEM</b> survey filling the skinny water BlueTopo does not reach. Only water gets lines: land, spoil islands and the inland ponds are masked off. Offshore the surveys get coarser the further out you go, so the deep lines are the <b>shape</b> of the bottom rather than a survey of it — the ledges are drawn from the close-in surveys, the 2,000 ft lines from the wide ones.</p>
-      <p class="sheet-note"><b>Be advised: these are not chart soundings, and this is not for navigation.</b> The depths are measured to <b>NAVD88</b> — near enough to <b>average water level</b> — while a nautical chart's soundings are to <b>mean lower low water</b>, which around Ponce Inlet runs <b>a foot or two lower</b> than what you see here. So a line marked <span class="g-emph">3 ft</span> can be closer to <b>2 ft</b> of water on a low tide, and less than that on a hard north wind. Surveys are also years old in places and this coast <b>shoals and moves</b>. Use these lines to find an edge, a hole or a drop worth fishing — read your <b>depth sounder and chartplotter</b>, not this app, for the water under your boat.</p>
+      <p class="sheet-note"><b>Be advised: these are not chart soundings, and this is not for navigation.</b> The depths are measured to <b>NAVD88</b> — near enough to <b>average water level</b> — while a nautical chart's soundings are to <b>mean lower low water</b>, which around Ponce Inlet runs <b>2.25 ft lower</b> than what you see here — NOAA's own figure for the tide station at the inlet. So a line marked <span class="g-emph">3 ft</span> has about <b>9 inches</b> of water over it at dead low, and less than that on a hard north wind. Surveys are also years old in places and this coast <b>shoals and moves</b>. Use these lines to find an edge, a hole or a drop worth fishing — read your <b>depth sounder and chartplotter</b>, not this app, for the water under your boat.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mapview"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite / Hi Res &amp; ICW / Street Map<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-mapview">
@@ -4155,11 +4155,29 @@ const SPOTS = [
   { id:"three-bridges-s", name:"Three Bridges S", zone:"inshore", lat:29.08635, lng:-80.968633, meta:"Bridge", species:[] },
   { id:"three-bridges-se", name:"Three Bridges SE", zone:"inshore", lat:29.084033, lng:-80.967117, meta:"Bridge", species:[] },
   { id:"strickland-bay", name:"Strickland Bay", zone:"inshore", lat:29.081200, lng:-80.979800, meta:"Bay", species:[] },
-  { id:"strickland-bay-train-trestle", name:"Strickland Bay Train Trestle", zone:"inshore", lat:29.080083, lng:-80.983483, meta:"Train trestle", species:[] },
+  /* RENAMED in v455 — this pin shipped as "Strickland Bay Train Trestle" and that
+     is not what Jan calls it on the water. It is the SPRUCE CREEK trestle; the
+     crossing sits right where Spruce Creek opens into Strickland Bay, which is
+     how one structure came to carry both names. Position is Jan's own,
+     29°04.803'N 080°58.997'W, 19 m off the old figure and 19 m off the railway
+     bridge OSM maps there, so all three describe the same trestle.
+     Changing the id is safe: catches are matched to a pin BY POSITION within
+     200 ft, never by id or name, and the only thing that stores `spot:<id>` is
+     the Where-caught filter, which falls back to All on a value it does not
+     recognise. */
+  { id:"spruce-creek-train-trestle", name:"Spruce Creek Train Trestle", zone:"inshore", lat:29.080050, lng:-80.983283, meta:"Train trestle", species:[] },
   { id:"turnbull-bay-n", name:"Turnbull Bay N", zone:"inshore", lat:29.07705, lng:-80.9682, meta:"Bay", species:[] },
   { id:"spruce-creek-se", name:"Spruce Creek SE", zone:"inshore", lat:29.072383, lng:-80.991917, meta:"Creek", species:[] },
   { id:"turnbull-bay-s", name:"Turnbull Bay S", zone:"inshore", lat:29.053333, lng:-80.960867, meta:"Bay", species:[] },
   { id:"turnbull-bay-bridge", name:"Turnbull Bay Bridge", zone:"inshore", lat:29.051217, lng:-80.9598, meta:"Bridge", species:[] },
+  /* NEW in v455, and it is NOT the pin above it. The app had one Turnbull Bay
+     crossing and it is the ROAD bridge; the railroad trestle is a separate
+     structure about 46 m south of it. Two decks, two sets of pilings, two
+     different pieces of structure to fish, and until now only one pin.
+     Position from Jan, 29°03.042'N 080°57.579'W — 12 m off the railway bridge
+     OSM maps at 29.050726/-80.959770, which is the check that the road bridge
+     and the trestle really are two things and not one figure written twice. */
+  { id:"turnbull-bay-train-trestle", name:"Turnbull Bay Train Trestle", zone:"inshore", lat:29.050700, lng:-80.959650, meta:"Train trestle", species:[] },
   { id:"turnbull-creek", name:"Turnbull Creek", zone:"inshore", lat:29.047550, lng:-80.958600, meta:"Creek", species:[] },
   { id:"nsb-north-causeway-bridge", name:"NSB North Causeway Bridge", zone:"inshore", lat:29.038667, lng:-80.906017, meta:"Bridge", species:[] },
   { id:"aqua-ct", name:"Aqua Ct", zone:"inshore", lat:29.032683, lng:-80.947067, meta:"Inshore spot", species:[] },
@@ -4616,7 +4634,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 454;
+const BUILD_NUM  = 455;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -15178,9 +15196,18 @@ themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); 
    wiggle in the line IS the ledge.
 
    Two things follow from NAVD88 that the help and the toast both say out loud:
-   these are depths at roughly AVERAGE water level, not at chart datum (a
-   chart's soundings are MLLW, which near Ponce runs a foot or two lower), and
-   this is a fishing layer, not a navigation layer.
+   these are depths at roughly AVERAGE water level, not at chart datum, and this
+   is a fishing layer, not a navigation layer.
+
+   The offset is 2.25 ft and it is MEASURED, not a guess: NOAA's published datums
+   for station 8721138 put MLLW at 2.94 ft and NAVD88 at 5.19 ft on the station
+   datum, so NAVD88 sits 2.25 ft ABOVE chart datum. Subtract it to get depth at
+   dead low. The help said "a foot or two" until v455, which was not just vague
+   but wrong in the dangerous direction — it implied a 3 ft line held about 2 ft
+   at low water when the real figure is 9 inches. If this app ever gets a second
+   depth station, re-read that station's own datums; the offset is local and
+   there is no reason it holds elsewhere on the coast. The tide board carries the
+   same constant as NAVD88_ABOVE_MLLW.
 
    Land is masked three ways over: elevation must be below the datum, the pixel
    must sit in a body of water that connects to BlueTopo's surveyed water (a

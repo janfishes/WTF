@@ -7,6 +7,58 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 10:45 PM EDT · v455 · Two Trestles, True Datum
+------------------------------------------------------------------------------
+Three corrections that came out of building the tide board (My Tides), where
+Jan went looking for the trestles and found the app had the wrong name on one
+and no pin at all for the other.
+
+TWO TRESTLES, NOT ONE. The pin that shipped as "Strickland Bay Train Trestle"
+is not what Jan calls it on the water: it is the SPRUCE CREEK trestle. The
+crossing sits right where Spruce Creek opens into Strickland Bay, which is how
+one structure came to carry both names. Renamed, and moved 19 m to Jan's own
+position, 29°04.803'N 080°58.997'W. The id changed with it
+(spruce-creek-train-trestle) and that is safe: catches are matched to a pin BY
+POSITION, within 200 ft, never by id or name — the only thing that stores
+`spot:<id>` is the Where-caught filter, which falls back to All on a value it
+does not recognise.
+
+The TURNBULL BAY train trestle was missing outright. The app had one Turnbull
+Bay crossing and it is the ROAD bridge; the railroad trestle is a separate
+structure about 46 m south of it — two decks, two sets of pilings, two
+different pieces of structure to fish. New pin at Jan's position, 29°03.042'N
+080°57.579'W.
+
+Both positions were checked against OpenStreetMap's mapped railway bridges
+(Overpass API, `way["railway"]["bridge"]` over a bbox) and land 12 m and 19 m
+off, which is also what proved the road bridge and the trestle are two things
+and not one figure written twice. That check is worth reusing for any
+structure position here: no key, no account, one POST.
+
+KNOWN LIMIT ON THE NEW PIN'S TAG. Both new/renamed pins sit in the plain
+inshore block with no wp:true, so their tags hang RIGHT. At z16 the trestle
+and the bridge clear each other; at z15 and below they stack, and at z14 a
+right tag reaches the topo's printed "TURNBULL BAY RD" while a left one would
+sit on its printed "Turnbull Creek". There is no side that is clean at z14 —
+flagged for Jan rather than picked silently, since the label-side rule is his
+and it gets settled by looking at real tiles.
+
+THE DEPTH DATUM WAS WRONG IN THE HELP, in the dangerous direction. The Depth
+Lines note said a chart's MLLW soundings run "a foot or two lower" than the
+NAVD88 depths shown, and worked the example as "a line marked 3 ft can be
+closer to 2 ft of water on a low tide". The real offset is 2.25 ft and it is
+published, not estimated: NOAA's datums for station 8721138 (the tide station
+at the inlet) put MLLW at 2.94 ft and NAVD88 at 5.19 ft on the station datum.
+So a 3 ft line has about NINE INCHES over it at dead low, not two feet. Help
+text and the DEPTH CONTOURS source comment both corrected. The offset is
+local — if a second depth station is ever added, re-read that station's own
+datums. The tide board carries the same constant as NAVD88_ABOVE_MLLW.
+
+Also checked and NOT changed: the Waves button. An older note claimed it was
+still walking the dead public relay chain; v433 already put Jan's own
+Cloudflare worker first in BUOY_SOURCES, so there was nothing to fix.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 9:20 PM EDT · v454 · Personal Best Trophy
 ------------------------------------------------------------------------------
 Jan asked for a Personal Best flag with a trophy glyph that can be applied to
