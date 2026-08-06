@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-05
 
+- **v454** — Personal Best Trophy
 - **v453** — Return To Top
 - **v452** — Select Measurement Units
 - **v451** — Units Move To The Foot

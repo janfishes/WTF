@@ -7,6 +7,74 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 9:20 PM EDT · v454 · Personal Best Trophy
+------------------------------------------------------------------------------
+Jan asked for a Personal Best flag with a trophy glyph that can be applied to
+a catch, with the trophy showing in the corner of the photo both in My Log and
+when a map diamond is opened, and the whole thing searchable. Mid-build he
+added two more: confetti when a personal best is saved, and confetti again
+when the trophy is tapped in My Log or in the diamond's popup.
+
+THE FLAG. One boolean, c.pb, on the catch record. Nothing else had to learn
+about it: backups write whole catch objects, so it rides Full backup and Log
+only already; undo (catch-edit stores the fields it is handed) and the
+recently-deleted bin (whole record) carry it for free. A catch saved before
+this build simply has no pb key, which is falsy — no migration.
+
+THE FORM. A gold PERSONAL BEST 🏆 pill sits under Size, above Notes, in its
+own #logPbRow. Gold rather than the tide row's white because it is a
+one-of-a-kind flag, not one option among four: off is a black plate with the
+gold word and ring, lit is solid #FFC400 with the word in near-black (12.6:1).
+State is logPb + setPbUI(), reset by resetLogForm() and filled by
+openLogSheet() when editing, exactly like the tide chips. Tapping the pill
+does NOT fire confetti — the save a second later does, and two bursts in one
+flow reads as a glitch.
+
+WHERE THE TROPHY SHOWS. In the top-right CORNER OF THE PHOTO, on the My Log
+card and in the map diamond's popup alike (pbPhotoWrap()). The wrapper carries
+no border or padding on purpose: the image's own margin-top collapses through
+it, so the corner's `top:8px` measures from the picture's real top edge. Give
+.pb-wrap padding or a border and the trophy drifts down by that margin.
+A catch with NO photo has no corner to sit in, so it wears the words PERSONAL
+BEST 🏆 beside its species tags instead — never both, or the card says it
+twice. The undrawable-photo case gets the word tag too: BROKEN_PHOTO_NOTE is a
+text block, not a picture, and a trophy pinned to its corner would be nonsense.
+catchHasPhoto(c) is the single test both surfaces branch on.
+
+THE TAP. Tapping the trophy (corner or word tag) fires the confetti again.
+My Log cards are rebuilt constantly, so that tap is bound once on document.
+GOTCHA: that delegation does NOT reach map popups — sealPopupClicks() stops
+every click at the popup element so a tap inside a popup can't reach the map
+underneath — so wirePopup() binds the trophy itself, alongside the card
+EDIT/DELETE buttons it already wires for the same reason. Anything else added
+to popup markup later needs the same treatment.
+
+CONFETTI. pbConfetti() builds a throwaway full-screen <canvas> at z-index
+99999 (the app's highest; nothing else is above it), fires 90 paper bits up
+from the bottom centre with gravity, and removes the canvas when the last
+piece falls off the bottom. Nothing runs between bursts. It skips entirely
+under prefers-reduced-motion, and the whole thing is inside a try/catch — a
+decoration must never break a save. There is also a hard 400-frame cap as well
+as the empty-screen test, so a tab backgrounded mid-burst (which stops rAF and
+therefore stops the physics) can't leave the canvas parked over the map.
+
+SEARCH. Catches match on "pb" exactly, or on a two-letter-minimum prefix of
+"personal best", "trophy" or "best". The length gate matters: a one-letter
+query would have matched every flagged catch on a stray "p". Matching rows are
+led by the trophy — as PLAIN TEXT, not the .pb-corner/.pb-tag markup, because
+those carry the confetti tap and a tap on a search row has to open the catch.
+
+Help: the + Catch topic gets a Personal best paragraph (including how to take
+the flag off — EDIT and tap the gold pill again), and the Search topic gets
+the pb/trophy query line.
+
+Verified headless at v454: pill toggles and saves c.pb; confetti canvas
+appears on save and on tapping the trophy in both My Log and a diamond popup;
+trophy renders in the photo corner in both places and falls back to the word
+tag with no photo; searching "personal best", "pb" and "trophy" each return
+the flagged catch and "zzz" returns none.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 9:03 PM EDT · v453 · Return To Top
 ------------------------------------------------------------------------------
 Jan asked for a Return to Top button at the bottom of My Log.
