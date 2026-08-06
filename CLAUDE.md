@@ -27,8 +27,10 @@ Also on Jan's ship checklist for any change that warrants it: update the in-app
 imagery or data sources changed.
 
 If a build ever does go up without its entries, backfill them from the commit
-diff rather than leaving the gap — v442–v447 (2026-08-05) are the cautionary
-example.
+diff rather than leaving the gap — v442–v447 (2026-08-05) shipped without
+theirs and were reconstructed later that evening. A backfilled note says so in
+its own first line, and a docs-only commit like that takes no build number of
+its own (nothing in the app changed).
 
 ## Before you commit
 

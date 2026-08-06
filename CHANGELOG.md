@@ -7,6 +7,12 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 - **v449** — Spot Sits Above Catch
 - **v448** — Catch Wears A Plus
+- **v447** — Depth Icon Reads As Contours
+- **v446** — Catch Takes Second Slot
+- **v445** — Catch Pill Matches Spot
+- **v444** — Help Follows The Stack
+- **v443** — Spot Takes Second Slot
+- **v442** — Backup Text Scales
 - **v441** — Search Finds A Date
 - **v440** — Filter The Log By When And Where
 - **v439** — Catch Log Buttons Take The Accent

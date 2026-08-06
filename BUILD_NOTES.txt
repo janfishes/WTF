@@ -53,7 +53,91 @@ sticking out of it. If Catch ever needs to lose width again, take it out of the
 padding, not the icon.
 
 ------------------------------------------------------------------------------
-Build 2026-08-05 · 6:45 PM EDT · v441 · Search Finds A Date
+Build 2026-08-05 · 7:43 PM EDT · v447 · Depth Icon Reads As Contours
+------------------------------------------------------------------------------
+(Backfilled 2026-08-05 at 8:20 PM EDT — v442 through v447 were pushed without
+their notes. Written from the commit diffs; see the note under v442 below.)
+
+The Depth Lines button wore three identical sine waves, which is very nearly
+the Tides icon — two buttons in the same stack saying the same thing. Redrawn
+as three irregular, non-parallel lines, the way real contours run, with the
+bottom one detached (shorter and inset) so it reads as a separate contour ring
+rather than another wave in the set. Round caps on the free ends.
+
+Changed in all three places that drawing lives: the FAB, the Help intro
+paragraph's glyph run, and the Depth Lines help topic button.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 7:36 PM EDT · v446 · Catch Takes Second Slot
+------------------------------------------------------------------------------
+(Backfilled — see the note under v442.)
+
+Stack order changed to Bite, Catch, Spot: Catch moved up under Bite and Spot
+took the third slot, reversing v443. The matching Help > Action Buttons topics
+moved with it, so help still reads down the stack in the order the buttons
+appear. Superseded by v449, which put Spot back above Catch.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 7:35 PM EDT · v445 · Catch Pill Matches Spot
+------------------------------------------------------------------------------
+(Backfilled — see the note under v442.)
+
+Catch runs a letter longer than its neighbours and the fish it wore at the time
+was a wide glyph, so at the stack's shared padding the pill stuck out past Spot
+and Tides. Fixed two ways at once: side padding 8px -> 6px and the fish 15px ->
+12px, bringing it to 70.6px, level with Spot. Both stay --tsb-scaled so the
+match holds as the text size changes, and ui-compact keeps its own icon-only
+padding (hence the :not() on the rule).
+
+The icon half of that was undone in v448, when Catch went back to wearing the
+same + as Spot — two pluses at two sizes read as a mistake. The padding cut
+stays and carries the match on its own.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 6:31 PM EDT · v444 · Help Follows The Stack
+------------------------------------------------------------------------------
+(Backfilled — see the note under v442.)
+
+Help > Action Buttons listed the map-view topic (Topo Satellite / Hi Res & ICW
+/ Street Map) before Depth Lines, but the stack has Depth Lines above the map
+view button. Moved the Depth Lines topic ahead of it so the help reads straight
+down the stack. Text unchanged — the two topic blocks swapped places.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 6:30 PM EDT · v443 · Spot Takes Second Slot
+------------------------------------------------------------------------------
+(Backfilled — see the note under v442.)
+
+First of the stack reorders: the top three buttons became Bite, Spot, Catch,
+and the matching Help > Action Buttons topics moved to the same order. Reversed
+by v446 an hour later, then restored by v449.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 5:52 PM EDT · v442 · Backup Text Scales
+------------------------------------------------------------------------------
+(Backfilled 2026-08-05 at 8:20 PM EDT. v442 through v447 all shipped without a
+CHANGELOG.md line or a note here; these six entries were reconstructed from the
+commit diffs, so they are accurate about WHAT changed but thinner on the
+reasoning than a note written at the time. The rule that keeps this from
+happening again is now written down in CLAUDE.md at the repo root: the build
+number bump, the changelog line and the note here all land in the same commit
+as the change.)
+
+(Also corrected in the same pass: the v440 and v441 stamps below read 6:05 PM
+and 6:45 PM, both about an hour later than their commits, which put them out of
+order under the backfilled entries. They now carry their commit times, 5:12 PM
+and 5:38 PM. Every other stamp checked out — notes are normally written a few
+minutes before the push.)
+
+The block below the last catch card in My Log — the backup and photo-import
+text — ignored the A text-size cookie. Four rules carried hard-coded px sizes:
+.field-label (11.5px), .storage-note (10.5px), .backup-head (12.5px) and
+.backup-sub (11.5px). All four now ride calc(px * var(--ts)), like the
+.sheet-note / .log-count / .pi-drop rules beside them, so the whole sheet
+grows and shrinks together.
+
+------------------------------------------------------------------------------
+Build 2026-08-05 · 5:38 PM EDT · v441 · Search Finds A Date
 ------------------------------------------------------------------------------
 Jan asked whether search only goes back to the earliest year of a logged catch.
 It doesn't go back at all: search never looked at the date field. It matched a
@@ -105,7 +189,7 @@ record that drops out of a WHEN pick is one with no date at all, which can only
 arrive from an outside backup; it still shows under All dates.
 
 ------------------------------------------------------------------------------
-Build 2026-08-05 · 6:05 PM EDT · v440 · Filter The Log By When And Where
+Build 2026-08-05 · 5:12 PM EDT · v440 · Filter The Log By When And Where
 ------------------------------------------------------------------------------
 Jan: how best to filter catches by when and where caught.
 
