@@ -7,6 +7,50 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-06 · 11:40 AM EDT · v460 · Dries Under A Foot
+------------------------------------------------------------------------------
+Jan's edits to the v459 help, plus a wording rule that now applies app-wide.
+
+THE DRIES LINE SAYS WHAT IT IS WORTH. The map label went from "dries" to
+"dries < 1 ft" and the help paragraph was rewritten to match: the line is the
+bottom at low-water level, so everything inside it is LESS THAN A FOOT or out of
+the water at dead low. "dries" on its own answered what happens at the line and
+said nothing about what you have just inside it, which is the thing you actually
+want to know before you run in there. The answer is: not enough.
+
+TWO THINGS CUT, both at Jan's instruction.
+  * The Turnbull Bay example — "the survey calls one hole there a drying flat
+    where there is 8 to 10 ft that never fails". The mechanism it illustrated
+    (green lidar gets no return through tannic water, so a hole drops out of the
+    survey and is filled in from the bar around it) STAYS in the help; only the
+    named example is gone. Worth knowing why that matters beyond wording: that
+    sentence published the depth of a private hole in an app that is being sold.
+    THE SAME DISCLOSURE IS STILL IN THE TIDE BOARD'S HELP, which is also public
+    — flagged to Jan, his call.
+  * The whole "The lines moved in Build 458" paragraph, which explained the
+    NAVD88 history and warned that numbers would read shallower than they used
+    to. It had a shelf life of about a week and Jan cut it early.
+The "trust the dries line where you can see clean sand" line became "trust your
+EYES where you can see clean sand" — the app should not be pointing at its own
+line as the thing to trust.
+
+The Depth Lines topic now ENDS on "DEPTH LINES ARE FOR PLANNING PURPOSES, NOT
+FOR NAVIGATION." on its own line.
+
+CAPS ON EVERY NAVIGATION WARNING, app-wide, which is the part a future build has
+to keep honouring. Jan's rule: wherever this app says it is not to be used for
+navigation, it says so IN CAPITALS. Six help and gate phrases were raised —
+the MARK topic's "BE ADVISED, THIS APP IS NOT FOR NAVIGATION OR EMERGENCY USE!",
+the depth caveat's "BE ADVISED: THESE ARE NOT CHART SOUNDINGS...", the ICW
+topic's "READ AND RELY ON YOUR DEPTH SOUNDER AND CHARTPLOTTER — NOT THIS APP —
+FOR NAVIGATION.", the Warning topic's "DO NOT RELY ON THIS APP FOR NAVIGATION.",
+the Accept gate's "DO NOT USE THIS SITE FOR NAVIGATION OR EMERGENCY USE." and
+the map-credits line's "NOT FOR NAVIGATION" — plus all four `nav-warn` badges on
+the attribution string and the three Depth Lines toasts. ADD NEW ONES IN CAPS.
+
+No data change: the contour blocks are untouched and DEPTH_DATA_V stays at 6.
+
+------------------------------------------------------------------------------
 Build 2026-08-06 · 3:05 AM EDT · v459 · A Line That Says Dries
 ------------------------------------------------------------------------------
 Jan, on v458: "turnbull bay and creek lost virtually all contours." True, and
