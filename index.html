@@ -3218,24 +3218,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Add catches from photos</b> and the two ways to export and import your log.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log.</p>
       <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Ace’s Catch Log”)</span></label>
       <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
-      <!-- v450: units. Display only — catches are always stored in inches and pounds,
-           and runs in nautical miles, whichever way this device chooses to read them. -->
-      <label class="field-label" for="unitsSizeSel" style="margin-top:0;">Units <span style="color:var(--muted); font-weight:400;">(how figures are shown on this device)</span></label>
-      <div class="log-filter" id="unitsRow">
-        <label class="lf-cell"><span class="lf-lbl">Catch size</span>
-          <select id="unitsSizeSel" title="How length and weight are shown, and how the + Catch size boxes are labelled">
-            <option value="us">Inches &amp; pounds</option>
-            <option value="metric">Centimetres &amp; kilograms</option>
-          </select></label>
-        <label class="lf-cell"><span class="lf-lbl">Distance</span>
-          <select id="unitsDistSel" title="The unit for a run on the compass overlay, the MARK readout and a recorded track">
-            <option value="sm">Statute miles (sm)</option>
-            <option value="nm">Nautical miles (nm)</option>
-          </select></label>
-      </div>
       <div class="loc-btns" style="margin:0 0 10px;">
         <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, catch or spot">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
         <button class="mini-btn" onclick="jumpToLogEnd()" title="Skip to the end of your catch list — the photo, backup and import buttons are just below it">JUMP TO END <span class="bi bi-sm">⬇</span></button>
@@ -3253,6 +3238,29 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="log-count" id="logFilterCount"></p>
       <div id="catchListBody"></div>
       <div style="height:12px;"></div>
+
+      <!-- v451: units sit at the SEAM — where the log itself ends and the things you set
+           up begin. They were at the top of the sheet in v450, but they are a set-once
+           preference, not an action on the log or a filter over it, and up there they cost
+           the catch list a row of screen every single time the sheet opened. JUMP TO END
+           lands here, so this is one tap from the top rather than a scroll away. Display
+           only: catches are always stored in inches and pounds, runs in nautical miles,
+           whichever way this device chooses to read them. -->
+      <div class="backup-head" id="logUnitsSection">Units</div>
+      <p class="backup-sub">How figures are shown <b>on this device</b>. Nothing stored changes: a catch is always saved in inches and pounds, so switching back and forth never alters a record and a <b>backup file reads correctly either way</b>. Size limits in the <b>Season Guide</b> stay in <b>inches</b> — that is the unit the regulations are written in.</p>
+      <div class="log-filter" id="unitsRow">
+        <label class="lf-cell"><span class="lf-lbl">Catch size</span>
+          <select id="unitsSizeSel" title="How length and weight are shown, and how the + Catch size boxes are labelled">
+            <option value="us">Inches &amp; pounds</option>
+            <option value="metric">Centimetres &amp; kilograms</option>
+          </select></label>
+        <label class="lf-cell"><span class="lf-lbl">Distance</span>
+          <select id="unitsDistSel" title="The unit for a run on the compass overlay, the MARK readout and a recorded track">
+            <option value="sm">Statute miles (sm)</option>
+            <option value="nm">Nautical miles (nm)</option>
+          </select></label>
+      </div>
+      <div style="height:14px;"></div>
 
       <div class="backup-head" id="photoImportSection">Add catches from photos</div>
       <p class="backup-sub">Pick a batch of fish photos and the app reads each one's own <b>GPS position and timestamp</b> and offers it as a catch for you to check. Only <b>JPEG</b> photos that carry <b>both</b> a location and a date/time can be used — anything missing either one is listed with the reason and left alone. Photos you have already logged are recognized and skipped. Nothing is read anywhere but on this device, and nothing saves until you name the fish.</p>
@@ -3417,7 +3425,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>Where caught</b> has four ways to cut it and then your pins. <b>In the current map view</b> shows only the fish inside the map's current window — pan or zoom the chart behind the sheet and the list keeps up. <b>Inshore</b> is everything caught inside the shoreline: the Intracoastal, the rivers, the lagoons and the bays. <b>Beach &amp; offshore</b> is everything on the ocean side of it, surf fish included. Below those, every pin with a fish logged on it is listed with its count — picking one shows the catches <b>within 200 feet</b> of that pin, which is how the app matches a catch to a spot: by position, not by the name you typed.</p>
       <p class="sheet-note"><b>You can always see that a filter is on.</b> The line under the menus reads <b>Showing 12 of 84 catches</b> in the theme colour whenever anything is being held back, with <b>SHOW ALL ✕</b> beside it to put the whole log back in one tap. The filter is <b>not</b> remembered between sessions — every time you open the app the log starts whole — and saving or editing a catch that the filter would have hidden clears the filter rather than the fish.</p>
       <p class="sheet-note"><b>Put your name on it.</b> Type your name in the box at the top of My Log — or on the app's initial Acceptance screen — and the sheet becomes <b>“Ace’s Catch Log”</b> instead of “My Catch Log”, with your own name in Ace's place. It's entirely optional: leave the box blank and nothing changes, clear it later and the title goes back to “My Catch Log”. Like everything else in the app, your name is stored only on your device, nowhere else. On a phone, use <b>Add to Home Screen</b> to launch it like an app.</p>
-      <p class="sheet-note"><b>Units.</b> Under the name box sit two menus. <b>Catch size</b> switches length and weight between <b>inches and pounds</b> and <b>centimetres and kilograms</b> — it changes both the way a catch reads on its card and popup <i>and</i> the boxes on the <b>+ Catch</b> form, which become a single <b>cm</b> box and a single <b>kg</b> box. <b>Distance</b> switches a run between <b>statute miles (sm)</b> and <b>nautical miles (nm)</b>: the figure on a <b>Compass</b> leg, the distance in the <b>MARK</b> banner, and the length of a recorded <b>track</b>. Distances already printed as a <b>pair</b> — the <span class="g-emph">sm/nm</span> in an offshore pin's popup and in its drop list — carry both units whichever you pick, so nothing is hidden there. Short distances stay in <b>feet</b> up to 1000 ft either way, because that is the scale a boat is handled at.</p>
+      <p class="sheet-note"><b>Units.</b> At the <b>foot of My Log</b>, just past the end of your catch list — <b>JUMP TO END</b> lands you on them — sit two menus. <b>Catch size</b> switches length and weight between <b>inches and pounds</b> and <b>centimetres and kilograms</b> — it changes both the way a catch reads on its card and popup <i>and</i> the boxes on the <b>+ Catch</b> form, which become a single <b>cm</b> box and a single <b>kg</b> box. <b>Distance</b> switches a run between <b>statute miles (sm)</b> and <b>nautical miles (nm)</b>: the figure on a <b>Compass</b> leg, the distance in the <b>MARK</b> banner, and the length of a recorded <b>track</b>. Distances already printed as a <b>pair</b> — the <span class="g-emph">sm/nm</span> in an offshore pin's popup and in its drop list — carry both units whichever you pick, so nothing is hidden there. Short distances stay in <b>feet</b> up to 1000 ft either way, because that is the scale a boat is handled at.</p>
       <p class="sheet-note">Both menus change only <b>how figures are shown on this device</b>. A catch is always <b>stored</b> in inches and pounds, so switching units back and forth never alters a record, and a <b>backup file</b> written on one setting reads correctly on the other. Note that the size limits in the <b>Season Guide</b> stay in <b>inches</b> whatever you pick — that is the unit FWC writes the regulations in, and a converted limit is not the limit. On a catch card, length reads as inches first with the feet-and-inches equivalent beside it — <b>27.5 inches (2' 3.5")</b> — for the same reason: the inches figure is the one you check against the table.</p>
       <p class="sheet-note">The <b>My Log</b> sheet has two exports. <b>Full backup</b> as <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> carries everything, photos included, along with the spots you added, your edits to built-in spots, your drop labels, and the tide stations you created. Photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. The <b>Log only</b> backup is called <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span>. It is the same data with the <b>photos stripped out</b>, small enough to email or text, so catches restored from this backup have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what the device hasn't seen. If the backup fails, it says exactly which check failed rather than shrugging.</p>
       <p class="sheet-note"><b>Add catches from photos.</b> Fish you photographed but never logged can be brought in a batch at a time. In My Log, tap <b>Choose photos</b> and pick as many as you like — the app reads each photo's <b>own GPS position and its own date and time</b> and offers it to you as a catch to check over. Each one arrives as a card showing the picture, when it was taken, and where, with the tide for that exact moment looked up from NOAA. <b>You name the fish</b> — no photo can say what species it is — and then tap <b>SAVE CATCH</b>, or <b>SKIP</b> to pass it by. <b>SAVE ALL NAMED</b> takes every card you have picked a fish on in one go. Nothing is saved until you say so, and the photos on your phone are never changed, moved or uploaded — they are read on this device and nowhere else.</p>
@@ -3556,7 +3564,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <p class="storage-note" style="text-align:left; margin-top:7px;" id="tideStatus"></p>
 
-    <label class="field-label">Size (optional) <span id="sizeUnitsHint" style="color:var(--muted); font-weight:400;">(inches &amp; pounds)</span></label>
+    <label class="field-label">Size (optional) <span id="sizeUnitsHint" style="color:var(--muted); font-weight:400;">(inches &amp; pounds — change at the foot of My Log)</span></label>
     <div class="field-row">
       <input type="number" id="logLenFt" placeholder="Length: ft" min="0" step="1">
       <input type="number" id="logLenIn" placeholder="+ inches" min="0" step="0.5">
@@ -4557,7 +4565,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 450;
+const BUILD_NUM  = 451;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -9990,8 +9998,13 @@ function sizeUnitsApplyForm(){
   lenIn.style.display = metric ? 'none' : '';
   wtOz.style.display  = metric ? 'none' : '';
   if(metric){ lenIn.value = ''; wtOz.value = ''; }
+  /* v451: the hint names the active pair AND where to change it. Units moved to the foot
+     of My Log, so this line is the discovery point — it is read at the exact moment
+     someone is about to type a length into the unit they didn't want. It wraps to a
+     second line on a narrow phone, which is fine: .field-label is a plain block with no
+     nowrap or ellipsis, so nothing is ever clipped. */
   const hint = document.getElementById('sizeUnitsHint');
-  if(hint) hint.textContent = metric ? '(centimetres & kilograms)' : '(inches & pounds)';
+  if(hint) hint.textContent = (metric ? '(centimetres & kilograms' : '(inches & pounds') + ' — change at the foot of My Log)';
 }
 function setSizeInputs(length, weight){
   sizeUnitsApplyForm();
@@ -12911,11 +12924,15 @@ document.getElementById('shareLogBtn')  .addEventListener('click', ()=> exportBa
    you had actually reached its end. It now stops at the FOOT OF THE CATCH LIST: the tail of
    the last catch is left showing above "Add catches from photos", so the end of the log is
    something you can see rather than something you have to infer. The 56px is that glimpse.
-   Falls back to the old behaviour if the section isn't in the DOM. */
+   Falls back to the old behaviour if the section isn't in the DOM.
+   v451: the target is whatever comes FIRST after the catch list, which is now the Units
+   block rather than "Add catches from photos". Aiming at photoImportSection instead would
+   put Units in that 56px glimpse and push the tail of the last catch off the top — the one
+   thing v437 was fixing. Anything inserted at that seam later must take the target with it. */
 function jumpToLogEnd(){
   const body = document.querySelector('#infoSheet .sheet-body');
   if(!body) return;
-  const target = document.getElementById('photoImportSection');
+  const target = document.getElementById('logUnitsSection') || document.getElementById('photoImportSection');
   if(!target){ body.scrollTo({top: body.scrollHeight, behavior:'smooth'}); return; }
   const delta = target.getBoundingClientRect().top - body.getBoundingClientRect().top;
   const top = Math.max(0, Math.min(body.scrollTop + delta - 56, body.scrollHeight - body.clientHeight));

@@ -7,6 +7,68 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 9:05 PM EDT · v451 · Units Move To The Foot
+------------------------------------------------------------------------------
+Jan asked whether the units menus belonged at the top of My Log or the bottom.
+Bottom, and this build moves them.
+
+WHY
+  Everything else at the top of My Log is either an ACTION on the log (UNDO,
+  JUMP TO END) or a FILTER over it (When caught / Where caught). Units are
+  neither — they are a set-once preference. Sitting up there they cost the
+  catch list a row of screen every single time the sheet opened, on top of an
+  intro paragraph, the name box, two buttons and the deleted-items line. The
+  name box stays where it is: it is one line and it names the header you are
+  reading while you read it.
+
+WHERE THEY WENT
+  The SEAM — immediately after the catch list, above "Add catches from photos",
+  where the sheet stops being your log and starts being things you set up
+  (photos, backups, imports). Styled as a backup-head + backup-sub like its
+  neighbours, with the same .log-filter select row it always used.
+
+  It is not buried: JUMP TO END lands exactly there in one tap from the top.
+
+JUMP TO END HAD TO FOLLOW (the trap in this build)
+  jumpToLogEnd() aimed at #photoImportSection and stopped 56px above it, so the
+  tail of the last catch stayed visible — v437's deliberate fix for overshooting
+  into the backup buttons. Inserting Units at that seam without touching the
+  target would have put the Units block in that 56px glimpse and pushed the last
+  catch off the top, quietly undoing v437. The target is now
+  #logUnitsSection || #photoImportSection — whatever comes FIRST after the list,
+  with the old id as the fallback. ANYTHING inserted at that seam later must
+  take the target with it. Verified at 375px: the last catch's month bar is
+  still showing above the Units heading after a jump.
+
+DISCOVERY MOVED WITH IT
+  Moving a preference down the sheet costs discoverability, so the + Catch
+  form's size hint now names both the active pair and where to change it:
+
+      SIZE (OPTIONAL) (INCHES & POUNDS — CHANGE AT THE FOOT OF MY LOG)
+
+  That line is read at the exact moment someone is about to type a length into
+  the unit they didn't want, which is a better place to learn about the setting
+  than a menu they scrolled past. Jan asked whether phone users see it — they
+  do, and it is not a hover tip: it is a plain <span> inside the .field-label,
+  no media query, no fine-pointer gate, unlike the .fab-tip bubbles which ARE
+  desktop-only. Measured at 375px and 430px, and at 375px with the A control two
+  steps up: it wraps to two lines on a phone and nothing clips or overflows,
+  because .field-label is a plain block with no nowrap and no ellipsis.
+
+ALSO REWORDED
+  - Help > My Log: the Units paragraph now opens "At the foot of My Log, just
+    past the end of your catch list — JUMP TO END lands you on them".
+  - The My Log panel's own intro note, which walks what sits below the list,
+    now reads "...just under it sit Units — inches or centimetres, statute or
+    nautical miles — then Add catches from photos and the two ways to export
+    and import your log."
+  - The new backup-sub under the Units heading repeats the two things worth
+    repeating at the point of use: nothing stored changes and a backup reads
+    correctly either way, and the Season Guide's size limits stay in inches.
+
+No behaviour changed — same two menus, same keys, same conversions as v450.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 8:35 PM EDT · v450 · Inches Lead, Units Are Yours
 ------------------------------------------------------------------------------
 Three things Jan asked for in one go: fish length reads in inches with the
