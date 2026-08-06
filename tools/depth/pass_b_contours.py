@@ -63,10 +63,14 @@ MIN_LEN_DEG = 60.0 / 111320.0  # drop noise specks shorter than 60 m
 # because the edge sits at NAVD88 zero and that is what the rule is about.  Under
 # the old NAVD88 labels this caught the 1 and 2 ft lines; at MLLW the shallowest
 # line is cut 3.25 ft down and no longer hugs the bank, so it is expected to
-# catch nothing — kept, correctly expressed, because it costs nothing and the
-# next person to add a shallower level will need it.
+# catch nothing — except that v459 added the 0 ft line, whose cut is 2.25 ft, so
+# the threshold was lifted to 2.5 to catch it.  It needs catching: the drying
+# edge follows every ripple on every flat in the county and came out of the
+# build with 876 segments over the four blocks around Turnbull, against the 1 ft
+# line's 506.  With the 160 m minimum it lands at 549 — the same weight as the
+# line above it, which is what makes it drawable at z11.
 MIN_LEN_SHOAL = 160.0 / 111320.0
-SHOAL_CUT_FT = 2.0
+SHOAL_CUT_FT = 2.5
 Q = 100000                     # coordinate quantum: 1e-5 deg ≈ 1.1 m
 
 # NOAA station 8721138 (Ponce de Leon Inlet) published datums: MLLW 2.94 ft,
@@ -88,8 +92,23 @@ NAVD88_ABOVE_MLLW = 2.25
 # as an outline.  It is one step off 3 ft but a far quieter line: it sits out in
 # open basin water rather than along the ripple at the water's edge, and the
 # screen-length cull (DEPTH_MIN_PX in the app) keeps it off the narrow Halifax.
+# THE 0 FT LINE (v459) is the DRYING EDGE — the bottom exactly at chart datum,
+# so everything inside it is out of the water at dead low.  The app labels it
+# "dries", not "0 ft".  It was added because the MLLW re-cut left Turnbull Bay
+# and its creek nearly bare, and the measurement explains why: the survey puts
+# the median of that water at -0.34 ft MLLW and 54.8% of it BELOW zero, with only
+# 23% deeper than the 1 ft line.  Under NAVD88 the same water spread across the
+# 1/2/3/4 ft lines (32/19/20/15%), which is why it used to look well drawn.  So
+# the bay was never full of contours — it was full of contours describing water
+# that is not there at low tide, and the honest line to draw is the edge itself.
+# CAUTION, and it is written in the app's help too: this line is least reliable
+# exactly where it is most interesting.  Green topobathy lidar gets no return
+# through tannic water, so deep holes drop out of the measured set and are
+# interpolated off the bar around them — which is why the survey calls Crook's
+# Corner, inside this bay, a drying flat when Jan sounds 8-10 ft there.  The line
+# is right about the flats and wrong about the holes and looks identical in both.
 TIERS = {
-    0: [4, 6, 12, 20, 30, 50, 100, 200],
+    0: [0, 4, 6, 12, 20, 30, 50, 100, 200],
     1: [3, 9, 16, 25, 40, 60, 80, 150],
     2: [2, 8, 10, 14, 18, 35, 70],
     3: [1, 5, 7, 11, 90, 120, 140, 160, 180],

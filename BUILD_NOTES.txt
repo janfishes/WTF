@@ -7,6 +7,64 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-06 · 3:05 AM EDT · v459 · A Line That Says Dries
+------------------------------------------------------------------------------
+Jan, on v458: "turnbull bay and creek lost virtually all contours." True, and
+the measurement explains it rather than excusing it. Sampled straight off the
+source rasters over Turnbull Bay and its creek: the median depth there is
+-0.34 ft MLLW and 54.8% of that water is BELOW zero at dead low, with only 23%
+deeper than the 1 ft line. Under NAVD88 the same water spread evenly across the
+1/2/3/4 ft lines (32/19/20/15%), which is exactly why it used to look well
+drawn. So the bay was never full of contours — it was full of contours
+describing water that is not there at low tide. Count in that box: 149 lines
+under v457, 89 under v458.
+
+TWO THINGS ADDED, and between them the bay is drawn again.
+
+1. THE 0 FT LINE — the drying edge, the bottom exactly at chart datum, so
+   everything inside it is out of the water at dead low. The app labels it
+   "dries", not "0 ft": it is a state, not a measurement, and "0 ft" reads like
+   something you could float in. It goes in tier 0 (draws from z11).
+   It needed the long-minimum rule to be usable. The drying edge follows every
+   ripple on every flat in the county: 876 segments over the four blocks around
+   Turnbull straight out of the build, against the 1 ft line's 506. SHOAL_CUT_FT
+   went 2.0 -> 2.5 so the 0 ft cut (2.25 ft below NAVD88) earns the 160 m
+   minimum instead of the 60 m one, which brings it to 549 — the same weight as
+   the line above it. Without that it is a stain, not a line.
+
+2. THE 1 FT LINE PROMOTED, tier 3 -> tier 1, so it draws from z13 instead of
+   z15. Only 23% of Turnbull is deeper than 1 ft, which means the 1 ft line IS
+   that bay's interior and it was invisible at every zoom anyone would look at
+   it from. It stays OUT of tier 0: at z12 it is still the busiest line in this
+   water (283 segments over the Halifax against the 2 ft line's 186) and it
+   would fill the river solid — the same reason 3 ft was kept out before the
+   datum moved. Checked at z13 after: the Halifax is busier but still reads as a
+   river with structure rather than a smear.
+
+County-wide the set went 8,985 -> 9,930 lines (0 ft contributes 945, and the
+1 ft promotion adds no data at all — it only changes when the existing 1,091
+lines draw).
+
+THE HONEST PART, and it is in the app's help now, not just here. This line is
+least reliable exactly where it is most interesting. The shallow water in these
+grids is mapped by green lidar from an aircraft, which gets no return through
+tannic water — so a deep hole drops out of the measured set and is interpolated
+off the bar around it. That is precisely why the survey calls CROOK'S CORNER,
+inside this same Turnbull Bay, a drying flat when Jan sounds 8-10 ft there that
+never fails. The line is right about the flats and wrong about the holes and
+looks identical in both. The Depth Lines help now says so in those words, names
+Turnbull Bay and the 8-10 ft, and ends "trust the dries line where you can see
+clean sand, and trust your sounder everywhere else." The tide board's help got
+the same caveat, with the added point that a sounding you enter yourself always
+outranks the survey on those cards.
+
+DEPTH_DATA_V 5 -> 6, and the tide board went to build 17 with the same six
+blocks re-copied and the same version. One behaviour change there, and it
+reverses something written in build 16's note: the board CAN report "dries out"
+from the survey again, because a 0 ft contour now exists for it to interpolate
+against. Before this build the shallowest thing it could see was 1 ft.
+
+------------------------------------------------------------------------------
 Build 2026-08-06 · 2:10 AM EDT · v458 · Depth Lines Move To MLLW
 ------------------------------------------------------------------------------
 One spot, three numbers. The contour labels were raw NAVD88, the tide board

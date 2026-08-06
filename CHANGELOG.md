@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-06
 
+- **v459** — A Line That Says Dries
 - **v458** — Depth Lines Move To MLLW
 
 ## 2026-08-05

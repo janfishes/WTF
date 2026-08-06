@@ -3505,6 +3505,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>Offshore the lines change their step</b>, because a one-foot line means nothing once you are off the beach. The <b>fathom curves</b> are drawn as the heavy lines out here — <b>60 ft is ten fathoms</b>, <b>120 is twenty</b>, <b>180 is thirty</b> — so the ten-fathom curve runs down the whole beach from Flagler to Titusville <b>from the widest view onward</b>, labelled the length of it, and you can follow it to the grounds without zooming in and hunting for it. Out past the three-mile line the contours open up to <b>60, 80, 100, 120, 150 and 200 ft</b>, and beyond that they carry the deep water: <b>250, 300, 400, 600, 900, 1500 and 2400 ft</b> wide out, with <b>10 ft steps through the 210-275 ft band</b> — the ledge depths — as you zoom in. That is the <b>shelf break</b> drawn as contours, and the offshore waypoints sit right on it: bring up <b>Steeples (North)</b> or the <b>South Ledge</b> and you can see the ledge itself running under the pin, the drop it faces and which way it lies. Coverage runs east past every offshore spot in the app — past <b>Rolldown</b>, the furthest mark on the chart — and about <b>13 miles beyond it</b> down the slope, which is as far out as this is worth drawing. The lines are pale cyan over the painted blue ocean out there the same as they are over the photo inshore.</p>
       <p class="sheet-note"><b>Where the numbers come from.</b> The contours are built from <b>NOAA's own surveys</b> and stored <b>in the app</b>, so they draw with the signal off, anywhere in the county and all the way out to the offshore grounds, with nothing to download first. The bottom comes from <b>NOAA BlueTopo</b> — the Office of Coast Survey's "best available" compiled bathymetry for navigable US water, which already includes the <b>2022 Indian River Lagoon lidar</b> — with <b>NOAA NCEI's CUDEM</b> survey filling the skinny water BlueTopo does not reach. Only water gets lines: land, spoil islands and the inland ponds are masked off. Offshore the surveys get coarser the further out you go, so the deep lines are the <b>shape</b> of the bottom rather than a survey of it — the ledges are drawn from the close-in surveys, the 2,000 ft lines from the wide ones.</p>
       <p class="sheet-note"><b>Be advised: these are not chart soundings, and this is not for navigation.</b> The depths are to <b>mean lower low water</b> — the same zero a nautical chart uses, and the same one the tide heights on the Tides tab are measured from. A line marked <span class="g-emph">3 ft</span> is about three feet of water <b>at dead low</b>, and less than that on a hard north wind. That is the datum only: these are <b>survey grids, not soundings</b>, they are years old in places, and this coast <b>shoals and moves</b>. Use these lines to find an edge, a hole or a drop worth fishing — read your <b>depth sounder and chartplotter</b>, not this app, for the water under your boat.</p>
+      <p class="sheet-note"><b>The line marked <span class="g-emph">dries</span></b> is the bottom exactly at low-water level, so everything inside it is out of the water at dead low. It is the most useful line on a flat and the <b>least trustworthy one in a dark creek</b>, and it is worth knowing why: the survey's shallow water is mapped by <b>laser from an aircraft</b>, which gets no return through tannic water, so a deep hole can drop out of the survey and be filled in from the bar around it. That is exactly what happened in <b>Turnbull Bay</b> — the survey calls one hole there a drying flat where there is <b>8 to 10 ft</b> that never fails. So: trust the <span class="g-emph">dries</span> line where you can see clean sand, and trust your <b>sounder</b> everywhere else.</p>
       <p class="sheet-note"><b>The lines moved in Build 458.</b> They used to be measured to <b>NAVD88</b>, roughly average water level, which ran <b>2.25 ft deeper</b> than a chart — an old <span class="g-emph">6 ft</span> line was really about <span class="g-emph">3¾ ft</span> at dead low. So the numbers here now read <b>shallower than they did</b>, and they finally agree with your chartplotter and your phone. If a spot you know reads about two feet less than you remember, that is this change and not a shoal.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mapview"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite / Hi Res &amp; ICW / Street Map<span class="ht-caret">▸</span></button>
@@ -4646,7 +4647,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/06/26';                          // map stamp form
-const BUILD_NUM  = 458;
+const BUILD_NUM  = 459;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -15272,8 +15273,8 @@ themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); 
    imagery. Labels are drawn here rather than baked in, so they stay upright,
    stay the same size at every zoom, and can step aside from each other. */
 
-const DEPTH_DATA_V = 5;         // bump to bust the on-device cache after a rebuild
-                                // 5 = the v458 MLLW re-cut. The tide board ships
+const DEPTH_DATA_V = 6;         // bump to bust the on-device cache after a rebuild
+                                // 6 = v459's 0 ft drying line. The tide board ships
                                 // six of these blocks and must sit on the same v.
 const DEPTH_DIR = 'depth/';
 // Which blocks exist, and the exact box each one covers. Written by the offline
@@ -15377,8 +15378,16 @@ const DEPTH_TIER_MINZOOM = [11, 13, 14, 15];
    line in this water is now 1 ft (283 in that same view) and it stays in tier 3
    for exactly the reason 3 ft used to — at z12 it would fill the river solid.
    2 ft exists only inshore, so like the fathom entries this cannot leak across
-   the -80.3 seam. Reverse it by deleting the 2:0 entry if the rivers read busy. */
-const DEPTH_TIER_PROMOTE = { 2:0, 60:0, 120:0, 180:0, 70:1, 90:1 };
+   the -80.3 seam. Reverse it by deleting the 2:0 entry if the rivers read busy.
+   1 FT JOINED IT IN v459, promoted from tier 3 to tier 1 (z15 -> z13). Jan's
+   report was that Turnbull Bay and its creek had lost virtually all their
+   contours. The 0 ft drying line added in the same build does most of the work
+   there, but only 23% of that bay is deeper than 1 ft, so the 1 ft line IS the
+   bay's interior and it was not drawing until z15. It stays OUT of tier 0: at
+   z12 it is still the busiest line in this water — 283 segments over the
+   Halifax against the 2 ft line's 186 — and it would fill the river solid,
+   which is the same reason 3 ft was kept out before the datum moved. */
+const DEPTH_TIER_PROMOTE = { 1:1, 2:0, 60:0, 120:0, 180:0, 70:1, 90:1 };
 
 /* WIDE-ZOOM OFFSHORE (v409). Below z11 the layer used to draw nothing at all,
    which is right for the rivers — the Halifax is a few pixels wide out there
@@ -15718,7 +15727,9 @@ const DepthLayer = L.Layer.extend({
         prevX = X; prevY = Y; prevIn = inside;
       }
       if(visible < MIN_RUN || !cand.length) continue;
-      const txt = ln.lv + ' ft';
+      // The drying edge is a state, not a depth: "0 ft" reads like a
+      // measurement and "dries" reads like the warning it is.
+      const txt = ln.lv === 0 ? 'dries' : ln.lv + ' ft';
       items.push({ t:ln.t, lv:ln.lv, txt:txt, w:ctx.measureText(txt).width + 11,
                    cand:cand, last:-1e9, count:0 });
     }
