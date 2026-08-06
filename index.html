@@ -3394,7 +3394,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-h-credits"><span class="ht-g">ⓘ</span>Map Credits<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-h-credits">
-      <p class="sheet-note"><b>Map credits.</b> The bottom-right corner has a small <b>ⓘ</b> cookie. Tap it and the map credits open above it — <b>USGS</b>, <b>USDA NAIP</b> and <b>Sentinel-2/EOX</b> on the satellite views, <b>OpenStreetMap</b> on the street map — and tapping it again, or tapping open water, hides the credits. With the <b>depth contours</b> up the credits also carry <b>NOAA Office of Coast Survey</b> (BlueTopo) and <b>NOAA NCEI</b> (CUDEM), and the reminder that those depths are at <b>average water level</b> and <b>not for navigation</b>.</p>
+      <p class="sheet-note"><b>Map credits.</b> The bottom-right corner has a small <b>ⓘ</b> cookie. Tap it and the map credits open above it — <b>USGS</b>, <b>USDA NAIP</b> and <b>Sentinel-2/EOX</b> on the satellite views, <b>OpenStreetMap</b> on the street map — and tapping it again, or tapping open water, hides the credits. With the <b>depth contours</b> up the credits also carry <b>NOAA Office of Coast Survey</b> (BlueTopo) and <b>NOAA NCEI</b> (CUDEM), and the reminder that those depths are at <b>low water</b> and <b>not for navigation</b>.</p>
       </div>
 
       <div class="subhead">Map Filter Buttons</div>
@@ -3463,7 +3463,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="help-body" id="hb-tides">
       <p class="sheet-note">The <svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> <b>Tides</b> action button lets you tap anywhere on the map to drop a Tide pin — you get a 3-day high/low forecast, built from official NOAA predictions for Ponce Inlet stored on your device. Instead of just borrowing the nearest station's timing, the app measures how far your pin sits along the same waterway and interpolates the tide lag by distance between the calibrated stations on that arm — or extrapolates past the last one when you're farther upstream. Each forecast carries a confidence badge: <i>High</i> when you're on or between calibrated stations, and <i>Low</i> (with a ⚠) when the timing is extrapolated, off the mapped channel, or in a shallow wind-driven reach. Again, no internet is needed.</p>
       <p class="sheet-note"><b>Tapping Tides also brings up the tide gauge pins on the map.</b> They are the marks your forecast is timed from, so they show while it is lit. Tap on a tide gauge to read its offset (lag times). Heights are scaled as well as times: the tide swings about 2.7 ft at Ponce Inlet but only half a foot at Ormond and five inches at Turtle Mound, so the app seeks to match the water you're actually on. Each waterway has its own zero-lag reference, and the app carries a full year of official NOAA predictions for both, updated annually. The <b>Ponce Inlet</b> gauge anchors everything north up the Halifax River and the <b>Ponce De Leon Inlet South</b> gauge anchors the Indian River North and Mosquito Lagoon. Every other gauge is timed as an offset from whichever of those two its waterway belongs to. Side waters — <b>Spruce Creek</b>, <b>Rose Bay</b> and <b>Turnbull Bay</b> — are followed as their own tributaries instead of being flattened onto the main river, so a spot up a creek is timed by the distance the tide really travels to reach it. <b>Turnbull Bay</b> is followed the way the water gets there — up the Halifax, into Spruce Creek, through Three Bridges and down the bay — not across from the Indian River. The bay has no measured gauge at present, so forecasts up that run are rough estimates and wear the low-confidence ⚠ — time the tide at your dock and save it under <b>Create &amp; Calibrate Tide Stations</b> and nearby forecasts pick up your timing. The Indian River North is measured the whole way down: <b>New Smyrna Beach</b>, <b>Packwood Place</b> and <b>Turtle Mound</b> are all real gauges, so spots between the inlet and Turtle Mound are timed by interpolation rather than guesswork. South of Turtle Mound there is nothing to measure against for a long way, so once you get more than about five miles past it the app stops guessing: it shows raw Ponce Inlet times, tells you it has done so, and flags the forecast low confidence. In any case, always read the water depth conditions rather than the clock.</p>
-      <p class="sheet-note"><b>A tide height is not a depth.</b> The <span class="g-emph">3.4 ft</span> beside a high or low is feet of tide above <b>mean lower low water</b> &mdash; how far the water has risen off its own zero &mdash; not how much water is under your boat. A <span class="g-emph">0.5 ft</span> low does not mean six inches to run in, and it is not a number to add to a depth line either: the <b>Depth Lines</b> topic below explains why (those lines are measured to a different datum, 2.25 ft higher). For the water under the boat, read your <b>depth sounder</b>.</p>
+      <p class="sheet-note"><b>A tide height is not a depth.</b> The <span class="g-emph">3.4 ft</span> beside a high or low is feet of tide above <b>mean lower low water</b> &mdash; how far the water has risen off its own zero &mdash; not how much water is under your boat. A <span class="g-emph">0.5 ft</span> low does not mean six inches to run in. Since Build 458 the <b>Depth Lines</b> are measured from that same zero, so the two numbers are at last on one datum &mdash; but a depth line is a <b>survey years old in places</b> on a coast that shoals and moves, and neither number knows what the wind is doing today. For the water under the boat, read your <b>depth sounder</b>.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-waves"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><use href="#waveArt"></use></svg> Waves<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-waves">
@@ -3504,7 +3504,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>What you see changes with the zoom</b>, so the lines never bury the picture. Wide out, only the <b>heavy lines</b> draw — <b>4, 6, 12, 20, 30, 50, 100 and 200 ft</b> — which is the shape of the water: the run of the channel, the deep holes, the drop off the beach, and with the <b>4 ft</b> line in that set the shallow west-side bays — <b>Turnbull</b>, <b>Rose</b>, <b>Strickland</b>, the <b>Tomoka Basin</b> — show their outline from the wide view instead of reading as empty water. Zoom in a step and the <b>3 and 9 ft</b> lines join them, the ones that fence the flats. A step closer brings the <b>2 ft steps</b>, and at the closest zooms <b>every single foot</b> from 1 to 12 draws — fine enough to pick out the one-foot lip a redfish sits on. Zoom back out and they thin away again. <b>Every line carries its own depth wherever there is room to print it</b>, repeated along the long ones so you are never far from a number; where the water is busy the <b>heavier lines are numbered first</b>, and at the closest zooms the every-foot lines take turns so the chart does not disappear under its own tags. The lines draw <b>under</b> your pins, your track and the compass, so nothing you put on the chart is ever hidden by them.</p>
       <p class="sheet-note"><b>Offshore the lines change their step</b>, because a one-foot line means nothing once you are off the beach. The <b>fathom curves</b> are drawn as the heavy lines out here — <b>60 ft is ten fathoms</b>, <b>120 is twenty</b>, <b>180 is thirty</b> — so the ten-fathom curve runs down the whole beach from Flagler to Titusville <b>from the widest view onward</b>, labelled the length of it, and you can follow it to the grounds without zooming in and hunting for it. Out past the three-mile line the contours open up to <b>60, 80, 100, 120, 150 and 200 ft</b>, and beyond that they carry the deep water: <b>250, 300, 400, 600, 900, 1500 and 2400 ft</b> wide out, with <b>10 ft steps through the 210-275 ft band</b> — the ledge depths — as you zoom in. That is the <b>shelf break</b> drawn as contours, and the offshore waypoints sit right on it: bring up <b>Steeples (North)</b> or the <b>South Ledge</b> and you can see the ledge itself running under the pin, the drop it faces and which way it lies. Coverage runs east past every offshore spot in the app — past <b>Rolldown</b>, the furthest mark on the chart — and about <b>13 miles beyond it</b> down the slope, which is as far out as this is worth drawing. The lines are pale cyan over the painted blue ocean out there the same as they are over the photo inshore.</p>
       <p class="sheet-note"><b>Where the numbers come from.</b> The contours are built from <b>NOAA's own surveys</b> and stored <b>in the app</b>, so they draw with the signal off, anywhere in the county and all the way out to the offshore grounds, with nothing to download first. The bottom comes from <b>NOAA BlueTopo</b> — the Office of Coast Survey's "best available" compiled bathymetry for navigable US water, which already includes the <b>2022 Indian River Lagoon lidar</b> — with <b>NOAA NCEI's CUDEM</b> survey filling the skinny water BlueTopo does not reach. Only water gets lines: land, spoil islands and the inland ponds are masked off. Offshore the surveys get coarser the further out you go, so the deep lines are the <b>shape</b> of the bottom rather than a survey of it — the ledges are drawn from the close-in surveys, the 2,000 ft lines from the wide ones.</p>
-      <p class="sheet-note"><b>Be advised: these are not chart soundings, and this is not for navigation.</b> The depths are measured to <b>NAVD88</b> — near enough to <b>average water level</b> — while a nautical chart's soundings are to <b>mean lower low water</b>, which around Ponce Inlet runs <b>2.25 ft lower</b> than what you see here — NOAA's own figure for the tide station at the inlet. So a line marked <span class="g-emph">3 ft</span> has about <b>9 inches</b> of water over it at dead low, and less than that on a hard north wind. Surveys are also years old in places and this coast <b>shoals and moves</b>. Use these lines to find an edge, a hole or a drop worth fishing — read your <b>depth sounder and chartplotter</b>, not this app, for the water under your boat.</p>
+      <p class="sheet-note"><b>Be advised: these are not chart soundings, and this is not for navigation.</b> The depths are to <b>mean lower low water</b> — the same zero a nautical chart uses, and the same one the tide heights on the Tides tab are measured from. A line marked <span class="g-emph">3 ft</span> is about three feet of water <b>at dead low</b>, and less than that on a hard north wind. That is the datum only: these are <b>survey grids, not soundings</b>, they are years old in places, and this coast <b>shoals and moves</b>. Use these lines to find an edge, a hole or a drop worth fishing — read your <b>depth sounder and chartplotter</b>, not this app, for the water under your boat.</p>
+      <p class="sheet-note"><b>The lines moved in Build 458.</b> They used to be measured to <b>NAVD88</b>, roughly average water level, which ran <b>2.25 ft deeper</b> than a chart — an old <span class="g-emph">6 ft</span> line was really about <span class="g-emph">3¾ ft</span> at dead low. So the numbers here now read <b>shallower than they did</b>, and they finally agree with your chartplotter and your phone. If a spot you know reads about two feet less than you remember, that is this change and not a shoal.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-mapview"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> Topo Satellite / Hi Res &amp; ICW / Street Map<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-mapview">
@@ -4644,8 +4645,8 @@ function showToast(msg, duration=2400, html){
    build spelled out by hand in five places, which is why those messages still said
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
-const BUILD_DATE = '08/05/26';                          // map stamp form
-const BUILD_NUM  = 457;
+const BUILD_DATE = '08/06/26';                          // map stamp form
+const BUILD_NUM  = 458;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-05 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -15219,19 +15220,45 @@ themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); 
    plateau is smoothed harder and simplified harder than the ledges, where the
    wiggle in the line IS the ledge.
 
-   Two things follow from NAVD88 that the help and the toast both say out loud:
-   these are depths at roughly AVERAGE water level, not at chart datum, and this
-   is a fishing layer, not a navigation layer.
+   THE LINES ARE AT MLLW SINCE v458 (2026-08-06). They used to be at NAVD88 —
+   near enough average water level — which meant a line marked 6 ft held about
+   3.75 ft at dead low, and the help had to teach that subtraction. Jan's phone
+   chart and the tide board both read MLLW, so one spot showed three numbers and
+   only this app's needed arithmetic on the water. His call was to move.
+
+   It could not be done by relabelling. The lines sat at INTEGER NAVD88 feet, so
+   subtracting 2.25 lands every one of them on a quarter foot (6 -> 3.75) and
+   sends the two shallowest negative (1 -> -1.25): nothing honest left to print.
+   So the blocks were re-cut. Each level is contoured at `label + 2.25` feet
+   below NAVD88 and STORED as the label — a 3 ft line is cut at 5.25 and written
+   as 3 — which is why the label set below is unchanged and none of the tier
+   tables, the promotion table, the wide-zoom set or the `lv % 5` label sort had
+   to move. Keep that property: change the label set and all of those need a
+   second look. The build lives in tools/depth/, the datum note is at the top of
+   pass_b_contours.py, and the offshore pass had to be re-cut in the same change
+   or the -80.3 seam would step by 2.25 ft.
 
    The offset is 2.25 ft and it is MEASURED, not a guess: NOAA's published datums
    for station 8721138 put MLLW at 2.94 ft and NAVD88 at 5.19 ft on the station
-   datum, so NAVD88 sits 2.25 ft ABOVE chart datum. Subtract it to get depth at
-   dead low. The help said "a foot or two" until v455, which was not just vague
-   but wrong in the dangerous direction — it implied a 3 ft line held about 2 ft
-   at low water when the real figure is 9 inches. If this app ever gets a second
-   depth station, re-read that station's own datums; the offset is local and
-   there is no reason it holds elsewhere on the coast. The tide board carries the
-   same constant as NAVD88_ABOVE_MLLW.
+   datum, so NAVD88 sits 2.25 ft ABOVE chart datum. It is now spent in the build
+   rather than carried in the app. If this app ever gets a second depth station,
+   re-read that station's own datums; the offset is local and there is no reason
+   it holds elsewhere on the coast. (History worth keeping: the help said "a foot
+   or two" until v455, which was wrong in the dangerous direction — it implied a
+   3 ft line held about 2 ft at low water when the real figure was 9 inches.
+   v458 retired the problem rather than the wording.)
+
+   What did NOT change: this is still a fishing layer and not a navigation layer,
+   the surveys are still years old in places, and the help and the toast still
+   say so. The lines now agree with a chart's soundings on DATUM; they are still
+   not chart soundings.
+
+   Two consequences that are correct but visible on the water: the old 1 and 2 ft
+   NAVD88 lines have no MLLW label at all — that bottom dries at low water — so
+   shorelines carry fewer lines now; and every label inherits roughly the shape
+   the line 2-3 ft deeper used to have, so the shallow lines sit further off the
+   bank. County-wide the set went from 10,886 lines to 8,985, 2.4 MB to 2.1 MB.
+   The level SET is byte-for-byte the same 69 values it was before.
 
    Land is masked three ways over: elevation must be below the datum, the pixel
    must sit in a body of water that connects to BlueTopo's surveyed water (a
@@ -15240,12 +15267,14 @@ themeScrim.addEventListener('click', ()=>{ themeSheet.classList.remove('open'); 
    own coverage counts as water on its own account.
 
    Delivery is vector, not pre-rendered tiles: 29 blocks of delta-encoded
-   integer polylines, 2.4 MB for the county and the ocean off it, fetched only for
+   integer polylines, 2.1 MB for the county and the ocean off it, fetched only for
    the blocks you actually look at and then cache-first forever like the
    imagery. Labels are drawn here rather than baked in, so they stay upright,
    stay the same size at every zoom, and can step aside from each other. */
 
-const DEPTH_DATA_V = 4;         // bump to bust the on-device cache after a rebuild
+const DEPTH_DATA_V = 5;         // bump to bust the on-device cache after a rebuild
+                                // 5 = the v458 MLLW re-cut. The tide board ships
+                                // six of these blocks and must sit on the same v.
 const DEPTH_DIR = 'depth/';
 // Which blocks exist, and the exact box each one covers. Written by the offline
 // build (pass_b_contours.py inshore, pass_c_offshore.py from -80.3 out) — an
@@ -15333,7 +15362,23 @@ const DEPTH_TIER_MINZOOM = [11, 13, 14, 15];
    there is no 60 ft of water anywhere inshore of the beach in this county, so a
    depth rule cannot leak into the lagoon and cannot step at the -80.3 seam the
    way a per-block rule would. */
-const DEPTH_TIER_PROMOTE = { 60:0, 120:0, 180:0, 70:1, 90:1 };
+/* THE 2 FT LINE (v458). The MLLW re-cut re-opened the exact hole v408 closed.
+   v408 put 4 ft in tier 0 because the shallow west-side bays — Turnbull, Rose,
+   Strickland, Tomoka Basin — ran 2-3 ft over most of their area and had nothing
+   to draw until z13, so they read as empty water. Those depths were NAVD88; at
+   MLLW the same bays run about 0-1 ft, so the 4 ft line no longer touches them
+   and Strickland Bay went blank at z13 again — measured against v457 in the
+   before/after shots, not guessed.
+   The line that used to outline those bays was 4 ft NAVD88, which IS the 2 ft
+   MLLW line — 1.75 ft of it, near enough — so the fix is to promote 2 ft into
+   the frame, the same promotion v408 made, expressed in the new datum. It is
+   also the same weight of line: over the Halifax at z12 the old tier-0 4 ft
+   line put 198 segments in view and the new 2 ft line puts 186. The busiest
+   line in this water is now 1 ft (283 in that same view) and it stays in tier 3
+   for exactly the reason 3 ft used to — at z12 it would fill the river solid.
+   2 ft exists only inshore, so like the fathom entries this cannot leak across
+   the -80.3 seam. Reverse it by deleting the 2:0 entry if the rivers read busy. */
+const DEPTH_TIER_PROMOTE = { 2:0, 60:0, 120:0, 180:0, 70:1, 90:1 };
 
 /* WIDE-ZOOM OFFSHORE (v409). Below z11 the layer used to draw nothing at all,
    which is right for the rivers — the Halifax is a few pixels wide out there
@@ -15434,7 +15479,7 @@ const DepthLayer = L.Layer.extend({
   // bathymetry credit — and the caveat that belongs beside any depth figure —
   // appear only while the contours are up, and leave with them.
   getAttribution: function(){
-    return 'Bathymetry: <a href="https://www.nauticalcharts.noaa.gov/" target="_blank" rel="noopener noreferrer">NOAA Office of Coast Survey</a> (BlueTopo) / <a href="https://www.ncei.noaa.gov/" target="_blank" rel="noopener noreferrer">NOAA NCEI</a> (CUDEM) &mdash; depths in feet at average water level<b class="nav-warn">Not for navigation</b>';
+    return 'Bathymetry: <a href="https://www.nauticalcharts.noaa.gov/" target="_blank" rel="noopener noreferrer">NOAA Office of Coast Survey</a> (BlueTopo) / <a href="https://www.ncei.noaa.gov/" target="_blank" rel="noopener noreferrer">NOAA NCEI</a> (CUDEM) &mdash; depths in feet at mean lower low water<b class="nav-warn">Not for navigation</b>';
   },
   onAdd: function(m){
     this._map = m;
@@ -15753,7 +15798,7 @@ function depthSetOn(on, quiet){
         ? 'Depth Lines on \u2014 zoom in to see them.<b class="nav-warn">Not for navigation</b>'
         : dz < DEPTH_TIER_MINZOOM[0]
         ? 'Depth Lines on \u2014 offshore contours. Zoom in for the rivers and lagoon.<b class="nav-warn">Not for navigation</b>'
-        : 'Depth Lines on \u2014 feet at average water level.<b class="nav-warn">Not for navigation</b>',
+        : 'Depth Lines on \u2014 feet at low water (MLLW).<b class="nav-warn">Not for navigation</b>',
         3600, true);
     }
   }else{

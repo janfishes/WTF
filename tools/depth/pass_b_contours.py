@@ -1,10 +1,35 @@
 #!/usr/bin/env python
-"""Pass B: depth contours in FEET for the WTF app.
+"""Pass B: depth contours in FEET at MLLW for the WTF app.
 
 BlueTopo (4 m / 8 m, the "best available" compiled bathymetry, 2022 IRL lidar
 included) is authoritative; CUDEM 1/9" topobathy fills the shallows BlueTopo
 does not reach, blended across BlueTopo's edge so the seam doesn't ladder.
 Both are metres on NAVD88, so no vertical shift is needed between them.
+
+DATUM (changed 2026-08-06, WTF v458 / board build 16).  The grids are NAVD88 and
+always will be; what changed is the datum the LINES ARE CUT AT.  Through v457
+the levels were integer feet below NAVD88 — near enough average water level —
+so a line marked "6 ft" held about 3.75 ft at dead low and the app had to say so
+in its help.  Jan's phone chart and the tide board both read MLLW, so one spot
+showed three numbers and only WTF's needed arithmetic on the water.
+
+The fix is NOT a relabel: subtracting 2.25 from an integer NAVD88 level lands on
+a quarter foot (6 -> 3.75) and sends the two shallowest lines negative
+(1 -> -1.25), so there is nothing honest to print.  Instead every level is CUT at
+`label + NAVD88_ABOVE_MLLW` in NAVD88 feet and STORED as the label.  A "3 ft"
+line is cut at 5.25 ft below NAVD88 and written to the block as 3.
+
+Because the label SET is unchanged, nothing downstream had to move: the app's
+tier table, DEPTH_TIER_PROMOTE (the fathom-curve promotion), DEPTH_WIDE_LEVELS,
+DEPTH_MIN_PX and the label sort's `lv % 5` round-number preference are all keyed
+on these same integers and keep their meaning.  Keep it that way — if a future
+build changes the label set, walk that list in index.html first.
+
+Two consequences that are correct but visible:
+  * The old 1 and 2 ft NAVD88 lines have no MLLW label (that bottom dries at low
+    water) and simply cease to exist.  Shorelines carry fewer lines now.
+  * Every label inherits roughly the geometry of the line 2-3 ft deeper than the
+    one that used to wear it, so the shallow lines sit further off the bank.
 
 Output: one JSON block per 0.25 degree, delta-encoded integer polylines.
 """
@@ -32,12 +57,28 @@ SIGMA = 2.5                    # cells of gaussian smoothing (~17 m)
 BLEND_CELLS = 15               # BlueTopo→CUDEM feather at BlueTopo's edge
 RDP_TOL_DEG = 2.0 / 111320.0   # ≈ 2 m — under one z16 pixel
 MIN_LEN_DEG = 60.0 / 111320.0  # drop noise specks shorter than 60 m
-# The 1 ft and 2 ft lines run along the water's edge, where a flat's own ripple
-# breaks them into thousands of hairs; they have to earn their place with length.
+# A contour cut close to the drying edge runs along the waterline, where a flat's
+# own ripple breaks it into thousands of hairs; those have to earn their place
+# with length.  The threshold is on the CUT depth below NAVD88, not on the label,
+# because the edge sits at NAVD88 zero and that is what the rule is about.  Under
+# the old NAVD88 labels this caught the 1 and 2 ft lines; at MLLW the shallowest
+# line is cut 3.25 ft down and no longer hugs the bank, so it is expected to
+# catch nothing — kept, correctly expressed, because it costs nothing and the
+# next person to add a shallower level will need it.
 MIN_LEN_SHOAL = 160.0 / 111320.0
+SHOAL_CUT_FT = 2.0
 Q = 100000                     # coordinate quantum: 1e-5 deg ≈ 1.1 m
 
-# Feet levels.  1 ft steps through the lagoon range, opening out offshore.
+# NOAA station 8721138 (Ponce de Leon Inlet) published datums: MLLW 2.94 ft,
+# NAVD88 5.19 ft on the station datum, so NAVD88 stands 2.25 ft ABOVE chart
+# datum.  MEASURED, not a guess, and LOCAL: if this layer ever reaches another
+# tide station, re-read that station's own datums before assuming it holds.
+# The app and the tide board carry the same constant.
+NAVD88_ABOVE_MLLW = 2.25
+
+# Feet levels — LABELS, at MLLW.  Each is cut at label + NAVD88_ABOVE_MLLW feet
+# below NAVD88 and stored as the label; see the datum note at the top.
+# 1 ft steps through the lagoon range, opening out offshore.
 # tier 0 draws from z11, tier 1 from z13, tier 2 from z14, tier 3 from z15.
 # The 3 ft line is the busiest thing in this water, so it is NOT in tier 0: at
 # z12 the Halifax is ten pixels wide and its own 3 ft wiggle filled it solid.
@@ -264,10 +305,13 @@ def do_block(bw, bs):
 
     lines = []
     for lv in LEVELS:
-        if lv > np.nanmax(sm) or lv < np.nanmin(sm):
+        # lv is the MLLW label; cut is where that depth actually sits in the
+        # NAVD88 grid.  Only the label is ever written to the block.
+        cut = lv + NAVD88_ABOVE_MLLW
+        if cut > np.nanmax(sm) or cut < np.nanmin(sm):
             continue
         tier = LEVEL_TIER[lv]
-        for seg in cg.lines(float(lv)):
+        for seg in cg.lines(float(cut)):
             seg = np.asarray(seg, float)
             if len(seg) < 3:
                 continue
@@ -275,7 +319,7 @@ def do_block(bw, bs):
                 if len(part) < 3:
                     continue
                 d = np.diff(part, axis=0)
-                lim = MIN_LEN_SHOAL if lv <= 2 else MIN_LEN_DEG
+                lim = MIN_LEN_SHOAL if cut <= SHOAL_CUT_FT else MIN_LEN_DEG
                 if float(np.hypot(d[:, 0], d[:, 1]).sum()) < lim:
                     continue
                 sp = rdp(part, RDP_TOL_DEG)

@@ -1,2 +1,4 @@
 tools/__pycache__/
 tools/depth/.rat_cache/
+tools/depth/depth_out/
+tools/depth/__pycache__/

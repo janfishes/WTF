@@ -8,6 +8,14 @@ Rolldown and the Gulf Stream slope down onto the Blake Plateau (~3000 ft).
 Deliberately a separate pass from pass_b_contours.py so the inshore blocks
 cannot move: the lagoon design is settled and those files are byte-frozen.
 
+DATUM: MLLW since 2026-08-06, exactly as in pass B — every level is cut at
+`label + PB.NAVD88_ABOVE_MLLW` feet below NAVD88 and stored as the label.  This
+pass had to move in the same change even though 2.25 ft is nothing on a 400 ft
+slope: INSHORE_KEEP below carries every inshore level <= 200 ft through verbatim
+so the lines run across the -80.30 seam without a step, and if the two passes cut
+at different datums that seam breaks right off the beach — a 12 ft line arriving
+from the lagoon at 9.75 ft of real water meeting a 12 ft line at 12.
+
 Differences from inshore:
   * BlueTopo only.  CUDEM does not reach out here, and BlueTopo *is* the water
     mask offshore — it only maps navigable water — so the coarse connected-water
@@ -150,11 +158,13 @@ def do_block(cw, cs, ce, cn):
 
     lines = []
     for lv in LEVELS:
-        if lv > hi or lv < lo:
+        # MLLW label -> where it sits in the NAVD88 grid.  Only the label ships.
+        cut = lv + PB.NAVD88_ABOVE_MLLW
+        if cut > hi or cut < lo:
             continue
         tier = LEVEL_TIER[lv]
         tol, lim = tol_for(lv), minlen_for(lv)
-        for seg in cg.lines(float(lv)):
+        for seg in cg.lines(float(cut)):
             seg = np.asarray(seg, float)
             if len(seg) < 3:
                 continue

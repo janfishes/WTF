@@ -8,7 +8,7 @@ sprinkle depth contours across pastures.  So: build one coarse water mask over
 the whole area, keep only the components that actually touch BlueTopo's
 navigable-water coverage, and use that as a gate in pass B.
 """
-import glob, warnings
+import glob, os, warnings
 import numpy as np
 import rasterio
 from rasterio.warp import reproject, Resampling, transform_bounds
@@ -18,7 +18,9 @@ from scipy import ndimage
 warnings.filterwarnings('ignore')
 
 DATA = '/Users/janneal/Desktop/WTF Files/depth-data'
-OUT  = '/private/tmp/claude-501/-Users-janneal/43d5b7c7-e9a2-4d91-ae08-90e9492cba43/scratchpad/watermask_coarse.npz'
+# Next to this script, which is where pass B loads it from.  (Through 2026-08-06
+# this still pointed at the long-dead scratchpad the original run wrote to.)
+OUT  = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'watermask_coarse.npz')
 
 # The app's own fishing-area box (OFFLINE_BBOX in index.html), so the contour
 # layer can never extend past the imagery Jan pre-caches.

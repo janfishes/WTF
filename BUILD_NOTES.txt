@@ -7,6 +7,108 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-06 · 2:10 AM EDT · v458 · Depth Lines Move To MLLW
+------------------------------------------------------------------------------
+One spot, three numbers. The contour labels were raw NAVD88, the tide board
+showed MLLW and Jan's phone chart showed MLLW, so the only surface that needed
+arithmetic on the water was this one — a "6 ft" line here was about 3.75 ft at
+dead low. It was documented (the Depth Lines help has carried the full 2.25 ft
+translation since v455) but Jan was tired of doing the subtraction in his head.
+His call, scoped first and built after: move the lines to MLLW.
+
+WHY IT COULD NOT BE A RELABEL. The lines sat at INTEGER NAVD88 feet. Subtract
+2.25 at draw time and every label lands on a quarter foot — 6 becomes 3.75, 12
+becomes 9.75 — and the two shallowest go negative: the 1 ft line becomes -1.25.
+Rounding to the nearest foot would be a lie of up to six inches in exactly the
+water where six inches is the whole question. So the blocks were re-cut.
+
+HOW IT WAS DONE, which is the part worth keeping. Each level is now contoured at
+`label + 2.25` feet below NAVD88 and STORED AS THE LABEL — a 3 ft line is cut at
+5.25 and written to the block as 3. The grids are still NAVD88 and always will
+be; only the cut moved. Because the label SET is unchanged, nothing downstream
+had to move: the tier table, DEPTH_TIER_PROMOTE, DEPTH_WIDE_LEVELS, DEPTH_MIN_PX
+and the label sort's `lv % 5` round-number preference are all keyed on those
+same integers. Keep that property. If a future build changes the label set,
+every one of those needs a second look.
+
+THE OFFSHORE PASS HAD TO MOVE IN THE SAME CHANGE. pass_c carries every inshore
+level <= 200 ft through verbatim so the lines cross the -80.30 seam without a
+step. Cut the two passes at different datums and the seam breaks right off the
+beach — a 12 ft line arriving from the lagoon at 9.75 ft of real water meeting a
+12 ft line at 12. Measured after the rebuild: seam gaps 2-6 m, unchanged in
+character from the NAVD88 build's 1-5 m.
+
+THE REBUILD. The source rasters had been deleted on 2026-08-04, so all 85
+BlueTopo tiles and 8 CUDEM tiles were re-pulled (2.0 GB). Worth knowing: the
+re-fetch is FAITHFUL — BlueTopo object keys embed the delivery date, so the URLs
+in bluetopo_tiles.json return the same tiles that built the shipped blocks
+rather than whatever NOAA serves today. All 85 still answered 200. So this is a
+clean datum change with no survey update smuggled in beside it. Pass A was not
+re-run: the water gate is a connectivity mask at NAVD88 -0.15 m and is
+datum-independent, so the committed watermask_coarse.npz was reused. Whole
+build: 84 s for the 20 inshore blocks, 23 s for the 12 offshore ones.
+
+WHAT MOVED. 29 blocks, 10,886 lines -> 8,985, 2.4 MB -> 2.1 MB. The shallow end
+is where it shows: the old 1 and 2 ft NAVD88 lines have no MLLW label at all —
+that bottom dries at low water — so they are simply gone and shorelines carry
+fewer lines. Every remaining label inherits roughly the shape of the line 2-3 ft
+deeper than the one that used to wear it, so the shallow lines sit further off
+the bank. Verified end to end against the point Jan tapped on his phone chart at
+29°04.628'N 080°54.900'W: the old blocks put it on the 14 ft line (1.3 m away,
+matching the 14.3 NAVD88 the tide board's depth_at.py reported), the new blocks
+put it between the 11 and 12 ft lines — which is what his phone prints there.
+
+THE 2 FT PROMOTION, and why it is not scope creep. The re-cut re-opened the
+exact hole v408 closed. v408 put 4 ft in tier 0 because the shallow west-side
+bays — Turnbull, Rose, Strickland, Tomoka Basin — ran 2-3 ft over most of their
+area and had nothing to draw until z13, so they read as empty water. Those
+depths were NAVD88; at MLLW the same bays run about 0-1 ft, so the 4 ft line no
+longer touches them and Strickland Bay went blank at z13 again — caught in a
+before/after screenshot against v457, not guessed. The line that used to outline
+those bays was 4 ft NAVD88, which IS the 2 ft MLLW line, so 2 ft was promoted
+into the frame: the same promotion v408 made, expressed in the new datum. Same
+weight of line, too — over the Halifax at z12 the old tier-0 4 ft line put 198
+segments in view and the new 2 ft line puts 186. The busiest line in this water
+is now 1 ft (283 in that view) and it stays in tier 3 for exactly the reason
+3 ft used to: at z12 it would fill the river solid. 2 ft exists only inshore so,
+like the fathom entries, it cannot leak across the -80.3 seam. Delete the 2:0
+entry from DEPTH_TIER_PROMOTE if the rivers ever read busy.
+
+TEXT. The Depth Lines help no longer teaches a subtraction; it says the depths
+are to mean lower low water, the same zero a chart uses, and keeps "read your
+depth sounder and chartplotter, not this app, for the water under your boat".
+A second paragraph warns that the numbers now read SHALLOWER than they did and
+that a spot reading two feet less than you remember is this change, not a shoal.
+The tide-panel note (v457's "a tide height is not a depth") had claimed the
+depth lines were on a different datum 2.25 ft higher, which is now false; it
+says instead that the two numbers are at last on one datum, and then that a
+depth line is a survey years old in places on a coast that shoals and moves.
+DELIBERATELY NOT SAID: that you can add a tide height to a depth line to get the
+water under you. It is now arithmetically true and it is the most useful thing
+this change unlocks, but it invites using this app for navigation, which is the
+posture Jan has been shrinking before the sale (MOB -> MARK). Jan's call, taken
+before the build started, was to state the datum and stop there. Revisit with
+the attorney, not casually. The attribution string and the layer toast changed
+from "average water level" to MLLW / "low water".
+
+DEPTH_DATA_V 4 -> 5. Blocks are cache-first, so without the bump every device
+that has already seen the old ones serves them forever.
+
+AND THE TIDE BOARD SHIPPED IN THE SAME CHANGE (its build 16). Its depth/ is six
+of these blocks copied verbatim and it SUBTRACTED 2.25 on every read to get
+them onto the tide's datum. Left in place after the re-cut, every depth on that
+board would have read 2.25 ft shallow with nothing looking obviously wrong.
+Both subtractions are out, its DEPTH_DATA_V is 5 to match, and its strip now
+says "at low water" instead of "ft NAVD88". Its numbers were already correct
+MLLW before this, so they should not have moved much — and checked against the
+source rasters at the seven built-in spots they moved TOWARD truth, mean
+absolute error 2.7 ft -> 1.9 ft, because the interpolation now estimates the
+quantity being displayed instead of estimating in NAVD88 and subtracting a
+constant afterwards. One behaviour note: the survey can no longer report "dries
+out" on its own, since no contour exists below 1 ft MLLW; the drying message now
+only fires when the tide itself is low enough to take the water under 0.2 ft.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 11:20 PM EDT · v457 · A Tide Height Is Not A Depth
 ------------------------------------------------------------------------------
 Came out of the same question on the tide board app: the number beside a high

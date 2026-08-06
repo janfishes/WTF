@@ -3,6 +3,10 @@
 One line per build, newest first. Full build notes with dates, times, and
 details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
+## 2026-08-06
+
+- **v458** — Depth Lines Move To MLLW
+
 ## 2026-08-05
 
 - **v457** — A Tide Height Is Not A Depth
