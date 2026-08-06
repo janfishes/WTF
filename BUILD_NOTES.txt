@@ -7,6 +7,31 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-05 · 10:55 PM EDT · v456 · Trestle Tag Hangs Left
+------------------------------------------------------------------------------
+Settles the known limit v455 flagged. The new Turnbull Bay Train Trestle pin
+now hangs its tag LEFT.
+
+It is not a waypoint pin, so the v308 rule would have left it hanging right by
+default — but it sits 46 m from the Turnbull Bay Bridge pin, and two
+right-hand tags that close stack on each other at z15 and below. Left
+separates them horizontally at every zoom.
+
+No side is clean at z14: a right tag reaches the topo's printed "TURNBULL BAY
+RD", a left one sits on its printed "Turnbull Creek". Jan's call, and his
+reasoning is the general one — a covered chart name is recoverable by zooming,
+two app tags written over each other are not readable at all. Verified against
+real z14/z15/z16 USGS ImageryTopo tiles rather than assumed, which is the
+standing rule for any label-side decision.
+
+Mechanically this is the first pin that hangs left WITHOUT being a waypoint,
+so the expression grew a LEFT_TAG_IDS list in front of it rather than another
+`s.id !== ...` clause: the existing exceptions all subtract from the waypoint
+rule, this one adds to it, and stacking those two kinds of exception in one
+boolean is how that line becomes unreadable. Put future forced-left pins in
+the list.
+
+------------------------------------------------------------------------------
 Build 2026-08-05 · 10:45 PM EDT · v455 · Two Trestles, True Datum
 ------------------------------------------------------------------------------
 Three corrections that came out of building the tide board (My Tides), where
