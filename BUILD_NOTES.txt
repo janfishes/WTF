@@ -7,6 +7,38 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 12:35 PM EDT · v466 · Log A Skunked Trip
+------------------------------------------------------------------------------
+Jan: "change card name to Log a Skunked Trip." The v464/v465 word for a fishless
+day was "blank trip", which is accurate and colourless. Skunked is what anyone
+who fishes actually says, and this app has always used Jan's words over correct
+ones. Swept through every user-facing string rather than the one Jan named -
+half-renamed vocabulary in a shipped app reads as a bug, and the whole point of
+the feature is that the entry feels natural enough to log on a bad day.
+
+Now reading: sheet title "Log a Skunked Trip" / "Edit Skunked Trip"; the v465
+section bar "Skunked trip"; the My Log card tag simply "Skunked" (short enough
+to sit where a species tag sits); the count line "+ 3 skunked trips"; the
+Recently-deleted note; the import summary and its toast; the save, update,
+delete, undo and mode-switch toasts; the My Log help paragraph.
+
+Deliberately NOT renamed: the chip that starts it all still says FISHED - NO
+CATCHES, because that one names the ACTION rather than the record, and it is
+the phrase Jan wrote when asking for the feature. Nothing internal moved either
+- the storage key stays `blank-trips`, the record stays kind:'trip', the flag
+stays blankTrip, the CSS stays .blank-card / .bs / .bh. Renaming the storage key
+would strand every skunked trip already logged on a device for a word that only
+appears on screen; renaming the rest would be churn in a diff that has to stay
+readable next to v464's.
+
+All three suites re-run green on v466: 28 checks on the feature, 11 on the
+notes/conditions swap, 8 on the section bar. Three of those failures on the
+first pass were the TESTS still asserting the old wording, not the app - worth
+saying out loud, because a rename is exactly the change where a green suite can
+mean the suite was renamed with it. Each was checked against the real string
+before the assertion was updated.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 11:55 AM EDT · v465 · A Bar That Says Catches
 ------------------------------------------------------------------------------
 Jan, on the v464 form: "need a separator between the no catches para and the
