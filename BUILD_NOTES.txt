@@ -7,6 +7,84 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 10:35 AM EDT · v464 · Fished, No Catches
+------------------------------------------------------------------------------
+A trip that caught nothing can now be logged. FISHED - NO CATCHES is the first
+chip on the + Catch form, above the photo box; tapping it folds away everything
+about a fish - photo, species, size, personal best - and folds in one new field,
+Hours fished. Save writes a blank trip. The sheet retitles itself to "Log a
+Blank Trip" and the button to "Save trip", so there is never a moment where the
+form looks like one thing and saves another.
+
+Why Jan asked for it. A catch log with no blanks in it can only ever say WHEN
+YOU FISH. Every count of "redfish on a falling tide" is really a count of how
+often Jan fished a falling tide - the water that was quiet leaves no trace at
+all. This came out of the Bite Board work (the 5th app, started 2026-08-07,
+which reads a WTF backup and backfills the weather each catch was made in): 39
+catches over 36 trip days, and no way to tell a good day from a day Jan simply
+had free. A blank trip is the only record that can fix that, and it is the one
+record that CANNOT be reconstructed later - it exists only if it was logged on
+the day. Which is why it shipped before the app that needs it.
+
+Where the record lives, and why not in `catches`. Own array, own storage key
+(`blank-trips`), own place in APP_KEYS and in both backup kinds. The obvious
+shortcut - a catch with an empty species list - was rejected: everything
+downstream of `catches` assumes a fish on the end of it. The species pills, the
+map diamonds, the Catches count on the filter pill, the season bars, personal
+bests, the photo importer. A blank riding in that array would have to be
+filtered out of every one of them, and the first place it got missed would
+quietly corrupt a real number. Separate array, shared date/tide/location
+plumbing, merged only where a merge is what the user is actually looking at:
+the My Log list, the when/where filter, the backup file.
+
+What a blank trip carries: date, time, lat/lng + location label, tide + tide
+detail, hours fished (optional), notes. No photo, no species, no size, no PB.
+`kind:'trip'` is on the record itself, which is how openLogSheet() and
+renderCatchList() tell the two apart without a second argument.
+
+Hours fished is the field that makes blanks worth having. Two fish in one hour
+and two fish in eight are not the same day; without hours a blank can only be
+counted, never weighed against anything. Optional, 0-24, half-hour steps.
+
+In My Log. Blank trips sit in the same list as catches, ordered by the day they
+happened, so the log reads as the season Jan actually had. Their card is
+deliberately the quiet one on the page - transparent background, dashed border,
+a muted outlined "Fished - no catches" tag instead of coloured species tags. A
+day with no fish belongs in the log but must never draw the eye ahead of a day
+with fish. Delete and EDIT work exactly as they do on a catch, including UNDO
+and the 14-day Recently-deleted bin (trash kind 'trip', undo kinds trip-edit /
+trip-del).
+
+Counting. The Catches pill on the map counts CATCHES and nothing else - a blank
+is not a catch and folding it in would break the one number the pill exists to
+report. The My Log count line carries blanks alongside instead: "12 catches
+logged + 3 blank trips.", and the same split under an active when/where filter.
+
+Backups. `trips` is a new top-level key in both full and log-only files. Schema
+stays at 2 on purpose: nothing about a CATCH changed, and bumping it would make
+every v464 backup unreadable to v463 for no gain. A v463-or-older file has no
+`trips` key at all, which the importer treats as what it is - a backup from
+before blank trips existed - not as an error. Import dedupes on id like every
+other section.
+
+Switching mode mid-edit is refused with a toast rather than half-implemented.
+Moving a saved record between the two stores has no good silent answer, and
+delete-and-re-add is one tap away.
+
+Gotcha for next time: turning blank mode ON clears the fish fields rather than
+just hiding them. A species picked before the switch was thrown would otherwise
+survive invisibly into a record that is supposed to have none - nothing should
+be saveable that the person filling the form can no longer see.
+
+Tested in real headless Chrome (a zero-dependency CDP driver over node's built-in
+WebSocket - puppeteer is no longer installed on the Mac): 28 checks covering
+mode switching, field visibility both ways, refusing to save with no location,
+save, storage write, card rendering, the count line, edit round-trip, delete +
+undo, a catch still saving normally alongside, backup export, a real
+export->wipe->import round trip through the actual file input, re-import
+dedupe, and a hand-built v463-era backup importing cleanly.
+
+------------------------------------------------------------------------------
 Build 2026-08-06 · 12:50 PM EDT · v463 · Green Tiles At Rockhouse
 ------------------------------------------------------------------------------
 Jan: "green tiles showing through around Rockhouse Creek." Same USGS

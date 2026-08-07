@@ -2253,6 +2253,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .catch-card{background:var(--navy-800); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px;}
   .cc-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
   .cc-species{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:#04141e; padding:2px 8px; border-radius:5px; text-transform:uppercase; letter-spacing:.03em;}
+  /* v464: a blank trip's card. Deliberately the quiet one on the page — outlined
+     rather than filled, muted rather than coloured. It belongs in the log, but a
+     day with no fish on it should never draw the eye ahead of a day with fish. */
+  .catch-card.blank-card{background:transparent; border-style:dashed;}
+  .cc-blank{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:var(--muted); border:1px solid var(--line); padding:2px 8px; border-radius:5px; text-transform:uppercase; letter-spacing:.03em;}
+  /* The + Catch form in blank-trip mode: everything about a fish folds away,
+     hours fished folds in. */
+  .bs{display:none;}
+  body.blank-trip .bh{display:none !important;}
+  body.blank-trip .bs{display:block;}
   .cc-actions{display:flex; gap:4px;}
   .cc-edit, .cc-del{background:none; border:none; color:var(--muted); font-size:10.5px; font-weight:700; letter-spacing:.3px; cursor:pointer; padding:2px 4px; white-space:nowrap;}
   .cc-edit:hover{color:var(--teal);}
@@ -3256,7 +3266,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Measurement units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log. <b>RETURN TO TOP</b> at the very bottom brings you straight back here.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. A trip that caught nothing belongs here too: tap <b>FISHED — NO CATCHES</b> at the top of the <b>+ Catch</b> form and it saves the water, the day and the tide with no fish on it. Those sit in the list as dashed cards and are never counted as catches — they're the only thing that tells you how often the water was quiet, and there's no way to add one after the day has gone. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Measurement units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log. <b>RETURN TO TOP</b> at the very bottom brings you straight back here.</p>
       <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Ace’s Catch Log”)</span></label>
       <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
       <div class="loc-btns" style="margin:0 0 10px;">
@@ -3577,20 +3587,28 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="close" id="logClose">CLOSE <span class="bi bi-x">✕</span></button>
   </div>
   <div class="sheet-body">
-    <label class="field-label" style="margin-top:2px;">Photo (optional)</label>
+    <!-- v464: the blank-trip switch sits FIRST, above the photo, because it is the
+         one choice that changes what the rest of the form is for. Lit, everything
+         about a fish folds away and what is left is the trip itself. -->
+    <div class="chiprow wrap" id="logBlankRow" style="margin-top:2px;">
+      <div class="chip util" id="logBlankChip">FISHED — NO CATCHES <span class="bi bi-emoji">🎣</span></div>
+    </div>
+    <p class="sheet-note" style="margin:6px 0 0;">Tap this for a trip that caught nothing. It saves the water, the day and the tide with no fish on it — the only record that says you were out there and they weren't biting, and the one thing that can never be filled in later.</p>
+
+    <label class="field-label bh" style="margin-top:2px;">Photo (optional)</label>
     <input type="file" id="logPhoto" accept="image/*" style="display:none;">
-    <div class="photo-box" id="photoBox">
+    <div class="photo-box bh" id="photoBox">
       <img id="photoPreview" style="display:none;">
       <button class="photo-remove" id="photoRemove" style="display:none;" title="Remove photo">✕</button>
       <button class="photo-crop" id="photoCrop" style="display:none;" title="Crop photo">Crop ⛶</button>
       <button class="photo-revert" id="photoRevert" style="display:none;" title="Revert to original photo">Revert ↺</button>
       <span id="photoPlaceholderText">📷 Add a photo — if it has GPS &amp; a timestamp I'll fill in the location, date &amp; time</span>
     </div>
-    <p class="storage-note" id="photoStatus"></p>
+    <p class="storage-note bh" id="photoStatus"></p>
 
-    <label class="field-label">Species</label>
-    <div class="chiprow wrap" id="logSpeciesRow"></div>
-    <p class="sheet-note" style="margin:6px 0 0;">Tap every species you caught — the first one you tap colors the catch pin, and each gets its season bar in your log.</p>
+    <label class="field-label bh">Species</label>
+    <div class="chiprow wrap bh" id="logSpeciesRow"></div>
+    <p class="sheet-note bh" style="margin:6px 0 0;">Tap every species you caught — the first one you tap colors the catch pin, and each gets its season bar in your log.</p>
 
     <label class="field-label">Date &amp; time</label>
     <div class="field-row">
@@ -3622,21 +3640,33 @@ svg.leaflet-image-layer.leaflet-interactive path {
          placeholders already say ft/inches or cm — repeating it in the label was the
          longest part of the line and the only part that had to be rewritten on a switch.
          Static text now; sizeUnitsApplyForm no longer touches it. -->
-    <label class="field-label">Size (optional) <span id="sizeUnitsHint" style="color:var(--muted); font-weight:400;">(Select measurement units at foot of My Log)</span></label>
-    <div class="field-row">
+    <!-- v464: hours fished replaces the size boxes on a blank trip. It is the one
+         number that makes blanks comparable to catches — two fish in one hour and
+         two fish in eight are not the same day, and without it a blank can only be
+         counted, not weighed against anything. -->
+    <div class="bs">
+      <label class="field-label">Hours fished (optional)</label>
+      <div class="field-row">
+        <input type="number" id="logHours" placeholder="Hours on the water" min="0" max="24" step="0.5">
+      </div>
+      <p class="sheet-note" style="margin:6px 0 0;">Roughly how long you fished. Two blank hours and eight blank hours say very different things about a day.</p>
+    </div>
+
+    <label class="field-label bh">Size (optional) <span id="sizeUnitsHint" style="color:var(--muted); font-weight:400;">(Select measurement units at foot of My Log)</span></label>
+    <div class="field-row bh">
       <input type="number" id="logLenFt" placeholder="Length: ft" min="0" step="1">
       <input type="number" id="logLenIn" placeholder="+ inches" min="0" step="0.5">
     </div>
-    <div class="field-row" style="margin-top:6px;">
+    <div class="field-row bh" style="margin-top:6px;">
       <input type="number" id="logWtLb" placeholder="Weight: lb" min="0" step="1">
       <input type="number" id="logWtOz" placeholder="+ ounces" min="0" step="1">
     </div>
 
-    <label class="field-label">Personal best (optional)</label>
-    <div class="chiprow wrap" id="logPbRow">
+    <label class="field-label bh">Personal best (optional)</label>
+    <div class="chiprow wrap bh" id="logPbRow">
       <div class="chip util" id="logPbChip">PERSONAL BEST <span class="bi bi-emoji">🏆</span></div>
     </div>
-    <p class="sheet-note" style="margin:6px 0 0;">Tap it for your best-ever fish. The trophy rides the corner of that catch's photo in <b>My Log</b> and in its map diamond — tap the trophy for a little celebration — and searching <b>personal best</b> finds every one of them.</p>
+    <p class="sheet-note bh" style="margin:6px 0 0;">Tap it for your best-ever fish. The trophy rides the corner of that catch's photo in <b>My Log</b> and in its map diamond — tap the trophy for a little celebration — and searching <b>personal best</b> finds every one of them.</p>
 
     <label class="field-label">Notes (optional)</label>
     <textarea id="logNotes" rows="2" placeholder="Bait, rig, conditions..." spellcheck="true" autocapitalize="sentences" autocorrect="on"></textarea>
@@ -4646,10 +4676,10 @@ function showToast(msg, duration=2400, html){
    build spelled out by hand in five places, which is why those messages still said
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
-const BUILD_DATE = '08/06/26';                          // map stamp form
-const BUILD_NUM  = 463;
+const BUILD_DATE = '08/07/26';                          // map stamp form
+const BUILD_NUM  = 464;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
-const BUILD_TAG  = 'build 2026-08-06 v' + BUILD_NUM;    // diagnostic-message form
+const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
    made same-day updates look unchanged. */
 { const bs = document.getElementById('buildStamp');
@@ -6876,8 +6906,26 @@ applySpotLabels();
 
 const STORAGE_KEY = 'catch-log';
 const NOTES_KEY = 'spot-notes';
-const APP_KEYS = [STORAGE_KEY, NOTES_KEY, 'theme', 'spot-overrides', 'custom-spots', 'tide-lags', 'drop-labels'];
+/* ===================== BLANK TRIPS (v464) =====================
+   A trip that caught nothing. Jan asked for it because a catch log with no
+   blanks in it can only ever say WHEN YOU FISH — every count of "redfish bite
+   on a falling tide" is really a count of how often you fished a falling tide.
+   One tap that records a trip with no fish on it is what turns the log from a
+   list of fish into a record of effort, and nothing can reconstruct it after
+   the fact: a blank trip only exists if it was logged on the day.
+
+   Kept in their OWN array and their own storage key rather than as catches
+   with an empty species list. Everything downstream of `catches` assumes a
+   fish — the species pills, the map diamonds, the Catches count, the season
+   bars, personal bests. A blank riding in that array would have had to be
+   filtered out of each of them, and the first one that got missed would
+   quietly corrupt a real number. Separate array, shared date/tide/location
+   plumbing, merged only where a merge is what the user is looking at: the
+   My Log list, the when/where filter, and the backup file. */
+const TRIPS_KEY = 'blank-trips';
+const APP_KEYS = [STORAGE_KEY, NOTES_KEY, TRIPS_KEY, 'theme', 'spot-overrides', 'custom-spots', 'tide-lags', 'drop-labels'];
 let catches = [];
+let trips = [];              // blank trips — see the note by TRIPS_KEY
 let storageMode = 'memory';
 let idb = null;
 
@@ -7068,6 +7116,7 @@ async function loadAll(){
   storageMode = await detectStorage();
   await migrateToIDB();
   try{ const raw = await storeGet(STORAGE_KEY); catches = raw ? JSON.parse(raw) : []; }catch(e){ catches = []; }
+  try{ const traw = await storeGet(TRIPS_KEY); trips = traw ? JSON.parse(traw) : []; }catch(e){ trips = []; }
   try{ const nraw = await storeGet(NOTES_KEY); userNotes = nraw ? JSON.parse(nraw) : {}; }catch(e){ userNotes = {}; }
   // Theme ids were renamed to match the names on the picker, and 'beige' was retired before
   // that. An id saved under any older name would otherwise land in data-theme with no
@@ -7171,6 +7220,44 @@ async function updateCatch(id, fields){
   renderCatchList();
   updateCatchCount();
 }
+/* Blank trips: same shape as the catch calls above, same await-before-close
+   discipline (see the note there — an un-awaited IndexedDB write can be lost
+   when the sheet tears down). No map markers and no species, so only the log
+   list is redrawn. */
+async function persistTrips(){
+  if(storageMode === 'memory') return true;
+  const ok = await storeSet(TRIPS_KEY, JSON.stringify(trips));
+  if(!ok) showToast("Couldn't save — storage may be full. Your trip is kept for this session.");
+  return ok;
+}
+async function addTrip(entry){
+  entry.id = newId();
+  entry.createdAt = Date.now();
+  trips.push(entry);
+  if(logFilterActive() && !catchPassesLogFilter(entry)){ catchWhen = 'all'; catchWhere = 'all'; }
+  await persistTrips();
+  renderCatchList();
+}
+async function updateTrip(id, fields){
+  const t = trips.find(x=>x.id===id);
+  if(!t) return;
+  const before = {};
+  Object.keys(fields).forEach(k=>{ before[k] = t[k]; });
+  pushUndo({kind:'trip-edit', id, before});
+  Object.assign(t, fields);
+  if(logFilterActive() && !catchPassesLogFilter(t)){ catchWhen = 'all'; catchWhere = 'all'; }
+  await persistTrips();
+  renderCatchList();
+}
+async function deleteTrip(id){
+  const rec = trips.find(t=>t.id===id);
+  if(rec){ pushUndo({kind:'trip-del', record:rec}); await trashAdd('trip', rec); }
+  trips = trips.filter(t=>t.id!==id);
+  await persistTrips();
+  renderCatchList();
+  showToast('Trip deleted — UNDO at the top of My Log brings it back.');
+}
+
 async function deleteCatch(id){
   const rec = catches.find(c=>c.id===id);
   if(rec){ pushUndo({kind:'catch-del', record:rec}); await trashAdd('catch', rec); }
@@ -7225,9 +7312,11 @@ async function trashRemove(kind, id){
 function updateTrashNotes(){
   const c = trash ? trash.filter(e=>e.kind==='catch').length : 0;
   const k = trash ? trash.filter(e=>e.kind==='track').length : 0;
-  const s = trash ? trash.length - c - k : 0;
+  const p = trash ? trash.filter(e=>e.kind==='trip').length : 0;
+  const s = trash ? trash.length - c - k - p : 0;
   const bits = [];
   if(c) bits.push(c + (c===1?' catch':' catches'));
+  if(p) bits.push(p + (p===1?' blank trip':' blank trips'));
   if(s) bits.push(s + (s===1?' spot':' spots'));
   if(k) bits.push(k + (k===1?' track':' tracks'));
   const txt = bits.length
@@ -7260,6 +7349,11 @@ window.appUndo = async function(){
       await persistCatches();
       renderCatchMarkers(); renderCatchList(); updateCatchCount();
       showToast('Deleted catch restored ✓');
+    } else if(e.kind === 'trip'){
+      if(!trips.some(t=>t.id===e.record.id)) trips.push(e.record);
+      await persistTrips();
+      renderCatchList();
+      showToast('Deleted trip restored ✓');
     } else if(e.kind === 'track'){
       const list = trkLoadSaved();
       if(!list.some(x=>x.id===e.record.id)){ list.push(e.record); list.sort((a2,b2)=>a2.t0-b2.t0); trkStoreSaved(list); }
@@ -7292,6 +7386,18 @@ window.appUndo = async function(){
     await trashRemove('catch', a.record.id);
     renderCatchMarkers(); renderCatchList(); updateCatchCount();
     showToast('Deleted catch restored ✓');
+  } else if(a.kind === 'trip-edit'){
+    const t = trips.find(x=>x.id===a.id);
+    if(t) Object.assign(t, a.before);
+    await persistTrips();
+    renderCatchList();
+    showToast('Trip edit undone ✓');
+  } else if(a.kind === 'trip-del'){
+    trips.push(a.record);
+    await persistTrips();
+    await trashRemove('trip', a.record.id);
+    renderCatchList();
+    showToast('Deleted trip restored ✓');
   } else if(a.kind === 'cspot-edit'){
     const s = customSpots.find(x=>x.id===a.id);
     if(s){
@@ -8264,18 +8370,23 @@ function updateLogFilterCount(){
   if(!el) return;
   const total = catches.length;
   const shown = catches.filter(catchPassesLogFilter).length;
+  // v464: blank trips are counted alongside, never folded into the catch total —
+  // the whole value of the record is that it is NOT a catch.
+  const tTotal = trips.length;
+  const tShown = trips.filter(catchPassesLogFilter).length;
+  const blankBit = n => n ? ` <span style="opacity:.75">+ ${n} blank trip${n===1?'':'s'}</span>` : '';
   const on = logFilterActive();
   el.classList.toggle('narrowed', on);
   el.innerHTML = on
-    ? `Showing <b>${shown}</b> of ${total} ${total===1?'catch':'catches'}. <button type="button" id="logFilterClear">SHOW ALL <span class="bi bi-xs">✕</span></button>`
-    : `${total} ${total===1?'catch':'catches'} logged.`;
+    ? `Showing <b>${shown}</b> of ${total} ${total===1?'catch':'catches'}${blankBit(tShown)}. <button type="button" id="logFilterClear">SHOW ALL <span class="bi bi-xs">✕</span></button>`
+    : `${total} ${total===1?'catch':'catches'} logged${blankBit(tTotal)}.`;
   const btn = document.getElementById('logFilterClear');
   if(btn) btn.addEventListener('click', clearLogFilter);
 }
 function syncLogFilterUI(){
   const row = document.getElementById('logFilterRow');
   const cnt = document.getElementById('logFilterCount');
-  const empty = catches.length === 0;           // nothing to narrow — don't show the controls
+  const empty = catches.length === 0 && trips.length === 0;   // nothing to narrow — don't show the controls
   if(row) row.style.display = empty ? 'none' : '';
   if(cnt) cnt.style.display = empty ? 'none' : '';
   if(empty) return;
@@ -8331,25 +8442,61 @@ function byDateCaughtDesc(a,b){
   return (b.date+' '+(b.time||'00:00')).localeCompare(a.date+' '+(a.time||'00:00'));
 }
 
+/* v464: a blank trip's card. No species tag, no size, no photo, no season bar —
+   what is left is the day, the water and the tide, which is the whole point of
+   the record. Hours ride the same line as the size would have. */
+function tripCardHTML(t, showCoords){
+  const tide = catchTideStr(t);
+  const moon = catchMoonStr(t);
+  const wave = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>`;
+  const loc = escapeHTML((t.locationLabel||'').replace(/^(photo location|custom pin)$/i,'Location'));
+  const line2 = [tide? wave+' '+tide:'', moon].filter(Boolean).join(' · ');
+  const hrs = (t.hours || t.hours === 0)
+    ? `<div class="cc-size">${(+t.hours) === 1 ? '1 hour' : (+t.hours) + ' hours'} fished, nothing caught</div>` : '';
+  return `<div class="catch-card blank-card">
+      <div class="cc-top">
+        <span style="display:flex; flex-wrap:wrap; gap:4px; min-width:0;"><span class="cc-blank">Fished — no catches</span></span>
+        <div class="cc-actions">
+          <button class="tc-edit" data-id="${t.id}" title="Edit">EDIT <span class="bi">✎</span></button>
+          <button class="tc-del" data-id="${t.id}" title="Delete">DELETE <span class="bi">✕</span></button>
+        </div>
+      </div>
+      <div class="cc-meta">${fmtDateShort(t.date)}${t.time? ' · '+fmtTime(t.time):''} · ${loc}${showCoords? ' · '+toDMS(t.lat, t.lng):''}${line2? '<br>'+line2:''}</div>
+      ${hrs}
+      ${t.notes? `<div class="cc-notes">Note: ${escapeHTML(t.notes)}</div>`:''}
+    </div>`;
+}
+
 function renderCatchList(){
   const body = document.getElementById('catchListBody');
   syncLogFilterUI();
-  if(catches.length===0){
+  if(catches.length===0 && trips.length===0){
     body.innerHTML = `<p class="empty-note">No catches logged yet. Tap <b>+ Catch</b> to add your first one.</p>`;
     return;
   }
-  const shown = catches.filter(catchPassesLogFilter).sort(byDateCaughtDesc);
+  // Catches and blank trips are one list here, ordered by the day they happened —
+  // the log reads as the season you actually had, blanks and all.
+  const shown = catches.filter(catchPassesLogFilter)
+    .concat(trips.filter(catchPassesLogFilter))
+    .sort(byDateCaughtDesc);
   if(!shown.length){
-    body.innerHTML = `<p class="empty-note">No catches match <b>when</b> and <b>where</b> you've picked above. <b>SHOW ALL ✕</b> puts the whole log back.</p>`;
+    body.innerHTML = `<p class="empty-note">Nothing matches <b>when</b> and <b>where</b> you've picked above. <b>SHOW ALL ✕</b> puts the whole log back.</p>`;
     return;
   }
-  body.innerHTML = shown.map(c=> catchCardHTML(c, true)).join("");
+  body.innerHTML = shown.map(c=> c.kind === 'trip' ? tripCardHTML(c, true) : catchCardHTML(c, true)).join("");
   body.querySelectorAll('.cc-del').forEach(btn=> btn.addEventListener('click', ()=> deleteCatch(btn.dataset.id)));
   body.querySelectorAll('.cc-edit').forEach(btn=> btn.addEventListener('click', ()=>{
     const c = catches.find(x=>x.id===btn.dataset.id);
     if(!c) return;
     closeInfoSheet();
     openLogSheet(c);
+  }));
+  body.querySelectorAll('.tc-del').forEach(btn=> btn.addEventListener('click', ()=> deleteTrip(btn.dataset.id)));
+  body.querySelectorAll('.tc-edit').forEach(btn=> btn.addEventListener('click', ()=>{
+    const t = trips.find(x=>x.id===btn.dataset.id);
+    if(!t) return;
+    closeInfoSheet();
+    openLogSheet(t);
   }));
 }
 
@@ -9632,6 +9779,53 @@ function setPbUI(on){
    bursts in one flow reads as a glitch. */
 logPbChip.addEventListener('click', ()=> setPbUI(!logPb));
 
+/* ---------- blank-trip mode (v464) ----------
+   One boolean over the same form. Lit, the fish half of the sheet is hidden by
+   CSS and Save writes a trip instead of a catch. Turning it on CLEARS the fish
+   fields rather than just hiding them, so nothing can be saved that the person
+   filling the form can no longer see — a species picked before the switch was
+   thrown would otherwise survive, invisibly, into a record that is supposed to
+   have none. Turning it off leaves the trip fields alone for the same reason in
+   reverse: hours is cleared, because a catch has no hours to carry. */
+let blankTrip = false, editingTripId = null;
+const logBlankChip = document.getElementById('logBlankChip');
+function setBlankUI(on){
+  blankTrip = !!on;
+  logBlankChip.classList.toggle('active', blankTrip);
+  document.body.classList.toggle('blank-trip', blankTrip);
+  if(blankTrip){
+    activeLogSpecies = [];
+    logSpeciesRow.querySelectorAll('.chip').forEach(c=> c.classList.remove('active'));
+    setSizeInputs(null, null);
+    setPbUI(false);
+    clearPhoto();
+  } else {
+    document.getElementById('logHours').value = '';
+  }
+  syncLogSheetTitle();
+}
+/* One place decides what the sheet is called and what its button says, so the
+   four states — new catch, edit catch, new trip, edit trip — cannot drift. */
+function syncLogSheetTitle(){
+  const editing = editingCatchId || editingTripId;
+  document.getElementById('logSheetTitle').textContent =
+    blankTrip ? (editing ? 'Edit Trip' : 'Log a Blank Trip')
+              : (editing ? 'Edit Catch' : 'Log a Catch');
+  document.getElementById('saveCatch').textContent =
+    editing ? 'Save changes' : (blankTrip ? 'Save trip' : 'Save catch');
+}
+logBlankChip.addEventListener('click', ()=>{
+  // Mid-edit the switch would have to move a record between two stores; there is
+  // no good silent answer, so it simply doesn't move. Delete and re-add is the
+  // honest path and it is one tap away.
+  if(editingCatchId || editingTripId){
+    showToast(editingTripId ? "This is already a blank trip."
+                            : "A saved catch can't become a blank trip — delete it and log the trip instead.");
+    return;
+  }
+  setBlankUI(!blankTrip);
+});
+
 /* Confetti: shot up from the bottom of the screen when a personal best is SAVED,
    and again whenever the trophy is tapped in My Log or in a catch popup (Jan's
    ask — the trophy should be worth pressing). One throwaway <canvas> per burst
@@ -10316,16 +10510,38 @@ function resetLogForm(){
   clearPreviewMarker();
   updateLocPreview();
   clearPhoto();
-  document.getElementById('logSheetTitle').textContent = 'Log a Catch';
-  document.getElementById('saveCatch').textContent = 'Save catch';
+  // Blank-trip mode is cleared by hand rather than through setBlankUI(false),
+  // which would re-run the field clearing this function has already done.
+  editingTripId = null;
+  blankTrip = false;
+  logBlankChip.classList.remove('active');
+  document.body.classList.remove('blank-trip');
+  document.getElementById('logHours').value = '';
+  syncLogSheetTitle();
 }
 
+/* Takes a catch OR a blank trip (records carry kind:'trip'), or nothing for a
+   fresh entry. */
 function openLogSheet(editCatch){
   resetLogForm();
-  if(editCatch){
+  if(editCatch && editCatch.kind === 'trip'){
+    const t = editCatch;
+    editingTripId = t.id;
+    blankTrip = true;
+    logBlankChip.classList.add('active');
+    document.body.classList.add('blank-trip');
+    syncLogSheetTitle();
+    setTideUI(t.tide || null);
+    tideDetail = t.tideDetail || null;
+    setLogDate(t.date || todayStr());
+    document.getElementById('logTime').value = t.time || '';
+    document.getElementById('logHours').value = (t.hours === null || t.hours === undefined) ? '' : t.hours;
+    document.getElementById('logNotes').value = t.notes || '';
+    pendingLoc = {lat:t.lat, lng:t.lng, label:t.locationLabel};
+    updateLocPreview();
+  } else if(editCatch){
     editingCatchId = editCatch.id;
-    document.getElementById('logSheetTitle').textContent = 'Edit Catch';
-    document.getElementById('saveCatch').textContent = 'Save changes';
+    syncLogSheetTitle();
     catchSpeciesList(editCatch).forEach(k=>{
       const chip = logSpeciesRow.querySelector(`[data-species="${k}"]`);
       if(chip) chip.click();   // toggle-select in saved order, so [0] stays primary
@@ -10376,11 +10592,35 @@ document.getElementById('logClose').addEventListener('click', closeLogSheetFn);
 logScrim.addEventListener('click', closeLogSheetFn);
 
 document.getElementById('saveCatch').addEventListener('click', async ()=>{
-  if(!activeLogSpecies.length){ showToast('Pick a species first.'); return; }
+  if(!blankTrip && !activeLogSpecies.length){ showToast('Pick a species first.'); return; }
   if(!pendingLoc){ showToast('Set a location — choose a spot, drop a pin, or use your location.'); return; }
   // Typed-but-unreadable date must not silently save as today.
   if(LOG_DATE_TEXT && logDateEl.value.trim() && !parseDateEntry(logDateEl.value)){
     showToast('Couldn’t read that date — try mm/dd/yyyy.'); return;
+  }
+
+  if(blankTrip){
+    const hrsRaw = document.getElementById('logHours').value;
+    const fields = {
+      kind: 'trip',
+      date: getLogDate() || todayStr(),
+      time: document.getElementById('logTime').value || '',
+      tide: activeTide,
+      tideDetail: tideDetail,
+      lat: pendingLoc.lat, lng: pendingLoc.lng, locationLabel: pendingLoc.label,
+      hours: hrsRaw === '' ? null : Math.max(0, Math.min(24, Number(hrsRaw) || 0)),
+      notes: document.getElementById('logNotes').value.trim() || ''
+    };
+    const wasEditingTrip = editingTripId;
+    const btn = document.getElementById('saveCatch');
+    btn.disabled = true;
+    try{
+      if(wasEditingTrip){ await updateTrip(wasEditingTrip, fields); showToast('Trip updated ✓'); }
+      else { await addTrip(fields); showToast('Blank trip logged ✓'); }
+    } finally { btn.disabled = false; }
+    clearPreviewMarker();
+    closeLogSheetFn();
+    return;
   }
   const fields = {
     species: activeLogSpecies[0],
@@ -13088,6 +13328,12 @@ function buildBackup(kind){
     exported: new Date().toISOString(),
     photosIncluded: withPhotos,
     catches: withPhotos ? catches : stripPhotos(catches),
+    // v464: blank trips ride every backup, both kinds. They carry no photo, so a
+    // log-only file loses nothing off them. An older build reading this file
+    // simply ignores the key — schema stays 2 because nothing about a CATCH
+    // changed, and bumping it would make this file unreadable to v463 for no
+    // reason.
+    trips: trips,
     notes: userNotes,
     customSpots: customSpots,
     spotOverrides: spotOverrides,
@@ -13266,6 +13512,18 @@ document.getElementById('importFile').addEventListener('change', async function(
       catches.push(x); existing.add(x.id); added++;
     });
 
+    // v464. A file written by v463 or earlier has no trips key at all, which is
+    // not an error — it is a backup from before blank trips existed.
+    let tripsAdded = 0;
+    if(Array.isArray(data.trips)){
+      const haveTrips = new Set(trips.map(x=>x.id));
+      data.trips.forEach(t=>{
+        if(!t || !t.id || haveTrips.has(t.id)) return;
+        trips.push({ ...t, kind:'trip' }); haveTrips.add(t.id); tripsAdded++;
+      });
+      if(tripsAdded) await persistTrips();
+    }
+
     let notesAdded = 0;
     if(data.notes && typeof data.notes === 'object'){
       Object.entries(data.notes).forEach(([k,v])=>{ if(!userNotes[k]){ userNotes[k] = v; notesAdded++; } });
@@ -13319,6 +13577,7 @@ document.getElementById('importFile').addEventListener('change', async function(
 
     const logOnly = (data.photosIncluded === false) || (data.kind === 'log-only');
     const bits = [added + ' new catch' + (added===1?'':'es')];
+    if(tripsAdded)  bits.push(tripsAdded  + ' blank trip' + (tripsAdded===1?'':'s'));
     if(notesAdded)  bits.push(notesAdded  + ' note'       + (notesAdded===1?'':'s'));
     if(spotsAdded)  bits.push(spotsAdded  + ' of your spots');
     if(editsAdded)  bits.push(editsAdded  + ' spot edit'  + (editsAdded===1?'':'s'));
@@ -13326,7 +13585,7 @@ document.getElementById('importFile').addEventListener('change', async function(
     if(stationsAdded) bits.push(stationsAdded + ' tide station' + (stationsAdded===1?'':'s'));
 
     let msg;
-    if(!added && !notesAdded && !spotsAdded && !editsAdded && !labelsAdded && !stationsAdded){
+    if(!added && !tripsAdded && !notesAdded && !spotsAdded && !editsAdded && !labelsAdded && !stationsAdded){
       msg = 'Read ' + where + ' without trouble — but every one of its '
           + data.catches.length + ' entries was already on this device, so nothing changed.';
     }else{
@@ -13336,7 +13595,9 @@ document.getElementById('importFile').addEventListener('change', async function(
     }
     if(malformed) msg += ' ' + malformed + ' entr' + (malformed===1?'y was':'ies were') + ' skipped for having no id.';
     backupNote(msg);
-    showToast(added ? ('Imported ' + added + ' catch' + (added===1?'':'es') + ' ✓')
+    showToast(added ? ('Imported ' + added + ' catch' + (added===1?'':'es') +
+                       (tripsAdded ? ' and ' + tripsAdded + ' blank trip' + (tripsAdded===1?'':'s') : '') + ' ✓')
+            : tripsAdded ? ('Imported ' + tripsAdded + ' blank trip' + (tripsAdded===1?'':'s') + ' ✓')
                     : 'Nothing new to import — see the note in My Log.', 4000);
   }catch(e){
     fail('Read ' + where + ' fine, but writing it to this device failed: ' + errText(e)

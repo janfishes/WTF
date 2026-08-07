@@ -3,6 +3,10 @@
 One line per build, newest first. Full build notes with dates, times, and
 details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
+## 2026-08-07
+
+- **v464** — Fished, No Catches
+
 ## 2026-08-06
 
 - **v463** — Green Tiles At Rockhouse
