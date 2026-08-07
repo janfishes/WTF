@@ -7,6 +7,53 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 2:40 PM EDT · v469 · Save As Spot
+------------------------------------------------------------------------------
+Jan: "yes, add Save As a Spot" / "Save As Spot" (the second message settled the
+wording, so that is exactly what the button says).
+
+The gap it closes, which came up while answering a question of Jan's: there are
+two things that both feel like adding a location, and only one of them made a
+pin. ADD SPOT creates a real spot and always gets a zone - picked automatically
+from the position, overridable by pill - and from then on it shows under the
+Inshore/Offshore filters, in the My Spots sub-pill, in the + Catch dropdown and
+(since v467) in the search. Setting a location ON AN ENTRY - dropped pin, GPS,
+typed coordinates, search - did none of that: the position lived on that one
+record and nowhere else. Drop a pin for a catch and the pin was gone the moment
+it saved. Now a button under the location preview offers the other option.
+
+It hands the pending position to Add Spot with the coordinates filled in and the
+type already auto-picked, and the name box pre-filled from the location's label
+- unless that label is one the APP invented (Custom pin, My location, Photo
+location, Typed position), in which case the box opens empty and waiting, because
+those are not names anybody chose.
+
+The round trip is the part with the teeth. The + Catch form may be half filled -
+species tapped, notes typed, date set - so it must NOT be reopened through
+openLogSheet(), which resets it. The sheet is hidden and re-shown by class
+instead, with a flag remembering where we came from. Three exits, all handled:
+SAVE puts the form back with the brand-new spot selected as its location (and
+deliberately skips the flyTo - moving the map out from under a half-filled entry
+is disorienting, and the spot is already chosen, which is what was wanted);
+CLOSE without saving puts the form back untouched with nothing saved; and DROP A
+PIN from inside Add Spot closes this sheet on purpose and reopens it a moment
+later, so the flag has to survive that - hence the !placingSpotPin guard on the
+bail-out path. Get that one wrong and dropping a pin for a new spot dumps you
+back on the catch form mid-flow.
+
+Works the same from a skunked trip, where the new spot then banks into the
+multi-location list like any other pick.
+
+Verified headless, 22 checks: refusal with no location, the hand-off (position,
+auto-picked type, empty name for a generic label), bail-out returning the
+half-filled entry with nothing saved, the real save creating the spot and
+returning with it selected in the dropdown AND set as the entry's location, the
+species and notes surviving the whole round trip, the spot being searchable
+immediately, the catch then saving with that spot as its location, and the
+skunked-mode round trip keeping blank mode and feeding the trip list. All five
+earlier suites re-run green on v469: 28 + 11 + 8 + 27 + 13.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 1:55 PM EDT · v468 · Turtle Mound Gets A Pin
 ------------------------------------------------------------------------------
 Jan: "include Turtle Mound as a pin." Noticed because v467's new spot search

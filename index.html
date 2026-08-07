@@ -3319,7 +3319,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. A trip that caught nothing belongs here too: tap <b>FISHED — NO CATCHES</b> at the top of the <b>+ Catch</b> form and it saves the water, the day and the tide with no fish on it. Those sit in the list as dashed <b>skunked trip</b> cards and are never counted as catches. A skunked trip can hold <b>several locations</b> — add every spot you tried and they ride on the one entry — they're the only thing that tells you how often the water was quiet, and there's no way to add one after the day has gone. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Measurement units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log. <b>RETURN TO TOP</b> at the very bottom brings you straight back here.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. A trip that caught nothing belongs here too: tap <b>FISHED — NO CATCHES</b> at the top of the <b>+ Catch</b> form and it saves the water, the day and the tide with no fish on it. Those sit in the list as dashed <b>skunked trip</b> cards and are never counted as catches. A skunked trip can hold <b>several locations</b> — add every spot you tried and they ride on the one entry. Wherever you set a location, <b>Save As Spot 📌</b> turns that position into a permanent pin of your own and hands you straight back to what you were filling in — they're the only thing that tells you how often the water was quiet, and there's no way to add one after the day has gone. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Measurement units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log. <b>RETURN TO TOP</b> at the very bottom brings you straight back here.</p>
       <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Ace’s Catch Log”)</span></label>
       <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
       <div class="loc-btns" style="margin:0 0 10px;">
@@ -3697,6 +3697,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="clearLoc">Clear <span class="bi">✕</span></button>
     </div>
     <div class="loc-preview" id="locPreview">No location set yet.</div>
+    <!-- v469 (Jan): a position set here lives on the record and nowhere else — it
+         never becomes a pin unless you say so. This says so. -->
+    <div class="loc-btns"><button class="mini-btn" id="saveAsSpot">Save As Spot <span class="bi bi-emoji">📌</span></button></div>
     <!-- v467: a skunked trip is usually several spots tried, not one. The picker
          above stays exactly as it is — it sets ONE pending location — and this
          button is what banks it, so a mis-tap is never already in the list. -->
@@ -4772,7 +4775,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 468;
+const BUILD_NUM  = 469;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -10316,6 +10319,11 @@ function closeAddSpot(){
   document.getElementById('addSpotBtn').classList.remove('pressed');
   if(typeof clearAddSpotPreview === 'function') clearAddSpotPreview();
   if(!placingSpotPin){ editingSpotId = null; editingBuiltinId = null; const sv = document.getElementById('addSpotSave'); if(sv) sv.textContent = 'Save spot'; }
+  // v469: closed without saving, having arrived from the + Catch form — put the
+  // half-filled entry back rather than stranding it behind a closed sheet. Not
+  // while a pin is being dropped: that closes this sheet on purpose and reopens
+  // it a moment later, and logSpotReturn has to survive the round trip.
+  if(logSpotReturn && !placingSpotPin) reopenLogSheetAfterSpot();
 }
 /* One place that lights the pills and writes the explanation line, so the two can never
    disagree. Passing null lights nothing. */
@@ -10431,6 +10439,7 @@ window.editCustomSpot = function(id){
   openAddSpot();
 };
 document.getElementById('addSpotSave').addEventListener('click', ()=>{
+  let justSavedSpot = null;
   const name = (document.getElementById('addSpotName').value || '').trim();
   if(!name){ showToast('Give your spot a name first.'); return; }
   if(!addSpotLoc){ showToast('Set a location — drop a pin or use My location.'); return; }
@@ -10480,6 +10489,7 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
     const s = { id:'custom-'+Date.now(), name, zone:addSpotZone, lat:addSpotLoc.lat, lng:addSpotLoc.lng, meta, custom:true, details, species:detSpecies, ramp:(addSpotZone==='launch') };
     customSpots.push(s);
     addCustomSpotMarker(s);
+    justSavedSpot = s;                 // v469: needed below to hand it back to the log form
   }
   saveCustomSpots();
   updateCustomSpotList();
@@ -10492,7 +10502,24 @@ document.getElementById('addSpotSave').addEventListener('click', ()=>{
   document.getElementById('addSpotName').value = '';
   document.getElementById('addSpotDetails').value = '';
   addSpotLoc = null; clearAddSpotPreview(); updateAddSpotPreview();
+  /* v469: came from the + Catch form. Take the return flag DOWN before closing,
+     so closeAddSpot's bail-out path doesn't also fire, then put the form back with
+     the brand-new spot chosen as its location. No flyTo on this path — moving the
+     map out from under a half-filled entry is disorienting, and the spot is
+     already selected, which is what was actually wanted. */
+  const cameFromLog = logSpotReturn && justSavedSpot;
+  if(cameFromLog) logSpotReturn = false;
   closeAddSpot();
+  if(cameFromLog){
+    pendingLoc = { lat:justSavedSpot.lat, lng:justSavedSpot.lng, label:justSavedSpot.name };
+    rebuildSpotSelect();
+    spotSelect.value = justSavedSpot.id;
+    setPreviewMarker(pendingLoc.lat, pendingLoc.lng);
+    updateLocPreview();
+    reopenLogSheetAfterSpot();
+    showToast('Spot saved: '+name+' \u2014 set as this entry\u2019s location.', 4000);
+    return;
+  }
   showToast('Spot saved: '+name);
   map.flyTo([savedLat, savedLng], Math.max(map.getZoom(), 13));
 });
@@ -10660,6 +10687,53 @@ document.getElementById('locAdd').addEventListener('click', ()=>{
   updateLocPreview();
   showToast(tripLocs.length === 1 ? 'Location added — add the other spots you tried.'
                                   : tripLocs.length + ' locations on this trip.');
+});
+
+/* ===================== SAVE AS SPOT (v469) =====================
+   A location set on the + Catch form has always lived on that one record and
+   nowhere else — drop a pin for a catch and the pin is gone the moment it saves.
+   Jan asked for the other option, so this hands the pending location straight to
+   Add Spot with the position filled in and the type already picked, and brings
+   you BACK to the half-filled form afterwards with the new spot selected as the
+   location.
+
+   That round trip is the whole difficulty. The log sheet must not be reopened
+   through openLogSheet(), which resets the form — the species you tapped and the
+   notes you typed are still in it. So the sheet is hidden and re-shown by class,
+   and logSpotReturn remembers that we came from there. It is also honoured when
+   Add Spot is CLOSED without saving: bailing out has to put you back where you
+   were, not drop you on the map with a form you can no longer get to. */
+let logSpotReturn = false;
+// Labels the app invented for a position rather than names a person chose. These
+// are not spot names, so the name box opens empty and waiting instead.
+const GENERIC_LOC = /^(custom pin|my location|photo location|typed position|location)$/i;
+
+function reopenLogSheetAfterSpot(){
+  logSpotReturn = false;
+  closeAllOverlays('logSheet');
+  logSheet.classList.add('open');
+  logScrim.classList.add('open');
+  document.getElementById('logCatchFab').classList.add('pressed');
+}
+
+document.getElementById('saveAsSpot').addEventListener('click', ()=>{
+  if(!pendingLoc){
+    showToast('Set a location first — a spot, the search, a dropped pin or your position.');
+    return;
+  }
+  blurActive();
+  logSpotReturn = true;
+  addSpotLoc = { lat:pendingLoc.lat, lng:pendingLoc.lng };
+  addSpotZone = null;
+  addSpotZoneManual = false;         // let the app pick the type from the position
+  autoSetSpotZone();
+  showAddSpotPreview(addSpotLoc.lat, addSpotLoc.lng);
+  updateAddSpotPreview();
+  const nameBox = document.getElementById('addSpotName');
+  nameBox.value = GENERIC_LOC.test(pendingLoc.label || '') ? '' : (pendingLoc.label || '');
+  openAddSpot();                     // closeAllOverlays inside this hides the log sheet without resetting it
+  resetViewportScale();
+  showToast('Name it and tap Save spot — you’ll come straight back to your entry.', 5000);
 });
 
 document.getElementById('pinOnMap').addEventListener('click', ()=>{
