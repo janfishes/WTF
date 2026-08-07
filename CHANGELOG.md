@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-07
 
+- **v465** — A Bar That Says Catches
 - **v464** — Fished, No Catches
 
 ## 2026-08-06

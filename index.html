@@ -2258,6 +2258,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
      day with no fish on it should never draw the eye ahead of a day with fish. */
   .catch-card.blank-card{background:transparent; border-style:dashed;}
   .cc-blank{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:var(--muted); border:1px solid var(--line); padding:2px 8px; border-radius:5px; text-transform:uppercase; letter-spacing:.03em;}
+  /* v465 (Jan): a bar across the + Catch form, breaking the blank-trip switch and
+     its paragraph off from the fish fields below it. Styled as the sheet head is,
+     and bled to the sheet's full width by cancelling .sheet-body's 18px side
+     padding, so it reads as a band across the form rather than another label in
+     the stack — the field labels above and below are also uppercase, and a third
+     uppercase line would have separated nothing. */
+  .sheet-sect{
+    display:block; margin:18px -18px 4px; padding:8px 18px;
+    background:var(--accent-deep); color:var(--on-accent);
+    font-family:'Space Grotesk',sans-serif; font-size:calc(12.5px * var(--ts));
+    font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
   /* The + Catch form in blank-trip mode: everything about a fish folds away,
      hours fished folds in. */
   .bs{display:none;}
@@ -3595,6 +3608,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <p class="sheet-note" style="margin:6px 0 0;">Tap this for a trip that caught nothing. It saves the water, the day and the tide with no fish on it — the only record that says you were out there and they weren't biting, and the one thing that can never be filled in later.</p>
 
+    <!-- v465: one bar or the other, never both — whichever kind of entry the form
+         is currently for. It also answers, at a glance, which mode the switch above
+         is in, which the folded-away fields only imply. -->
+    <div class="sheet-sect bh">Catches</div>
+    <div class="sheet-sect bs">Blank trip</div>
+
     <label class="field-label bh" style="margin-top:2px;">Photo (optional)</label>
     <input type="file" id="logPhoto" accept="image/*" style="display:none;">
     <div class="photo-box bh" id="photoBox">
@@ -3668,8 +3687,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <p class="sheet-note bh" style="margin:6px 0 0;">Tap it for your best-ever fish. The trophy rides the corner of that catch's photo in <b>My Log</b> and in its map diamond — tap the trophy for a little celebration — and searching <b>personal best</b> finds every one of them.</p>
 
-    <label class="field-label">Notes (optional)</label>
+    <!-- v465 (Jan: "dont want photos for no catch day. can add a conditions or
+         notes field under it"). ONE box, wearing the name that fits the entry —
+         "Notes" on a catch, "Conditions" on a blank trip, where what the water
+         was doing IS the record. A second textarea was the obvious build and the
+         wrong one: two free-text boxes on the same form and neither gets filled
+         properly. The text lands in the same `notes` field either way, so nothing
+         downstream — backups, search, Bite Board — has to learn a second name. -->
+    <label class="field-label bh">Notes (optional)</label>
+    <label class="field-label bs">Conditions (optional)</label>
     <textarea id="logNotes" rows="2" placeholder="Bait, rig, conditions..." spellcheck="true" autocapitalize="sentences" autocorrect="on"></textarea>
+    <p class="sheet-note bs" style="margin:6px 0 0;">Water clarity, wind, bait showing or not, weed — what a photo of the day would have told you. On a blank trip this is the only thing that says <i>why</i>.</p>
 
     <button class="save-btn" id="saveCatch">Save catch</button>
     <p class="storage-note" id="storageNote"></p>
@@ -4677,7 +4705,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 464;
+const BUILD_NUM  = 465;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -9808,6 +9836,12 @@ function setBlankUI(on){
    four states — new catch, edit catch, new trip, edit trip — cannot drift. */
 function syncLogSheetTitle(){
   const editing = editingCatchId || editingTripId;
+  // The notes box is shared between the two kinds; only its label (CSS) and its
+  // prompt change with the mode. Set here rather than in setBlankUI because the
+  // edit path and resetLogForm() both set the mode without going through it.
+  document.getElementById('logNotes').placeholder = blankTrip
+    ? 'Dirty water, no bait showing, wind out of the east...'
+    : 'Bait, rig, conditions...';
   document.getElementById('logSheetTitle').textContent =
     blankTrip ? (editing ? 'Edit Trip' : 'Log a Blank Trip')
               : (editing ? 'Edit Catch' : 'Log a Catch');

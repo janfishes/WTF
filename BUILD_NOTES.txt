@@ -7,6 +7,60 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 11:55 AM EDT · v465 · A Bar That Says Catches
+------------------------------------------------------------------------------
+Jan, on the v464 form: "need a separator between the no catches para and the
+photo for a catch. maybe include title bar that says Catches." Right - with the
+blank-trip switch and its paragraph sitting above PHOTO (OPTIONAL), the form
+read as one unbroken column and there was nothing to say where the trip-level
+choice ended and the fish began.
+
+A bar now runs across the form at that seam. Styled as the sheet head is -
+accent-deep ground, on-accent text, Space Grotesk, uppercase - and bled to the
+sheet's full width by cancelling .sheet-body's 18px side padding with a -18px
+side margin, so it reads as a BAND across the form. That full-bleed is the
+whole trick: the field labels above and below it are already uppercase, so a
+fourth uppercase line inside the same margins would have separated nothing.
+
+Two bars in the markup, never both on screen - .sheet-sect.bh says "Catches",
+.sheet-sect.bs says "Blank trip", and the same v464 body class that folds the
+fish fields away swaps which one shows. So the bar does a second job beyond
+separating: it names, in words, which kind of entry the form is currently for.
+Until now that was only implied by which fields had folded away, which you have
+to already understand the feature to read.
+
+Jan's wording kept for the catch bar ("Catches", not "Catch") - it is the name
+of the section of the log those fields feed, and it matches the Catches pill on
+the map filter row.
+
+Also v465, same sitting. Jan settled the open v464 question - "dont want photos
+for no catch day. can add a conditions or notes field under it" - so the photo
+box stays out of blank mode for good, and the notes box now wears the name that
+fits the entry: NOTES (OPTIONAL) on a catch, CONDITIONS (OPTIONAL) on a blank
+trip, with its placeholder swapping to match ("Dirty water, no bait showing,
+wind out of the east..."). On a day with no fish, what the water was doing IS
+the record - it is the thing the photo would have carried.
+
+ONE box, not two. A second textarea was the obvious build and the wrong one:
+put two free-text fields on the same form and neither gets filled properly. The
+text lands in the same `notes` field whichever name it wore, so backups, search
+and Bite Board never learn a second key. The label swap is pure CSS (a .bh
+label and a .bs label over the same textarea); only the placeholder is set in
+JS, and it is set in syncLogSheetTitle() rather than setBlankUI() because the
+edit path and resetLogForm() both change mode without going through the latter.
+
+Verified headless at 430px in both modes: exactly one bar visible in each, the
+right text on each, the bar's box exactly the width of the sheet body (the 11px
+delta against the SHEET's own width is the custom scrollbar, not a layout bug -
+worth remembering the next time a full-bleed element is measured), and DOM
+order confirming it lands after the blank-trip note and before the photo box.
+Screenshots of both modes eyeballed. Eleven more checks on the notes/conditions
+swap: label and placeholder in each mode, no photo on a blank, save with
+conditions text, reopen for edit showing the Conditions label and the saved
+text, and reverting to Notes on a fresh catch afterwards. The v464 suite (28
+checks) re-run green on top.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 10:35 AM EDT · v464 · Fished, No Catches
 ------------------------------------------------------------------------------
 A trip that caught nothing can now be logged. FISHED - NO CATCHES is the first
