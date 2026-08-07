@@ -2151,6 +2151,41 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .loc-preview{margin-top:9px; padding:9px 11px; border-radius:8px; border:1px dashed var(--line); font-size:12px; color:var(--muted); line-height:1.5;}
   .loc-preview.set{border-color:var(--teal); border-style:solid; color:var(--fog);}
   .loc-preview .mono{font-family:'JetBrains Mono',monospace; color:var(--brass); font-size:11px;}
+  /* v467: spot type-ahead. The results panel is absolutely positioned so a long
+     list never pushes the buttons under it down the form while you are reading —
+     the row below has to stay where your thumb left it. */
+  .loc-search{position:relative; margin-top:8px;}
+  .loc-search input{width:100%; box-sizing:border-box; padding-right:32px;}
+  .loc-search-x{
+    position:absolute; right:6px; top:50%; transform:translateY(-50%);
+    background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer; padding:4px 6px;
+  }
+  .loc-results{
+    position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:30;
+    max-height:230px; overflow-y:auto; background:var(--navy-800);
+    border:1px solid var(--line); border-radius:8px; box-shadow:0 10px 26px rgba(0,0,0,.45);
+  }
+  .loc-hit{padding:8px 11px; cursor:pointer; border-bottom:1px solid var(--line);}
+  .loc-hit:last-child{border-bottom:none;}
+  .loc-hit:hover, .loc-hit.on{background:var(--navy-700);}
+  .loc-hit b{font-size:calc(12.5px * var(--ts)); font-weight:600; color:var(--fog); display:block;}
+  .loc-hit span{font-size:calc(11px * var(--ts)); color:var(--muted);}
+  .loc-hit .mono{font-family:'JetBrains Mono',monospace; color:var(--brass);}
+  .loc-none{padding:9px 11px; font-size:12px; color:var(--muted);}
+  /* The banked locations on a skunked trip. Numbered, because the first one is
+     load-bearing — it is where the trip files on the map and in the filters. */
+  .trip-loc{
+    display:flex; align-items:center; gap:8px; margin-top:6px; padding:7px 9px;
+    border:1px solid var(--line); border-radius:8px; background:var(--navy-800);
+  }
+  .trip-loc .n{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+    color:var(--on-accent); background:var(--accent-deep); border-radius:4px; padding:1px 6px; flex:none;
+  }
+  .trip-loc .who{flex:1; min-width:0; font-size:calc(12px * var(--ts)); color:var(--fog); line-height:1.4;}
+  .trip-loc .who .mono{display:block; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--brass);}
+  .trip-loc .x{background:none; border:none; color:var(--muted); font-size:13px; cursor:pointer; padding:4px 6px; flex:none;}
+  .trip-loc .x:hover{color:var(--rust);}
   .save-btn{
     width:100%; margin-top:20px; padding:12px; border-radius:10px; border:none;
     background:var(--accent-deep); color:var(--on-accent); font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
@@ -2258,6 +2293,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
      day with no fish on it should never draw the eye ahead of a day with fish. */
   .catch-card.blank-card{background:transparent; border-style:dashed;}
   .cc-blank{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:var(--muted); border:1px solid var(--line); padding:2px 8px; border-radius:5px; text-transform:uppercase; letter-spacing:.03em;}
+  /* v467: the spots tried on a multi-location skunked trip, in the order they
+     were tried — which is the story of the day. */
+  .cc-spots{margin-top:5px; font-size:calc(12px * var(--ts)); color:var(--fog); line-height:1.7;}
+  .cc-spots .n{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:var(--on-accent); background:var(--accent-deep); border-radius:4px; padding:1px 5px;}
+  .cc-spots .mono{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--brass);}
   /* v465 (Jan): a bar across the + Catch form, breaking the blank-trip switch and
      its paragraph off from the fish fields below it. Styled as the sheet head is,
      and bled to the sheet's full width by cancelling .sheet-body's 18px side
@@ -3279,7 +3319,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="regsLog" style="display:none;"></div>
     </div>
     <div id="panel-catches" style="display:none;">
-      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. A trip that caught nothing belongs here too: tap <b>FISHED — NO CATCHES</b> at the top of the <b>+ Catch</b> form and it saves the water, the day and the tide with no fish on it. Those sit in the list as dashed <b>skunked trip</b> cards and are never counted as catches — they're the only thing that tells you how often the water was quiet, and there's no way to add one after the day has gone. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Measurement units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log. <b>RETURN TO TOP</b> at the very bottom brings you straight back here.</p>
+      <p class="sheet-note">Every catch you log shows up here and as a black diamond marker on the map. Entries are listed by <b>date caught</b>, most recent first — not by the order you added them. A trip that caught nothing belongs here too: tap <b>FISHED — NO CATCHES</b> at the top of the <b>+ Catch</b> form and it saves the water, the day and the tide with no fish on it. Those sit in the list as dashed <b>skunked trip</b> cards and are never counted as catches. A skunked trip can hold <b>several locations</b> — add every spot you tried and they ride on the one entry — they're the only thing that tells you how often the water was quiet, and there's no way to add one after the day has gone. Use <b>EDIT ✎</b> to edit an entry or <b>DELETE ✕</b> to delete it — <b>UNDO</b> below reverses your most recent change, one change per tap. The <b>When caught</b> and <b>Where caught</b> menus below narrow the list — and the diamonds on the map with it — to one time of year, one stretch of water, or one pin. Tap <b>JUMP TO END</b> below (or scroll down) to skip straight to the foot of your catch list — the last catch stays in view, and just under it sit <b>Measurement units</b> — inches or centimetres, statute or nautical miles — then <b>Add catches from photos</b> and the two ways to export and import your log. <b>RETURN TO TOP</b> at the very bottom brings you straight back here.</p>
       <label class="field-label" for="logNameInput" style="margin-top:0;">Your name <span style="color:var(--muted); font-weight:400;">(optional — puts it in the title, like “Ace’s Catch Log”)</span></label>
       <input type="text" id="logNameInput" maxlength="24" autocomplete="name" placeholder="Your name" style="width:100%; box-sizing:border-box; margin:0 0 10px;">
       <div class="loc-btns" style="margin:0 0 10px;">
@@ -3641,12 +3681,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="chip" data-zone="offshore">Offshore</div>
     </div>
     <select id="logSpotSelect"><option value="">— choose a known spot —</option></select>
+    <!-- v467 (Jan): type-ahead over every pin on the map, and over typed
+         coordinates. The select above lists 225+ spots in one scroll; on a phone
+         that is a long way to Turtle Mound. Both stay — the list is for browsing,
+         this is for when you already know the name. -->
+    <div class="loc-search">
+      <input type="text" id="locSearch" placeholder="Search a spot by name — or paste coordinates"
+             autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
+      <button class="loc-search-x" id="locSearchClear" title="Clear search" style="display:none;">✕</button>
+      <div class="loc-results" id="locResults" style="display:none;"></div>
+    </div>
     <div class="loc-btns">
       <button class="mini-btn" id="pinOnMap">Drop pin <span class="bi bi-emoji">📍</span></button>
       <button class="mini-btn" id="useMyLoc">My location <svg viewBox="0 0 24 28" width="15" height="17" style="color:var(--accent-lite); vertical-align:-3px;"><use href="#locatePin"></use></svg></button>
       <button class="mini-btn" id="clearLoc">Clear <span class="bi">✕</span></button>
     </div>
     <div class="loc-preview" id="locPreview">No location set yet.</div>
+    <!-- v467: a skunked trip is usually several spots tried, not one. The picker
+         above stays exactly as it is — it sets ONE pending location — and this
+         button is what banks it, so a mis-tap is never already in the list. -->
+    <div class="bs">
+      <div class="loc-btns"><button class="mini-btn" id="locAdd">+ Add this location to the trip</button></div>
+      <div id="tripLocList"></div>
+      <p class="sheet-note" style="margin:6px 0 0;">Add every spot you tried. The first one is where the trip is filed on the map and in the filters; the rest ride along with it.</p>
+    </div>
 
     <label class="field-label">Tide (optional)</label>
     <div class="chiprow wrap" id="tideRow"></div>
@@ -4705,7 +4763,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 466;
+const BUILD_NUM  = 467;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -8327,17 +8385,28 @@ function spotRefById(id){ return allSpotRefs().find(s=> s.id === id) || null; }
 function catchNearSpot(c, s){
   try{ return map.distance([s.lat, s.lng], [c.lat, c.lng]) <= CATCH_NEAR_M; }catch(e){ return false; }
 }
+/* v467: a skunked trip can carry several spots. A WHERE question is asked of ALL
+   of them and passes if ANY answers yes — "show me Ponce Inlet" has to surface
+   the day you tried Ponce Inlet third and blanked, or the filter is hiding
+   exactly the trips you went looking for. Catches have one position and take the
+   single-element path, unchanged. */
+function catchPositions(c){
+  if(c.kind === 'trip' && Array.isArray(c.locations) && c.locations.length) return c.locations;
+  return [{ lat:c.lat, lng:c.lng }];
+}
 function catchPassesWhere(c){
   if(catchWhere === 'all') return true;
+  const spots = catchPositions(c);
   if(catchWhere === 'view'){
-    try{ return map.getBounds().contains([c.lat, c.lng]); }catch(e){ return true; }
+    try{ return spots.some(p=> map.getBounds().contains([p.lat, p.lng])); }catch(e){ return true; }
   }
-  if(catchWhere === 'inshore')  return catchIsInshore(c);
-  if(catchWhere === 'offshore') return !catchIsInshore(c);
+  if(catchWhere === 'inshore')  return spots.some(p=> catchIsInshore(p));
+  if(catchWhere === 'offshore') return spots.some(p=> !catchIsInshore(p));
   const m = catchWhere.match(/^spot:(.+)$/);
   if(m){
     const s = spotRefById(m[1]);
-    return s ? catchNearSpot(c, s) : true;   // a deleted pin stops filtering rather than emptying the log
+    if(!s) return true;                      // a deleted pin stops filtering rather than emptying the log
+    return spots.some(p=> catchNearSpot(p, s));
   }
   return true;
 }
@@ -8477,7 +8546,14 @@ function tripCardHTML(t, showCoords){
   const tide = catchTideStr(t);
   const moon = catchMoonStr(t);
   const wave = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>`;
-  const loc = escapeHTML((t.locationLabel||'').replace(/^(photo location|custom pin)$/i,'Location'));
+  const clean = s => escapeHTML((s||'').replace(/^(photo location|custom pin)$/i,'Location'));
+  const all = (Array.isArray(t.locations) && t.locations.length)
+    ? t.locations : [{lat:t.lat, lng:t.lng, label:t.locationLabel}];
+  // One spot reads as a catch card does. Several get numbered on their own lines —
+  // the order they were tried is part of the story of the day.
+  const loc = all.length > 1
+    ? all.length + ' spots tried'
+    : clean(all[0].label);
   const line2 = [tide? wave+' '+tide:'', moon].filter(Boolean).join(' · ');
   const hrs = (t.hours || t.hours === 0)
     ? `<div class="cc-size">${(+t.hours) === 1 ? '1 hour' : (+t.hours) + ' hours'} fished, nothing caught</div>` : '';
@@ -8489,7 +8565,10 @@ function tripCardHTML(t, showCoords){
           <button class="tc-del" data-id="${t.id}" title="Delete">DELETE <span class="bi">✕</span></button>
         </div>
       </div>
-      <div class="cc-meta">${fmtDateShort(t.date)}${t.time? ' · '+fmtTime(t.time):''} · ${loc}${showCoords? ' · '+toDMS(t.lat, t.lng):''}${line2? '<br>'+line2:''}</div>
+      <div class="cc-meta">${fmtDateShort(t.date)}${t.time? ' · '+fmtTime(t.time):''} · ${loc}${(showCoords && all.length === 1)? ' · '+toDMS(all[0].lat, all[0].lng):''}${line2? '<br>'+line2:''}</div>
+      ${all.length > 1 ? `<div class="cc-spots">${all.map((l,i)=>
+          `<div><span class="n">${i+1}</span> ${clean(l.label)}${showCoords? ` <span class="mono">${toDMS(l.lat, l.lng)}</span>`:''}</div>`
+        ).join('')}</div>` : ''}
       ${hrs}
       ${t.notes? `<div class="cc-notes">Note: ${escapeHTML(t.notes)}</div>`:''}
     </div>`;
@@ -10419,6 +10498,159 @@ function updateLocPreview(){
   el.classList.add('set');
 }
 
+/* ===================== LOCATION TYPE-AHEAD (v467) =====================
+   Jan: "selectable from the dropdown or the usual gps or type entry (add search
+   and autofill option for location)". Searches every pin the app knows — the
+   built-in spots, the GNIS waypoints, ramps and the user's own — by name and by
+   kind, and ALSO reads a typed coordinate through parseLatLngInput(), which
+   already handles decimal, degrees-minutes and full DMS. So "turtle", "ponce",
+   "29 04.672 N 80 54.511 W" and a pasted DMS pair all land in the same box.
+
+   Deliberately NOT filtered by the Inshore/Offshore pills above it. Those narrow
+   the browse list, which is what a list is for; a search that silently refuses to
+   find Turtle Mound because a pill is lit is a search you stop trusting. */
+const locSearch = document.getElementById('locSearch');
+const locResults = document.getElementById('locResults');
+const locSearchClear = document.getElementById('locSearchClear');
+let locHits = [], locHitIdx = -1;
+
+function locSearchable(){
+  const out = [];
+  try{
+    allSpotRefs().forEach(s=>{
+      if(!s || !isFinite(s.lat) || !isFinite(s.lng)) return;
+      out.push({ lat:s.lat, lng:s.lng, label:s.name, meta:s.meta || '', id:s.id });
+    });
+  }catch(e){}
+  return out;
+}
+/* Name matches beat kind matches, and a match at the START of the name beats one
+   in the middle — typing "ponce" should not put "Rockhouse Creek (Ponce)" above
+   "Ponce de Leon Inlet". */
+function locRank(item, q){
+  const name = item.label.toLowerCase(), meta = (item.meta||'').toLowerCase();
+  if(name === q) return 0;
+  if(name.startsWith(q)) return 1;
+  if(new RegExp('\\b' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).test(name)) return 2;
+  if(name.includes(q)) return 3;
+  if(meta.includes(q)) return 4;
+  return 99;
+}
+function renderLocResults(){
+  if(!locHits.length){ locResults.style.display = 'none'; locResults.innerHTML = ''; return; }
+  locResults.innerHTML = locHits.map((h,i)=>
+    `<div class="loc-hit${i===locHitIdx?' on':''}" data-i="${i}">
+       <b>${escapeHTML(h.label)}</b>
+       <span>${h.meta ? escapeHTML(h.meta) + ' · ' : ''}<span class="mono">${toDMS(h.lat, h.lng)}</span></span>
+     </div>`).join('');
+  locResults.style.display = 'block';
+  locResults.querySelectorAll('.loc-hit').forEach(el=>
+    el.addEventListener('click', ()=> pickLocHit(+el.dataset.i)));
+}
+function runLocSearch(){
+  const raw = locSearch.value.trim();
+  locSearchClear.style.display = raw ? 'block' : 'none';
+  locHitIdx = -1;
+  if(raw.length < 2){ locHits = []; renderLocResults(); return; }
+  const q = raw.toLowerCase();
+  locHits = locSearchable().map(h=>({h, r:locRank(h, q)}))
+    .filter(x=> x.r < 99)
+    .sort((a,b)=> a.r - b.r || a.h.label.localeCompare(b.h.label))
+    .slice(0, 8).map(x=> x.h);
+  // A typed coordinate always offers itself, at the top — it is the most specific
+  // thing anyone can type, so it should never be buried under fuzzy name matches.
+  const coord = parseLatLngInput(raw);
+  if(coord && isFinite(coord.lat) && isFinite(coord.lng)){
+    locHits.unshift({ lat:coord.lat, lng:coord.lng, label:'Typed position', meta:'Coordinates you typed' });
+  }
+  if(!locHits.length){
+    locResults.innerHTML = '<div class="loc-none">Nothing by that name. Try fewer letters, or type a position.</div>';
+    locResults.style.display = 'block';
+    return;
+  }
+  renderLocResults();
+}
+function pickLocHit(i){
+  const h = locHits[i];
+  if(!h) return;
+  pendingLoc = { lat:h.lat, lng:h.lng, label:h.label };
+  spotSelect.value = h.id || '';
+  setPreviewMarker(h.lat, h.lng);
+  updateLocPreview();
+  locSearch.value = '';
+  locSearchClear.style.display = 'none';
+  locHits = []; renderLocResults();
+  blurActive();
+}
+locSearch.addEventListener('input', runLocSearch);
+locSearch.addEventListener('focus', ()=>{ if(locSearch.value.trim().length >= 2) runLocSearch(); });
+locSearch.addEventListener('keydown', e=>{
+  if(!locHits.length) return;
+  if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+    e.preventDefault();
+    locHitIdx = (locHitIdx + (e.key === 'ArrowDown' ? 1 : locHits.length - 1)) % locHits.length;
+    renderLocResults();
+  } else if(e.key === 'Enter'){
+    e.preventDefault();
+    pickLocHit(locHitIdx >= 0 ? locHitIdx : 0);   // Enter with nothing highlighted takes the best match
+  } else if(e.key === 'Escape'){
+    locHits = []; renderLocResults();
+  }
+});
+locSearchClear.addEventListener('click', ()=>{
+  locSearch.value = ''; locSearchClear.style.display = 'none';
+  locHits = []; renderLocResults(); locSearch.focus();
+});
+// A tap anywhere else closes the panel; without this it sits over the buttons.
+document.addEventListener('click', e=>{
+  if(!locResults || locResults.style.display === 'none') return;
+  if(e.target.closest && e.target.closest('.loc-search')) return;
+  locHits = []; renderLocResults();
+});
+
+/* ---------- several locations on a skunked trip (v467) ----------
+   The picker above still sets ONE pending location, exactly as it does for a
+   catch. This list is what a skunked trip actually saves, and a location only
+   joins it when the Add button is pressed — so a mis-tapped spot is never
+   already banked, and the same four ways of choosing (list, search, drop pin,
+   GPS) all feed it without any of them learning about trips. */
+let tripLocs = [];
+const SAME_SPOT_M = 15;      // two picks this close are the same place, not two
+
+function renderTripLocs(){
+  const box = document.getElementById('tripLocList');
+  if(!box) return;
+  if(!tripLocs.length){ box.innerHTML = ''; return; }
+  box.innerHTML = tripLocs.map((l,i)=>
+    `<div class="trip-loc">
+       <span class="n">${i+1}</span>
+       <span class="who">${escapeHTML(l.label || 'Location')}<span class="mono">${toDMS(l.lat, l.lng)}</span></span>
+       <button class="x" data-i="${i}" title="Remove">✕</button>
+     </div>`).join('');
+  box.querySelectorAll('.x').forEach(btn=> btn.addEventListener('click', ()=>{
+    tripLocs.splice(+btn.dataset.i, 1);
+    renderTripLocs();
+  }));
+}
+document.getElementById('locAdd').addEventListener('click', ()=>{
+  if(!pendingLoc){ showToast('Pick a location first — a spot, the search, a dropped pin or your position.'); return; }
+  const dupe = tripLocs.some(l=>{
+    try{ return map.distance([l.lat, l.lng], [pendingLoc.lat, pendingLoc.lng]) <= SAME_SPOT_M; }
+    catch(e){ return false; }
+  });
+  if(dupe){ showToast('That spot is already on this trip.'); return; }
+  tripLocs.push({ lat:pendingLoc.lat, lng:pendingLoc.lng, label:pendingLoc.label });
+  renderTripLocs();
+  // Clear the picker so the next one starts from nothing — otherwise the same
+  // location sits there looking like it still needs adding.
+  pendingLoc = null;
+  spotSelect.value = '';
+  clearPreviewMarker();
+  updateLocPreview();
+  showToast(tripLocs.length === 1 ? 'Location added — add the other spots you tried.'
+                                  : tripLocs.length + ' locations on this trip.');
+});
+
 document.getElementById('pinOnMap').addEventListener('click', ()=>{
   // Blur first: hiding a control while it still has focus is what leaves the browser
   // mid-zoom (iOS pans, Chrome/Android strands the scale). Then reset the scale.
@@ -10551,6 +10783,11 @@ function resetLogForm(){
   logBlankChip.classList.remove('active');
   document.body.classList.remove('blank-trip');
   document.getElementById('logHours').value = '';
+  tripLocs = [];
+  renderTripLocs();
+  locSearch.value = '';
+  locSearchClear.style.display = 'none';
+  locHits = []; renderLocResults();
   syncLogSheetTitle();
 }
 
@@ -10571,7 +10808,13 @@ function openLogSheet(editCatch){
     document.getElementById('logTime').value = t.time || '';
     document.getElementById('logHours').value = (t.hours === null || t.hours === undefined) ? '' : t.hours;
     document.getElementById('logNotes').value = t.notes || '';
-    pendingLoc = {lat:t.lat, lng:t.lng, label:t.locationLabel};
+    // Trips saved before v467 carry one location on the record itself; from v467
+    // the list is authoritative and its first entry IS that location.
+    tripLocs = (Array.isArray(t.locations) && t.locations.length)
+      ? t.locations.map(l=>({ lat:+l.lat, lng:+l.lng, label:l.label || 'Location' }))
+      : [{ lat:t.lat, lng:t.lng, label:t.locationLabel || 'Location' }];
+    renderTripLocs();
+    pendingLoc = null;
     updateLocPreview();
   } else if(editCatch){
     editingCatchId = editCatch.id;
@@ -10627,7 +10870,11 @@ logScrim.addEventListener('click', closeLogSheetFn);
 
 document.getElementById('saveCatch').addEventListener('click', async ()=>{
   if(!blankTrip && !activeLogSpecies.length){ showToast('Pick a species first.'); return; }
-  if(!pendingLoc){ showToast('Set a location — choose a spot, drop a pin, or use your location.'); return; }
+  // A skunked trip is satisfied by its banked list OR by a location still sitting
+  // in the picker — forgetting to press Add must never cost you the entry.
+  if(!pendingLoc && !(blankTrip && tripLocs.length)){
+    showToast('Set a location — choose a spot, search for one, drop a pin, or use your location.'); return;
+  }
   // Typed-but-unreadable date must not silently save as today.
   if(LOG_DATE_TEXT && logDateEl.value.trim() && !parseDateEntry(logDateEl.value)){
     showToast('Couldn’t read that date — try mm/dd/yyyy.'); return;
@@ -10635,13 +10882,30 @@ document.getElementById('saveCatch').addEventListener('click', async ()=>{
 
   if(blankTrip){
     const hrsRaw = document.getElementById('logHours').value;
+    /* One un-banked location in the picker joins the list here rather than being
+       lost. The FIRST entry is also written to lat/lng/locationLabel on the
+       record: every filter, every map question and Bite Board's enrichment read
+       those two numbers, and teaching all of them about an array for a record
+       that is usually one place anyway would be a lot of new ways to be wrong.
+       The list is the truth; the flat pair is the primary, kept in step here and
+       nowhere else. */
+    const locs = tripLocs.slice();
+    if(pendingLoc){
+      const dupe = locs.some(l=>{
+        try{ return map.distance([l.lat,l.lng],[pendingLoc.lat,pendingLoc.lng]) <= SAME_SPOT_M; }
+        catch(e){ return false; }
+      });
+      if(!dupe) locs.push({ lat:pendingLoc.lat, lng:pendingLoc.lng, label:pendingLoc.label });
+    }
+    const first = locs[0];
     const fields = {
       kind: 'trip',
       date: getLogDate() || todayStr(),
       time: document.getElementById('logTime').value || '',
       tide: activeTide,
       tideDetail: tideDetail,
-      lat: pendingLoc.lat, lng: pendingLoc.lng, locationLabel: pendingLoc.label,
+      lat: first.lat, lng: first.lng, locationLabel: first.label,
+      locations: locs,
       hours: hrsRaw === '' ? null : Math.max(0, Math.min(24, Number(hrsRaw) || 0)),
       notes: document.getElementById('logNotes').value.trim() || ''
     };

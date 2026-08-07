@@ -7,6 +7,76 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 1:20 PM EDT · v467 · Several Spots, One Skunked Trip
+------------------------------------------------------------------------------
+Jan: "add several locations, selectable from the dropdown or the usual gps or
+type entry (add search and autofill option for location)." Two things, and the
+second one turned out to be the more broadly useful of the pair.
+
+1. A SPOT TYPE-AHEAD, on every entry - catch and skunked trip alike. The known-
+spot <select> lists 225+ pins in one scroll, which on a phone is a long way to
+anywhere. The new box searches every pin the app knows (built-in spots, GNIS
+waypoints, ramps, the user's own) by NAME and by KIND, ranked so an exact name
+beats a name that starts with the query beats a word-boundary match beats a
+substring beats a kind match - typing "ponce" must not put "Rockhouse Creek
+(Ponce)" above "Ponce de Leon Inlet". Eight hits max, arrow keys and Enter work,
+Enter with nothing highlighted takes the best match, Escape closes.
+
+It also reads a TYPED POSITION through the existing parseLatLngInput(), which
+already handled decimal, degrees-minutes and full DMS - so "29 04.672 N 80
+54.511 W", a pasted DMS pair and a bare decimal pair all land in the same box.
+A parsed coordinate is always offered FIRST, above the fuzzy name matches: it is
+the most specific thing anyone can type and burying it would be perverse.
+
+Deliberately NOT filtered by the Inshore/Offshore pills. Those narrow the browse
+list, which is what a list is for; a search that silently refuses to find a spot
+because a pill is lit is a search you stop trusting. The results panel is
+absolutely positioned so a long list never shoves the buttons below it down the
+form while you are reading it - the row has to stay where your thumb left it.
+
+2. SEVERAL LOCATIONS on a skunked trip, which is how a skunked day actually
+goes: you try three places and none of them produce. The picker above is
+untouched - it still sets ONE pending location, from any of the four ways
+(list, search, dropped pin, GPS) - and a new "+ Add this location to the trip"
+button banks it. A location only joins the list when that button is pressed, so
+a mis-tapped spot is never already in it, and none of the four pickers had to
+learn that trips exist. Adding clears the picker, because a location still
+sitting there after being banked looks like it still needs banking. Two picks
+within 15 m are the same place and the second is refused.
+
+Where it is stored, and the one bit that matters. The record gains
+`locations: [{lat,lng,label}, ...]` and the FIRST entry is ALSO written to the
+flat lat/lng/locationLabel it already had. Every filter, every map question and
+Bite Board's enrichment read those two numbers; teaching all of them about an
+array, for a record that is usually one place anyway, would have been a lot of
+new ways to be wrong. The list is the truth, the flat pair is the primary, and
+they are kept in step in exactly one place - the save handler.
+
+The one filter that DID have to learn: catchPassesWhere() now asks its question
+of every location and passes if ANY answers yes. "Show me Ponce Inlet" has to
+surface the day you tried Ponce Inlet third and blanked, or the filter hides
+precisely the trips you went looking for. Catches take the single-element path,
+unchanged. Forgetting to press Add never costs the entry either - a location
+still in the picker at Save joins the list there.
+
+In My Log a one-spot trip reads exactly as it did. Several get "3 spots tried"
+on the meta line and then a numbered list of them, in the order they were
+tried, which is the story of the day.
+
+Verified headless: 27 new checks (name search and its ranking, the two-letter
+floor, the no-match note, typed DDM parsing to within a metre of the right
+point, picking by name and by coordinate, Add/duplicate-refusal/remove, three
+locations saved with the primary matching the first, the card's "3 spots tried"
+and its numbered rows, the where-filter matching a NON-primary location, the
+backup carrying all three, the edit round trip reloading the list, and a fresh
+catch showing the search but neither the Add button nor the list). The three
+earlier suites re-run green: 28 + 11 + 8.
+
+Not a bug, in case it looks like one next time: searching "turtle" finds
+nothing. Turtle Mound is named in a spot's description but is not itself a pin
+in this app.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 12:35 PM EDT · v466 · Log A Skunked Trip
 ------------------------------------------------------------------------------
 Jan: "change card name to Log a Skunked Trip." The v464/v465 word for a fishless
