@@ -7,6 +7,38 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 1:55 PM EDT · v468 · Turtle Mound Gets A Pin
+------------------------------------------------------------------------------
+Jan: "include Turtle Mound as a pin." Noticed because v467's new spot search
+came up empty on it — the app carried the NAME in two places with no pin behind
+it (the NOAA tide station 8721223 is named for it, and a spot description points
+at "the notch south of Turtle Mound"), but you could not pick it as a location.
+
+Taken from GNIS, the app's place-name authority since v266, rather than typed
+from memory: feature 292579, Turtle Mound, class Summit, Volusia County,
+28.9306642 / -80.8271161. That is the 35-50 ft shell midden on the east shore of
+Mosquito Lagoon and the tallest thing on that water for miles, which is why it
+is the landmark everyone down there steers by. Sits between Shipyard Island and
+Turner Flats in the list, which is where it sits on the water. Spot count
+217 -> 218.
+
+Filed as a LANDMARK, not a waypoint. inshoreCat() sorts by the meta kind and
+"Mound" fell through to waypoints, which is the bucket for navigable water —
+creeks, cuts, channels, things you run THROUGH. A 50 ft midden is something you
+steer BY, same as a bridge or an island, so "mound" joins that regex. Verified
+the other three buckets are unmoved by the change.
+
+Verified headless: the record's coordinates match GNIS to five decimals, it
+draws a marker, it lands inside the shore envelope (so the inshore/offshore
+filters and catchIsInshore agree it is inshore), the v467 search now returns it
+first for "turtle", it is pickable as a catch location, it appears in the known-
+spot dropdown, and there are no duplicate spot ids.
+
+Note on measuring this next time: counting SPOTS with a hand-written regex over
+the source gave 215 and was wrong — entry field order varies. Count in the
+BROWSER (SPOTS.length) or anchor the regex to '{ id:"'.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 1:20 PM EDT · v467 · Several Spots, One Skunked Trip
 ------------------------------------------------------------------------------
 Jan: "add several locations, selectable from the dropdown or the usual gps or

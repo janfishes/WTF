@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-07
 
+- **v468** — Turtle Mound Gets A Pin
 - **v467** — Several Spots, One Skunked Trip
 - **v466** — Log A Skunked Trip
 - **v465** — A Bar That Says Catches

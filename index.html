@@ -4504,6 +4504,15 @@ const SPOTS = [
   { id:"wp-cedar-island", name:"Cedar Island", zone:"inshore", lat:28.948321, lng:-80.848664, meta:"Waypoint · Island", wp:true, species:[] },
   { id:"wp-shipyard-canal", name:"Shipyard Canal", zone:"inshore", lat:28.944987, lng:-80.848386, meta:"Waypoint · Canal", wp:true, species:[] },
   { id:"wp-turner-flats", name:"Turner Flats", zone:"inshore", lat:28.943541, lng:-80.840422, meta:"Waypoint · Flats", wp:true, species:[] },
+  /* v468 (Jan). GNIS feature 292579, class Summit, Volusia — the 35-50 ft shell
+     midden on the east shore of Mosquito Lagoon, and the tallest thing on that
+     water for miles, which is why it is the landmark everyone steers by down
+     there. Filed as a LANDMARK rather than a waypoint (see inshoreCat): it is
+     something you steer by, not water you run through. The app already carried
+     the name in two places without a pin behind it — the NOAA tide station
+     8721223 is named for it, and a spot description points at "the notch south
+     of Turtle Mound". */
+  { id:"wp-turtle-mound", name:"Turtle Mound", zone:"inshore", lat:28.930664, lng:-80.827116, meta:"Waypoint · Mound", wp:true, species:[] },
   { id:"wp-shipyard-island", name:"Shipyard Island", zone:"inshore", lat:28.928599, lng:-80.838386, meta:"Waypoint · Island", wp:true, species:[] },
   { id:"wp-orange-island-creek", name:"Orange Island Creek", zone:"inshore", lat:28.915393, lng:-80.832488, meta:"Waypoint · Creek", wp:true, species:[] },
   { id:"wp-bittersweet-cove", name:"Bittersweet Cove", zone:"inshore", lat:28.913701, lng:-80.859628, meta:"Waypoint · Cove", wp:true, species:[] },
@@ -4763,7 +4772,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 467;
+const BUILD_NUM  = 468;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -8649,7 +8658,9 @@ function inshoreCat(s){
   if(isCustomSpot(s)) return 'myspots';
   const kind = (s.meta || '').replace(/^Waypoint · /,'');
   if(/marina|yacht club/i.test(kind)) return 'marinas';
-  if(/bridge|trestle|island|city|point|flats|shoal|jetty/i.test(kind)) return 'landmarks';
+  // v468: "mound" joins the list for Turtle Mound — a 50 ft shell midden is as
+  // much a thing you steer by as a bridge or an island is.
+  if(/bridge|trestle|island|city|point|flats|shoal|jetty|mound/i.test(kind)) return 'landmarks';
   return 'waypoints';
 }
 
