@@ -7,6 +7,66 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 9:20 PM EDT · v488 · Routes Get Their Own Sheet
+------------------------------------------------------------------------------
+Jan: "remove the button function on Measure a Route in +Spots, because the Route
+FAB does that... also need to define S and L. It might be better to change the
+FAB to + Route and put it under + Catch, and put all the saved routes there as
+well, not to be confused with spots". Then, mid-build: "if moved, then measure
+button stays".
+
+ROUTES NO LONGER LIVE INSIDE + SPOT. They have their own sheet, opened by
++ ROUTE, which now wears the plus and sits with + Spot and + Catch — the three
+things you ADD. Jan's reason is the right one and should not be undone: a route
+is not a spot, and the two must not read as the same kind of thing. The old
+arrangement had "Your saved routes" sitting among the spot count, the spot UNDO
+and the spot trash line, which invited exactly the confusion he named.
+
+The MEASURE A ROUTE button was NOT deleted — it moved into the new sheet (Jan's
+follow-up settled this). So + ROUTE opens the sheet, and the sheet's first
+action starts measuring, exactly the shape + Spot and + Catch already have.
+Tapping + ROUTE while a route IS being measured cancels it instead of opening
+the sheet, the same toggle TRACK MY PATH uses.
+
+S AND L ARE NOW DEFINED, in the two places they are seen:
+  * The sheet has a "What the pins mean" paragraph using real .rt-key chips that
+    look exactly like the pins on the map — S is your start, every pin after it
+    is named for the LEG that ends there, and TOTAL is how far you have come by
+    that pin.
+  * The measuring card's foot carries a one-line version, because that is where
+    the letters actually appear while you are using them.
+  * Help got the same treatment with the same chips.
+
+GOTCHA THAT WILL BITE AGAIN IF FORGOTTEN: the FAB's measuring state is its own
+class, .measuring, NOT .pressed. closeAllOverlays() sweeps .pressed off the
+whole stack, so opening any sheet mid-route would have darkened the button while
+the route was still live. TRACK MY PATH keeps .rec for exactly this reason.
+.pressed on this FAB now means "the Routes sheet is open", which is a different
+state, and both are asserted in the suite.
+
+FAB ORDER: + ROUTE moved from between Tides and Waves (v487, placed by width) to
+directly under + Catch. This deliberately breaks the width taper v487 added —
+Route 78 now sits between Catch 74 and Tides 74. Grouping the three "+" actions
+beats sorting by pill width, so the suite's taper check was replaced by one that
+asserts the INTENDED order and that + Route wears the same plus glyph as its two
+neighbours. Do not "fix" the taper by moving it back.
+
+TEST NOTE, worth keeping: three checks failed on the first run of this build
+purely because they still described v486 behaviour (FAB starts measuring, FAB
+lit state is .pressed). Behaviour changes must update the checks that assert the
+OLD behaviour, or the suite reports a regression that is really just a stale
+description. Separately: a run that reported 0/4 with "routes is not defined"
+was the preview server started from the scratchpad instead of the repo — always
+confirm `curl -o /dev/null -w %{http_code}` on index.html before believing a
+mass failure.
+
+VERIFIED  56/56 headless, including real-tap checks that + ROUTE opens the sheet
+without arming, MEASURE arms without dropping a phantom pin, the + Spot sheet
+contains no route controls or the words "saved routes" at all, and the FAB stays
+lit through a closeAllOverlays sweep. Screenshot at 430 px confirms the key
+chips render as the map pins do.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 8:35 PM EDT · v487 · Route FAB Fits The Taper
 ------------------------------------------------------------------------------
 Jan: "are + Catch and Route the same length FAB, if so moce Route after Catch".
