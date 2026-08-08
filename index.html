@@ -3926,7 +3926,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>The app measures the distance. That is all it does here.</b> It does not work out your trip, your fuel or your time, and it deliberately doesn't try. Whether that run is an easy morning or more than you want depends on things no app can see: which way the wind gets up, what the sea does on the way home, how loaded the boat is, how much light is left — and whether you are running an outboard, sailing, paddling or on a trolling motor. The way back is rarely the way out, and it is usually the harder half. <b>What the distance costs you, on that day, in that boat, is yours to know</b> — and it is worth knowing before you need it.</p>
       <p class="sheet-note">A route measures the <b>straight line between the pins you dropped</b> — nothing more. It does not know where the channel runs, where the water is deep enough for your boat, or what lies between two pins. Inshore that matters: the real run bends around marsh, spoil islands and shoals, so <b>two pins can read a lot shorter than the run you'll actually make</b>. Trace the channel with extra pins wherever it bends and the total comes out honest. Bearings are <b>true</b> (marked <b>T</b>), because the heading your phone can be trusted for is its <b>GPS course</b>, which is true north as well — a phone's compass needle sits in a console full of wiring and can be well out. <b>This is not a course to steer.</b> Nothing has checked the water under that line.</p>
       <p class="sheet-note"><b>The best route is one you've already run.</b> Under <b>Your tracks</b>, every recorded track has a <b>SAVE AS ROUTE</b> button — it thins the track down to its bends and files it as a route, so the legs follow the water you actually went through instead of cutting across the flats. The route reads a little <b>shorter</b> than the track did, because it trims the boat's wander out of each bend.</p>
-      <p class="sheet-note">Saved routes live in the <b>+ ROUTE</b> sheet, each with <b>SHOW/HIDE 🗺</b>, <b>EDIT ✎</b> (rename it and take notes — ramp, tide, where it shoals) and <b>DELETE ✕</b>. Saving a route puts <b>that</b> route on the chart and takes the others off, so you are looking at the run you just measured — <b>SHOW 🗺</b> brings an older one back, and the <b>ROUTES</b> button along the top of the map takes the whole lot off in one tap; tapping a route's line on the map zooms to it. A deleted route comes back with <b>UNDO</b> for 14 days like anything else. The app keeps your last 20. Unlike tracks, <b>routes are saved in your backup file</b> — a route is work you did by hand, and it should survive a new phone. A route keeps the coordinates it was measured with, so moving or deleting a pin later never changes a distance you have already measured.</p>
+      <p class="sheet-note">Saved routes live in the <b>+ ROUTE</b> sheet, each with <b>SHOW/HIDE 🗺</b>, <b>EDIT ✎</b> (rename it and take notes — ramp, tide, where it shoals) and <b>DELETE ✕</b>. Saving a route puts <b>that</b> route on the chart and takes the others off, so you are looking at the run you just measured — <b>SHOW 🗺</b> brings an older one back, <b>HIDE ALL ROUTES</b> in the sheet clears every one of them and stays cleared, and the <b>ROUTES</b> button along the top of the map takes them off the chart without changing what is set to show; tapping a route's line on the map zooms to it. A deleted route comes back with <b>UNDO</b> for 14 days like anything else. The app keeps your last 20. Unlike tracks, <b>routes are saved in your backup file</b> — a route is work you did by hand, and it should survive a new phone. A route keeps the coordinates it was measured with, so moving or deleting a pin later never changes a distance you have already measured.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-track"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg> Track My Path<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-track">
@@ -4280,9 +4280,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="routeStartBtn" style="font-weight:700;">MEASURE A ROUTE <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3 19 9 9l5 5 7-12"></path></svg></button>
     </div>
     <p class="sheet-note" style="margin:0 0 6px;">The sheet closes and every tap on the map drops a pin. <b>UNDO PIN</b> takes back the last one, <b>SAVE</b> keeps the route.</p>
-    <p class="sheet-note" style="margin-top:14px;">Your saved routes: <span id="routeCount">0</span>. Straight-line legs between your pins — how far the run is. Routes <b>are</b> in your backup file, and a deleted one comes back with <b>UNDO</b> for 14 days.</p>
+    <p class="sheet-note" style="margin-top:14px;">Your saved routes: <span id="routeCount">0</span>. Straight-line legs between your pins — how far the run is. More than one can sit on the chart at a time; <b>SHOW/HIDE 🗺</b> works on one, <b>HIDE ALL ROUTES</b> clears the lot and sticks. Routes <b>are</b> in your backup file, and a deleted one comes back with <b>UNDO</b> for 14 days.</p>
     <div class="loc-btns" style="margin:6px 0 4px;">
       <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change">UNDO LAST CHANGE <span class="bi bi-undo">&#8634;</span></button>
+    </div>
+    <!-- v491: with more than one route able to sit on the chart at once, the list needs a
+         way to clear them without hunting for the ROUTES pill. This one STICKS — it
+         writes hidden onto every record — where the pill is only a master switch over
+         whatever is not hidden. Only shown once there are two routes; below that each
+         route's own SHOW/HIDE already covers it. -->
+    <div class="loc-btns" id="routeAllWrap" style="margin:0 0 6px;" hidden>
+      <button class="mini-btn" id="routeAllBtn" onclick="routeToggleAll()"></button>
     </div>
     <div id="routeList"></div>
   </div>
@@ -5163,7 +5171,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 490;
+const BUILD_NUM  = 491;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -14971,12 +14979,41 @@ function renderRouteList(){
       <div style="font-size:calc(11px * var(--ts)); color:var(--fog); line-height:1.4; margin-top:4px;">${r.pts.length} pins · straight-line legs · bearings true</div>
       ${notes}
     </div>`;}).join('');
+  /* The all-routes toggle earns its place only once two routes exist, and its label has
+     to say which way it will go. */
+  const allWrap = document.getElementById('routeAllWrap');
+  const allBtn = document.getElementById('routeAllBtn');
+  if(allWrap && allBtn){
+    allWrap.hidden = routes.length < 2;
+    const anyShown = routes.some(r=> routeShown[r.id]);
+    allBtn.innerHTML = (anyShown ? 'HIDE ALL ROUTES' : 'SHOW ALL ROUTES')
+      + ' <span class="bi bi-emoji">\uD83D\uDDFA</span>';
+  }
   if(editingRouteId){
     const r = routes.find(x=>x.id===editingRouteId);
     const n = document.getElementById('routeEditName'), no = document.getElementById('routeEditNotes');
     if(r && n){ n.value = r.name; no.value = r.notes || ''; }
   }
 }
+
+/* Clears (or restores) every route in one tap. Writes `hidden` onto the records, so it
+   survives a reload — unlike the ROUTES pill, which only decides whether the non-hidden
+   set is drawn right now. Label flips with the current state so one button covers both
+   directions. */
+window.routeToggleAll = async function(){
+  const anyShown = routes.some(r=> routeShown[r.id]);
+  if(anyShown){
+    routes.forEach(r=> r.hidden = true);
+    routeClearSaved();
+  }else{
+    routes.forEach(r=> { delete r.hidden; });
+    routesOn = true;
+    routePaintSaved();
+  }
+  await saveRoutes();
+  routeSyncPill();
+  renderRouteList();
+};
 
 /* HIDE persists on the record, so a route stays off the chart until it is asked for
    again — same contract as a kept track's HIDE. */

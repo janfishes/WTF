@@ -7,6 +7,38 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 10:45 PM EDT · v491 · Hide All Routes
+------------------------------------------------------------------------------
+Jan: "need a hide all routes if more than one can be shown on the map at a
+time". Fair — v489 made routes individually showable, so the chart can carry
+several at once and the only way to clear them was the ROUTES pill, which is up
+on the map rather than in the list where you are working.
+
+HIDE ALL ROUTES / SHOW ALL ROUTES sits in the + ROUTE sheet beside UNDO. One
+button, label flipping with the current state so it reads as what it will do.
+
+THE DISTINCTION THAT MATTERS, and the reason this is not a duplicate of the
+pill:
+
+  * HIDE ALL ROUTES writes `hidden` onto every RECORD. It sticks — through a
+    reload, through the pill being switched on again.
+  * The ROUTES pill is a master switch over whatever is not hidden. It takes the
+    lines off the chart for now and puts the same set back when tapped again; it
+    never edits what is set to show.
+
+So the pill answers "get these off my screen" and HIDE ALL answers "I am done
+with these". Both are worth having and neither replaces the other.
+
+It only appears once there are TWO routes — with one, that route's own SHOW/HIDE
+already covers it, and a second button would be noise. The wrapper div is what
+gets hidden, not just the button, so the row leaves no gap.
+
+VERIFIED  67/67 headless. New checks: HIDE ALL clears the layers AND flags every
+record; the label flips to SHOW ALL and restores them; the hidden flags are
+actually in storage afterwards (which is what separates it from the pill); and
+the button hides itself below two routes.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 10:20 PM EDT · v490 · The Three Plus Buttons Taper
 ------------------------------------------------------------------------------
 Jan: "reduce the horizontal padding on + Catch and + Spot so + Catch is shorter
