@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-07
 
+- **v473** — Tap A Position To See It
 - **v472** — Places You Fish That Aren’t Spots Yet
 - **v471** — What This Spot Has Given You
 - **v470** — Send Spots To Your Fish Finder

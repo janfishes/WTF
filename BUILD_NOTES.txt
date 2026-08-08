@@ -7,6 +7,61 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 8:40 PM EDT · v473 · Tap A Position To See It
+------------------------------------------------------------------------------
+Jan, on v472: "before i can name a spot, i need to see the spot on the map. can
+you add view or map location on each cluster" - then, a moment later, "tap
+coordinates to view?". The second message settled the design and it is the
+better one: the card already carries SAVE AS SPOT, and a second button beside
+it would crowd a 393 px row. The COORDINATE LINE is now the control.
+
+Tapping a position on an unnamed-place card:
+  - closes + Spot,
+  - drops the add-spot PREVIEW PIN at the cluster centre and leaves addSpotLoc
+    armed, so the trip back is just naming it,
+  - fits the map to the cluster's actual catches (overlayInset padding, maxZoom
+    17) rather than centring on the centroid, because a lone pin in open water
+    shows nothing about why those fish are one place,
+  - turns Catches ON if it was off, so the diamonds that MADE the cluster are
+    visible,
+  - says so in a toast.
+
+ORDER GOTCHA: closeAddSpot() calls clearAddSpotPreview(). The pin must be
+dropped AFTER the close or it is wiped by the very call that opened the view.
+
+CATCHES TOGGLE: only ever turned ON, and only when it is off. setShowCatches
+(true) lights EVERY logged species (v310 model), so running it unconditionally
+would blow away a user's deliberately narrowed species pills. If Catches is
+already on, this leaves the filter exactly as they set it, and the toast only
+mentions the switch when it actually flipped it.
+
+WORDING, same build (Jan: "say aren't saved spots"): the section now reads
+"Places you fish that aren't SAVED spots" in both the + Spot sheet and Help -
+"aren't spots yet" implied the app was waiting on the user, and every one of
+these IS already a place they fish. v472's changelog and note keep the old
+title: that is what shipped under that number, and the record should not be
+quietly rewritten.
+
+The cards' VIEW indexes into lastUnnamedPlaces, rewritten on every render, so
+an index is only ever read against the list that drew the button - no points
+array threaded through an onclick attribute.
+
+VERIFIED headless, fresh profile, against the real 41-catch log: 4 coordinate
+controls render with a dotted underline, tapping the first closes the sheet,
+centres 24 m off the cluster centroid at z16 with all 11 of its fish inside the
+view, arms addSpotLoc, draws the preview pin, flips Catches false->true, and
+reopening + Spot shows the position already filled with the name field empty.
+27 diamonds visible on screen alongside the pin.
+
+TEST-HARNESS NOTE (cost a round, worth writing down): injecting catches by
+assigning the `catches` array directly does NOT create their markers, so the
+diamonds counted 0 and looked like a bug in this feature. setShowCatches() ends
+in applyFilter(), which shows and hides markers that already exist - it does not
+build them; renderCatchMarkers() does, and the real app has already run it by
+the time any of this is reachable. A harness that injects a log must call
+renderCatchMarkers() itself before judging anything visual.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 7:45 PM EDT · v472 · Places You Fish That Aren't Spots Yet
 ------------------------------------------------------------------------------
 The follow-on v471's own measurement asked for. v471 found that on Jan's real
