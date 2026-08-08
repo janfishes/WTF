@@ -3,6 +3,10 @@
 One line per build, newest first. Full build notes with dates, times, and
 details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
+## 2026-08-08
+
+- **v475** — My Spots First In The List
+
 ## 2026-08-07
 
 - **v474** — Photo Debug Text Off

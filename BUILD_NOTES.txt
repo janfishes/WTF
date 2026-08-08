@@ -7,6 +7,30 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 9:30 AM EDT · v475 · My Spots First In The List
+------------------------------------------------------------------------------
+Jan: "move the user's spots, my spots, above the built in spots" — in the
++ Catch location drop-down.
+
+rebuildSpotSelect() builds the location <select> zone by zone, and inside each
+zone it added two optgroups: the built-ins first, then "<Zone> — My Spots".
+With well over a hundred built-in inshore pins, the user's own spots sat far
+down a long scroll even though they're the ones picked most often. The two
+addGroup() calls are now swapped, so each zone reads:
+
+    Inshore — My Spots
+    Inshore
+    Offshore — My Spots
+    Offshore
+
+Nothing else changed: the same spots are listed, still alphabetical inside each
+group, launches still excluded, and the Inshore/Offshore filter pills above the
+list still cut it to one zone (in which case only that zone's pair shows). The
+group label here is the static "My Spots" — it is NOT run through
+userSpotsLabel() the way the map's sub-row pills are, so a saved user name does
+not rename it.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 12:55 AM EDT · v474 · Photo Debug Text Off
 ------------------------------------------------------------------------------
 Jan: "this text appears under photo without a time stamp: path:createImageBitmap

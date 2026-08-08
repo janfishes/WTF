@@ -4827,10 +4827,10 @@ function showToast(msg, duration=2400, html){
    build spelled out by hand in five places, which is why those messages still said
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
-const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 474;
+const BUILD_DATE = '08/08/26';                          // map stamp form
+const BUILD_NUM  = 475;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
-const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
+const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
    made same-day updates look unchanged. */
 { const bs = document.getElementById('buildStamp');
@@ -10408,8 +10408,10 @@ function rebuildSpotSelect(){
   // No pill lit = no filter = every zone, which is how the form opens.
   ['inshore','offshore'].forEach(zone=>{
     if(logZones.size && !logZones.has(zone)) return;
-    addGroup(ZONES[zone].label, SPOTS.filter(s=> !s._deleted && !isLaunch(s) && bucket(s) === zone));
+    // v475: the user's own spots come FIRST in each zone — they're the ones being
+    // picked most often, so they shouldn't sit below a hundred built-ins.
     addGroup(ZONES[zone].label + ' — My Spots', custom.filter(s=> !isLaunch(s) && bucket(s) === zone));
+    addGroup(ZONES[zone].label, SPOTS.filter(s=> !s._deleted && !isLaunch(s) && bucket(s) === zone));
   });
 
   // Keep the current pick if it survived the filter
