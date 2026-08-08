@@ -7,6 +7,78 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 6:30 PM EDT · v471 · What This Spot Has Given You
+------------------------------------------------------------------------------
+Every spot popup now carries a block showing what YOUR log says about that
+spot: how many fish, which species, which months, which way the tide was
+running, and how many blank trips you have there. Empty spots say so and
+explain how the block fills.
+
+WHY IT IS NOT A BITE SCORE. This started as Jan asking for one - a Salt Strong
+style "today is 7/10", cold-started for App Store users with a "it improves as
+you log" message. That framing was sound and the cold-start answer was right.
+What killed the score was Jan's own read, from fishing: "my experience is the
+bite scores are wrong more often than not."
+
+That is the ceiling of the whole category, not a bad implementation:
+  - Solunar (moon overhead/underfoot) is a 1926 magazine idea that has never
+    held up under controlled testing. It survives because it is easy to compute.
+  - Barometric pressure is weakly supported and heavily oversold.
+  - The moon's real effect is INDIRECT - bigger tidal range, more current, more
+    bait movement. Tide and current are the one inshore variable with a
+    mechanism behind them.
+
+Jan's log agrees. Falling tide on 19 catches vs rising on 14, against a
+baseline where the tide is falling about half the time: noise. And all 41
+catches sit between 9am and 4pm, which measures when Jan launches, not when
+fish eat. A model trained on that learns Jan's habits and calls them fish.
+
+So shipping a score would have put a usually-wrong number in the one app whose
+pitch is that it is honest and local - and a marketing claim in front of a sale
+and a handoff. A HISTORY cannot be wrong, needs no model, and makes no accuracy
+claim to break. It also gives a brand-new user an honest empty state and a
+reason to log blanks, which is the only thing that ever makes the data worth
+anything. That is the same cold-start narrative Jan wanted, told truthfully.
+
+MEASUREMENT THAT SET THE RADIUS, and the finding worth keeping: catches logged
+by PICKING a spot from the dropdown sit at exactly 0 m from it. Free "Custom
+pin"/"Photo location" catches are a MEDIAN 560 m from the nearest named spot,
+max 1030 m. So on Jan's own 41-catch log only 9 catches land on a spot at all -
+the other 32 were caught at places that were never saved as spots. A radius
+wide enough to sweep those in would credit Turnbull Creek with a fish caught a
+kilometre out in the bay, which is exactly the fake precision this feature
+exists to avoid. 200 m inshore / 400 m offshore (spot density differs by an
+order of magnitude; a boat drifts off a wreck) and the rest stay honestly
+unassigned. v469's SAVE AS SPOT is the cure for that going forward.
+
+OTHER DECISIONS:
+- Assignment prefers an exact locationLabel == spot name match over distance,
+  so history survives a spot being MOVED after the catch was logged.
+- Recomputed on every popup open, never cached. An edit, an import, an undo or
+  a spot move all change the answer. Do NOT add a cache keyed on array length:
+  edits do not change length.
+- SPOT_HISTORY_MIN_PATTERN = 5. Under five fish only counts and species print,
+  with a line saying why. The tide sentence needs five records that actually
+  CARRY a tide - three of Jan's catches have none, and pre-v241 records use
+  different prose, so tideStageOf() reads four shapes and says nothing rather
+  than guess.
+- Blank trips come from the v467 multi-location trip, so one skunked trip feeds
+  every spot it names. Pre-v467 trips fall back to their own lat/lng.
+- Deleted built-in spots (s._deleted) collect no history - their pin is gone.
+- Brass left rule, not teal: this is the app reporting YOUR log back, not
+  another curated tip.
+
+VERIFIED headless against Jan's real 41-catch backup plus seeded cases: empty
+state, blanks-only, under-threshold, full pattern, tide-present-but-under-
+threshold (correctly prints no tide line rather than "3 of 4"), deleted spots
+excluded, multi-location and legacy single-location trips both counted.
+
+NOT DONE: clustering the 32 unassigned catches into unnamed places and
+offering SAVE AS SPOT on them. That is the obvious next build and it is what
+would make this feature light up on Jan's existing log rather than only going
+forward.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 5:05 PM EDT · v470 · Send Spots To Your Fish Finder
 ------------------------------------------------------------------------------
 Jan asked for this straight off the back of a comparison against Salt Strong's

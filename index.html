@@ -2460,6 +2460,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .pop-meta{font-family:'JetBrains Mono',monospace; font-size:calc(11.5px * var(--ts)); color:var(--brass); margin:2px 0 8px; display:flex; gap:8px; flex-wrap:wrap;}
   .pop-desc{font-size:calc(12.5px * var(--ts)); color:var(--fog); line-height:1.55; margin-bottom:9px;}
   .pop-tip{font-size:calc(12.5px * var(--ts)); line-height:1.55; color:var(--fog); background:var(--navy-800); border-left:2px solid var(--teal); padding:7px 9px; border-radius:0 6px 6px 0; margin-bottom:10px;}
+  /* v471: the spot's own record. Brass rule rather than teal so it reads as the app
+     reporting YOUR log back to you, not as another curated tip. */
+  .pop-hist{font-size:calc(12.5px * var(--ts)); line-height:1.5; color:var(--fog); background:var(--navy-800); border-left:2px solid var(--brass); padding:7px 9px; border-radius:0 6px 6px 0; margin:9px 0 0;}
+  .pop-hist-head{font-weight:800; color:var(--brass); margin-bottom:2px;}
+  .pop-hist-row{margin-top:1px;}
+  .pop-hist-foot{font-size:calc(11px * var(--ts)); color:var(--muted); margin-top:5px;}
+  .pop-hist-empty{color:var(--muted); border-left-color:var(--muted);}
   .pop-targets{font-size:calc(12px * var(--ts)); line-height:1.6; color:var(--fog); margin-bottom:9px;}
   .pop-targets b{color:var(--emph); font-weight:700;}
   .pop-species{display:flex; flex-direction:column; gap:5px; overflow:hidden;}
@@ -3572,6 +3579,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>Measurement units.</b> At the <b>foot of My Log</b>, just past the end of your catch list — <b>JUMP TO END</b> lands you on them — sit two menus. <b>Catch size</b> switches length and weight between <b>inches and pounds</b> and <b>centimetres and kilograms</b> — it changes both the way a catch reads on its card and popup <i>and</i> the boxes on the <b>+ Catch</b> form, which become a single <b>cm</b> box and a single <b>kg</b> box. <b>Distance</b> switches a run between <b>statute miles (sm)</b> and <b>nautical miles (nm)</b>: the figure on a <b>Compass</b> leg, the distance in the <b>MARK</b> banner, and the length of a recorded <b>track</b>. Distances already printed as a <b>pair</b> — the <span class="g-emph">sm/nm</span> in an offshore pin's popup and in its drop list — carry both units whichever you pick, so nothing is hidden there. Short distances stay in <b>feet</b> up to 1000 ft either way, because that is the scale a boat is handled at.</p>
       <p class="sheet-note">Both menus change only <b>how figures are shown on this device</b>. A catch is always <b>stored</b> in inches and pounds, so switching units back and forth never alters a record, and a <b>backup file</b> written on one setting reads correctly on the other. Note that the size limits in the <b>Season Guide</b> stay in <b>inches</b> whatever you pick — that is the unit FWC writes the regulations in, and a converted limit is not the limit. On a catch card, length reads as inches first with the feet-and-inches equivalent beside it — <b>27.5 inches (2' 3.5")</b> — for the same reason: the inches figure is the one you check against the table.</p>
       <p class="sheet-note">The <b>My Log</b> sheet has two exports. <b>Full backup</b> as <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> carries everything, photos included, along with the spots you added, your edits to built-in spots, your drop labels, and the tide stations you created. Photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. The <b>Log only</b> backup is called <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span>. It is the same data with the <b>photos stripped out</b>, small enough to email or text, so catches restored from this backup have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what the device hasn't seen. If the backup fails, it says exactly which check failed rather than shrugging.</p>
+      <p class="sheet-note"><b>What a spot has given you.</b> Tap any spot pin and, under its details, the app shows what <b>your own log</b> says about that place: how many fish you have caught there, which species, which months, which way the tide was running, and how many <b>blank trips</b> you have logged there. A spot with nothing on it says so. It fills in as you log — and logging the trips that caught <b>nothing</b> matters as much as logging the fish, because a spot's record only means something when you can see both sides of it. Fish are counted to a spot when you pick that spot in <b>+ Catch</b>, or when your pin lands within about <b>200 yards</b> of it inshore (a little more offshore, where the marks are further apart). A fish caught well away from any pin stays where you put it and belongs to no spot — use <b>Save As Spot <span class="bi bi-sm">📌</span></b> if it is somewhere you want to keep. Months and tide only appear once you have <b>five or more</b> fish at that spot; below that the app says there is too little to go on rather than reading meaning into one or two trips. <b>This is your record, not a prediction</b> — the app does not claim to know when the fish will bite, and no honest app does.</p>
       <p class="sheet-note"><b>Sending your spots to the fish finder on your boat.</b> Under <b>Send spots to your fish finder</b> in <b>My Log</b>, tick what you want — <b>My spots</b>, the <b>built-in spots, launches and waypoints</b>, the <b>reef drops with their depths</b>, <b>your catches</b>, and <b>your tracks</b> — then tap <b>Save GPX</b>. Copy the file to the <b>root</b> of an SD card (<b>32 GB or smaller</b> — most units refuse the big cards), put the card in the unit and import it.
       <b>Garmin</b> (echoMAP, GPSMAP): the unit finds the GPX on its own. <b>Lowrance</b> (HDS, Elite Ti, Hook): <i>Files → the SD card → the .gpx → Import</i>. <b>Humminbird APEX, SOLIX, XPLORE and ONIX</b> read the GPX as it is.
       <b>Humminbird HELIX is the exception</b> — it reads only Humminbird's own <b>.HWR</b>, so the GPX needs converting once, with either <b>HumminbirdPC</b> (free, Windows) or <b>GPSBabel</b> (free, Mac and Windows). The card must end up with a folder named <b>matrix</b> holding <b>DATA.HWR</b>. On a Mac, GPSBabel's one line is <span style="color:var(--brass); font-weight:600;">gpsbabel -i gpx -f wtf-spots.gpx -o humminbird -F DATA.HWR</span>.
@@ -4809,7 +4817,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 470;
+const BUILD_NUM  = 471;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -6905,6 +6913,151 @@ function parseSpeciesFromText(text){
   return Object.keys(SPECIES).filter(k=> found.has(k));   // canonical A-Z order
 }
 
+/* ===================== v471 — What this spot has given you =====================
+   Deliberately NOT a bite score. Jan's read, from actually fishing: "the bite scores
+   are wrong more often than not" -- and that is the ceiling of the category, not a
+   bad implementation. Solunar (moon overhead/underfoot) has never held up under
+   controlled testing; barometric pressure is weak and overstated; the moon's real
+   effect is INDIRECT, through tidal range -> current -> bait. Jan's own log says the
+   same: falling tide on 19 catches vs rising on 14, against a baseline where the tide
+   is falling about half the time -- noise. And all 41 catches sit between 9am and 4pm,
+   which measures when Jan launches, not when fish eat.
+
+   So this block prints the RECORD, never a prediction. A history cannot be wrong, it
+   needs no model, and it makes no accuracy claim to break -- which matters more than
+   usual for an app heading to the App Store under a warning that says do not rely on
+   it. It also gives a brand-new user with an empty log an honest empty state and a
+   reason to log blanks, which is the only thing that ever makes the data worth
+   anything.
+
+   Assignment is nearest-spot-within-SPOT_HISTORY_M, recomputed on every popup open
+   rather than cached: a catch edit, a spot move, an import or an undo all change the
+   answer, and a stale cache here would quietly lie. It is O(records x spots), which
+   at real log sizes is a fraction of a frame. If a log ever gets big enough to feel
+   it, index by rounded lat/lng cell -- do NOT reach for a cache keyed on array
+   length, edits do not change length. */
+/* Not SAME_SPOT_M (15) -- that answers "is this the same pick", this answers "was this
+   fish caught AT this spot". Zone-aware because spot density differs by an order of
+   magnitude: inshore pins sit a few hundred metres apart along a creek, offshore wrecks
+   are miles apart and a boat drifts off the number while you fight a fish.
+
+   MEASURED against Jan's real log before these numbers were chosen: every catch logged
+   by PICKING a spot sits at exactly 0 m, while free "Custom pin"/"Photo location"
+   catches are a MEDIAN 560 m from the nearest named spot (max 1030 m). So a radius wide
+   enough to sweep those in would be crediting Turnbull Creek with a fish caught a
+   kilometre out in the bay -- precisely the fake precision this whole feature exists to
+   avoid. 200 m stays tight on purpose and those catches stay unassigned, which is the
+   honest answer: they were caught at places that were never saved as spots. */
+const SPOT_HISTORY_M          = 200;   // inshore, launches, everything not offshore
+const SPOT_HISTORY_M_OFFSHORE = 400;   // offshore reefs, wrecks and ledges
+function spotHistoryRadius(x){ return x && x.zone === 'offshore' ? SPOT_HISTORY_M_OFFSHORE : SPOT_HISTORY_M; }
+const SPOT_HISTORY_MIN_PATTERN = 5;  /* Below this only counts and species print. Months
+   and tide tendency need at least this many before they are worth a sentence -- and
+   even at 5 they are described as what happened, never as what will. */
+
+function metersBetween(aLat, aLng, bLat, bLng){
+  try{ return L.latLng(aLat, aLng).distanceTo(L.latLng(bLat, bLng)); }catch(e){ return Infinity; }
+}
+/* Every spot a record could belong to: built-ins that still exist, plus the user's own.
+   Deleted built-ins must not collect history -- their pin is gone from the map. */
+function historySpots(){
+  return SPOTS.filter(x=> x && !x._deleted && isFinite(x.lat)).concat(
+         customSpots.filter(x=> x && isFinite(x.lat)));
+}
+/* `label` is the record's locationLabel. When a catch was logged by picking a spot from
+   the dropdown that label IS the spot's name, and an exact name match beats distance --
+   it survives the spot later being MOVED, which distance alone would not. Falls back to
+   nearest-within-radius, nearest winning, so a dense run of GNIS waypoints cannot
+   swallow a neighbouring spot's fish. */
+function nearestSpotId(lat, lng, pool, label){
+  if(label){
+    const named = pool.find(x=> x.name === label);
+    if(named) return named.id;
+  }
+  if(!isFinite(lat) || !isFinite(lng)) return null;
+  let best = null, bd = Infinity;
+  pool.forEach(x=>{
+    const d = metersBetween(lat, lng, x.lat, x.lng);
+    if(d < bd && d <= spotHistoryRadius(x)){ bd = d; best = x.id; }
+  });
+  return best;
+}
+/* Four shapes of tide text have shipped over the app's life (v241 changed the prose,
+   and the oldest records carry none at all) -- read them all, and say nothing rather
+   than guess when a record has no tide on it. */
+function tideStageOf(rec){
+  const t = String((rec && (rec.tideDetail || rec.tide)) || '').toLowerCase();
+  if(!t) return null;
+  if(t.indexOf('rising') >= 0 || t.indexOf('incoming') >= 0) return 'rising';
+  if(t.indexOf('falling') >= 0 || t.indexOf('outgoing') >= 0) return 'falling';
+  if(t.indexOf('high') >= 0) return 'high';
+  if(t.indexOf('low')  >= 0) return 'low';
+  return null;
+}
+const HIST_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function spotHistory(s){
+  const pool = historySpots();
+  const hits = catches.filter(c=> c && nearestSpotId(c.lat, c.lng, pool, c.locationLabel) === s.id);
+  /* A blank trip can carry several locations (v467) -- every spot Jan tried and got
+     nothing at. That is the denominator, and it is the whole reason a history here is
+     worth more than a tally of successes. A pre-v467 trip has only its own lat/lng. */
+  const blanks = trips.filter(t=>{
+    if(!t) return false;
+    const locs = (t.locations && t.locations.length) ? t.locations : [{lat:t.lat, lng:t.lng}];
+    return locs.some(l=> l && nearestSpotId(l.lat, l.lng, pool, l.label) === s.id);
+  });
+  const species = {};
+  hits.forEach(c=> catchSpeciesList(c).forEach(k=>{ species[k] = (species[k]||0) + 1; }));
+  const months = {}, stages = {};
+  hits.forEach(c=>{
+    const mo = Number(String(c.date||'').slice(5,7));
+    if(mo >= 1 && mo <= 12) months[mo] = (months[mo]||0) + 1;
+    const st = tideStageOf(c);
+    if(st) stages[st] = (stages[st]||0) + 1;
+  });
+  const years = hits.concat(blanks).map(r=> String(r.date||'').slice(0,4)).filter(Boolean).sort();
+  return { hits, blanks, species, months, stages,
+           yearFrom: years[0] || '', yearTo: years[years.length-1] || '' };
+}
+
+function spotHistoryHTML(s){
+  const h = spotHistory(s);
+  const n = h.hits.length, b = h.blanks.length;
+  if(!n && !b){
+    return `<div class="pop-hist pop-hist-empty">No fish logged here yet — log your catches, and the trips that caught nothing, and this fills in with what the spot has actually given you.</div>`;
+  }
+  const rows = [];
+  const head = n
+    ? `Your ${n} fish here` + (b ? ` · ${b} blank trip${b===1?'':'s'}` : '')
+    : `No fish here yet · ${b} blank trip${b===1?'':'s'}`;
+  if(n){
+    const sp = Object.keys(h.species).sort((a,c)=> h.species[c] - h.species[a])
+      .map(k=> `${speciesOf(k).label}${h.species[k] > 1 ? ' ' + h.species[k] : ''}`);
+    rows.push(sp.join(', '));
+  }
+  /* The threshold is the honest part: under five fish there is nothing to say about
+     months or tide that is not just the last thing that happened. */
+  if(n >= SPOT_HISTORY_MIN_PATTERN){
+    const mos = Object.keys(h.months).map(Number).sort((a,c)=> a-c).map(m=> HIST_MONTHS[m-1]);
+    if(mos.length) rows.push(mos.join(', '));
+    const st = Object.keys(h.stages).sort((a,c)=> h.stages[c] - h.stages[a])[0];
+    const withTide = Object.keys(h.stages).reduce((t,k)=> t + h.stages[k], 0);
+    if(st && withTide >= SPOT_HISTORY_MIN_PATTERN){
+      const word = (st === 'rising' || st === 'falling') ? 'on the ' + st : 'at ' + st + ' tide';
+      rows.push(`${h.stages[st]} of ${withTide} ${word}`);
+    }
+  } else if(n){
+    rows.push(`Only ${n} fish — too few to say anything about months or tide yet.`);
+  }
+  const span = h.yearFrom ? (h.yearFrom === h.yearTo ? h.yearFrom : h.yearFrom + '–' + h.yearTo) : '';
+  return `<div class="pop-hist">
+    <div class="pop-hist-head">${head}</div>
+    ${rows.map(r=> `<div class="pop-hist-row">${escapeHTML(r)}</div>`).join('')}
+    <div class="pop-hist-foot">Your log${span ? ', ' + span : ''} — not a forecast.</div>
+  </div>`;
+}
+
 function popupHTML(s){
   const speciesBlock = speciesSeasonBlock(s.species);
   /* Round 43: the county-reef popups carry the headline paragraph, the numbers and the
@@ -6931,6 +7084,7 @@ function popupHTML(s){
     ${s.desc? `<div class="pop-desc">${s.desc}</div>`:''}
     ${(s.tip && !isCountyReef)? `<div class="pop-tip">${s.tip}</div>`:''}
     ${isCountyReef ? '' : speciesBlock}
+    ${spotHistoryHTML(s)}
     ${dropsBlock}
     <div class="note-area">${note? `<div class="pop-tip" style="border-left-color:var(--teal); margin-top:9px; margin-bottom:0;"><b>My note:</b> ${escapeHTML(note)}</div>`:''}</div>
     <button class="mini-btn note-edit-btn" style="width:100%; margin-top:8px;">${note? 'Edit my note <span class="bi">\u270e</span>' : 'Add my note <span class="bi bi-lg">\uff0b</span>'}</button>
@@ -10287,6 +10441,7 @@ function customSpotPopup(s){
     ${offshoreInfo}
     ${details}
     ${seasons ? `<div style="margin-top:8px;">${seasons}</div>` : ''}
+    ${spotHistoryHTML(s)}
     ${note}
     <div class="loc-btns" style="margin-top:9px;">
       <button class="mini-btn" onclick="editCustomSpot('${s.id}')">EDIT <span class="bi">✎</span></button>
