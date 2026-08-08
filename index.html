@@ -3579,6 +3579,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>Measurement units.</b> At the <b>foot of My Log</b>, just past the end of your catch list — <b>JUMP TO END</b> lands you on them — sit two menus. <b>Catch size</b> switches length and weight between <b>inches and pounds</b> and <b>centimetres and kilograms</b> — it changes both the way a catch reads on its card and popup <i>and</i> the boxes on the <b>+ Catch</b> form, which become a single <b>cm</b> box and a single <b>kg</b> box. <b>Distance</b> switches a run between <b>statute miles (sm)</b> and <b>nautical miles (nm)</b>: the figure on a <b>Compass</b> leg, the distance in the <b>MARK</b> banner, and the length of a recorded <b>track</b>. Distances already printed as a <b>pair</b> — the <span class="g-emph">sm/nm</span> in an offshore pin's popup and in its drop list — carry both units whichever you pick, so nothing is hidden there. Short distances stay in <b>feet</b> up to 1000 ft either way, because that is the scale a boat is handled at.</p>
       <p class="sheet-note">Both menus change only <b>how figures are shown on this device</b>. A catch is always <b>stored</b> in inches and pounds, so switching units back and forth never alters a record, and a <b>backup file</b> written on one setting reads correctly on the other. Note that the size limits in the <b>Season Guide</b> stay in <b>inches</b> whatever you pick — that is the unit FWC writes the regulations in, and a converted limit is not the limit. On a catch card, length reads as inches first with the feet-and-inches equivalent beside it — <b>27.5 inches (2' 3.5")</b> — for the same reason: the inches figure is the one you check against the table.</p>
       <p class="sheet-note">The <b>My Log</b> sheet has two exports. <b>Full backup</b> as <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> carries everything, photos included, along with the spots you added, your edits to built-in spots, your drop labels, and the tide stations you created. Photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. The <b>Log only</b> backup is called <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span>. It is the same data with the <b>photos stripped out</b>, small enough to email or text, so catches restored from this backup have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what the device hasn't seen. If the backup fails, it says exactly which check failed rather than shrugging.</p>
+      <p class="sheet-note"><b>Places you fish that aren’t spots yet.</b> Plenty of fish get logged on a dropped pin or straight off a photo, well away from any pin on the map — and nothing on the map can speak for those places. Open <b>+ Spot</b> and, above <b>Your saved spots</b>, the app lists the places where you have caught fish <b>more than once</b> within about 150 yards of each other but never saved a spot. Each one shows how many fish, which species and which years, with its position. Tap <b>SAVE AS SPOT <span class="bi bi-emoji">📌</span></b> and the location is filled in for you — you just name it. From that moment the spot carries its own record, shows up in the <b>+ Catch</b> location list and the filters, and goes out with your <b>GPX</b> file to the boat. The list shrinks as you save them, and a brand-new log shows nothing here at all.</p>
       <p class="sheet-note"><b>What a spot has given you.</b> Tap any spot pin and, under its details, the app shows what <b>your own log</b> says about that place: how many fish you have caught there, which species, which months, which way the tide was running, and how many <b>blank trips</b> you have logged there. A spot with nothing on it says so. It fills in as you log — and logging the trips that caught <b>nothing</b> matters as much as logging the fish, because a spot's record only means something when you can see both sides of it. Fish are counted to a spot when you pick that spot in <b>+ Catch</b>, or when your pin lands within about <b>200 yards</b> of it inshore (a little more offshore, where the marks are further apart). A fish caught well away from any pin stays where you put it and belongs to no spot — use <b>Save As Spot <span class="bi bi-sm">📌</span></b> if it is somewhere you want to keep. Months and tide only appear once you have <b>five or more</b> fish at that spot; below that the app says there is too little to go on rather than reading meaning into one or two trips. <b>This is your record, not a prediction</b> — the app does not claim to know when the fish will bite, and no honest app does.</p>
       <p class="sheet-note"><b>Sending your spots to the fish finder on your boat.</b> Under <b>Send spots to your fish finder</b> in <b>My Log</b>, tick what you want — <b>My spots</b>, the <b>built-in spots, launches and waypoints</b>, the <b>reef drops with their depths</b>, <b>your catches</b>, and <b>your tracks</b> — then tap <b>Save GPX</b>. Copy the file to the <b>root</b> of an SD card (<b>32 GB or smaller</b> — most units refuse the big cards), put the card in the unit and import it.
       <b>Garmin</b> (echoMAP, GPSMAP): the unit finds the GPX on its own. <b>Lowrance</b> (HDS, Elite Ti, Hook): <i>Files → the SD card → the .gpx → Import</i>. <b>Humminbird APEX, SOLIX, XPLORE and ONIX</b> read the GPX as it is.
@@ -3927,6 +3928,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="mini-btn" id="addSpotSave" style="font-weight:700;">Save spot</button>
     </div>
     <p class="sheet-note" style="margin-top:8px;"><b>Check the type before you save.</b> The app guesses it from the coordinates, and the guess is only as good as the coastline and channel lines it carries. Close to a bank, a jetty, or a ramp it can land on the wrong side. If the lit pill is wrong, tap the right one; your choice sticks and is what gets saved.</p>
+    <!-- v472: filled by updateUnnamedPlaces(); empty and invisible when every catch
+         already sits on a spot, which is the state a brand-new user starts in. -->
+    <div id="unnamedPlaces"></div>
     <p class="sheet-note" style="margin-top:14px;">Your saved spots: <span id="customSpotCount">0</span>.</p>
     <div class="loc-btns" style="margin:6px 0 4px;">
       <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, spot or catch">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
@@ -4817,7 +4821,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 471;
+const BUILD_NUM  = 472;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -7044,8 +7048,17 @@ function spotHistoryHTML(s){
     const st = Object.keys(h.stages).sort((a,c)=> h.stages[c] - h.stages[a])[0];
     const withTide = Object.keys(h.stages).reduce((t,k)=> t + h.stages[k], 0);
     if(st && withTide >= SPOT_HISTORY_MIN_PATTERN){
-      const word = (st === 'rising' || st === 'falling') ? 'on the ' + st : 'at ' + st + ' tide';
-      rows.push(`${h.stages[st]} of ${withTide} ${word}`);
+      /* A leading stage is only worth a sentence if it is at least half the tided
+         records. "5 of 12 on the rising" is a 42% plurality dressed up as a tendency --
+         with four stages in play that is close to what chance hands you, and printing
+         it is exactly the overselling this whole feature exists to avoid. Say plainly
+         that nothing stands out instead; that is a real finding about the spot. */
+      if(h.stages[st] * 2 >= withTide){
+        const word = (st === 'rising' || st === 'falling') ? 'on the ' + st : 'at ' + st + ' tide';
+        rows.push(`${h.stages[st]} of ${withTide} ${word}`);
+      } else {
+        rows.push(`No one tide stage stands out (${withTide} with a tide logged)`);
+      }
     }
   } else if(n){
     rows.push(`Only ${n} fish — too few to say anything about months or tide yet.`);
@@ -7057,6 +7070,101 @@ function spotHistoryHTML(s){
     <div class="pop-hist-foot">Your log${span ? ', ' + span : ''} — not a forecast.</div>
   </div>`;
 }
+
+/* =============== v472 — Places you fish that aren't spots yet ===============
+   v471 measured the gap this closes: on Jan's real 41-catch log only 9 catches sit
+   near a saved spot. The other 32 are free "Custom pin"/"Photo location" positions a
+   MEDIAN 560 m from anything named -- real places, fished repeatedly, that the spot
+   history could never speak about because they have no pin.
+
+   Widening the history radius to swallow them would have been wrong (it would credit
+   a creek with a fish caught a kilometre out in the bay). The right fix is the other
+   direction: find where those loose catches PILE UP, and offer to make that a spot.
+   One tap then feeds v471's history, the +Catch picker, the filters and the GPX export
+   all at once.
+
+   Clustering is greedy leader-style at UNNAMED_PLACE_M: walk the catches in stored
+   order, drop each into the first cluster whose centroid is within range, else start
+   one, then re-centre. Order-dependent in principle, deterministic in practice because
+   the catch array order is stable. It is not k-means and does not need to be -- these
+   are tens of points, and the answer only has to be good enough to put a pin near. */
+const UNNAMED_PLACE_M = 150;  /* Tighter than SPOT_HISTORY_M (200): that asks "is this
+   fish AT that spot", this asks "were these fish caught in the same place as each
+   other". 150 m is about the length of a creek bend and keeps Jan's two real inlet
+   locations (350 m apart) separate, which is the behaviour v471 already established. */
+const UNNAMED_PLACE_MIN = 2;  /* One fish somewhere odd is not a place worth a pin --
+   it is one fish. Two or more in the same water is a pattern, and it is the user's
+   call from there. */
+
+function unnamedPlaces(){
+  const pool = historySpots();
+  const loose = catches.filter(c=> c && isFinite(c.lat) && isFinite(c.lng)
+                                && !nearestSpotId(c.lat, c.lng, pool, c.locationLabel));
+  const out = [];
+  loose.forEach(c=>{
+    const hit = out.find(k=> metersBetween(c.lat, c.lng, k.lat, k.lng) <= UNNAMED_PLACE_M);
+    if(hit){
+      hit.members.push(c);
+      hit.lat = hit.members.reduce((t,x)=> t + x.lat, 0) / hit.members.length;
+      hit.lng = hit.members.reduce((t,x)=> t + x.lng, 0) / hit.members.length;
+    } else {
+      out.push({ lat:c.lat, lng:c.lng, members:[c] });
+    }
+  });
+  return out.filter(k=> k.members.length >= UNNAMED_PLACE_MIN)
+    .map(k=>{
+      const species = {};
+      k.members.forEach(c=> catchSpeciesList(c).forEach(s=>{ species[s] = (species[s]||0) + 1; }));
+      const years = k.members.map(c=> String(c.date||'').slice(0,4)).filter(Boolean).sort();
+      return { lat:k.lat, lng:k.lng, n:k.members.length, species,
+               yearFrom:years[0] || '', yearTo:years[years.length-1] || '' };
+    })
+    .sort((a,b)=> b.n - a.n);
+}
+
+function updateUnnamedPlaces(){
+  const wrap = document.getElementById('unnamedPlaces');
+  if(!wrap) return;
+  const places = unnamedPlaces();
+  if(!places.length){ wrap.innerHTML = ''; return; }
+  const cards = places.map(pl=>{
+    const sp = Object.keys(pl.species).sort((a,b)=> pl.species[b] - pl.species[a])
+      .map(k=> `${speciesOf(k).label}${pl.species[k] > 1 ? ' ' + pl.species[k] : ''}`).join(', ');
+    const span = pl.yearFrom ? (pl.yearFrom === pl.yearTo ? pl.yearFrom : pl.yearFrom + '–' + pl.yearTo) : '';
+    return `<div class="loc-preview set" style="margin-top:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <span>${pl.n} fish${span ? ' · ' + span : ''}</span>
+        <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;"
+          onclick="saveUnnamedPlace(${pl.lat.toFixed(6)}, ${pl.lng.toFixed(6)})">SAVE AS SPOT <span class="bi bi-emoji">📌</span></button>
+      </div>
+      <div style="font-size:calc(11.5px * var(--ts)); color:var(--fog); line-height:1.45; margin-top:5px;">${escapeHTML(sp)}</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:calc(11px * var(--ts)); color:var(--brass); margin-top:4px;">${toDMS(pl.lat, pl.lng)}</div>
+    </div>`;
+  }).join('');
+  wrap.innerHTML = `<p class="sheet-note" style="margin-top:16px;"><b>Places you fish that aren’t spots yet.</b> ${places.length === 1 ? 'This is a spot' : 'These are ' + places.length + ' spots'} where you have caught fish more than once but never dropped a pin — so nothing on the map speaks for ${places.length === 1 ? 'it' : 'them'}. Save one and its catches, seasons and tide come with it.</p>${cards}`;
+}
+
+/* Hands the cluster's centre to the add-spot form the same way a map tap does, then
+   leaves the user in the name field -- the app must not invent a name for somebody's
+   fishing spot. */
+window.saveUnnamedPlace = function(lat, lng){
+  addSpotLoc = {lat:lat, lng:lng};
+  editingSpotId = null;
+  addSpotZoneManual = false;
+  autoSetSpotZone();
+  showAddSpotPreview(lat, lng);
+  updateAddSpotPreview();
+  showSpotDetailsField(true);
+  openAddSpot();
+  const nameEl = document.getElementById('addSpotName');
+  if(nameEl){
+    nameEl.value = '';
+    try{ nameEl.scrollIntoView({block:'center'}); }catch(e){}
+    /* Focus after the sheet's open transition, or iOS drops the keyboard request. */
+    setTimeout(()=>{ try{ nameEl.focus(); }catch(e){} }, 350);
+  }
+  showToast('Location set from your catches — name it and tap Save spot.', 4000);
+};
 
 function popupHTML(s){
   const speciesBlock = speciesSeasonBlock(s.species);
@@ -10489,6 +10597,9 @@ function updateCustomSpotList(){
       ${det}
       ${seasons ? `<div style="margin-top:7px;">${seasons}</div>` : ''}
     </div>`;}).join('');
+  /* v472: saving or deleting a spot changes which catches are still loose, so the
+     suggestions must be rebuilt on the same beat as the list above them. */
+  updateUnnamedPlaces();
 }
 
 /* ---- Add-spot modal flow ---- */
@@ -10502,7 +10613,7 @@ let addSpotZoneManual = false;
 let placingSpotPin = false;
 const addSpotSheet = document.getElementById('addSpotSheet');
 const addSpotScrim = document.getElementById('addSpotScrim');
-function openAddSpot(){ closeAllOverlays('addSpotSheet'); addSpotSheet.classList.add('open'); addSpotScrim.classList.add('open'); document.getElementById('addSpotBtn').classList.add('pressed'); loadTrash(); }
+function openAddSpot(){ closeAllOverlays('addSpotSheet'); addSpotSheet.classList.add('open'); addSpotScrim.classList.add('open'); document.getElementById('addSpotBtn').classList.add('pressed'); loadTrash(); updateUnnamedPlaces(); }
 function closeAddSpot(){
   addSpotSheet.classList.remove('open'); addSpotScrim.classList.remove('open');
   document.getElementById('addSpotBtn').classList.remove('pressed');

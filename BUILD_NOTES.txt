@@ -7,6 +7,67 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 7:45 PM EDT · v472 · Places You Fish That Aren't Spots Yet
+------------------------------------------------------------------------------
+The follow-on v471's own measurement asked for. v471 found that on Jan's real
+41-catch log only 9 catches sit near a saved spot: the other 32 are free
+"Custom pin"/"Photo location" positions a MEDIAN 560 m from anything named.
+Real places, fished for years, that the spot history could never speak about
+because they have no pin.
+
+Widening v471's radius to swallow them would have been wrong - it would credit
+a creek with a fish caught a kilometre out in the bay. This build goes the
+other direction: find where the loose catches PILE UP and offer to make that a
+spot.
+
+WHAT SHIPPED. + Spot, directly above "Your saved spots", now lists the places
+where you have caught fish more than once within 150 m of each other but never
+dropped a pin. Each card: fish count, year span, species breakdown, position in
+DMS, and SAVE AS SPOT. The tap fills the add-spot form's location the same way
+a map tap does, auto-picks the zone, draws the preview pin and drops the user
+in the NAME field - the app must never invent a name for somebody's spot. The
+list shrinks as they are saved, and an empty log renders nothing at all, which
+is the state every App Store user starts in.
+
+ON JAN'S REAL LOG: 32 loose catches -> 4 clusters covering 25 of them (11, 8, 3
+and 3 fish). Saving the 11-fish one immediately gave that new spot a v471
+history reading "Your 12 fish here / Snook 4, Tarpon 2, Redfish 2, ... / Jan,
+Feb, Jun, Aug, Sep, Nov, Dec". Twelve rather than eleven because the new pin
+also picks up a nearby catch that was inside 200 m but outside the 150 m
+cluster - correct, and worth knowing before it reads as an off-by-one.
+
+CLUSTERING. Greedy leader-style: walk catches in stored order, drop each into
+the first cluster whose centroid is within UNNAMED_PLACE_M (150 m), else start
+one, then re-centre. Order-dependent in principle, deterministic in practice
+because the catch array order is stable. Not k-means and does not need to be -
+tens of points, and the answer only has to be good enough to put a pin near.
+150 m is deliberately TIGHTER than SPOT_HISTORY_M (200 m): that constant asks
+"is this fish at that spot", this one asks "were these fish caught in the same
+place as each other". UNNAMED_PLACE_MIN is 2 - one fish somewhere odd is one
+fish, not a place.
+
+ALSO IN THIS BUILD, a fix to v471 caught by reading its own output: the tide
+line printed "5 of 12 on the rising" for the 12-fish spot. That is a 42%
+plurality dressed up as a tendency, and with four stages in play it is close to
+what chance hands you - exactly the overselling v471 exists to avoid. The
+leading stage now needs at least HALF the tided records to earn a sentence;
+below that it prints "No one tide stage stands out (N with a tide logged)",
+which is itself a real finding about the spot.
+
+GOTCHA THAT COST A TEST ROUND, and is already in the notes but bit again:
+re-running the headless suite against a REUSED Chrome user-data-dir served the
+previous build's shell from the service worker. BUILD_NUM read 472 (it had been
+bumped before that run) while the guard above was absent from the loaded code,
+so the fix looked broken when it was fine. Always a FRESH profile after an
+edit, and assert on the changed CODE (spotHistoryHTML.toString().indexOf(...)),
+not just on BUILD_NUM - the number lies when two edits share a build.
+
+NOT DONE: blank-trip locations do not form clusters of their own, only catches
+do. A place fished twice with nothing caught is arguably worth a pin too, but
+the card would have to say something other than "N fish" and the feature reads
+cleanly as it is. Revisit once real blank trips exist in a log.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 6:30 PM EDT · v471 · What This Spot Has Given You
 ------------------------------------------------------------------------------
 Every spot popup now carries a block showing what YOUR log says about that
