@@ -7,6 +7,76 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-07 · 5:05 PM EDT · v470 · Send Spots To Your Fish Finder
+------------------------------------------------------------------------------
+Jan asked for this straight off the back of a comparison against Salt Strong's
+Smart Fishing Spots app: "do it, but can you do it for hummingbird and lorance
+fish finders as well". Salt Strong exports routes and waypoints to a
+chartplotter and WTF did not, and it is the one gap on that comparison that
+costs a day rather than a season. (Their app, for the record, has no catch log
+at all - that side of the comparison runs the other way.)
+
+WHAT SHIPPED. A new "Send spots to your fish finder" section in My Log, sitting
+between the log-only backup and Import. Five tick boxes with live counts - My
+spots, Built-in spots/launches/waypoints (218), Reef drops with depths (240),
+My catches, My tracks - and three buttons: Save GPX, Save KML, Share GPX. My
+spots and My catches start ticked; the 458 built-in positions do not, because
+dumping the whole county onto somebody's plotter unasked is not a favour.
+
+THE FORMAT LANDSCAPE, which is the part worth keeping:
+
+  Garmin (echoMAP, GPSMAP)           .gpx  read straight off the card
+  Lowrance (HDS, Elite Ti, Hook)     .gpx  read straight off the card
+  Humminbird APEX/SOLIX/XPLORE/ONIX  .gpx  read straight off the card
+  Humminbird HELIX                   .HWR  ONLY, at /matrix/DATA.HWR
+
+So one GPX reaches every unit Jan is likely to meet EXCEPT the HELIX, which is
+also the most common Humminbird on a small boat. Lowrance's native .usr keeps
+icons and is nicer inside the Lowrance world, but GPX imports fine there and
+.usr is an undocumented binary, so GPX is the right single answer.
+
+WHY NO .HWR IS WRITTEN. It would be the complete answer, and it was considered
+and rejected on purpose: .HWR is reverse-engineered (GPSBabel's `humminbird`
+writer), nobody on this project has a HELIX to test against, and an untested
+nav file handed to a unit somebody steers a boat by is not a trade worth
+making for one build's convenience. Help carries the one-line GPSBabel
+conversion instead (`gpsbabel -i gpx -f wtf-spots.gpx -o humminbird -F
+DATA.HWR`) plus the /matrix/ folder requirement. IF A HELIX EVER BECOMES
+TESTABLE, that is the build to add native .HWR in - and verify it by round-
+tripping back through GPSBabel to GPX before it ships, not just by eye.
+
+DECISIONS INSIDE THE WRITER, all in the comment above buildGpx():
+- GPX 1.1 child order is fixed by the schema (ele, time, ..., name, cmt, desc,
+  ..., sym). Garmin forgives a wrong order; Humminbird's converter does not.
+  Verified 0 of 460 waypoints out of order.
+- Reef depth goes in <desc> as feet, NOT in <ele>. <ele> is height, and a
+  plotter reading 125 ft of water as 125 ft of altitude is worse than no depth.
+- Names cap at NAV_NAME_MAX = 24 chars with an ellipsis, because plotters
+  truncate silently mid-word and a screen of "Ponce de Leon Inlet Sou..." is
+  useless. Verified: longest name out is exactly 24.
+- Symbols use Garmin's vocabulary (Boat Ramp, Marina, Shipwreck, Fishing Area,
+  Waypoint); Lowrance and Humminbird either honour them or fall back to their
+  default dot. An unknown sym never fails an import.
+- xmlEsc() strips control characters as well as escaping the five XML
+  entities. A note pasted in from another app can carry a control char and it
+  would break the whole file on import, not just its own line.
+- Deleted built-in spots stay in SPOTS wearing s._deleted - the export skips
+  them, or it would hand Jan back the pins they threw away.
+- Drop names go through dropLabelFor(), the same resolver the popup uses, so a
+  renamed drop travels under Jan's name for it.
+- refreshNavCounts() is called from openInfoSheet('catches') rather than kept
+  in sync from the dozen places that change spots, catches and tracks.
+
+VERIFIED headless (fresh profile, zero-dependency CDP) against the real data
+plus a seeded custom spot, catch and track: 460 waypoints + 1 track out, GPX
+and KML both parse, child order clean, escaping survives a name containing
+&, <, > and a straight quote, all coordinates inside Volusia, empty-pick guard
+fires with its own message.
+
+NOT DONE, deliberately: routes (WTF has no route object - the compass draws
+bearings, it does not store a leg list), and the .usr/.HWR native binaries.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 2:40 PM EDT · v469 · Save As Spot
 ------------------------------------------------------------------------------
 Jan: "yes, add Save As a Spot" / "Save As Spot" (the second message settled the

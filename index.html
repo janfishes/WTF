@@ -2198,6 +2198,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .backup-head:first-child{margin-top:2px;}
   .backup-sub{font-size:calc(11.5px * var(--ts)); line-height:1.45; color:var(--muted); margin:0 0 7px;}
   .backup-warn{border:1px solid var(--brass); border-radius:8px; padding:9px 11px; margin-top:14px !important;}
+  /* v470: the what-to-send tick list above the GPX/KML buttons. Plain checkboxes on
+     purpose — these are settings for one tap, not map filters, so they must not read
+     as the lit/unlit pills the map stack uses. */
+  .nav-picks{display:flex; flex-direction:column; gap:6px; margin:8px 0 2px;}
+  .nav-picks label{display:flex; align-items:center; gap:8px; font-size:calc(12.5px * var(--ts)); color:var(--fog); cursor:pointer;}
+  .nav-picks input{width:16px; height:16px; flex:0 0 auto; margin:0; accent-color:var(--accent-deep);}
+  .nav-picks .np-n{color:var(--muted); font-weight:600;}
+  #navExportNote{margin-top:11px; word-break:break-word; line-height:1.5;}
+  #navExportNote.bad{color:var(--rust); font-weight:600;}
+  #navExportNote:empty{display:none;}
   #backupStatus{margin-top:11px; word-break:break-word; line-height:1.5;}
   #backupStatus.bad{color:var(--rust); font-weight:600;}
   #backupStatus:empty{display:none;}
@@ -3396,6 +3406,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <button class="mini-btn" id="shareLogBtn">Share / email log <span class="bi bi-mail">✉</span></button>
       </div>
 
+      <!-- v470: the chartplotter bridge. Everything about WHY each brand gets the file
+           it gets is in the note above buildGpx() -- do not change the wording here
+           without reading it, the HELIX sentence in particular is not a simplification. -->
+      <div class="backup-head" id="navExportSection">Send spots to your fish finder</div>
+      <p class="backup-sub">Writes what you tick below as a <b>GPX</b> file — the format <b>Garmin</b>, <b>Lowrance</b> (HDS, Elite, Hook) and the <b>Humminbird APEX / SOLIX / XPLORE / ONIX</b> units read straight off an SD card — or as <b>KML</b> for Google Earth and Navionics. <b>Humminbird HELIX owners:</b> a HELIX reads only Humminbird's own <b>.HWR</b> file, so the GPX needs one free conversion step first — it is spelled out in <b>Help</b>.</p>
+      <div class="nav-picks">
+        <label><input type="checkbox" id="navPickMine" checked> My spots <span class="np-n" id="navCntMine">0</span></label>
+        <label><input type="checkbox" id="navPickBuilt"> Built-in spots, launches and waypoints <span class="np-n" id="navCntBuilt">0</span></label>
+        <label><input type="checkbox" id="navPickDrops"> Reef drops, with depths <span class="np-n" id="navCntDrops">0</span></label>
+        <label><input type="checkbox" id="navPickCatch" checked> My catches <span class="np-n" id="navCntCatch">0</span></label>
+        <label><input type="checkbox" id="navPickTrack"> My tracks <span class="np-n" id="navCntTrack">0</span></label>
+      </div>
+      <div class="loc-btns">
+        <button class="mini-btn" id="navGpxBtn">Save GPX <span class="bi bi-sm">⬇</span></button>
+        <button class="mini-btn" id="navKmlBtn">Save KML <span class="bi bi-sm">⬇</span></button>
+        <button class="mini-btn" id="navShareBtn">Share GPX <span class="bi bi-mail">✉</span></button>
+      </div>
+      <p class="storage-note" id="navExportNote"></p>
+
       <div class="backup-head">Import</div>
       <p class="backup-sub">Reads either file back in — on this device, another one, or a fresh copy of the app. Nothing is overwritten: existing catches, notes, spots, labels and tide gauges are left alone and only items this device has never seen are added.</p>
       <div class="loc-btns">
@@ -3543,6 +3572,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>Measurement units.</b> At the <b>foot of My Log</b>, just past the end of your catch list — <b>JUMP TO END</b> lands you on them — sit two menus. <b>Catch size</b> switches length and weight between <b>inches and pounds</b> and <b>centimetres and kilograms</b> — it changes both the way a catch reads on its card and popup <i>and</i> the boxes on the <b>+ Catch</b> form, which become a single <b>cm</b> box and a single <b>kg</b> box. <b>Distance</b> switches a run between <b>statute miles (sm)</b> and <b>nautical miles (nm)</b>: the figure on a <b>Compass</b> leg, the distance in the <b>MARK</b> banner, and the length of a recorded <b>track</b>. Distances already printed as a <b>pair</b> — the <span class="g-emph">sm/nm</span> in an offshore pin's popup and in its drop list — carry both units whichever you pick, so nothing is hidden there. Short distances stay in <b>feet</b> up to 1000 ft either way, because that is the scale a boat is handled at.</p>
       <p class="sheet-note">Both menus change only <b>how figures are shown on this device</b>. A catch is always <b>stored</b> in inches and pounds, so switching units back and forth never alters a record, and a <b>backup file</b> written on one setting reads correctly on the other. Note that the size limits in the <b>Season Guide</b> stay in <b>inches</b> whatever you pick — that is the unit FWC writes the regulations in, and a converted limit is not the limit. On a catch card, length reads as inches first with the feet-and-inches equivalent beside it — <b>27.5 inches (2' 3.5")</b> — for the same reason: the inches figure is the one you check against the table.</p>
       <p class="sheet-note">The <b>My Log</b> sheet has two exports. <b>Full backup</b> as <span style="color:var(--brass); font-weight:600;">wtf-full-backup-<i>date</i>.json</span> carries everything, photos included, along with the spots you added, your edits to built-in spots, your drop labels, and the tide stations you created. Photos make it big enough that email will usually refuse it, so use <b>Share</b> and pick AirDrop or Save to Files. The <b>Log only</b> backup is called <span style="color:var(--brass); font-weight:600;">wtf-log-only-<i>date</i>.json</span>. It is the same data with the <b>photos stripped out</b>, small enough to email or text, so catches restored from this backup have no photo, and there is no way to get those photos back from that file. <b>Share</b> hands either file straight to the iPhone share sheet — Mail, Messages, AirDrop — rather than putting it in Downloads. <b>Import backup</b> reads either one back in on a new copy or another device and adds only what the device hasn't seen. If the backup fails, it says exactly which check failed rather than shrugging.</p>
+      <p class="sheet-note"><b>Sending your spots to the fish finder on your boat.</b> Under <b>Send spots to your fish finder</b> in <b>My Log</b>, tick what you want — <b>My spots</b>, the <b>built-in spots, launches and waypoints</b>, the <b>reef drops with their depths</b>, <b>your catches</b>, and <b>your tracks</b> — then tap <b>Save GPX</b>. Copy the file to the <b>root</b> of an SD card (<b>32 GB or smaller</b> — most units refuse the big cards), put the card in the unit and import it.
+      <b>Garmin</b> (echoMAP, GPSMAP): the unit finds the GPX on its own. <b>Lowrance</b> (HDS, Elite Ti, Hook): <i>Files → the SD card → the .gpx → Import</i>. <b>Humminbird APEX, SOLIX, XPLORE and ONIX</b> read the GPX as it is.
+      <b>Humminbird HELIX is the exception</b> — it reads only Humminbird's own <b>.HWR</b>, so the GPX needs converting once, with either <b>HumminbirdPC</b> (free, Windows) or <b>GPSBabel</b> (free, Mac and Windows). The card must end up with a folder named <b>matrix</b> holding <b>DATA.HWR</b>. On a Mac, GPSBabel's one line is <span style="color:var(--brass); font-weight:600;">gpsbabel -i gpx -f wtf-spots.gpx -o humminbird -F DATA.HWR</span>.
+      Names are shortened to <b>24 characters</b> on the way out because plotters cut long names off mid-word with no warning. Reef depths ride in each waypoint's <b>description</b>, not as an elevation — a plotter that read 125 ft of water as 125 ft of altitude would be worse than no depth at all. <b>Save KML</b> writes the same picks for <b>Google Earth</b> and as a Navionics layer instead.
+      <b>None of this makes the app a navigation system</b> — the warning at the top of this Help applies to every spot you send.</p>
       <p class="sheet-note"><b>Add catches from photos.</b> Fish you photographed but never logged can be brought in a batch at a time. In My Log, tap <b>Choose photos</b> and pick as many as you like — the app reads each photo's <b>own GPS position and its own date and time</b> and offers it to you as a catch to check over. Each one arrives as a card showing the picture, when it was taken, and where, with the tide for that exact moment looked up from NOAA. <b>You name the fish</b> — no photo can say what species it is — and then tap <b>SAVE CATCH</b>, or <b>SKIP</b> to pass it by. <b>SAVE ALL NAMED</b> takes every card you have picked a fish on in one go. Nothing is saved until you say so, and the photos on your phone are never changed, moved or uploaded — they are read on this device and nowhere else.</p>
       <p class="sheet-note"><b>Check the position before you save.</b> A photo's GPS records <b>where you were standing when you took the picture</b>, not where the fish was hooked. Photograph a red back at the ramp and the catch lands at the ramp. Every card prints its coordinates for that reason — a glance is usually enough to catch one that has wandered.</p>
       <p class="sheet-note"><b>Which photos can be used.</b> A photo has to be a <b>JPEG</b> and it has to carry <b>both</b> a location and a date and time of its own. That is not a preference — a photo missing either one would put a catch in the wrong place or on the wrong day, and a guess is worse than a gap. Photos that don't qualify are listed under <b>Not used</b> with the reason, and are otherwise left completely alone. The usual reasons are: it came through <b>Messages, WhatsApp or Facebook</b>, which strip this information out; it is a <b>screenshot</b>, which never had a position; it was taken <b>before Location Services was turned on</b> for the Camera; or it is a <b>HEIC</b> file rather than a JPEG. Photos already in your log are recognized by their time and place and skipped, so importing the same batch twice does no harm.</p>
@@ -4775,7 +4809,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 469;
+const BUILD_NUM  = 470;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -9389,7 +9423,7 @@ function openInfoSheet(mode, btnId){
   closeAllOverlays('infoSheet');
   setInfoMode(mode);
   // Fill in the Recently-deleted count the first time the log is seen; cached after.
-  if(mode === 'catches') loadTrash();
+  if(mode === 'catches'){ loadTrash(); refreshNavCounts(); }   // v470: counts for Send to your fish finder
   infoSheet.classList.add('open'); infoScrim.classList.add('open');
   INFO_BTNS.forEach(id=>{ const b = document.getElementById(id); if(b) b.classList.toggle('pressed', id === btnId); });
 }
@@ -13803,6 +13837,230 @@ document.getElementById('exportFullBtn').addEventListener('click', ()=> exportBa
 document.getElementById('shareFullBtn') .addEventListener('click', ()=> exportBackup('full', true));
 document.getElementById('exportLogBtn') .addEventListener('click', ()=> exportBackup('log',  false));
 document.getElementById('shareLogBtn')  .addEventListener('click', ()=> exportBackup('log',  true));
+
+/* ============================ v470 — Send to a fish finder ============================
+   The backup JSON above is WTF talking to itself. This is WTF talking to the plotter on
+   the console, and the honest state of that world in August 2026 is:
+
+     Garmin (echoMAP, GPSMAP)          .gpx  straight off the card
+     Lowrance (HDS, Elite Ti, Hook)    .gpx  straight off the card -- .usr is Lowrance's
+                                             native file and keeps ICONS, but it is an
+                                             undocumented binary and GPX imports fine
+     Humminbird APEX/SOLIX/XPLORE/ONIX .gpx  straight off the card
+     Humminbird HELIX                  .HWR  ONLY, and it must sit at /matrix/DATA.HWR
+
+   So HELIX is the one family a GPX cannot reach. We do NOT write .HWR here: it is a
+   reverse-engineered binary (GPSBabel's `humminbird` format) and nobody on this project
+   has a HELIX to test against -- shipping an untested nav file to a unit somebody steers
+   a boat by is not a trade worth making. Help carries the one-line GPSBabel conversion
+   instead. If a HELIX ever becomes testable, that is the build to add it in.
+
+   GPX schema order matters: inside <wpt> the children must run ele, time, ..., name,
+   cmt, desc, ..., sym. Garmin is forgiving, Humminbird's converter is not. Depth stays
+   in <desc> as feet rather than <ele> -- ele is height above the ellipsoid, and a plotter
+   reading a reef's 125 ft depth as an altitude is worse than it not being there at all.
+   Names are capped at NAV_NAME_MAX because plotters truncate silently and a screen full
+   of "Ponce de Leon Inlet Sou..." is unreadable. */
+const NAV_NAME_MAX = 24;
+/* Garmin's symbol vocabulary, which Lowrance and Humminbird either honour or quietly
+   swap for their default dot. An unknown sym never fails an import. */
+const NAV_SYM = { ramp:'Boat Ramp', marina:'Marina', wreck:'Shipwreck', fish:'Fishing Area', wpt:'Waypoint' };
+
+function xmlEsc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&apos;')
+    /* Control characters are not legal XML at any escape. A note pasted out of another
+       app can carry them and they would break the whole file on import, not just a line. */
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'');
+}
+function navName(s){
+  const t = String(s == null ? '' : s).replace(/\s+/g,' ').trim();
+  return (t.length > NAV_NAME_MAX ? t.slice(0, NAV_NAME_MAX - 1).trim() + '…' : t) || 'Spot';
+}
+function navCoord(n){ return Number(n).toFixed(6); }
+
+/* One shape for every source so GPX and KML are written from the same list:
+   {lat, lng, name, desc, sym}. Tracks come back separately -- they are lines. */
+function navWaypoints(picks){
+  const out = [];
+  if(picks.mine){
+    customSpots.forEach(s=>{
+      if(!s || !isFinite(s.lat) || !isFinite(s.lng)) return;
+      out.push({ lat:s.lat, lng:s.lng, name:navName(s.name), sym: s.ramp ? NAV_SYM.ramp : NAV_SYM.fish,
+                 desc: [s.meta, (s.details||'')].filter(Boolean).join(' · ') });
+    });
+  }
+  if(picks.built){
+    SPOTS.forEach(s=>{
+      /* _deleted is how a deleted built-in spot is marked -- it stays in SPOTS and is
+         hidden, so an unguarded pass would send Jan back the pins they threw away. */
+      if(!s || s._deleted || !isFinite(s.lat) || !isFinite(s.lng)) return;
+      const sym = s.ramp ? NAV_SYM.ramp : isMarinaSpot(s) ? NAV_SYM.marina
+                : /wreck|barge|ship|boiler|platform/i.test(s.name || '') ? NAV_SYM.wreck
+                : s.zone === 'offshore' ? NAV_SYM.fish : NAV_SYM.wpt;
+      out.push({ lat:s.lat, lng:s.lng, name:navName(s.name), sym, desc: s.meta || '' });
+    });
+  }
+  if(picks.drops){
+    Object.keys(REEF_DROPS).forEach(id=>{
+      const s = SPOTS.find(x=>x.id===id);
+      if(!s || s._deleted) return;
+      (REEF_DROPS[id] || []).forEach((d,i)=>{
+        if(!d || !isFinite(d.lat) || !isFinite(d.lng)) return;
+        /* dropLabelFor() is the same resolver the popup uses, so a drop Jan renamed
+           travels under the name they gave it, not the built-in one. */
+        const lbl = dropLabelFor(s, d) || (s.name + ' ' + (i+1));
+        const bits = [];
+        if(d.depth) bits.push(d.depth + ' ft');
+        if(d.fwc && d.fwc.mat) bits.push(d.fwc.mat);
+        if(d.fwc && d.fwc.date) bits.push(d.fwc.date);
+        out.push({ lat:d.lat, lng:d.lng, name:navName(lbl),
+                   sym: (d.fwc && /ship|tug|barge|boat|vessel|freighter/i.test(d.fwc.mat||'')) ? NAV_SYM.wreck : NAV_SYM.fish,
+                   desc: bits.join(' · ') });
+      });
+    });
+  }
+  if(picks.catch){
+    catches.forEach(c=>{
+      if(!c || !isFinite(c.lat) || !isFinite(c.lng)) return;
+      const names = catchSpeciesList(c).map(k=> speciesOf(k).label);
+      const bits = [names.join(', '), c.date, c.time, c.tideDetail || c.tide,
+                    c.length ? c.length + '"' : '', c.weight ? c.weight + ' lb' : '', c.notes || ''];
+      out.push({ lat:c.lat, lng:c.lng, sym:NAV_SYM.fish, time:c.date && c.time ? c.date + 'T' + c.time + ':00' : '',
+                 name: navName((names[0] || 'Catch') + ' ' + (c.date || '').slice(5).replace('-','/')),
+                 desc: bits.filter(Boolean).join(' · ') });
+    });
+  }
+  return out;
+}
+function navTracks(picks){
+  if(!picks.track) return [];
+  return trkLoadSaved().filter(t=> t && t.pts && t.pts.length > 1);
+}
+
+function buildGpx(picks){
+  const wpts = navWaypoints(picks), trks = navTracks(picks);
+  const head = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<gpx version="1.1" creator="WTF Log — janfishes.github.io/WTF"'
+    + ' xmlns="http://www.topografix.com/GPX/1/1"'
+    + ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+    + ' xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">\n'
+    + '  <metadata><name>WTF Log</name><time>' + new Date().toISOString() + '</time></metadata>\n';
+  const body = wpts.map(w=>
+      '  <wpt lat="' + navCoord(w.lat) + '" lon="' + navCoord(w.lng) + '">\n'
+    + (w.time ? '    <time>' + xmlEsc(w.time) + '</time>\n' : '')
+    + '    <name>' + xmlEsc(w.name) + '</name>\n'
+    + (w.desc ? '    <desc>' + xmlEsc(w.desc) + '</desc>\n' : '')
+    + '    <sym>' + xmlEsc(w.sym) + '</sym>\n'
+    + '  </wpt>\n').join('');
+  const lines = trks.map(t=>
+      '  <trk>\n    <name>' + xmlEsc(navName(t.name || 'Track')) + '</name>\n    <trkseg>\n'
+    + t.pts.map(p=> '      <trkpt lat="' + navCoord(p[0]) + '" lon="' + navCoord(p[1]) + '"></trkpt>\n').join('')
+    + '    </trkseg>\n  </trk>\n').join('');
+  return { text: head + body + lines + '</gpx>\n', wpts:wpts.length, trks:trks.length,
+           name: 'wtf-spots-' + backupStamp() + '.gpx', mime: 'application/gpx+xml' };
+}
+function buildKml(picks){
+  const wpts = navWaypoints(picks), trks = navTracks(picks);
+  const head = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n  <name>WTF Log</name>\n';
+  const body = wpts.map(w=>
+      '  <Placemark>\n    <name>' + xmlEsc(w.name) + '</name>\n'
+    + (w.desc ? '    <description>' + xmlEsc(w.desc) + '</description>\n' : '')
+    + '    <Point><coordinates>' + navCoord(w.lng) + ',' + navCoord(w.lat) + ',0</coordinates></Point>\n'
+    + '  </Placemark>\n').join('');
+  const lines = trks.map(t=>
+      '  <Placemark>\n    <name>' + xmlEsc(navName(t.name || 'Track')) + '</name>\n'
+    + '    <LineString><tessellate>1</tessellate><coordinates>'
+    + t.pts.map(p=> navCoord(p[1]) + ',' + navCoord(p[0]) + ',0').join(' ')
+    + '</coordinates></LineString>\n  </Placemark>\n').join('');
+  return { text: head + body + lines + '</Document>\n</kml>\n', wpts:wpts.length, trks:trks.length,
+           name: 'wtf-spots-' + backupStamp() + '.kml', mime: 'application/vnd.google-earth.kml+xml' };
+}
+
+function navNote(msg, bad){
+  const el = document.getElementById('navExportNote');
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.toggle('bad', !!bad);
+}
+function navPicks(){
+  const on = id => { const el = document.getElementById(id); return !!(el && el.checked); };
+  return { mine:on('navPickMine'), built:on('navPickBuilt'), drops:on('navPickDrops'),
+           catch:on('navPickCatch'), track:on('navPickTrack') };
+}
+/* Counts are recomputed on every open of My Log rather than kept in sync from a dozen
+   call sites -- spots, catches and tracks all change from places that know nothing
+   about this section. */
+function refreshNavCounts(){
+  const set = (id,n) => { const el = document.getElementById(id); if(el) el.textContent = '(' + n + ')'; };
+  let drops = 0;
+  Object.keys(REEF_DROPS).forEach(id=>{
+    const s = SPOTS.find(x=>x.id===id);
+    if(s && !s._deleted) drops += (REEF_DROPS[id] || []).length;
+  });
+  set('navCntMine',  customSpots.length);
+  set('navCntBuilt', SPOTS.filter(s=> s && !s._deleted).length);
+  set('navCntDrops', drops);
+  set('navCntCatch', catches.filter(c=> c && isFinite(c.lat) && isFinite(c.lng)).length);
+  set('navCntTrack', trkLoadSaved().filter(t=> t && t.pts && t.pts.length > 1).length);
+}
+
+/* Same attach-click-revoke dance as downloadBackup; kept separate so the mime type and
+   the note it writes into belong to this section. */
+function navDownload(file){
+  const url = URL.createObjectURL(new Blob([file.text], {type:file.mime}));
+  const a = document.createElement('a');
+  a.href = url; a.download = file.name; a.rel = 'noopener'; a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ try{ URL.revokeObjectURL(url); a.remove(); }catch(e){} }, 12000);
+}
+/* Must be reached inside the tap that started it — the file is built before any await. */
+async function navShare(file){
+  let f = null;
+  try{ f = new File([file.text], file.name, {type:file.mime}); }catch(e){ f = null; }
+  if(f && navigator.share && navigator.canShare && navigator.canShare({files:[f]})){
+    try{
+      await navigator.share({ files:[f], title:file.name });
+      navNote('Handed ' + file.name + ' to the share sheet.');
+      return;
+    }catch(e){
+      if(e && e.name === 'AbortError'){ navNote('Share cancelled — nothing left this device.'); return; }
+    }
+  }
+  navDownload(file);
+  navNote('This browser can’t hand files to a share sheet, so ' + file.name + ' went to your downloads instead — copy it to the SD card from there.');
+}
+
+function exportNav(fmt, share){
+  const picks = navPicks();
+  if(!picks.mine && !picks.built && !picks.drops && !picks.catch && !picks.track){
+    navNote('Nothing ticked — choose at least one of the five lines above.', true);
+    return;
+  }
+  let file;
+  try{ file = (fmt === 'kml') ? buildKml(picks) : buildGpx(picks); }
+  catch(e){ navNote('Could not build the file: ' + errText(e), true); showToast('Export failed — see the note in My Log.', 5000); return; }
+  if(!file.wpts && !file.trks){
+    navNote('Nothing to send — what you ticked has no saved positions in it yet.', true);
+    return;
+  }
+  const bytes = new Blob([file.text]).size;
+  const tail = file.wpts + ' waypoint' + (file.wpts===1?'':'s')
+             + (file.trks ? ' and ' + file.trks + ' track' + (file.trks===1?'':'s') : '')
+             + ', ' + humanSize(bytes) + '.';
+  if(share){ navShare(file); return; }
+  navDownload(file);
+  navNote('Saved ' + file.name + ' — ' + tail
+    + (fmt === 'kml' ? ' Open it in Google Earth, or load it as a layer in Navionics.'
+                     : ' Copy it to the root of an SD card (32 GB or smaller) and import it on the unit. HELIX needs the conversion step in Help first.'));
+  showToast(fmt === 'kml' ? 'KML saved ✓' : 'GPX saved ✓');
+}
+document.getElementById('navGpxBtn')  .addEventListener('click', ()=> exportNav('gpx', false));
+document.getElementById('navKmlBtn')  .addEventListener('click', ()=> exportNav('kml', false));
+document.getElementById('navShareBtn').addEventListener('click', ()=> exportNav('gpx', true));
 
 /* The picker carries no `accept` list on purpose. iOS hands a .json saved out of
    Mail or copied from another phone to Files with no extension or as

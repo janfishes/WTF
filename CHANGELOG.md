@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-07
 
+- **v470** — Send Spots To Your Fish Finder
 - **v469** — Save As Spot
 - **v468** — Turtle Mound Gets A Pin
 - **v467** — Several Spots, One Skunked Trip
