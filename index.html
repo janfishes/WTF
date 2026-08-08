@@ -2192,6 +2192,46 @@ svg.leaflet-image-layer.leaflet-interactive path {
     #logSpotSelect option:checked{ background:var(--accent-lite); color:#000; font-weight:800; }
     #logSpotSelect option::checkmark{ display:none; }
   }
+  /* v481: and Safari — Jan's default browser on the Mac — has no base-select either,
+     so on a FINE-POINTER device the location list is replaced with a list built out
+     of ordinary divs (initSelx). A phone keeps the native control untouched: the iOS
+     wheel is the right thing there and Jan says it's fine as it is. The hidden
+     <select> stays the source of truth, so every value/change path in the app is
+     unchanged. Colours mirror the v480 picker exactly. */
+  .selx{position:relative;}
+  select.selx-native{display:none !important;}
+  .selx-btn{
+    width:100%; box-sizing:border-box; text-align:left; cursor:pointer;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    font-size:16px; color:var(--fog); background:var(--navy-800);
+    border:1px solid var(--line); border-radius:8px; padding:9px 30px 9px 10px; position:relative;
+  }
+  .selx-btn::after{
+    content:''; position:absolute; right:13px; top:50%; width:6px; height:6px;
+    border-right:2px solid var(--muted); border-bottom:2px solid var(--muted);
+    transform:translateY(-70%) rotate(45deg);
+  }
+  .selx.on .selx-btn{outline:2px solid var(--accent-lite); outline-offset:0;}
+  .selx-panel{
+    position:absolute; z-index:60; left:0; right:0; top:calc(100% + 4px);
+    max-height:46vh; overflow:auto; background:var(--navy-900);
+    border:1px solid var(--line); border-radius:10px; padding:4px;
+    box-shadow:0 14px 34px rgba(0,0,0,.6);
+  }
+  .selx-panel.up{top:auto; bottom:calc(100% + 4px);}
+  /* Jan, v481: "black text is ok" — so the header is the lit-pill treatment, black on
+     the theme accent, rather than accent-coloured text on the dark panel. */
+  .selx-group{
+    color:#000; background:var(--accent-lite); font-weight:800; letter-spacing:.06em;
+    font-size:13px; padding:6px 8px; border-radius:6px; margin:8px 0 3px;
+  }
+  .selx-panel > .selx-group:first-child{margin-top:2px;}
+  .selx-opt{color:var(--fog); font-size:15px; padding:7px 8px; border-radius:6px; cursor:pointer;}
+  .selx-opt:hover{background:var(--navy-700); color:#fff;}
+  /* The CURRENT pick must not wear the header's black-on-accent, or the row you are
+     sitting on reads as another section title — it gets a lit left edge instead. */
+  .selx-opt.sel{background:var(--navy-700); color:#fff; font-weight:800; box-shadow:inset 3px 0 0 var(--accent-lite);}
+  .selx-note, .selx-note:hover{color:var(--muted); font-style:italic; cursor:default; background:transparent;}
   .loc-btns{display:flex; gap:8px; margin-top:8px;}
   .mini-btn{
     flex:1; font-family:'Space Grotesk',sans-serif; font-size:calc(12px * var(--tsb)); font-weight:600;
@@ -4882,7 +4922,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 480;
+const BUILD_NUM  = 481;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -10501,7 +10541,104 @@ function rebuildSpotSelect(){
 
   // Keep the current pick if it survived the filter
   if(keep && spotSelect.querySelector(`option[value="${keep}"]`)) spotSelect.value = keep;
+  if(spotSelect._selx) spotSelect._selx();
 }
+
+/* =============== v481 — the location list, drawn by the page ===============
+   Three builds went into colouring the section headers in this drop-down and none
+   of them reached Jan, because on macOS the browser draws an open <select> with the
+   SYSTEM menu: Safari always, Chrome unless it is handed base-select (v480). A page
+   cannot paint a system menu, full stop.
+
+   So on a FINE-POINTER device the list is rebuilt out of divs and the <select> is
+   hidden. The select stays in the DOM and stays the source of truth — every
+   spotSelect.value read/write and every 'change' listener in the app keeps working
+   untouched, which is why this is a wrapper and not a rewrite. Two things keep the
+   button in step with code that sets the value behind our back: an instance-level
+   override of the `value` setter, and a MutationObserver for rebuildSpotSelect()
+   replacing the options wholesale.
+
+   A PHONE keeps the native control. The iOS wheel is the right widget on a touch
+   screen, and Jan's word on it was "its ok on phone". Do not extend this to coarse
+   pointers without asking him. */
+function initSelx(sel){
+  if(!sel || sel._selx) return;
+  // Fine pointer only. A Mac with a trackpad reports fine; an iPhone reports coarse.
+  try{ if(!(window.matchMedia && matchMedia('(pointer:fine)').matches)) return; }catch(e){ return; }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'selx';
+  sel.parentNode.insertBefore(wrap, sel);
+  wrap.appendChild(sel);
+  sel.classList.add('selx-native');
+
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'selx-btn';
+  btn.setAttribute('aria-haspopup','listbox'); btn.setAttribute('aria-expanded','false');
+  const panel = document.createElement('div');
+  panel.className = 'selx-panel'; panel.hidden = true; panel.setAttribute('role','listbox');
+  wrap.appendChild(btn); wrap.appendChild(panel);
+
+  const sync = ()=>{ const o = sel.selectedOptions[0]; btn.textContent = o ? o.textContent : ''; };
+  const row = o=>{
+    const d = document.createElement('div');
+    d.className = 'selx-opt' + (o.disabled ? ' selx-note' : '') + (!o.disabled && o.value === sel.value ? ' sel' : '');
+    d.textContent = o.textContent;
+    d.setAttribute('role','option');
+    if(!o.disabled) d.addEventListener('click', ()=>{
+      sel.value = o.value;
+      sel.dispatchEvent(new Event('change', {bubbles:true}));
+      close();
+    });
+    return d;
+  };
+  const build = ()=>{
+    panel.innerHTML = '';
+    [...sel.children].forEach(node=>{
+      if(node.tagName === 'OPTGROUP'){
+        const h = document.createElement('div');
+        h.className = 'selx-group'; h.textContent = node.label;
+        panel.appendChild(h);
+        [...node.children].forEach(o=> panel.appendChild(row(o)));
+      }else{
+        panel.appendChild(row(node));
+      }
+    });
+  };
+  const open = ()=>{
+    build();
+    // Drop upward when the button sits low in the window, or the list opens off-screen.
+    const r = btn.getBoundingClientRect();
+    panel.classList.toggle('up', r.bottom > window.innerHeight * 0.55);
+    panel.hidden = false; wrap.classList.add('on'); btn.setAttribute('aria-expanded','true');
+    const s = panel.querySelector('.selx-opt.sel');
+    if(s) s.scrollIntoView({block:'nearest'});
+  };
+  const close = ()=>{
+    panel.hidden = true; wrap.classList.remove('on'); btn.setAttribute('aria-expanded','false');
+  };
+  btn.addEventListener('click', e=>{ e.stopPropagation(); panel.hidden ? open() : close(); });
+  document.addEventListener('click', e=>{ if(!wrap.contains(e.target)) close(); });
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape') close(); });
+
+  /* Code all over the app does `spotSelect.value = ''` to clear the form. The native
+     element fires no event for that, so the button would keep showing a stale name —
+     override the setter on THIS element and repaint from it. */
+  const desc = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+  if(desc && desc.get && desc.set){
+    Object.defineProperty(sel, 'value', {
+      configurable:true,
+      get(){ return desc.get.call(sel); },
+      set(v){ desc.set.call(sel, v); sync(); if(!panel.hidden) build(); }
+    });
+  }
+  try{ new MutationObserver(()=>{ sync(); if(!panel.hidden) build(); }).observe(sel, {childList:true, subtree:true}); }catch(e){}
+  sel.addEventListener('change', sync);
+
+  sel._selx = ()=>{ sync(); if(!panel.hidden) build(); };
+  sync();
+}
+initSelx(spotSelect);
 
 function syncLogZoneChips(){
   if(!logZoneRow) return;

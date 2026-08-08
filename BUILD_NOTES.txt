@@ -7,6 +7,55 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 2:40 PM EDT · v481 · Location List Drawn By The App
+------------------------------------------------------------------------------
+Jan: the faint headers are "on the mac. its ok on phone" — and, asked which
+browser, SAFARI. Also, mid-build: "black text is ok."
+
+v480 fixed this for Chrome only (appearance:base-select). Safari has no such
+feature and never will on Jan's timescale, so the last three builds' colours
+never reached the browser he actually uses. Ending the chase: on a FINE-POINTER
+device the location list is now built by the app out of divs (initSelx, beside
+rebuildSpotSelect), and the <select> is hidden.
+
+  * The <select> stays in the DOM and stays the source of truth. Every
+    spotSelect.value read/write and every 'change' listener elsewhere in the app
+    is untouched — this is a wrapper, not a rewrite. Clicking a row sets .value
+    and dispatches a bubbling 'change', which is exactly what the native control
+    did.
+  * Two hooks keep the button label honest when code sets the value behind our
+    back (the form clears itself in a half-dozen places, and none of that fires
+    an event): an instance-level override of the `value` property, and a
+    MutationObserver for rebuildSpotSelect() swapping the options out.
+    rebuildSpotSelect() also calls spotSelect._selx() at the end.
+  * PHONES KEEP THE NATIVE CONTROL — matchMedia('(pointer:fine)') gates the
+    whole thing. The iOS wheel is right on a touch screen and Jan said the phone
+    is fine as it is. Do not extend this to coarse pointers without asking him.
+  * Headers: BLACK on var(--accent-lite), per Jan's "black text is ok" — the
+    lit-pill pairing again. The panel is --navy-900, rows are --fog, empty-zone
+    notes are muted italic, hover is --navy-700. The CURRENT pick deliberately
+    does NOT wear black-on-accent (it would read as a third section title) — it
+    gets --navy-700 with a 3px accent left edge instead.
+  * The panel flips above the button when the button sits below 55% of the
+    window, which is where it lands with the sheet scrolled to Location.
+
+The v476/v477 optgroup rules and the v480 base-select block are both dead code
+on the Mac now but stay as the fallback for any engine where initSelx bails
+(coarse pointer, or matchMedia missing).
+
+Verified headless (Chrome 151, real CDP mouse clicks — a synthetic .click()
+opens the panel even when a real click would miss, so test with dispatched mouse
+events and send a mouseMoved first): real click opens, headers measured
+rgb(0,0,0) on rgb(255,122,61), picking "Test Inshore Spot" sets select.value=t1
+and the button label and closes the panel, `spotSelect.value=''` repaints the
+button, and the My Spots filter rebuild shows both zone groups with the offshore
+note. Screenshots of both states reviewed.
+
+REUSED-PROFILE TRAP, hit again: the first re-shoot after a CSS edit showed the
+OLD styling — the headless profile's service worker served the previous shell.
+A fresh --user-data-dir per verification round is not optional.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 1:10 PM EDT · v480 · Real Drop-Down, Theme-Colored Headers
 ------------------------------------------------------------------------------
 Jan: "where it says INSHORE - My Spots and OFFSHORE - My Spots, gray text color
