@@ -7,6 +7,56 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 9:55 PM EDT · v489 · Only The Route You Just Saved
+------------------------------------------------------------------------------
+Three from Jan, all from using v488.
+
+1. "reduce the padding on +Route pill so it is not lonber than + catch"
+
+Measured rather than nudged, and the cause was not the word: "Catch" and
+"Route" are within 0.7 px of each other. It was PADDING — .fab.primary (which
++ Catch wears) carries 6 px sides while a plain .fab carries 8 px, so Route came
+out 78.3 against Catch's 73.6. #routeFab now takes 5 px sides: 72.3, just inside
+Catch with ~2 px of headroom. The headroom matters because the padding is fixed
+while the word scales with the A control, so a tight match would drift back past
+at large text. The suite asserts Route <= Catch at BOTH the default and the
+largest text size.
+
+2. "Delete It is not a spot: nothing is saved to the map as a place, and routes
+   never appear in the + Catch location list."
+
+Gone — and it deserved to go, because half of it was simply untrue. A route very
+much is drawn on the map; it is a line rather than a pin, but "nothing is saved
+to the map as a place" reads as "you will not see this on the chart", which is
+wrong. (The + Catch half was true: routes are not in the location picker. It is
+still true, it just did not need saying in a sentence whose first half misled.)
+
+3. "I created a new route and tapped save and the othe saved route appeared on
+   the map" ... "both routes on the map"
+
+Real bug. routeSaveDraft() did `routesOn = true` then routePaintSaved(), which
+drew EVERY saved route — so finishing one run put all the earlier ones on the
+chart at once. Fixed by giving each route its own `hidden` flag, exactly the
+contract a kept track's HIDE already has:
+
+  * routePaintSaved() draws routes where !r.hidden, and only while the Routes
+    pill is on.
+  * Saving (measured OR converted from a track) marks every existing route
+    hidden and leaves the new one visible, so you are looking at the run you
+    just measured and nothing else.
+  * The per-route button became a SHOW/HIDE toggle instead of SHOW-only, so an
+    older route is one tap from coming back, and HIDE sticks on the record.
+  * The Routes pill is unchanged: master switch over the whole non-hidden set.
+
+Help and the sheet copy now describe that behaviour instead of "shows and hides
+them all", which had stopped being the whole story.
+
+VERIFIED  62/62 headless. New checks: Route <= Catch at default and large text;
+saving a second route leaves exactly one line drawn and flags the first hidden;
+SHOW brings it back; HIDE sticks; and the sheet no longer carries the deleted
+claim.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 9:20 PM EDT · v488 · Routes Get Their Own Sheet
 ------------------------------------------------------------------------------
 Jan: "remove the button function on Measure a Route in +Spots, because the Route
