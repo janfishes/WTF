@@ -19,7 +19,7 @@ land in one sitting, each one gets its own number and its own entry.
    any gotcha the next person would otherwise rediscover the hard way. These
    notes are the app's memory — they get read months later.
 4. **After pushing**, archive the build: copy `index.html` to
-   `~/Desktop/WTF Files/index<BUILD_NUM>.html`, and refresh the single current
+   `~/Documents/WTF Files/index<BUILD_NUM>.html`, and refresh the single current
    copy of `BUILD_NOTES.txt` in that same folder.
 
 Also on Jan's ship checklist for any change that warrants it: update the in-app
