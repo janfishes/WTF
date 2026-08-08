@@ -2140,6 +2140,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   input::placeholder, textarea::placeholder{color:var(--muted);}
   input:focus, select:focus, textarea:focus{outline:2px solid var(--teal); outline-offset:0;}
   textarea{resize:vertical; min-height:44px;}
+  /* v476: the section headers inside a drop-down were the browser's default dim grey
+     italic and Jan couldn't pick them out from the spots under them. Chrome honours
+     colour/weight on optgroup in the popup, so state them; Safari and the iOS wheel
+     ignore CSS entirely, which is why rebuildSpotSelect() also uppercases the label
+     text — the shouting is what carries the header on those engines. */
+  select optgroup{color:var(--fog); background:var(--navy-900); font-weight:800; font-style:normal; letter-spacing:.06em;}
+  select option{color:var(--fog); background:var(--navy-800); font-weight:400; font-style:normal; letter-spacing:0;}
   select{appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%); background-position:calc(100% - 16px) center, calc(100% - 11px) center; background-size:5px 5px; background-repeat:no-repeat;}
   .loc-btns{display:flex; gap:8px; margin-top:8px;}
   .mini-btn{
@@ -4828,7 +4835,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 475;
+const BUILD_NUM  = 476;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -10384,7 +10391,9 @@ function rebuildSpotSelect(){
   const addGroup = (label, list)=>{
     if(!list.length) return;
     const group = document.createElement('optgroup');
-    group.label = label;
+    // Uppercased with rules either side: Safari and the iOS picker wheel ignore any
+    // CSS on an optgroup, so the label's own text has to do the separating work.
+    group.label = '—— ' + label.toUpperCase() + ' ——';
     list.slice().sort(byName).forEach(s=>{
       const opt = document.createElement('option');
       opt.value = s.id;
@@ -10410,7 +10419,7 @@ function rebuildSpotSelect(){
     if(logZones.size && !logZones.has(zone)) return;
     // v475: the user's own spots come FIRST in each zone — they're the ones being
     // picked most often, so they shouldn't sit below a hundred built-ins.
-    addGroup(ZONES[zone].label + ' — My Spots', custom.filter(s=> !isLaunch(s) && bucket(s) === zone));
+    addGroup(ZONES[zone].label + ' · My Spots', custom.filter(s=> !isLaunch(s) && bucket(s) === zone));
     addGroup(ZONES[zone].label, SPOTS.filter(s=> !s._deleted && !isLaunch(s) && bucket(s) === zone));
   });
 

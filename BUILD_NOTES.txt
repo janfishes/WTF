@@ -7,6 +7,31 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 10:05 AM EDT · v476 · Louder Drop-Down Headers
+------------------------------------------------------------------------------
+Jan, right after v475: "in the dropdown, the section labels are to hard to see."
+
+The section headers in the + Catch location list are <optgroup> labels, and by
+default every browser draws them small, grey and italic — nearly the same weight
+as the spot names underneath, so the list read as one undifferentiated run.
+
+Two fixes, because one is not enough:
+
+  * CSS — `select optgroup` now gets --fog text, --navy-900 background, weight
+    800 and a little letter-spacing; `select option` is pinned back to normal
+    weight/upright/--fog on --navy-800 so the contrast between header and entry
+    is deliberate. This is what Chrome renders. Applies to EVERY select in the
+    app, so My Log's "Within 200 ft of a pin" group gets it too.
+  * TEXT — Safari (Mac) and the iOS picker wheel ignore CSS on an optgroup
+    completely, so the label string itself carries the emphasis: addGroup() now
+    uppercases and rules it, "—— INSHORE · MY SPOTS ——". Do not "clean this up"
+    back to plain title case; on Jan's own devices the shouting IS the styling.
+    The My Spots separator changed from an em dash to a middot in the same
+    build, or the uppercased label reads with two competing dashes.
+
+Order is still v475's: My Spots above the built-ins within each zone.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 9:30 AM EDT · v475 · My Spots First In The List
 ------------------------------------------------------------------------------
 Jan: "move the user's spots, my spots, above the built in spots" — in the

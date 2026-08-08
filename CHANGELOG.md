@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-08
 
+- **v476** — Louder Drop-Down Headers
 - **v475** — My Spots First In The List
 
 ## 2026-08-07
