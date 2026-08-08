@@ -2953,8 +2953,33 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* The honest-limit line. It says what the number IS, which is also the instruction:
      two pins measure a straight line, so trace the channel if you want the real run. */
   #routeBar .rt-foot{font-size:calc(11px * var(--tsb)); font-weight:700; color:#555; line-height:1.35; margin-top:3px;}
-  #routeBar .rt-legs{max-height:34vh; overflow-y:auto; -webkit-overflow-scrolling:touch; margin-top:5px;
-    border-top:1px solid #ddd; padding-top:4px;}
+  /* v485: the legs list is capped at about FIVE rows and scrolls, and routeUpdateBar()
+     keeps it pinned to the newest leg.
+
+     It was 34vh, which let the card grow to roughly half a phone screen by a dozen pins.
+     The card is position:fixed OVER the map, so every tap that landed on it did nothing
+     — which reads exactly like "it won't take more than about 8 pins" and like "the last
+     leg didn't calculate" (the pin was never added, so the leg never existed). The maths
+     was never involved: 14 pins computes 13 legs correctly.
+
+     So the card must stay SMALL no matter how long the route gets. Any future change
+     here has to keep that property — the map is the thing being tapped. */
+  #routeBar .rt-legs{max-height:calc(5.4 * 1.45em); overflow-y:auto; -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain; margin-top:2px;}
+  /* Column labels, so the right-hand number is not an unexplained figure — Jan asked for
+     the running total to say what it is. Same flex shape as a leg row so they line up. */
+  #routeBar .rt-head{display:flex; gap:8px; align-items:baseline; margin-top:5px;
+    border-top:1px solid #ddd; padding-top:4px;
+    font-size:calc(9.5px * var(--tsb)); font-weight:900; letter-spacing:.07em; color:#777;}
+  #routeBar .rt-head .rt-n{flex:0 0 auto; min-width:4.6em; color:#777;}
+  #routeBar .rt-head .rt-cum{margin-left:auto;}
+  /* Collapsed: the card drops to its one-line total and the buttons, handing the whole
+     chart back. The legs are still there, one tap away. */
+  #routeBar.mini .rt-legs, #routeBar.mini .rt-head, #routeBar.mini .rt-foot{display:none;}
+  #routeBar .rt-fold{
+    background:none; border:none; padding:0 0 0 4px; cursor:pointer; color:#555;
+    font-family:inherit; font-weight:900; font-size:calc(12px * var(--tsb)); line-height:1;
+  }
   /* The leg row is used in TWO places — the measuring bar (on a white card) and each
      saved route under + Spot (on the sheet's dark ground) — so it must NOT be scoped to
      #routeBar. It was, at first, and the sheet copy came out as one run-together string
@@ -3379,6 +3404,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
       Catch
       <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the form to log a catch.</span><span>Logged catches show as diamonds on the map.</span></span>
     </button>
+    <!-- v485: + Route, kept with the other two "+" actions rather than between Spot and
+         Catch, so the two most-used buttons stay neighbours. Measuring a run was two taps
+         through the + Spot sheet before this, which is two taps too many in a moving
+         boat. Tap again to cancel, the way TRACK MY PATH does. No title attr — a FAB with
+         one doubles its tooltip (v375). -->
+    <button class="fab" id="routeFab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 9 9l5 5 7-12"></path></svg>
+      Route
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> measure a run — tap along your path,</span><span>one pin per bend. Tap again to cancel.</span></span>
+    </button>
     <button class="fab" id="tidePinBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
       Tides
@@ -3493,12 +3528,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <span class="rt-title">ROUTE</span>
     <span class="rt-stat" id="routeTotal">tap the map to start</span>
     <span class="rt-pins" id="routePins">0 pins</span>
+    <!-- Fold the legs away and the card drops to one line, handing the chart back. -->
+    <button class="rt-fold" id="routeFoldBtn" type="button" aria-label="Show or hide the legs">▾</button>
   </div>
   <div class="rt-sums" id="routeSums" hidden></div>
   <!-- The honest limit, on screen rather than buried in help: what the line IS. The card
        states distance and stops there — see the note in routeUpdateBar() for why the
        1/3-reserve figure that v482/v483 printed here was taken out. -->
   <div class="rt-foot">Straight line between the pins you dropped. Not a checked course — no depth, no channel.</div>
+  <!-- Column labels. The right-hand figure is the RUNNING TOTAL at that pin and used to
+       be an unexplained number sitting on its own — Jan asked for it to say so. -->
+  <div class="rt-head" id="routeHead" hidden>
+    <span class="rt-n">LEG</span><span>DIST</span><span>BEARING</span><span class="rt-cum">TOTAL</span>
+  </div>
   <div class="rt-legs" id="routeLegs" hidden></div>
   <div class="rt-btns">
     <button id="routeUndoBtn" type="button">UNDO PIN <span class="bi bi-undo">↺</span></button>
@@ -3748,7 +3790,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
 
       <div class="subhead">Action Buttons</div>
-      <p class="sheet-note">Twelve black buttons along the right side of the map are the app’s actions. A button fills with your <b>theme color</b> while its action is on.</p>
+      <p class="sheet-note">Thirteen black buttons along the right side of the map are the app’s actions. A button fills with your <b>theme color</b> while its action is on.</p>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-bite"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg> Bite<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-bite">
       <p class="sheet-note"><svg class="g-emph" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg> <b>Bite</b> opens a 3-day solunar feeding forecast — the moon phase and % lit at the top, then Major and Minor feeding windows for that day. Bite times are computed fully offline from moon-position astronomy — no internet is needed.</p>
@@ -3838,11 +3880,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-routes"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 9 9l5 5 7-12"></path></svg> Routes &amp; Distance<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-routes">
-      <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-7px;"><path d="M3 19 9 9l5 5 7-12"></path></svg> <b>How far is it?</b> Open <b>+ Spot</b>, scroll to <b>Your saved routes</b> and tap <b>MEASURE A ROUTE</b>. The sheet closes and every tap on the map drops a pin. The first one is marked <b>S</b> for start; after that each pin is marked <b>L1</b>, <b>L2</b>, <b>L3</b> for the <b>leg</b> that ends there, and the legs add up to the run. A card at the top of the screen keeps the total distance in front of you. Under it every leg is listed with its <b>distance</b>, its <b>bearing</b> and the <b>running total</b> at that pin, so you can see how far along you are at any point. <b>UNDO PIN</b> takes back the last tap, <b>SAVE</b> keeps the route and <b>CANCEL</b> throws it away. The pins and the line are drawn in <b>black and white</b> on purpose — green and red mean something else on the water, and plenty of people can't tell those two apart anyway, so the <b>letters</b> tell you which pin is which, not the colour.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-7px;"><path d="M3 19 9 9l5 5 7-12"></path></svg> <b>How far is it?</b> Tap <b>+ ROUTE</b> in the button stack (or open <b>+ Spot</b> and tap <b>MEASURE A ROUTE</b> under <b>Your saved routes</b>). Every tap on the map then drops a pin. The first one is marked <b>S</b> for start; after that each pin is marked <b>L1</b>, <b>L2</b>, <b>L3</b> for the <b>leg</b> that ends there, and the legs add up to the run. A card at the top of the screen keeps the total distance in front of you. Under it every leg is listed with its <b>distance</b>, its <b>bearing</b> and the <b>running total</b> at that pin, so you can see how far along you are at any point. <b>UNDO PIN</b> takes back the last tap, <b>SAVE</b> keeps the route, and <b>CANCEL</b> — or tapping <b>+ ROUTE</b> again — throws it away. The card shows the last few legs and scrolls; the small <b>▾</b> beside the total folds it away to one line when you want the whole chart back. There is <b>no limit</b> on how many pins a route can have. The pins and the line are drawn in <b>black and white</b> on purpose — green and red mean something else on the water, and plenty of people can't tell those two apart anyway, so the <b>letters</b> tell you which pin is which, not the colour.</p>
       <p class="sheet-note"><b>The app measures the distance. That is all it does here.</b> It does not work out your trip, your fuel or your time, and it deliberately doesn't try. Whether that run is an easy morning or more than you want depends on things no app can see: which way the wind gets up, what the sea does on the way home, how loaded the boat is, how much light is left — and whether you are running an outboard, sailing, paddling or on a trolling motor. The way back is rarely the way out, and it is usually the harder half. <b>What the distance costs you, on that day, in that boat, is yours to know</b> — and it is worth knowing before you need it.</p>
       <p class="sheet-note">A route measures the <b>straight line between the pins you dropped</b> — nothing more. It does not know where the channel runs, where the water is deep enough for your boat, or what lies between two pins. Inshore that matters: the real run bends around marsh, spoil islands and shoals, so <b>two pins can read a lot shorter than the run you'll actually make</b>. Trace the channel with extra pins wherever it bends and the total comes out honest. Bearings are <b>true</b> (marked <b>T</b>), because the heading your phone can be trusted for is its <b>GPS course</b>, which is true north as well — a phone's compass needle sits in a console full of wiring and can be well out. <b>This is not a course to steer.</b> Nothing has checked the water under that line.</p>
       <p class="sheet-note"><b>The best route is one you've already run.</b> Under <b>Your tracks</b>, every recorded track has a <b>SAVE AS ROUTE</b> button — it thins the track down to its bends and files it as a route, so the legs follow the water you actually went through instead of cutting across the flats. The route reads a little <b>shorter</b> than the track did, because it trims the boat's wander out of each bend.</p>
-      <p class="sheet-note">Saved routes live under <b>Your saved routes</b> in <b>+ Spot</b>, each with <b>SHOW 🗺</b>, <b>EDIT ✎</b> (rename it and take notes — ramp, tide, where it shoals) and <b>DELETE ✕</b>. The <b>ROUTES</b> button along the top of the map shows and hides them all; tapping a route's line on the map zooms to it. A deleted route comes back with <b>UNDO</b> for 14 days like anything else. The app keeps your last 20. Unlike tracks, <b>routes are saved in your backup file</b> — a route is work you did by hand, and it should survive a new phone. A route keeps the coordinates it was measured with, so moving or deleting a pin later never changes a distance you have already planned fuel against.</p>
+      <p class="sheet-note">Saved routes live under <b>Your saved routes</b> in <b>+ Spot</b>, each with <b>SHOW 🗺</b>, <b>EDIT ✎</b> (rename it and take notes — ramp, tide, where it shoals) and <b>DELETE ✕</b>. The <b>ROUTES</b> button along the top of the map shows and hides them all; tapping a route's line on the map zooms to it. A deleted route comes back with <b>UNDO</b> for 14 days like anything else. The app keeps your last 20. Unlike tracks, <b>routes are saved in your backup file</b> — a route is work you did by hand, and it should survive a new phone. A route keeps the coordinates it was measured with, so moving or deleting a pin later never changes a distance you have already measured.</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-track"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg> Track My Path<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-track">
@@ -4158,6 +4200,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <!-- v472: filled by updateUnnamedPlaces(); empty and invisible when every catch
          already sits on a spot, which is the state a brand-new user starts in. -->
     <div id="unnamedPlaces"></div>
+    <!-- v485: routes sit ABOVE the spots list and its Recently-deleted line (Jan) — they
+         are their own thing and were buried at the very bottom under the tracks.
+         Still a SIBLING of the spots list, never a member of it: a route is a path, not a
+         place, which is what keeps the spot count honest and keeps a route out of the
+         + Catch location picker. -->
+    <p class="sheet-note" style="margin-top:14px;">Your saved routes: <span id="routeCount">0</span>. Straight-line legs between your pins — how far the run is. Routes <b>are</b> in your backup file.</p>
+    <div class="loc-btns" style="margin:6px 0 4px;">
+      <button class="mini-btn" id="routeStartBtn" style="font-weight:700;">MEASURE A ROUTE <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3 19 9 9l5 5 7-12"></path></svg></button>
+    </div>
+    <div id="routeList"></div>
     <p class="sheet-note" style="margin-top:14px;">Your saved spots: <span id="customSpotCount">0</span>.</p>
     <div class="loc-btns" style="margin:6px 0 4px;">
       <button class="mini-btn" onclick="appUndo()" title="Undo your most recent change — edit or delete, spot or catch">UNDO LAST CHANGE <span class="bi bi-undo">↺</span></button>
@@ -4170,14 +4222,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <p class="sheet-note" style="margin-top:6px;">Restoring brings back any built-in spots you edited or deleted. Your own added spots are not affected.</p>
     <p class="sheet-note" style="margin-top:14px;">Your tracks: <span id="trackCount">0</span>. Record one with the <b>TRACK MY PATH</b> button on the map — the app keeps your last 10, on this device only.</p>
     <div id="trackList"></div>
-    <!-- v482: routes are a sibling of the spots list, never a member of it — a route is a
-         path, not a place. Keeping them apart is what stops the spot count drifting and
-         stops a route turning up as a pickable catch location. -->
-    <p class="sheet-note" style="margin-top:14px;">Your saved routes: <span id="routeCount">0</span>. Straight-line legs between your pins — how far the run is. Routes <b>are</b> in your backup file.</p>
-    <div class="loc-btns" style="margin:6px 0 4px;">
-      <button class="mini-btn" id="routeStartBtn" style="font-weight:700;">MEASURE A ROUTE <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3 19 9 9l5 5 7-12"></path></svg></button>
-    </div>
-    <div id="routeList"></div>
   </div>
 </div>
 
@@ -5056,7 +5100,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 484;
+const BUILD_NUM  = 485;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -14613,12 +14657,19 @@ function routeUpdateBar(){
      hard to argue with, which matters for an app whose own warning says never to
      navigate by it. */
   if(sums) sums.hidden = true;
+  const headEl = document.getElementById('routeHead');
+  if(headEl) headEl.hidden = legs.length === 0;
   if(legsEl){
     legsEl.hidden = legs.length === 0;
     legsEl.innerHTML = legs.map(l=>
       `<div class="rt-leg"><span class="rt-n">${routeLabel(l.n-1)}→${routeLabel(l.n)}</span>`
       + `<span>${fmtRunNm(l.nm)}</span><span>${fmtBrgT(l.brg)}</span>`
       + `<span class="rt-cum">${fmtRunNm(l.cum)}</span></div>`).join('');
+    /* The list is capped at about five rows, so on a long route the newest leg would sit
+       below the fold — which is exactly what made it look like the last leg "did not
+       calculate". Pin the scroll to the bottom after every pin so the leg just made is
+       always the one on screen. */
+    legsEl.scrollTop = legsEl.scrollHeight;
   }
   const u = document.getElementById('routeUndoBtn'), s = document.getElementById('routeSaveBtn');
   if(u) u.disabled = routeDraft.length === 0;
@@ -14633,7 +14684,13 @@ function routeStart(){
   routeDraft = [];
   document.body.classList.add('route-mode');
   const bar = document.getElementById('routeBar');
-  if(bar) bar.hidden = false;
+  /* A fresh route always opens UNFOLDED — the first thing anyone needs to see is that
+     the tap registered as a pin. */
+  if(bar){ bar.hidden = false; bar.classList.remove('mini'); }
+  const fold = document.getElementById('routeFoldBtn');
+  if(fold) fold.textContent = '\u25be';
+  const fab = document.getElementById('routeFab');
+  if(fab) fab.classList.add('pressed');
   routePaintDraft();
   routeUpdateBar();
   showToast('Tap along your run — one pin per bend. Trace the channel and the total matches the run you’ll actually make.', 7000);
@@ -14644,6 +14701,8 @@ function routeStop(){
   document.body.classList.remove('route-mode');
   const bar = document.getElementById('routeBar');
   if(bar) bar.hidden = true;
+  const fab = document.getElementById('routeFab');
+  if(fab) fab.classList.remove('pressed');
   if(routeDraftLayer){ try{ map.removeLayer(routeDraftLayer); }catch(e){} routeDraftLayer = null; }
 }
 function routeAddPoint(latlng){
@@ -14877,15 +14936,28 @@ window.removeRoute = async function(id){
 };
 
 /* ---------- wiring ---------- */
+function routeAskCancel(){
+  if(routeDraft.length >= 2 && !window.confirm('Discard this route?\n\nIt has not been saved.')) return;
+  routeStop();
+}
 document.getElementById('routeStartBtn').addEventListener('click', ()=>{
   try{ closeAddSpot(); }catch(e){}
   routeStart();
 });
+/* The FAB is the fast way in — one tap from the chart. Tap again to cancel, same
+   toggle TRACK MY PATH uses, so the two recording-ish buttons behave alike. */
+document.getElementById('routeFab').addEventListener('click', ()=>{
+  if(routeMode) routeAskCancel(); else routeStart();
+});
 document.getElementById('routeUndoBtn').addEventListener('click', routeUndoPin);
 document.getElementById('routeSaveBtn').addEventListener('click', routeSaveDraft);
-document.getElementById('routeCancelBtn').addEventListener('click', ()=>{
-  if(routeDraft.length >= 2 && !window.confirm('Discard this route?\n\nIt has not been saved.')) return;
-  routeStop();
+document.getElementById('routeCancelBtn').addEventListener('click', routeAskCancel);
+/* Folding is remembered for the session only — a new route opens with its legs showing,
+   because the first thing anyone wants to see is that the tap registered. */
+document.getElementById('routeFoldBtn').addEventListener('click', ()=>{
+  const bar = document.getElementById('routeBar');
+  const on = bar.classList.toggle('mini');
+  document.getElementById('routeFoldBtn').textContent = on ? '▸' : '▾';
 });
 /* Every tap on the chart is a pin while measuring. The pointer-events rule on the map
    panes (see the CSS) is what stops a tap that lands on a pin or a track being eaten

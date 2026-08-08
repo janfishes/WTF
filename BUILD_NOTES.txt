@@ -7,6 +7,68 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 7:15 PM EDT · v485 · Route FAB, Long Routes, Column Labels
+------------------------------------------------------------------------------
+First real use of routes on the water. Jan: "need to be able to record more than
+8 pins. also the last leg did not calculate. need total or running total label".
+Then: "need to move route to above the deleted spots. maybe next to +Spot have
++Route".
+
+THE 8-PIN LIMIT AND THE MISSING LAST LEG WERE THE SAME BUG, AND IT WAS NOT THE
+MATHS. Measured before touching anything: 14 pins computes 13 legs correctly and
+the last row is in the DOM. What was actually happening is a LAYOUT failure:
+
+  * .rt-legs was capped at 34vh, so the card grew with the route. By a dozen
+    pins it was ~343 px tall — half a phone screen — and #routeBar is
+    position:fixed OVER the map. Every tap aimed at water inside that rectangle
+    hit the card and did nothing, which reads exactly as "it won't take more
+    than about 8 pins".
+  * The same cap meant the newest leg sat below the fold of a list nobody knew
+    was scrollable, which reads exactly as "the last leg did not calculate" —
+    and when a tap HAD been swallowed by the card, the leg genuinely was not
+    there, so both readings were available at once.
+
+Fixes, and the property that must survive any future change here: THE CARD MUST
+NOT GROW WITH THE ROUTE. The map is the thing being tapped.
+
+  * .rt-legs is now capped at about five rows (calc(5.4 * 1.45em)) and
+    routeUpdateBar() pins scrollTop to the bottom after every pin, so the leg
+    just made is always the visible one.
+  * A fold button (the small caret by the total) drops the card to one line and
+    hands the whole chart back. A fresh route always opens UNFOLDED — the first
+    thing anyone needs is confirmation the tap registered.
+  * Measured at 20 pins: card 253 px and no longer growing; the suite asserts it
+    stays under 42% of the viewport.
+  * There is no cap on pins and never was. Only the TRACK->route conversion caps
+    at ROUTE_MAX_PTS = 40, which is a different thing entirely.
+
+COLUMN LABELS (Jan's third point): the leg list now has a LEG / DIST / BEARING /
+TOTAL header, so the right-hand figure says what it is. It is the RUNNING TOTAL
+at that pin, not the leg distance repeated — which was impossible to tell from
+a bare column of numbers. Note for whoever edits the bar markup: the header must
+sit immediately above .rt-legs. It first shipped above .rt-foot, which put the
+straight-line paragraph BETWEEN the labels and the rows they label. Caught on a
+screenshot; the tests could not see it.
+
++ ROUTE FAB. Measuring a run was two taps through the + Spot sheet, which is two
+too many in a moving boat. The FAB is placed after + Catch rather than between
+Spot and Catch — Jan asked for it "next to +Spot", and this keeps it in the
+same "+" cluster while leaving the two most-used buttons neighbours. Tap again
+to cancel, same toggle TRACK MY PATH uses. NO title attr (v375: a FAB with one
+doubles its tooltip). The stack is now THIRTEEN buttons and help's count line was
+updated — that sentence has to move every time a FAB is added or removed.
+
+SHEET ORDER. Your saved routes moved from the very bottom (under the tracks) to
+ABOVE Your saved spots and its Recently-deleted line. Still a SIBLING of the
+spots list and never a member of it — that separation is what keeps the spot
+count honest and keeps a route out of the + Catch location picker.
+
+VERIFIED  41/41 headless, including six new checks aimed squarely at the report:
+20 pins accepted with all 19 legs finite, the newest leg scrolled into view, the
+card under 42% of the viewport at 20 pins, the column labels present, the fold
+collapsing the card, and the FAB lit while measuring and carrying no title attr.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 6:10 PM EDT · v484 · Distance Only, No Trip Planning
 ------------------------------------------------------------------------------
 Jan, on the 1/3 reserve: "should we ditch the 1/3 rule and measures since it
