@@ -1765,6 +1765,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
      (--launch is fixed in :root, not per-theme.)
      v387: the OFF-state TEXT went white with the rest of the top row (see the zone-pill
      note above); the #d08c4c brown survives on the border only. */
+  /* v482 Routes pill, made hueless in v483. Sits ahead of Launches on the second row
+     (Jan's call) — Labels stays last because it modifies every other pill.
+     The route draws in ink-and-casing rather than a colour (see .route-dot), and the
+     pill has to agree with what it switches on, so it wears the same black-and-white:
+     off = white on black inside a white ring, lit = the inversion, black on white.
+     That is the same hueless lit state #catchToggle has worn since v305, which is the
+     app's established way of saying "on" without spending a hue — and it is the one
+     lit state that cannot fail for a colour-blind user. */
+  #routesToggle{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid #fff !important; box-shadow:none !important;}
+  #routesToggle:not(.active){opacity:1; color:#fff !important; border-color:#cfd6dd !important;}
+  #routesToggle.active{background:#fff !important; color:#000 !important; border-color:#fff !important;}
+  #routesToggle.active .fic{stroke:#000 !important;}
+  #metaRow #routesToggle{text-shadow:none !important;}
   #launchToggle{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid #d08c4c !important; box-shadow:none !important;}
   #launchToggle:not(.active){opacity:1; color:#fff !important; border-color:#d08c4c !important;}
   #launchToggle.active{background:var(--launch) !important; color:#fff !important; border-color:#fff !important;}
@@ -2912,6 +2925,85 @@ svg.leaflet-image-layer.leaflet-interactive path {
     font-size:calc(12.5px * var(--tsb)); padding:7px 12px; margin-top:12px;}
   .track-line{filter:drop-shadow(0 0 2px rgba(255,255,255,.75));}
 
+  /* ---------- v482: ROUTE bar ----------
+     Same white-card-with-accent-border family as the track bar and the MARK banner.
+     The route itself is GREEN — after v389 blue, purple, amber, orange, launch brown
+     and TRACK's magenta are all spoken for, and green is the one hue left that no pin,
+     zone or line already wears. Unlike the track bar this one is NOT tappable as a
+     whole (it carries three real buttons), so no cursor:pointer on the card.
+     The legs list scrolls inside the card: a long route must never grow the bar until
+     it owns the screen, because the map underneath is the thing being measured. */
+  #routeBar{
+    position:fixed; left:50%; top:calc(env(safe-area-inset-top, 0px) + 8px); transform:translateX(-50%);
+    z-index:5900; width:min(360px, calc(100vw - 16px)); box-sizing:border-box;
+    background:rgba(255,255,255,.96); border:2.5px solid var(--teal); border-radius:12px;
+    color:#000; font-family:'Space Grotesk',sans-serif; padding:6px 11px 7px;
+    box-shadow:0 5px 20px rgba(0,0,0,.5); backdrop-filter:blur(6px);
+  }
+  /* A track already owns the top of the screen when one is recording — the route card
+     steps down below it rather than stacking on top of it. */
+  #routeBar.below{top:calc(env(safe-area-inset-top, 0px) + 74px);}
+  body.mark-active #routeBar{display:none;}
+  #routeBar .rt-top{display:flex; align-items:center; gap:8px;}
+  #routeBar .rt-title{font-weight:900; letter-spacing:.09em; font-size:calc(13.5px * var(--tsb)); color:#101418;}
+  #routeBar .rt-stat{font-weight:800; font-variant-numeric:tabular-nums; font-size:calc(13.5px * var(--tsb)); color:#333;}
+  #routeBar .rt-pins{margin-left:auto; font-weight:800; font-size:calc(12px * var(--tsb)); color:#555;}
+  #routeBar .rt-sums{font-size:calc(12px * var(--tsb)); font-weight:800; color:#333; margin-top:3px;
+    font-variant-numeric:tabular-nums; line-height:1.4;}
+  /* The honest-limit line. It says what the number IS, which is also the instruction:
+     two pins measure a straight line, so trace the channel if you want the real run. */
+  #routeBar .rt-foot{font-size:calc(11px * var(--tsb)); font-weight:700; color:#555; line-height:1.35; margin-top:3px;}
+  #routeBar .rt-legs{max-height:34vh; overflow-y:auto; -webkit-overflow-scrolling:touch; margin-top:5px;
+    border-top:1px solid #ddd; padding-top:4px;}
+  /* The leg row is used in TWO places — the measuring bar (on a white card) and each
+     saved route under + Spot (on the sheet's dark ground) — so it must NOT be scoped to
+     #routeBar. It was, at first, and the sheet copy came out as one run-together string
+     with no gaps: "1→21.8 sm313°T1.8 sm". Colour is the only thing the two differ on,
+     and the list overrides that inline. */
+  .rt-leg{display:flex; gap:8px; align-items:baseline; font-size:calc(11.5px * var(--tsb));
+    font-weight:700; color:#333; font-variant-numeric:tabular-nums; padding:1.5px 0;}
+  /* Wide enough for "L10→L11" without the columns after it jumping between rows. */
+  .rt-leg .rt-n{color:#101418; font-weight:900; flex:0 0 auto; min-width:4.6em;}
+  .rt-leg .rt-cum{margin-left:auto; color:#777;}
+  /* The saved-route list sits on the sheet's dark ground, where near-black ink would
+     vanish — the leg label goes white there instead. */
+  .rt-leg .rt-n-sheet{color:#fff;}
+  #routeBar .rt-btns{display:flex; gap:6px; margin-top:7px;}
+  #routeBar .rt-btns button{
+    flex:1 1 auto; font-family:inherit; cursor:pointer; border-radius:100px;
+    font-weight:800; letter-spacing:.05em; font-size:calc(12px * var(--tsb)); padding:5px 8px;
+  }
+  #routeBar #routeSaveBtn{background:#101418; border:2px solid #101418; color:#fff;}
+  #routeBar #routeUndoBtn{background:#fff; border:2px solid #101418; color:#101418;}
+  #routeBar #routeCancelBtn{background:#fff; border:2px solid #bbb; color:#333;}
+  #routeBar button:disabled{opacity:.45; cursor:default;}
+  .route-line{filter:drop-shadow(0 0 2px rgba(255,255,255,.75));}
+  /* While a route is being measured EVERY tap on the chart has to land as a pin. Without
+     this a tap that happens to fall on a spot pin, a name tag or a saved track's fat hit
+     line opens a popup (or zooms to the track) instead, and on a busy chart that is most
+     of the water. Panes, not individual layers, so anything added later is covered too. */
+  body.route-mode .leaflet-marker-pane,
+  body.route-mode .leaflet-tooltip-pane,
+  body.route-mode .leaflet-overlay-pane{pointer-events:none;}
+  body.route-mode #map{cursor:crosshair;}
+  /* Numbered dot at each dropped pin. Green fill, white ring — the same separation
+     device every map pin uses since v390. */
+  /* v483: the pin is a LABEL, not a coloured dot — S, L1, L2 … Identity has to survive
+     both a greyscale print and a red-green deficiency, and on the water green is the
+     starboard-hand aid colour, so the route wears no hue at all: near-black ink in a
+     white jacket, which separates against bright sand and dark water alike.
+     Width is content-driven ("S" vs "L12"), so the marker carries no iconSize and the
+     translate here does the centring that iconAnchor would normally do. */
+  .route-dot{
+    position:absolute; transform:translate(-50%,-50%);
+    min-width:19px; height:19px; padding:0 4px; border-radius:100px;
+    background:#101418; border:2px solid #fff; box-sizing:border-box;
+    box-shadow:0 1px 4px rgba(0,0,0,.6);
+    color:#fff; font-family:'Space Grotesk',sans-serif; font-weight:900;
+    font-size:10px; letter-spacing:.02em;
+    display:flex; align-items:center; justify-content:center; line-height:1; white-space:nowrap;
+  }
+
   .search-row{
     display:flex; align-items:center; justify-content:space-between; gap:8px;
     padding:9px 11px; margin-bottom:6px; border-radius:9px;
@@ -3389,6 +3481,32 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <button id="trackStopDeleteBtn" type="button">DELETE — DON'T KEEP THIS TRACK ✕</button>
 </div>
 
+<!-- ===================== v482: ROUTE bar =====================
+     Up while a route is being measured. Every tap on the map adds a pin, each new pin
+     closes a leg, and the legs add up to the run. The card carries the total, the
+     and the leg list. v484 stripped it back to what the app MEASURED — the round-trip
+     and 1/3-reserve figures it printed for two builds are gone; see routeUpdateBar().
+     The foot line is the honest limit and is deliberately not a warning bubble: it
+     explains what the number is, which is also the instruction for making it right. -->
+<div id="routeBar" hidden>
+  <div class="rt-top">
+    <span class="rt-title">ROUTE</span>
+    <span class="rt-stat" id="routeTotal">tap the map to start</span>
+    <span class="rt-pins" id="routePins">0 pins</span>
+  </div>
+  <div class="rt-sums" id="routeSums" hidden></div>
+  <!-- The honest limit, on screen rather than buried in help: what the line IS. The card
+       states distance and stops there — see the note in routeUpdateBar() for why the
+       1/3-reserve figure that v482/v483 printed here was taken out. -->
+  <div class="rt-foot">Straight line between the pins you dropped. Not a checked course — no depth, no channel.</div>
+  <div class="rt-legs" id="routeLegs" hidden></div>
+  <div class="rt-btns">
+    <button id="routeUndoBtn" type="button">UNDO PIN <span class="bi bi-undo">↺</span></button>
+    <button id="routeSaveBtn" type="button">SAVE</button>
+    <button id="routeCancelBtn" type="button">CANCEL</button>
+  </div>
+</div>
+
 <!-- ===================== INFO SHEET ===================== -->
 <div class="scrim" id="infoScrim"></div>
 <div class="sheet" id="infoSheet">
@@ -3548,7 +3666,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div id="panel-help" style="display:none;">
       <div class="subhead" style="margin-top:0;">Read This Section to Get Fishing</div>
-      <p class="sheet-note help-intro">Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>SPOT</b> to save your actual position or any place you drop a pin on the map and details you add. Tap any spot pin on the map for its coordinates and details. <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>CATCH</b> logs a fish — one species or several — where you caught it and details. <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg> <b>BITE</b> shows 3-day feeding times. With <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>WAVES</b> provides NOAA's offshore buoy data. <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 6.2C10 4.6 7.4 4 4 4v14.4c3.4 0 6 .6 8 2.2 2-1.6 4.6-2.2 8-2.2V4c-3.4 0-6 .6-8 2.2Z"></path><path d="M12 6.2v14.4"></path></svg> <b>MY LOG</b> shows all your catches' info. <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>SEASONS</b> show feeding times by month and fishing regs. Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 4 13.9 10.1 20 12 13.9 13.9 12 20 10.1 13.9 4 12 10.1 10.1Z"></path></svg> <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="vertical-align:-2px;"><path d="M2 6.6c2.5-2.6 4.9-2.8 7.2-.7 2.5 2.3 5.1 2.4 8 .2 1.3-1 2.8-1.3 4.5-.9"></path><path d="M2.2 12.2c1.8-3 3.8-3.3 6.1-1 2.7 2.7 5.5 2.9 8.5.6 1.2-.9 2.5-1.2 4-.9"></path><path d="M5.4 18.6c2.1-2.4 4.3-2.5 6.7-.4 1.8 1.6 3.7 1.7 5.7.3"></path></svg> <b>Depth Lines</b> to lay depth contours in feet over the water on either satellite view — or press and hold the map for about half a second to show/hide the depth lines. Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg> <b>TRACK MY PATH</b> to record your path as a line on the map while the app is on screen — tap it again to stop. The track is <b>saved automatically</b> under Your tracks in + SPOT. A short <b>TAP</b> on <svg class="hi-pin" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. The five filter buttons across the top of the map decide which pins you see: <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>CATCHES</b> filters the fish you have and haven't caught; <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="vertical-align:-2px;"><path d="M2 12C5 8.6 9 8.6 12 12S19 15.4 22 12"></path></svg> <b>INSHORE</b> filters your saved spots, landmarks and waypoints; <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><g transform="translate(24,0) scale(-1,1)"><use href="#waveArt"></use></g></svg> <b>OFFSHORE</b> filters your saved spots and the artificial and natural reefs; <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3.5 8.5c.4 3 2.6 5 5.7 5h5.6c3.1 0 5.3-2 5.7-5Z"></path><path d="M2 20.5 22 13.5"></path></svg> <b>LAUNCHES</b> filters launch spots and marinas; and <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3.5" y="8" width="17" height="8" rx="4"></rect></svg> <b>LABELS</b> shows and hides their labels. With <b>CATCHES</b> on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. The <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 12S5.5 5.4 12 5.4 22.4 12 22.4 12 18.5 18.6 12 18.6 1.6 12 1.6 12Z"></path><circle cx="12" cy="12" r="3.1"></circle></svg> <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 12S5.5 18.6 12 18.6 22.4 12 22.4 12"></path><path d="M2.2 11.4H21.8"></path><path d="M8.9 12a3.1 3.1 0 0 0 6.2 0"></path></svg> <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 9.6S5.5 15.4 12 15.4 22.4 9.6 22.4 9.6"></path><path d="M4.6 13.4 3 15.6M9 15.1 8.3 17.7M15 15.1 15.7 17.7M19.4 13.4 21 15.6"></path></svg> <b>EYE</b> cookie toggles between three map visibility settings. <b>Everything is only stored on your device.</b> Read further to learn how to add your own tide station, download the offline map, batch import your photos, back up your catch log and photos, and see the print options at the end of this Help.</p>
+      <p class="sheet-note help-intro">Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>SPOT</b> to save your actual position or any place you drop a pin on the map and details you add. Tap any spot pin on the map for its coordinates and details. <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"></path></svg> <b>CATCH</b> logs a fish — one species or several — where you caught it and details. <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.8V12l3.6 2.1"></path></svg> <b>BITE</b> shows 3-day feeding times. With <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg> <b>TIDES</b> selected, tap anywhere on the water for a 3-day tide forecast. <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><use href="#waveArt"></use></svg> <b>WAVES</b> provides NOAA's offshore buoy data. <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M12 6.2C10 4.6 7.4 4 4 4v14.4c3.4 0 6 .6 8 2.2 2-1.6 4.6-2.2 8-2.2V4c-3.4 0-6 .6-8 2.2Z"></path><path d="M12 6.2v14.4"></path></svg> <b>MY LOG</b> shows all your catches' info. <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 4v6"></path></svg> <b>SEASONS</b> show feeding times by month and fishing regs. Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 4 13.9 10.1 20 12 13.9 13.9 12 20 10.1 13.9 4 12 10.1 10.1Z"></path></svg> <b>COMPASS</b> and one or more offshore pins to get bearings and distance to those waypoints. Toggle the <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"></path><path d="M9 4v14M15 6v14"></path></svg> <b>TOPO SATELLITE</b> button to show the <b>HI RES &amp; ICW</b> map and tap again to see the <b>STREET MAP</b>. Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="vertical-align:-2px;"><path d="M2 6.6c2.5-2.6 4.9-2.8 7.2-.7 2.5 2.3 5.1 2.4 8 .2 1.3-1 2.8-1.3 4.5-.9"></path><path d="M2.2 12.2c1.8-3 3.8-3.3 6.1-1 2.7 2.7 5.5 2.9 8.5.6 1.2-.9 2.5-1.2 4-.9"></path><path d="M5.4 18.6c2.1-2.4 4.3-2.5 6.7-.4 1.8 1.6 3.7 1.7 5.7.3"></path></svg> <b>Depth Lines</b> to lay depth contours in feet over the water on either satellite view — or press and hold the map for about half a second to show/hide the depth lines. Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg> <b>TRACK MY PATH</b> to record your path as a line on the map while the app is on screen — tap it again to stop. The track is <b>saved automatically</b> under Your tracks in + SPOT. A short <b>TAP</b> on <svg class="hi-pin" viewBox="0 0 24 28" width="13" height="15" style="vertical-align:-3px;"><use href="#locatePin"></use></svg> <b>LOCATE ME</b> puts a pin at your location, but a 1-second <b>PRESS AND HOLD</b> on the button drops a <b>MARK</b> — an instant waypoint at your position that the app then guides you back to. The six filter buttons across the top of the map decide what you see: <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M12 3 21 12 12 21 3 12Z"></path></svg> <b>CATCHES</b> filters the fish you have and haven't caught; <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="vertical-align:-2px;"><path d="M2 12C5 8.6 9 8.6 12 12S19 15.4 22 12"></path></svg> <b>INSHORE</b> filters your saved spots, landmarks and waypoints; <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:-2px;"><g transform="translate(24,0) scale(-1,1)"><use href="#waveArt"></use></g></svg> <b>OFFSHORE</b> filters your saved spots and the artificial and natural reefs; <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3.5 8.5c.4 3 2.6 5 5.7 5h5.6c3.1 0 5.3-2 5.7-5Z"></path><path d="M2 20.5 22 13.5"></path></svg> <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3 19 9 9l5 5 7-12"></path></svg> <b>ROUTES</b> shows and hides the runs you have measured; <b>LAUNCHES</b> filters launch spots and marinas; and <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;"><rect x="3.5" y="8" width="17" height="8" rx="4"></rect></svg> <b>LABELS</b> shows and hides their labels. With <b>CATCHES</b> on, the <b>SPECIES</b> buttons light up for the fish in your log. Tap on a diamond-shaped pin to see your catch details. The <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 12S5.5 5.4 12 5.4 22.4 12 22.4 12 18.5 18.6 12 18.6 1.6 12 1.6 12Z"></path><circle cx="12" cy="12" r="3.1"></circle></svg> <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 12S5.5 18.6 12 18.6 22.4 12 22.4 12"></path><path d="M2.2 11.4H21.8"></path><path d="M8.9 12a3.1 3.1 0 0 0 6.2 0"></path></svg> <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M1.6 9.6S5.5 15.4 12 15.4 22.4 9.6 22.4 9.6"></path><path d="M4.6 13.4 3 15.6M9 15.1 8.3 17.7M15 15.1 15.7 17.7M19.4 13.4 21 15.6"></path></svg> <b>EYE</b> cookie toggles between three map visibility settings. <b>Everything is only stored on your device.</b> Read further to learn how to add your own tide station, download the offline map, batch import your photos, back up your catch log and photos, and see the print options at the end of this Help.</p>
       <p class="sheet-note"><b>BE ADVISED, THIS APP IS NOT FOR NAVIGATION OR EMERGENCY USE!</b> The <b>MARK</b> function is a memory aid only — not navigation, safety, or rescue equipment, and no substitute for the safety gear and safe-boating practice the law and good seamanship require (see <a href="https://www.uscgboating.org" target="_blank">uscgboating.org</a>).</p>
       <p class="sheet-note" style="text-align:center; margin-top:4px;"><b id="reelFunLine">Ace, get out there and have some REEL FUN!</b> <span style="font-size:calc(52px * var(--tsb)); line-height:1; vertical-align:middle;">🎣</span></p>
       <!-- v344: CLOSE stays bold here but NOT gold (Jan) — a plain <b> in a sheet-note
@@ -3718,9 +3836,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="sheet-note"><b>The numbers start again on every waterway</b>, which is worth knowing before you go looking for one. There are <b>five marks numbered 47</b> in Volusia County alone — on the Halifax River, at New Smyrna Beach, in Mosquito Lagoon and elsewhere — so "marker 47" on its own does not identify a spot. That is why every dot carries its full name rather than just a number. Positions come from NOAA's electronic navigational charts (Harbor-band cells); the light characteristics are matched to each mark by position from the charts' separate light records. Same caution as the channel itself: aids get moved, go missing, and change — so this app is for planning, not for navigating.</p>
       <p class="sheet-note">The ICW outlines come from the US Army Corps of Engineers' National Channel Framework — the Florida East survey published <b>June 2020</b>. <b>Treat its path as a general reference, not as true soundings.</b> It shows where the channel is authorized to be at that time, not where the water actually is now. Furthermore, shoaling moves the usable water around, and this coast gets plenty of it. READ AND RELY ON YOUR DEPTH SOUNDER AND CHARTPLOTTER — NOT THIS APP — FOR NAVIGATION.</p>
       </div>
+      <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-routes"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 9 9l5 5 7-12"></path></svg> Routes &amp; Distance<span class="ht-caret">▸</span></button>
+      <div class="help-body" id="hb-routes">
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-7px;"><path d="M3 19 9 9l5 5 7-12"></path></svg> <b>How far is it?</b> Open <b>+ Spot</b>, scroll to <b>Your saved routes</b> and tap <b>MEASURE A ROUTE</b>. The sheet closes and every tap on the map drops a pin. The first one is marked <b>S</b> for start; after that each pin is marked <b>L1</b>, <b>L2</b>, <b>L3</b> for the <b>leg</b> that ends there, and the legs add up to the run. A card at the top of the screen keeps the total distance in front of you. Under it every leg is listed with its <b>distance</b>, its <b>bearing</b> and the <b>running total</b> at that pin, so you can see how far along you are at any point. <b>UNDO PIN</b> takes back the last tap, <b>SAVE</b> keeps the route and <b>CANCEL</b> throws it away. The pins and the line are drawn in <b>black and white</b> on purpose — green and red mean something else on the water, and plenty of people can't tell those two apart anyway, so the <b>letters</b> tell you which pin is which, not the colour.</p>
+      <p class="sheet-note"><b>The app measures the distance. That is all it does here.</b> It does not work out your trip, your fuel or your time, and it deliberately doesn't try. Whether that run is an easy morning or more than you want depends on things no app can see: which way the wind gets up, what the sea does on the way home, how loaded the boat is, how much light is left — and whether you are running an outboard, sailing, paddling or on a trolling motor. The way back is rarely the way out, and it is usually the harder half. <b>What the distance costs you, on that day, in that boat, is yours to know</b> — and it is worth knowing before you need it.</p>
+      <p class="sheet-note">A route measures the <b>straight line between the pins you dropped</b> — nothing more. It does not know where the channel runs, where the water is deep enough for your boat, or what lies between two pins. Inshore that matters: the real run bends around marsh, spoil islands and shoals, so <b>two pins can read a lot shorter than the run you'll actually make</b>. Trace the channel with extra pins wherever it bends and the total comes out honest. Bearings are <b>true</b> (marked <b>T</b>), because the heading your phone can be trusted for is its <b>GPS course</b>, which is true north as well — a phone's compass needle sits in a console full of wiring and can be well out. <b>This is not a course to steer.</b> Nothing has checked the water under that line.</p>
+      <p class="sheet-note"><b>The best route is one you've already run.</b> Under <b>Your tracks</b>, every recorded track has a <b>SAVE AS ROUTE</b> button — it thins the track down to its bends and files it as a route, so the legs follow the water you actually went through instead of cutting across the flats. The route reads a little <b>shorter</b> than the track did, because it trims the boat's wander out of each bend.</p>
+      <p class="sheet-note">Saved routes live under <b>Your saved routes</b> in <b>+ Spot</b>, each with <b>SHOW 🗺</b>, <b>EDIT ✎</b> (rename it and take notes — ramp, tide, where it shoals) and <b>DELETE ✕</b>. The <b>ROUTES</b> button along the top of the map shows and hides them all; tapping a route's line on the map zooms to it. A deleted route comes back with <b>UNDO</b> for 14 days like anything else. The app keeps your last 20. Unlike tracks, <b>routes are saved in your backup file</b> — a route is work you did by hand, and it should survive a new phone. A route keeps the coordinates it was measured with, so moving or deleting a pin later never changes a distance you have already planned fuel against.</p>
+      </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-track"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="currentColor" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="currentColor" stroke="none"></circle></svg> Track My Path<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-track">
-      <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c227d6" stroke-width="2" style="vertical-align:-7px;"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="#c227d6" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="#c227d6" stroke="none"></circle></svg> Tap <b>TRACK MY PATH</b> and the app records your path as a <b>magenta line</b> on the map. The map <b>zooms into your position</b> as soon as the first GPS fix lands. A slim bar at the top shows the distance covered and the time; <b>tap the bar</b> to fit the whole track on screen, and tap <b>STOP</b> (or TRACK MY PATH again) to finish. Stopped tracks are <b>saved automatically</b> — the stop card offers <b>STOP — KEEP ON MAP</b>, <b>STOP — CLEAR OFF MAP</b> (saved, line hidden until you SHOW it), <b>KEEP TRACKING</b>, and a separate <b>DELETE</b> that asks before discarding. Kept tracks <b>show on the map</b> every time the app opens, and <b>tapping a track's line zooms the map to it</b>. They are saved under <b>Your tracks</b> in <b>+ Spot</b> — the app keeps your last 10, each with <b>SHOW/HIDE 🗺</b>, <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons. <b>EDIT ✎</b> renames a track and takes <b>notes</b> — bait, tide, speed, what worked along that path. HIDE sticks until you SHOW it again, and a deleted track is restorable with <b>UNDO</b> for 14 days like anything else. Recording needs <b>no signal</b> — GPS works far offshore; download the offline map first if you want imagery under the line out there. Two honest limits: the app can only record <b>while it is on the screen</b> (it keeps the screen awake for you; locking the phone or switching apps pauses the track until you return), and keeping GPS and the screen on <b>uses real battery</b> — on phones that allow it the bar shows a live battery % and warns when it runs low; iPhones don't let a web app read the battery, so mind the gauge and bring a charging cable for a long day. Tracks live on this device only and are not in backup files.</p>
+      <p class="sheet-note"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c227d6" stroke-width="2" style="vertical-align:-7px;"><path d="M4 20c6 1 4-7 10-7 5 0 3-7 6-9" stroke-dasharray="3.4 2.6"></path><circle cx="4" cy="20" r="1.7" fill="#c227d6" stroke="none"></circle><circle cx="20" cy="4" r="1.7" fill="#c227d6" stroke="none"></circle></svg> Tap <b>TRACK MY PATH</b> and the app records your path as a <b>magenta line</b> on the map. The map <b>zooms into your position</b> as soon as the first GPS fix lands. A slim bar at the top shows the distance covered and the time; <b>tap the bar</b> to fit the whole track on screen, and tap <b>STOP</b> (or TRACK MY PATH again) to finish. Stopped tracks are <b>saved automatically</b> — the stop card offers <b>STOP — KEEP ON MAP</b>, <b>STOP — CLEAR OFF MAP</b> (saved, line hidden until you SHOW it), <b>KEEP TRACKING</b>, and a separate <b>DELETE</b> that asks before discarding. Kept tracks <b>show on the map</b> every time the app opens, and <b>tapping a track's line zooms the map to it</b>. They are saved under <b>Your tracks</b> in <b>+ Spot</b> — the app keeps your last 10, each with <b>SHOW/HIDE 🗺</b>, <b>EDIT ✎</b> and <b>DELETE ✕</b> buttons. <b>EDIT ✎</b> renames a track and takes <b>notes</b> — bait, tide, speed, what worked along that path. HIDE sticks until you SHOW it again, and a deleted track is restorable with <b>UNDO</b> for 14 days like anything else. Recording needs <b>no signal</b> — GPS works far offshore; download the offline map first if you want imagery under the line out there. Two honest limits: the app can only record <b>while it is on the screen</b> (it keeps the screen awake for you; locking the phone or switching apps pauses the track until you return), and keeping GPS and the screen on <b>uses real battery</b> — on phones that allow it the bar shows a live battery % and warns when it runs low; iPhones don't let a web app read the battery, so mind the gauge and bring a charging cable for a long day. Tracks live on this device only and are not in backup files — but <b>SAVE AS ROUTE</b> on any track turns the path you ran into a <b>route</b>, and routes <b>are</b> in your backup file (see <b>Routes &amp; Distance</b> above).</p>
       </div>
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-locate"><svg viewBox="0 0 24 28" width="13" height="15"><use href="#locatePin"></use></svg> Locate Me<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-locate">
@@ -4044,6 +4170,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <p class="sheet-note" style="margin-top:6px;">Restoring brings back any built-in spots you edited or deleted. Your own added spots are not affected.</p>
     <p class="sheet-note" style="margin-top:14px;">Your tracks: <span id="trackCount">0</span>. Record one with the <b>TRACK MY PATH</b> button on the map — the app keeps your last 10, on this device only.</p>
     <div id="trackList"></div>
+    <!-- v482: routes are a sibling of the spots list, never a member of it — a route is a
+         path, not a place. Keeping them apart is what stops the spot count drifting and
+         stops a route turning up as a pickable catch location. -->
+    <p class="sheet-note" style="margin-top:14px;">Your saved routes: <span id="routeCount">0</span>. Straight-line legs between your pins — how far the run is. Routes <b>are</b> in your backup file.</p>
+    <div class="loc-btns" style="margin:6px 0 4px;">
+      <button class="mini-btn" id="routeStartBtn" style="font-weight:700;">MEASURE A ROUTE <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3 19 9 9l5 5 7-12"></path></svg></button>
+    </div>
+    <div id="routeList"></div>
   </div>
 </div>
 
@@ -4922,7 +5056,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 481;
+const BUILD_NUM  = 484;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -7708,6 +7842,10 @@ async function loadAll(){
   await loadDropLabels();
   applySpotOverrides();
   await loadCustomSpots();
+  /* v482. Saved routes stay OFF the map until the Routes pill is tapped — a route is a
+     planning line, not something you want laid over the chart every time you open the
+     app the way a kept track is. loadRoutes() only fills the list and the pill count. */
+  await loadRoutes();
   applyTideLags();
   await loadUserTideStations();
   renderTideStationPins();
@@ -7851,12 +7989,16 @@ function updateTrashNotes(){
   const c = trash ? trash.filter(e=>e.kind==='catch').length : 0;
   const k = trash ? trash.filter(e=>e.kind==='track').length : 0;
   const p = trash ? trash.filter(e=>e.kind==='trip').length : 0;
-  const s = trash ? trash.length - c - k - p : 0;
+  /* v482: routes have to be counted out of the remainder like tracks and trips do,
+     or every deleted route is reported to the user as a deleted SPOT. */
+  const r = trash ? trash.filter(e=>e.kind==='route').length : 0;
+  const s = trash ? trash.length - c - k - p - r : 0;
   const bits = [];
   if(c) bits.push(c + (c===1?' catch':' catches'));
   if(p) bits.push(p + (p===1?' skunked trip':' skunked trips'));
   if(s) bits.push(s + (s===1?' spot':' spots'));
   if(k) bits.push(k + (k===1?' track':' tracks'));
+  if(r) bits.push(r + (r===1?' route':' routes'));
   const txt = bits.length
     ? 'Recently deleted: ' + bits.join(' · ') + ' — UNDO restores them, kept 14 days (last 10).'
     : 'Recently deleted: none.';
@@ -7897,6 +8039,10 @@ window.appUndo = async function(){
       if(!list.some(x=>x.id===e.record.id)){ list.push(e.record); list.sort((a2,b2)=>a2.t0-b2.t0); trkStoreSaved(list); }
       renderTrackList();
       showToast('Deleted track restored ✓');
+    } else if(e.kind === 'route'){
+      if(!routes.some(x=>x.id===e.record.id)){ routes.push(e.record); await saveRoutes(); }
+      renderRouteList(); routeSyncPill();
+      showToast('Deleted route restored ✓');
     } else {
       if(!customSpots.some(x=>x.id===e.record.id)){
         customSpots.push(e.record);
@@ -7971,6 +8117,16 @@ window.appUndo = async function(){
     await trashRemove('track', a.record.id);
     renderTrackList();
     showToast('Deleted track restored ✓');
+  } else if(a.kind === 'route-edit'){
+    const r = routes.find(x=>x.id===a.id);
+    if(r){ r.name = a.before.name; r.notes = a.before.notes; await saveRoutes(); }
+    renderRouteList();
+    showToast('Route edit undone ✓');
+  } else if(a.kind === 'route-del'){
+    if(!routes.some(x=>x.id===a.record.id)){ routes.push(a.record); await saveRoutes(); }
+    await trashRemove('route', a.record.id);
+    renderRouteList(); routeSyncPill(); routePaintSaved();
+    showToast('Deleted route restored ✓');
   } else if(a.kind === 'bspot-edit'){
     if(a.prevOv) spotOverrides[a.id] = a.prevOv; else delete spotOverrides[a.id];
     await saveSpotOverrides();
@@ -9209,7 +9365,10 @@ const FILTER_ICONS = {
      than copied, so the two can never drift apart; it is the one filled icon in the set. */
   offshore: '<svg class="fic fic-wave" viewBox="0.98 3.52 22.04 16.95" fill="currentColor"><g transform="translate(24,0) scale(-1,1)"><use href="#waveArt"></use></g></svg>',
   launch  : '<svg class="fic" viewBox="0.6 7.1 22.8 14.8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5c.4 3 2.6 5 5.7 5h5.6c3.1 0 5.3-2 5.7-5Z"></path><path d="M2 20.5 22 13.5"></path></svg>',
-  labels  : '<svg class="fic" viewBox="2.4 6.9 19.2 10.2" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="8" width="17" height="8" rx="4"></rect></svg>'
+  labels  : '<svg class="fic" viewBox="2.4 6.9 19.2 10.2" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="8" width="17" height="8" rx="4"></rect></svg>',
+  /* v482: a run of straight legs with a dogleg — the shape of the thing it draws, and
+     deliberately angular where Inshore's line is smooth and Offshore's is a curl. */
+  routes  : '<svg class="fic" viewBox="1.7 5.7 20.6 14.6" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 9 9l5 5 7-12"></path></svg>'
 };
 
 /* The inshore and offshore CATEGORY pills carry NO icons — Jan's call (v414, after a set was
@@ -9314,6 +9473,17 @@ const chipBreak = document.createElement('div');
 chipBreak.className = 'chip-break';
 metaRow.appendChild(chipBreak);
 
+/* v482: Routes leads the second row, ahead of Launches (Jan's call). It is a top-row
+   pill rather than a zone sub-row pill because a route is cross-zone by nature — the
+   ordinary one runs from an inshore ramp to an offshore reef, so neither zone's row
+   could own it. It shows and hides SAVED routes; the one being measured is always
+   drawn. The handler lives in the ROUTES section further down. */
+const routesToggle = document.createElement('div');
+routesToggle.className = 'chip util filter-count';
+routesToggle.id = 'routesToggle';
+routesToggle.innerHTML = FILTER_ICONS.routes + '<span class="chip-word">Routes</span><span class="chip-total" id="routesCount">0</span>';
+metaRow.appendChild(routesToggle);
+
 const launchToggle = document.createElement('div');
 launchToggle.className = 'chip util filter-count';
 launchToggle.id = 'launchToggle';
@@ -9340,6 +9510,8 @@ const FILTER_TIPS = {
                  'Opens a row of categories underneath to narrow it down.'],
   offshore    : ['<b>TAP:</b> shows or hides the offshore pins — the reefs, wrecks and ledges.',
                  'Opens a row of categories underneath to narrow it down.'],
+  routesToggle: ['<b>TAP:</b> shows or hides the routes you have saved.',
+                 'Measure a new one under Your saved routes in + Spot.'],
   launchToggle: ['<b>TAP:</b> shows or hides the boat ramps, marinas and yacht clubs.'],
   labelsToggle: ['<b>TAP:</b> prints each pin&rsquo;s name beside it on the chart.'],
   myspots     : ['<b>TAP:</b> shows or hides your own saved inshore spots.',
@@ -13209,6 +13381,9 @@ map.on('zoomend moveend', ()=>{ if(compassOn) redrawCompass(); });
 // without it the route could be built and instantly wiped in one gesture.
 map.on('click', ()=>{
   if(Date.now() - compassLastPin < 500) return;
+  /* v482: while a route is being measured every map tap is a pin, and wiping a pinned
+     compass leg on each one is not what the tap was for. */
+  if(typeof routeMode !== 'undefined' && routeMode) return;
   if(compassOn && (compassChain.length || compassPinnedId)){ compassChain = []; compassPinnedId = null; compassShow(null); }
 });
 
@@ -14138,6 +14313,12 @@ function renderTrackList(){
           <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="removeTrack('${t.id}')">DELETE <span class="bi">✕</span></button>
         </span>
       </div>
+      <!-- v482: the best route is a run you already made. This thins the track down to
+           its bends and files it under Your saved routes — and unlike the track, the
+           route rides in your backup file. -->
+      <div class="loc-btns" style="margin-top:6px;">
+        <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="trackToRoute('${t.id}')">SAVE AS ROUTE <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3 19 9 9l5 5 7-12"></path></svg></button>
+      </div>
       ${notes}
     </div>`;}).join('');
   if(editingTrackId){
@@ -14236,6 +14417,481 @@ document.getElementById('trackBtn').addEventListener('click', ()=>{ if(trk) trkS
   }catch(e){} }, 0);
 })();
 
+/* ============================ v482 — ROUTES ============================
+
+   What this is for: "how far is it from the ramp to that spot, and have I got the fuel
+   to get back?" Nothing else in the app answers that. The compass rose gives bearing and
+   distance from ONE fixed origin (Ponce Inlet); a track records where you already went.
+   A route is the thing in between — a run you lay out before you leave.
+
+   The measurement is Leaflet's own map.distance() (spherical, WGS84 mean radius), the
+   same call nmFromInlet() and the track odometer use, so every distance in the app comes
+   out of one function. At this scale the ellipsoidal answer differs by less than the GPS
+   fix does, and a second distance function would be a second thing to keep honest.
+
+   Design decisions worth keeping:
+
+   * STRAIGHT LINES, AND SAID SO. A route measures pin to pin. Inshore the real run
+     follows the channel around marsh and spoil islands, so two pins can under-report a
+     creek run badly. We do NOT try to snap to navigable water — that needs channel
+     centreline data this app does not carry, and a route that silently followed the
+     wrong channel would be worse than one that visibly does not try. Instead the bar
+     says what the number is and tells the user to trace the bends with more pins.
+
+   * FROZEN COORDINATES, NOT SPOT IDS. A saved route stores its own [lat,lng] points and
+     never references a spot. Referencing pins would look tidier and would mean a route
+     followed a pin you dragged — which is exactly the failure to avoid: the length a
+     fuel decision was made against must not change because some pin moved or was
+     deleted. Same reason a logged catch keeps the position it was caught at.
+
+   * ROUTES ARE IN BACKUPS; TRACKS ARE NOT. A track is a breadcrumb of where you happened
+     to go and is cheap to make again. A route is hand-built planning work — somebody
+     traced a channel bend by bend — and losing it on a device swap is the kind of thing
+     that costs trust. So this rides in the backup file and tracks deliberately do not.
+     That means the four importer touch points: the merge branch, the bits summary, the
+     all-zero check, and the payload itself.
+
+   * BEARING IS TRUE, UNCORRECTED. Deliberately NOT put through toMagnetic() like the
+     compass rose is. The rose is read against a compass; a route is read against the
+     phone, and the only heading a phone can be trusted for is GPS course over ground,
+     which is already true north. (The magnetometer reads magnetic but sits in a console
+     full of wiring and speaker magnets and will lie by tens of degrees.) Labelled T on
+     screen so it can never be mistaken for a magnetic course to steer. */
+
+const ROUTES_KEY  = 'routes';       // in backups, unlike wtf:tracks — see the note above
+/* v483: the route is drawn WITHOUT a hue. v482 shipped it green for one build and green
+   was the wrong answer twice over: on the water green is the STARBOARD-hand aid colour,
+   so a green line on a chart says something it does not mean; and red-green deficiency
+   (~8% of men) makes a green line and the red MARK the one pair that must never be the
+   only difference between two things. So the route is drawn in ink and casing — a near
+   black core inside a white jacket — which separates on bright sand AND on dark water,
+   survives greyscale, and cannot be confused with any aid to navigation.
+   Identity is carried by the LABEL on each pin, not by colour: S, L1, L2, L3 … (Jan's
+   scheme). S is where you start; every pin after it is named for the leg that ARRIVES
+   there, which is why the leg list reads S→L1, L1→L2. Solid, not dashed, deliberately:
+   the chart's own printed state-waters limit is a dashed white line and a dashed route
+   would read as more of it. */
+const ROUTE_INK    = '#101418';     // near-black core — reads on sand, shell, marsh
+const ROUTE_CASING = '#ffffff';     // white jacket — reads on dark water and shadow
+const ROUTES_MAX  = 20;
+const M_PER_NM    = 1852;
+
+let routes = [];                    // saved routes
+let routesOn = false;               // Routes pill — are saved routes drawn?
+let routeShown = {};                // route id -> layer on the map
+let routeMode = false;              // measuring right now
+let routeDraft = [];                // [[lat,lng], ...] of the route being measured
+let routeDraftLayer = null;
+let editingRouteId = null;
+
+async function loadRoutes(){
+  try{ const raw = await storeGet(ROUTES_KEY); routes = raw ? JSON.parse(raw) : []; }
+  catch(e){ routes = []; }
+  if(!Array.isArray(routes)) routes = [];
+  renderRouteList();
+  routeSyncPill();
+}
+async function saveRoutes(){
+  try{ await storeSet(ROUTES_KEY, JSON.stringify(routes)); }catch(e){}
+}
+
+/* ---------- the maths ----------
+   One leg per consecutive pair. `cum` is the running total AT that pin, which is the
+   number that actually gets used underway ("am I past half my fuel yet"); the per-leg
+   figure alone can't answer that. Bearing is true, see the section note. */
+function routeLegs(pts){
+  const out = [];
+  let cum = 0;
+  for(let i = 1; i < pts.length; i++){
+    const a = pts[i-1], b = pts[i];
+    const nm = map.distance(a, b) / M_PER_NM;
+    cum += nm;
+    out.push({ n:i, nm, cum, brg: bearingDeg(a[0], a[1], b[0], b[1]) });
+  }
+  return out;
+}
+function routeTotalNm(pts){
+  let t = 0;
+  for(let i = 1; i < pts.length; i++) t += map.distance(pts[i-1], pts[i]) / M_PER_NM;
+  return t;
+}
+function fmtBrgT(deg){ return String(Math.round(deg) % 360).padStart(3,'0') + '°T'; }
+
+/* ---------- drawing ---------- */
+/* S for the start, then L1, L2, L3 … Each pin after the start is named for the leg that
+   ARRIVES at it, so "L3" and "leg 3" are the same thing wherever they are read. */
+function routeLabel(i){ return i === 0 ? 'S' : 'L' + i; }
+
+function routeDots(pts){
+  return pts.map((p,i)=> L.marker(p, {
+    interactive:false, keyboard:false,
+    /* iconSize is null so the pill sizes itself to its text — "S" and "L12" are not the
+       same width, and a fixed box would either clip the long one or float the short one
+       off its position. The transform in .route-dot does the centring instead. */
+    icon: L.divIcon({ className:'', html:'<div class="route-dot">' + routeLabel(i) + '</div>',
+                      iconSize:null, iconAnchor:[0,0] })
+  }));
+}
+/* Casing under core: two polylines, the white one fatter and drawn first. This is how a
+   line stays legible over imagery that is bright in one place and near black in the next
+   without relying on a hue to do it. */
+function routeLines(pts, opacity){
+  return [
+    L.polyline(pts, {color:ROUTE_CASING, weight:6.5, opacity:opacity, interactive:false, lineCap:'round', lineJoin:'round'}),
+    L.polyline(pts, {color:ROUTE_INK,    weight:3,   opacity:opacity, interactive:false, lineCap:'round', lineJoin:'round', className:'route-line'})
+  ];
+}
+function routePaintDraft(){
+  if(routeDraftLayer){ try{ map.removeLayer(routeDraftLayer); }catch(e){} routeDraftLayer = null; }
+  if(!routeDraft.length) return;
+  const parts = routeDots(routeDraft);
+  if(routeDraft.length >= 2) parts.unshift(...routeLines(routeDraft, .97));
+  routeDraftLayer = L.featureGroup(parts).addTo(map);
+}
+
+/* A saved route on the map: the visible line, its numbered pins, and an invisible fat
+   twin that does the catching — a 3 px line is a hopeless touch target. Mirrors
+   trkDrawSaved, including bubblingMouseEvents:false so the tap doesn't reach the map's
+   own click handler (which clears a pinned compass route). */
+function routeDrawSaved(r){
+  const parts = routeDots(r.pts);
+  parts.unshift(...routeLines(r.pts, .92));
+  const hit = L.polyline(r.pts, {color:ROUTE_INK, weight:22, opacity:.03,
+                                 interactive:true, bubblingMouseEvents:false});
+  hit.on('click', ()=> routeZoomTo(r.id));
+  parts.push(hit);
+  return L.featureGroup(parts).addTo(map);
+}
+function routeClearSaved(){
+  Object.keys(routeShown).forEach(id=>{
+    try{ map.removeLayer(routeShown[id]); }catch(e){}
+    delete routeShown[id];
+  });
+}
+function routePaintSaved(){
+  routeClearSaved();
+  if(!routesOn) return;
+  routes.forEach(r=>{ if(r.pts && r.pts.length >= 2) routeShown[r.id] = routeDrawSaved(r); });
+}
+function routeZoomTo(id){
+  const r = routes.find(x=>x.id===id);
+  if(!r || !r.pts || !r.pts.length) return;
+  if(r.pts.length >= 2) map.fitBounds(L.latLngBounds(r.pts), {padding:[60,60], maxZoom:16});
+  else map.setView(r.pts[0], Math.max(map.getZoom(), 15));
+  showToast('“' + r.name + '” — ' + fmtRunNm(r.nm)
+    + '. EDIT or DELETE it under Your saved routes in + Spot.', 5000);
+}
+
+/* ---------- the bar ---------- */
+function routeSyncBarTop(){
+  const bar = document.getElementById('routeBar'), tb = document.getElementById('trackBar');
+  if(bar) bar.classList.toggle('below', !!(tb && !tb.hidden));
+}
+function routeUpdateBar(){
+  const legs = routeLegs(routeDraft);
+  const total = legs.length ? legs[legs.length-1].cum : 0;
+  const tot = document.getElementById('routeTotal');
+  const pins = document.getElementById('routePins');
+  const sums = document.getElementById('routeSums');
+  const legsEl = document.getElementById('routeLegs');
+  if(pins) pins.textContent = routeDraft.length + (routeDraft.length===1 ? ' pin' : ' pins');
+  if(tot) tot.textContent = routeDraft.length < 2 ? 'tap the map to start' : fmtRunNm(total);
+  /* v484: the card prints the MEASURED distance and the legs, and nothing derived from
+     them. v482/v483 also printed the run with a 1/3 reserve and the round-trip figure;
+     Jan had both taken out and they should not come back.
+
+     The reserve went first, and for the better reason: it was the only number here that
+     was ADVICE rather than a measurement — everything else is arithmetic on coordinates,
+     and a prescription with a number attached is exactly what people rely on. It also
+     silently assumed a fuel tank, which a kayak, a paddleboard, a sailboat or a trolling
+     motor does not have.
+
+     The round trip went with it. It was honest arithmetic, but doubling a number is
+     something anyone can do in their head, and printing it made the card look like it
+     was working out a trip PLAN rather than reporting a distance. Every figure on this
+     card is now something the app actually measured. That line is easy to defend and
+     hard to argue with, which matters for an app whose own warning says never to
+     navigate by it. */
+  if(sums) sums.hidden = true;
+  if(legsEl){
+    legsEl.hidden = legs.length === 0;
+    legsEl.innerHTML = legs.map(l=>
+      `<div class="rt-leg"><span class="rt-n">${routeLabel(l.n-1)}→${routeLabel(l.n)}</span>`
+      + `<span>${fmtRunNm(l.nm)}</span><span>${fmtBrgT(l.brg)}</span>`
+      + `<span class="rt-cum">${fmtRunNm(l.cum)}</span></div>`).join('');
+  }
+  const u = document.getElementById('routeUndoBtn'), s = document.getElementById('routeSaveBtn');
+  if(u) u.disabled = routeDraft.length === 0;
+  if(s) s.disabled = routeDraft.length < 2;
+  routeSyncBarTop();
+}
+
+/* ---------- measuring ---------- */
+function routeStart(){
+  if(routeMode) return;
+  routeMode = true;
+  routeDraft = [];
+  document.body.classList.add('route-mode');
+  const bar = document.getElementById('routeBar');
+  if(bar) bar.hidden = false;
+  routePaintDraft();
+  routeUpdateBar();
+  showToast('Tap along your run — one pin per bend. Trace the channel and the total matches the run you’ll actually make.', 7000);
+}
+function routeStop(){
+  routeMode = false;
+  routeDraft = [];
+  document.body.classList.remove('route-mode');
+  const bar = document.getElementById('routeBar');
+  if(bar) bar.hidden = true;
+  if(routeDraftLayer){ try{ map.removeLayer(routeDraftLayer); }catch(e){} routeDraftLayer = null; }
+}
+function routeAddPoint(latlng){
+  routeDraft.push([Math.round(latlng.lat*1e5)/1e5, Math.round(latlng.lng*1e5)/1e5]);
+  routePaintDraft();
+  routeUpdateBar();
+}
+function routeUndoPin(){
+  if(!routeDraft.length) return;
+  routeDraft.pop();
+  routePaintDraft();
+  routeUpdateBar();
+}
+async function routeSaveDraft(){
+  if(routeDraft.length < 2) return;
+  const pts = routeDraft.slice();
+  const rec = {
+    id: 'rt-' + Date.now() + '-' + Math.random().toString(36).slice(2,7),
+    name: 'Route ' + (routes.length + 1),
+    t: Date.now(),
+    pts: pts,
+    nm: routeTotalNm(pts),      // cached so the list renders without re-measuring every route
+    notes: ''
+  };
+  routes.push(rec);
+  let dropped = null;
+  if(routes.length > ROUTES_MAX) dropped = routes.shift();
+  await saveRoutes();
+  routeStop();
+  /* Saving a route turns the Routes pill on — the thing just made should be visible. */
+  routesOn = true;
+  routePaintSaved();
+  routeSyncPill();
+  renderRouteList();
+  showToast('Saved as “' + rec.name + '” — ' + fmtRunNm(rec.nm)
+    + '. Rename it under Your saved routes in + Spot.'
+    + (dropped ? ' Oldest route “' + dropped.name + '” dropped off (the app keeps the last ' + ROUTES_MAX + ').' : ''), 8000);
+}
+
+/* ---------- a track, turned into a route ----------
+   The best route is one you have already run: a track followed real navigable water, so
+   the legs off it carry the channel's bends instead of cutting across the marsh. This is
+   the answer to the straight-line problem for anyone who has fished the run once.
+
+   A track cannot be used as a route raw. It keeps a point every 12 m, so an 8 nm run is
+   well over a thousand of them — a leg list nobody can read and a record many times the
+   size of the rest of the backup file. Ramer–Douglas–Peucker keeps only the points that
+   carry the SHAPE: a pin at every real bend, nothing down the straights. Tolerance
+   climbs until the result fits ROUTE_MAX_PTS so a long or wandering track can't produce
+   a hundred-pin route.
+
+   Honest limit, and it is stated in the toast: the simplified route is a little SHORTER
+   than the track's own odometer, because RDP cuts the corner on every bend and the
+   odometer counted the boat's actual wander. It is short by roughly a percent, never
+   long — which is the safe direction for a fuel figure to be wrong in. */
+const ROUTE_MAX_PTS  = 40;
+const ROUTE_RDP_TOL0 = 45;      // metres; a bend tighter than this is not a bend
+
+/* Perpendicular-distance simplification in a local flat projection — over a few miles
+   the error against the true geodesic is far below the tolerance itself. */
+function routeSimplify(pts, tolM){
+  if(pts.length < 3) return pts.slice();
+  const lat0 = pts[0][0] * Math.PI/180;
+  const mLat = 111132.9, mLng = 111320 * Math.cos(lat0);
+  const P = pts.map(p=> [ (p[1]-pts[0][1]) * mLng, (p[0]-pts[0][0]) * mLat ]);
+  const keep = new Array(pts.length).fill(false);
+  keep[0] = keep[pts.length-1] = true;
+  const stack = [[0, pts.length-1]];
+  while(stack.length){
+    const seg = stack.pop(), i = seg[0], j = seg[1];
+    if(j <= i+1) continue;
+    const ax = P[i][0], ay = P[i][1];
+    const dx = P[j][0]-ax, dy = P[j][1]-ay, len2 = dx*dx + dy*dy;
+    let best = -1, bi = -1;
+    for(let k = i+1; k < j; k++){
+      const px = P[k][0]-ax, py = P[k][1]-ay;
+      let d;
+      if(len2 === 0) d = Math.sqrt(px*px + py*py);
+      else{
+        let t = (px*dx + py*dy) / len2;
+        t = t < 0 ? 0 : (t > 1 ? 1 : t);
+        const ex = px - t*dx, ey = py - t*dy;
+        d = Math.sqrt(ex*ex + ey*ey);
+      }
+      if(d > best){ best = d; bi = k; }
+    }
+    if(best > tolM){ keep[bi] = true; stack.push([i,bi], [bi,j]); }
+  }
+  return pts.filter((_,i)=> keep[i]);
+}
+
+window.trackToRoute = async function(id){
+  const t = trkLoadSaved().find(x=>x.id===id);
+  if(!t || !t.pts || t.pts.length < 2){ showToast('That track has no path to turn into a route.'); return; }
+  let tol = ROUTE_RDP_TOL0, pts = routeSimplify(t.pts, tol);
+  /* Climb the tolerance until it fits. Bounded so a pathological track can't spin here. */
+  for(let guard = 0; pts.length > ROUTE_MAX_PTS && guard < 24; guard++){
+    tol *= 1.6;
+    pts = routeSimplify(t.pts, tol);
+  }
+  if(pts.length > ROUTE_MAX_PTS) pts = pts.filter((_,i)=> i === 0 || i === pts.length-1 || i % Math.ceil(pts.length/ROUTE_MAX_PTS) === 0);
+  const rec = {
+    id: 'rt-' + Date.now() + '-' + Math.random().toString(36).slice(2,7),
+    name: t.name + ' (route)',
+    t: Date.now(),
+    pts: pts,
+    nm: routeTotalNm(pts),
+    notes: 'From the track “' + t.name + '”.',
+    fromTrack: t.id      // provenance only; nothing reads it back, and the points are frozen
+  };
+  routes.push(rec);
+  let dropped = null;
+  if(routes.length > ROUTES_MAX) dropped = routes.shift();
+  await saveRoutes();
+  routesOn = true;
+  routePaintSaved();
+  routeSyncPill();
+  renderRouteList();
+  const trackNm = t.d / M_PER_NM;
+  showToast('“' + rec.name + '” saved — ' + pts.length + ' pins, ' + fmtRunNm(rec.nm)
+    + '. The track itself measured ' + fmtRunNm(trackNm)
+    + ' — a route trims the wander out of the bends, so it reads a little short.', 9000);
+};
+
+/* ---------- the pill ---------- */
+function routeSyncPill(){
+  const pill = document.getElementById('routesToggle');
+  const cnt = document.getElementById('routesCount');
+  if(cnt) cnt.textContent = routes.length;
+  if(pill) pill.classList.toggle('active', routesOn);
+}
+routesToggle.addEventListener('click', ()=>{
+  if(!routes.length){
+    /* Same manners as a species pill with nothing logged (v312): a pill that cannot show
+       anything must not light, or the lit state is a lie. */
+    showToast('No saved routes yet — measure one with MEASURE A ROUTE under Your saved routes in + Spot.', 6000);
+    return;
+  }
+  routesOn = !routesOn;
+  routePaintSaved();
+  routeSyncPill();
+});
+
+/* ---------- the list in + Spot ---------- */
+function renderRouteList(){
+  const cnt = document.getElementById('routeCount');
+  const list = document.getElementById('routeList');
+  if(cnt) cnt.textContent = routes.length;
+  if(!list) return;
+  list.innerHTML = routes.slice().reverse().map(r=>{
+    if(r.id === editingRouteId){
+      /* Inline editor, same shape as the track one. Values are assigned via the DOM
+         below, not in the markup — escapeHTML doesn't escape quotes, so they are not
+         safe in an attribute. */
+      return `<div class="loc-preview set" style="margin-top:6px;">
+        <label class="field-label">Route name</label>
+        <input type="text" id="routeEditName" maxlength="48" style="width:100%; box-sizing:border-box;">
+        <label class="field-label" style="margin-top:8px;">Notes</label>
+        <textarea id="routeEditNotes" rows="2" placeholder="Ramp, tide, where it shoals — what to know about this run" spellcheck="true" autocapitalize="sentences" autocorrect="on" style="width:100%; box-sizing:border-box;"></textarea>
+        <div class="loc-btns" style="margin-top:8px;">
+          <button class="mini-btn" style="font-weight:700;" onclick="saveRouteEdit('${r.id}')">Save route</button>
+          <button class="mini-btn" onclick="cancelRouteEdit()">Cancel</button>
+        </div>
+      </div>`;
+    }
+    const legs = routeLegs(r.pts || []);
+    const legRows = legs.map(l=>
+      `<div class="rt-leg" style="color:var(--fog);"><span class="rt-n rt-n-sheet">${routeLabel(l.n-1)}→${routeLabel(l.n)}</span>`
+      + `<span>${fmtRunNm(l.nm)}</span><span>${fmtBrgT(l.brg)}</span>`
+      + `<span class="rt-cum">${fmtRunNm(l.cum)}</span></div>`).join('');
+    const notes = r.notes ? `<div style="font-size:calc(11.5px * var(--ts)); color:var(--fog); line-height:1.45; margin-top:5px;">${escapeHTML(r.notes)}</div>` : '';
+    return `<div class="loc-preview set" style="margin-top:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <span>${escapeHTML(r.name)} · ${fmtRunNm(r.nm)}</span>
+        <span style="display:flex; gap:6px;">
+          <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="showRoute('${r.id}')">SHOW <span class="bi bi-emoji">🗺</span></button>
+          <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="editRoute('${r.id}')">EDIT <span class="bi">✎</span></button>
+          <button class="mini-btn" style="padding:2px 8px; white-space:nowrap;" onclick="removeRoute('${r.id}')">DELETE <span class="bi">✕</span></button>
+        </span>
+      </div>
+      <div style="margin-top:5px;">${legRows}</div>
+      <div style="font-size:calc(11px * var(--ts)); color:var(--fog); line-height:1.4; margin-top:4px;">${r.pts.length} pins · straight-line legs · bearings true</div>
+      ${notes}
+    </div>`;}).join('');
+  if(editingRouteId){
+    const r = routes.find(x=>x.id===editingRouteId);
+    const n = document.getElementById('routeEditName'), no = document.getElementById('routeEditNotes');
+    if(r && n){ n.value = r.name; no.value = r.notes || ''; }
+  }
+}
+
+window.showRoute = function(id){
+  routesOn = true;
+  routePaintSaved();
+  routeSyncPill();
+  try{ closeAddSpot(); }catch(e){}
+  routeZoomTo(id);
+};
+window.editRoute = function(id){
+  editingRouteId = id;
+  renderRouteList();
+  const n = document.getElementById('routeEditName');
+  if(n){ n.focus(); n.select(); }
+};
+window.cancelRouteEdit = function(){ editingRouteId = null; renderRouteList(); };
+window.saveRouteEdit = async function(id){
+  const r = routes.find(x=>x.id===id);
+  if(!r){ editingRouteId = null; renderRouteList(); return; }
+  const nEl = document.getElementById('routeEditName'), noEl = document.getElementById('routeEditNotes');
+  const name = (nEl && nEl.value.trim()) || r.name;    // an emptied name keeps the old one
+  const notes = noEl ? noEl.value.trim() : '';
+  pushUndo({kind:'route-edit', id, before:{name: r.name, notes: r.notes || ''}});
+  r.name = name; r.notes = notes;
+  await saveRoutes();
+  editingRouteId = null;
+  renderRouteList();
+  showToast('Route saved ✓ — UNDO above Your saved spots reverses the edit.');
+};
+window.removeRoute = async function(id){
+  const i = routes.findIndex(x=>x.id===id);
+  if(i < 0) return;
+  const rec = routes.splice(i,1)[0];
+  await saveRoutes();
+  if(editingRouteId === id) editingRouteId = null;
+  if(routeShown[id]){ try{ map.removeLayer(routeShown[id]); }catch(e){} delete routeShown[id]; }
+  pushUndo({kind:'route-del', record:rec});
+  await trashAdd('route', rec);
+  renderRouteList();
+  routeSyncPill();
+  showToast('Route deleted — UNDO above Your saved spots brings it back.');
+};
+
+/* ---------- wiring ---------- */
+document.getElementById('routeStartBtn').addEventListener('click', ()=>{
+  try{ closeAddSpot(); }catch(e){}
+  routeStart();
+});
+document.getElementById('routeUndoBtn').addEventListener('click', routeUndoPin);
+document.getElementById('routeSaveBtn').addEventListener('click', routeSaveDraft);
+document.getElementById('routeCancelBtn').addEventListener('click', ()=>{
+  if(routeDraft.length >= 2 && !window.confirm('Discard this route?\n\nIt has not been saved.')) return;
+  routeStop();
+});
+/* Every tap on the chart is a pin while measuring. The pointer-events rule on the map
+   panes (see the CSS) is what stops a tap that lands on a pin or a track being eaten
+   before it gets here. */
+map.on('click', (e)=>{ if(routeMode) routeAddPoint(e.latlng); });
+
 /* ===================== BACKUP EXPORT / IMPORT =====================
 
    Two shapes come out of here:
@@ -14313,7 +14969,13 @@ function buildBackup(kind){
     customSpots: customSpots,
     spotOverrides: spotOverrides,
     dropLabels: dropLabels,
-    userTideStations: userTideStations
+    userTideStations: userTideStations,
+    /* v482. Routes ride BOTH backup shapes — they carry no photo, so a log-only file
+       loses nothing off them. Deliberately unlike tracks, which stay device-local: a
+       track is a breadcrumb, a route is hand-built planning work. schema stays 2 —
+       nothing about a CATCH changed, and bumping it would make this file unreadable to
+       v481 for no reason (an older build just ignores the key). */
+    routes: routes
   };
   const text = JSON.stringify(payload, null, 2);
   return {
@@ -14370,7 +15032,8 @@ function exportBackup(kind, share){
   const tail = catches.length + ' catch' + (catches.length===1?'':'es') + ', '
              + customSpots.length + ' spot' + (customSpots.length===1?'':'s') + ' of your own, '
              + nEdits  + ' spot edit'  + (nEdits===1?'':'s') + ', '
-             + nLabels + ' drop label' + (nLabels===1?'':'s');
+             + nLabels + ' drop label' + (nLabels===1?'':'s')
+             + (routes.length ? ', ' + routes.length + ' route' + (routes.length===1?'':'s') : '');
 
   if(share){
     if(kind === 'full' && file.bytes > 20*1024*1024){
@@ -14767,6 +15430,24 @@ document.getElementById('importFile').addEventListener('change', async function(
       if(stationsAdded){ await saveUserTideStations(); refreshUserTsList(); }
     }
 
+    /* v482. A file written by v481 or earlier has no routes key at all, which is not an
+       error — it is a backup from before routes existed. Deduped by id like the spots
+       above; the points are frozen in the record, so an imported route measures exactly
+       what it measured on the device that made it. */
+    let routesAdded = 0;
+    if(Array.isArray(data.routes)){
+      const haveRoutes = new Set(routes.map(x=>x.id));
+      data.routes.forEach(r=>{
+        if(!r || !r.id || haveRoutes.has(r.id)) return;
+        if(!Array.isArray(r.pts) || r.pts.length < 2) return;
+        routes.push(r); haveRoutes.add(r.id); routesAdded++;
+      });
+      if(routesAdded){
+        while(routes.length > ROUTES_MAX) routes.shift();
+        await saveRoutes(); renderRouteList(); routeSyncPill(); routePaintSaved();
+      }
+    }
+
     await persistCatches();
     renderCatchMarkers();
     renderCatchList();
@@ -14782,9 +15463,10 @@ document.getElementById('importFile').addEventListener('change', async function(
     if(editsAdded)  bits.push(editsAdded  + ' spot edit'  + (editsAdded===1?'':'s'));
     if(labelsAdded) bits.push(labelsAdded + ' drop label' + (labelsAdded===1?'':'s'));
     if(stationsAdded) bits.push(stationsAdded + ' tide station' + (stationsAdded===1?'':'s'));
+    if(routesAdded) bits.push(routesAdded + ' route' + (routesAdded===1?'':'s'));
 
     let msg;
-    if(!added && !tripsAdded && !notesAdded && !spotsAdded && !editsAdded && !labelsAdded && !stationsAdded){
+    if(!added && !tripsAdded && !notesAdded && !spotsAdded && !editsAdded && !labelsAdded && !stationsAdded && !routesAdded){
       msg = 'Read ' + where + ' without trouble — but every one of its '
           + data.catches.length + ' entries was already on this device, so nothing changed.';
     }else{

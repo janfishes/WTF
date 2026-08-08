@@ -5,6 +5,9 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-08
 
+- **v484** — Distance Only, No Trip Planning
+- **v483** — Routes Wear Letters, Not Colour
+- **v482** — Routes, Legs And Fuel Range
 - **v481** — Location List Drawn By The App
 - **v480** — Real Drop-Down, Theme-Colored Headers
 - **v479** — Both Zones Always Under My Spots

@@ -7,6 +7,247 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 6:10 PM EDT · v484 · Distance Only, No Trip Planning
+------------------------------------------------------------------------------
+Jan, on the 1/3 reserve: "should we ditch the 1/3 rule and measures since it
+wont apply to kayakers and it is too close to navigation". Then, on the
+round-trip figure: "dont need return distance either".
+
+Both are gone. THE CARD NOW PRINTS ONLY WHAT THE APP MEASURED — the run, and
+each leg with its distance, its true bearing and the running total. Nothing
+derived, nothing recommended. Do not add either figure back.
+
+WHY THE 1/3 RESERVE HAD TO GO (the stronger of the two reasons)
+
+  * It was the ONLY number on the card that was ADVICE rather than a
+    measurement. Everything else is arithmetic on coordinates; that one was a
+    prescription with a number attached, which is precisely the kind of thing
+    people rely on and then find out it did not know their boat, their load or
+    the afternoon wind.
+  * It silently assumed a FUEL TANK. A kayak, a paddleboard, a sailboat or a
+    trolling motor has no reserve to hold back — for those users the figure was
+    meaningless at best. Jan's point, and it is the one that generalises: this
+    app is used from a lot more than a centre console.
+  * It edged the feature toward NAVIGATION GUIDANCE, in an app whose own
+    Warning ends "NEVER RELY ON THIS APP AS YOUR ONLY MEANS OF NAVIGATION OR
+    EMERGENCY RESPONSE." Matters more than usual given the sale posture and the
+    handover.
+
+WHY ROUND TRIP WENT TOO
+
+Honest arithmetic — twice the distance, true whatever pushes the boat — so it
+was defensible. But doubling a number is something anyone does in their head,
+and printing it made the card look like it was working out a trip PLAN rather
+than reporting a distance. Every figure on the card is now something the app
+actually measured. That line is easy to defend and hard to argue with, which is
+worth more than the convenience of the doubled number.
+
+WHAT CHANGED
+
+  * routeUpdateBar() keeps #routeSums permanently hidden (the element and its
+    CSS stay, so the reasoning sits with the code rather than in a deleted
+    diff). The bar foot is back to one sentence, the straight-line limit.
+  * The saved-route list headline is now "Name · 4.0 sm", not "... out ...
+    round trip". Same for the three toasts (save, zoom-to, track-to-route) and
+    the + Spot section note.
+  * Help: the reserve paragraph is replaced by one that makes no
+    recommendation at all — "The app measures the distance. That is all it does
+    here." It names the things that actually decide whether a run is easy or
+    more than you want (wind, sea on the way home, load, daylight, and whether
+    you are running an outboard, sailing, paddling or on a trolling motor),
+    then puts the judgement back where it belongs: "What the distance costs
+    you, on that day, in that boat, is yours to know." The topic's opening
+    question is now "How far is it?" rather than "...and have I got the fuel to
+    get back?".
+  * This is the same instinct as not shipping a bite score: ship the record,
+    not a prediction. A distance is a record. A reserve is a prediction.
+
+VERIFIED  33/33 headless (three new checks: the card prints no reserve and no
+round-trip figure anywhere, the header total equals the measured run, and the
+saved-route list carries neither phrase). Screenshot at 430 px confirms the
+stripped card. Fresh <script> extraction + node --check on the current file —
+worth noting that an earlier run in this session printed "PARSE OK" off STALE
+extracted files after a cd reset ate the extraction step, so always confirm the
+extractor reports its block count and byte size before trusting the check.
+
+------------------------------------------------------------------------------
+Build 2026-08-08 · 5:40 PM EDT · v483 · Routes Wear Letters, Not Colour
+------------------------------------------------------------------------------
+Jan, on v482 (which never left this machine — v483 is the first routes build to
+ship): "need a different color pin as green is confused with buoys and 25% of
+population cant see green or red. maybe an S>L1>L2>L3 etc in high contrast color
+against the map". And: did the help say the 1/3 reserve varies by sea state and
+speed? It did not.
+
+GREEN WAS WRONG TWICE OVER, and this must not be re-chosen later:
+
+  1. On the water GREEN IS THE STARBOARD-HAND AID COLOUR. A green line on a
+     chart is already saying something, and it isn't "your route". Red is just
+     as spoken for (port hand, and this app's MARK). Neither is available to a
+     nav overlay no matter how nice it looks.
+  2. Red-green deficiency. (The real prevalence is about 8% of men and 0.5% of
+     women rather than a quarter of everyone, but that does not soften the call
+     — it is still the one pair that must never be the ONLY difference between
+     two things on a chart somebody navigates by.)
+
+THE FIX IS JAN'S, AND IT IS BETTER THAN A DIFFERENT HUE: stop encoding identity
+in colour at all.
+
+  * Every pin is a LABEL: S for the start, then L1, L2, L3 … Each pin after the
+    start is named for the leg that ARRIVES there, so "L3" and "leg 3" are the
+    same thing wherever they are read, and the leg list now reads S→L1, L1→L2.
+    The pin sizes itself to its text (iconSize:null + a translate in CSS), so
+    "S" and "L12" both sit centred on their position.
+  * The line is INK AND CASING, not a hue: a 3 px near-black core (#101418)
+    inside a 6.5 px white jacket. That separates on bright sand AND dark water,
+    survives greyscale and any colour deficiency, and cannot be mistaken for an
+    aid to navigation. SOLID, not dashed, deliberately — the chart's own printed
+    state-waters limit is a dashed white line and a dashed route would read as
+    more of it.
+  * The Routes pill went hueless to match: off = white on black, lit = the
+    inversion, black on white. That is the same hueless lit state #catchToggle
+    has worn since v305 — the app's established way of saying "on" without
+    spending a hue, and the one lit state that cannot fail for a colour-blind
+    user. The pill has to agree with what it switches on; a green pill over a
+    black-and-white line would just move the confusion.
+  * The green freed here is NOT free to reuse elsewhere on the chart. It is
+    reserved by the buoy, not by this feature.
+
+THE 1/3 RESERVE now carries its caveat, and it is on the SCREEN as well as in
+help — a fuel assumption buried in a help sheet is not much of a warning. The
+measuring card's foot line gained a second sentence: "The ⅓ reserve is a
+calm-water floor — sea state and speed can cost far more on the way home." Help
+gained a full paragraph: the rule assumes the ride home matches the ride out and
+on this coast it often doesn't; a head sea, a chop, or a following sea that
+makes the boat work can cost half again; most hulls have one cruise speed that
+burns least per mile and both wallowing under it and pushing past it cost more;
+add crew, a full livewell, a dirty bottom and the afternoon wind. Treat 1/3 as
+the FLOOR, not the answer. The app measures distance and cannot know your burn —
+said plainly, in the same spirit as not shipping a bite score.
+
+Also: the "green pin" wording in help went with the colour, and the route topic
+now explains the letters and why they carry the meaning instead of the colour.
+
+VERIFIED  30/30 headless checks again (the suite is colour-agnostic — it asserts
+maths, state and wiring), plus fresh screenshots at 430 px: the cased line reads
+over dark ocean and over land, L1/L2 sit legibly on both, the leg rows read
+S→L1 / L1→L2 in the bar and in the sheet, and the lit pill is black-on-white.
+
+------------------------------------------------------------------------------
+Build 2026-08-08 · 5:05 PM EDT · v482 · Routes, Legs And Fuel Range
+    (never pushed — superseded by v483 the same evening; kept because the
+     decisions in it still stand and only the colour changed)
+------------------------------------------------------------------------------
+Jan's question: how to work out the distance between two or more dropped pins.
+The real ask underneath it, in his words: "users may not have a chartplotter and
+if they do may not have a garmin, they just want to know how far from the ramp
+to some spot to know if their boat has the fuel range."
+
+Nothing in the app answered that. The compass rose gives bearing and distance
+from ONE fixed origin (Ponce Inlet); a track records where you already went.
+A route is the thing in between — a run you lay out before you leave.
+
+WHAT SHIPPED
+
+  * MEASURE A ROUTE under Your saved routes in + Spot. The sheet closes, every
+    tap on the chart drops a green pin, each new pin closes a leg. A card at the
+    top carries the total, the ROUND TRIP (the number that gets you home), the
+    run with a 1/3 reserve, and the full leg list — distance, bearing, and the
+    RUNNING TOTAL at each pin, which is the figure actually used underway.
+    UNDO PIN / SAVE / CANCEL.
+  * A ROUTES pill leading the second filter row, ahead of Launches (Jan's call;
+    Labels stays last because it modifies the other pills). It shows and hides
+    saved routes. Green — after v389, blue, purple, amber, orange, launch brown
+    and TRACK's magenta are all spoken for and green was the one hue left.
+  * Your saved routes in + Spot: SHOW / EDIT / DELETE per route, the leg
+    breakdown under each, notes, and the existing UNDO + 14-day bin.
+  * SAVE AS ROUTE on every kept track (Jan asked for this mid-build). See below.
+  * Routes ARE in the backup file. Tracks deliberately still are not.
+  * New help topic "Routes & Distance", placed above Track My Path.
+
+DECISIONS THAT MUST NOT BE QUIETLY REVERSED
+
+  * STRAIGHT LINES, AND WE SAY SO. A route measures pin to pin. Inshore the real
+    run bends around marsh and spoil islands, so two pins can under-report a
+    creek run by a lot. We do NOT snap to navigable water — that needs channel
+    centreline data this app does not carry, and a route that silently followed
+    the wrong channel is worse than one that visibly does not try. The bar
+    instead says what the number IS, which is also the instruction: "Straight
+    line between the pins you dropped. Not a checked course — no depth, no
+    channel." That exact wording is Jan's and appears in three places.
+  * FROZEN COORDINATES, NEVER SPOT IDS. A saved route stores its own [lat,lng]
+    points. Referencing pins would look tidier and would mean a route followed a
+    pin you dragged — which is precisely the failure to avoid: a length someone
+    planned fuel against must not change because a pin moved or was deleted.
+    Same reasoning as a logged catch keeping its own position.
+  * BEARING IS TRUE, NOT PUT THROUGH toMagnetic(). This is the opposite of the
+    compass rose and the MARK banner, deliberately. Those are read against a
+    compass. A route is read against the phone, and the only heading a phone can
+    be trusted for is GPS course over ground, which is already true north — the
+    magnetometer reads magnetic but sits in a console full of wiring and speaker
+    magnets and will lie by tens of degrees. Labelled T on screen so it can
+    never be taken for a magnetic course to steer. If anyone ever "fixes" this
+    by adding declination, they have introduced a 7-degree error, not removed
+    one.
+  * ROUTES IN BACKUPS, TRACKS NOT. A track is a breadcrumb, cheap to remake. A
+    route is hand-built planning work — somebody traced a channel bend by bend —
+    and losing it on a device swap costs trust. Adding the key meant all four
+    importer touch points: payload, merge branch, `bits` summary, all-zero
+    check. Miss one and imports miscount. schema stays 2 (nothing about a CATCH
+    changed; bumping it would make the file unreadable to v481 for no reason).
+
+SAVE AS ROUTE (track -> route)
+
+Jan's idea, and it is the best answer to the straight-line problem: a track
+already followed real navigable water, so legs taken off it carry the channel's
+bends. A track cannot be used raw — it keeps a point every 12 m, so an 8 nm run
+is well over a thousand points, an unreadable leg list and a record many times
+the size of the rest of the backup. Ramer-Douglas-Peucker (routeSimplify, local
+flat projection, 45 m starting tolerance) keeps only the points carrying the
+SHAPE; the tolerance climbs x1.6 until the result fits ROUTE_MAX_PTS = 40.
+Honest limit, stated in the toast: the route reads a little SHORTER than the
+track's odometer, because RDP cuts the corner on each bend while the odometer
+counted the boat's actual wander. Short, never long — the safe direction for a
+fuel figure to be wrong in.
+
+GOTCHAS WORTH KEEPING
+
+  * Distances use map.distance()/1852 — Leaflet's own spherical call, the same
+    one nmFromInlet() and the track odometer use. One distance function in the
+    app. A second would be a second thing to keep honest, and the ellipsoidal
+    answer differs by less than the GPS fix does at this scale.
+  * .rt-leg must NOT be scoped to #routeBar. The leg row renders in two places —
+    the measuring card and each saved route in + Spot — and the first cut scoped
+    it, so the sheet copy came out as one run-together string with no gaps:
+    "1->21.8 sm313degT1.8 sm". Caught on a screenshot, not by a test.
+  * While measuring, body.route-mode sets pointer-events:none on the marker,
+    tooltip and overlay PANES. Without it a tap landing on a spot pin, a name
+    tag or a saved track's fat hit line opens a popup or zooms instead of
+    dropping a pin — which on a busy chart is most of the water.
+  * updateTrashNotes() derives the spot count as "everything left over", so a
+    new bin kind must be subtracted there or every deleted route is reported to
+    the user as a deleted SPOT. Same trap any future kind will hit.
+  * The compass map-click handler now early-returns while routeMode is on; it
+    was wiping a pinned compass leg on every route pin.
+  * Editing the block that opens the BACKUP EXPORT / IMPORT section: the new
+    ROUTES section was inserted directly above it and the first attempt ate that
+    comment's opening /*, which node --check caught 10,000 lines later as
+    "Unexpected identifier 'shapes'". Extract the <script> blocks and check them
+    before every commit.
+  * Help intro said "The five filter buttons across the top" — now six. Any pill
+    added or removed has to update that sentence.
+
+VERIFIED
+30/30 headless checks (zero-dependency CDP driver, fresh user-data-dir):
+1 degree of latitude measures 60.0 nm at 000 deg as a maths anchor; bearings
+stay true (090 does not become 097); round trip is exactly 2x and reserve 3x;
+UNDO PIN pops one pin; save persists, lights the pill and draws the line; the
+route rides both backup shapes; a synthetic 200-point dogleg track thins to its
+3 corners; a deleted route reports as a ROUTE in the bin and UNDO brings it
+back. Screenshots at 430 px confirmed the bar, the green line with numbered
+pins, the leg rows in both places, and the pill leading the second row.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 2:40 PM EDT · v481 · Location List Drawn By The App
 ------------------------------------------------------------------------------
 Jan: the faint headers are "on the mac. its ok on phone" — and, asked which
