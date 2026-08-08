@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-08
 
+- **v487** — Route FAB Fits The Taper
 - **v486** — Route No Longer Starts Offshore
 - **v485** — Route FAB, Long Routes, Column Labels
 - **v484** — Distance Only, No Trip Planning

@@ -7,6 +7,32 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 8:35 PM EDT · v487 · Route FAB Fits The Taper
+------------------------------------------------------------------------------
+Jan: "are + Catch and Route the same length FAB, if so moce Route after Catch".
+
+Measured at 430 px, and the answer is NO:
+
+    Bite 65.2   Spot 70.2   Catch 73.6   Tides 74.1   ROUTE 78.3
+    Waves 81.1   My Log 87.6   Seasons 94.5   Compass 99.2
+    Depth Lines 118   Topo Satellite 130.2   Track My Path 133.7
+    Locate Me 138.1
+
+Route is about 5 px wider than Catch. Catch's actual twin is Tides.
+
+So Route did not move to Catch — but the measurement showed v486 had put it in
+the WRONG place by Jan's own earlier rule ("before the FAB pill that is just
+longer than it"). The pill just longer than Route is Waves, so it belongs BEFORE
+Waves, not after. As shipped in v486 the stack dipped: 74.1, 81.1, 78.3, 87.6.
+Moved one slot up and the stack now widens the whole way down.
+
+The suite gained a check that the FAB widths taper strictly downward, so the
+next button added has to be placed by width rather than by eye. Current stack:
+65 70 74 74 78 81 88 94 99 118 130 134 138.
+
+VERIFIED  48/48 headless.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 8:05 PM EDT · v486 · Route No Longer Starts Offshore
 ------------------------------------------------------------------------------
 Jan: "routes not working. it is starting the route where the map opened instead

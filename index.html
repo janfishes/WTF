@@ -3409,14 +3409,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
       Tides
       <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> then tap the map for a tide forecast there.</span><span>Tap the button again to clear.</span></span>
     </button>
-    <button class="fab" id="waveBtn">
-      <svg viewBox="0 0 24 24" fill="currentColor"><use href="#waveArt"></use></svg>
-      Waves
-      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the offshore buoy's live wave report.</span></span>
-    </button>
-    <!-- + Route. v485 put it up with + Spot and + Catch; v486 moved it here, after Waves
-         and ahead of My Log, at Jan's request — the stack reads as a tidy taper and
-         "Route" belongs just above the first pill wider than it. Measuring a run was two
+    <!-- + Route. v485 put it up with + Spot and + Catch; v486 moved it after Waves;
+         v487 moved it one slot up, ahead of Waves, which is where Jan's own rule always
+         put it — "before the FAB pill that is just longer than it". Measured at 430px:
+         Bite 65.2, Spot 70.2, Catch 73.6, Tides 74.1, ROUTE 78.3, Waves 81.1, My Log
+         87.6. After Waves it made a dip in the taper (74.1, 81.1, 78.3, 87.6); here the
+         stack widens all the way down. Route and Catch are NOT the same width, which is
+         what Jan asked — Catch's twin is Tides. Measuring a run was two
          taps through the + Spot sheet before v485, which is two too many in a moving
          boat. Tap again to cancel, the way TRACK MY PATH does. No title attr — a FAB with
          one doubles its tooltip (v375). -->
@@ -3424,6 +3423,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 9 9l5 5 7-12"></path></svg>
       Route
       <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> measure a run — tap along your path,</span><span>one pin per bend. Tap again to cancel.</span></span>
+    </button>
+    <button class="fab" id="waveBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><use href="#waveArt"></use></svg>
+      Waves
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the offshore buoy's live wave report.</span></span>
     </button>
     <button class="fab" id="myLogBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.2C10 4.6 7.4 4 4 4v14.4c3.4 0 6 .6 8 2.2 2-1.6 4.6-2.2 8-2.2V4c-3.4 0-6 .6-8 2.2Z"></path><path d="M12 6.2v14.4"></path></svg>
@@ -5101,7 +5105,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 486;
+const BUILD_NUM  = 487;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
