@@ -7,6 +7,60 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 8:05 PM EDT · v486 · Route No Longer Starts Offshore
+------------------------------------------------------------------------------
+Jan: "routes not working. it is starting the route where the map opened instead
+of where the first pin is dropped" — then, decisively, "it puts start offshore".
+
+THE + ROUTE FAB WAS DROPPING A PHANTOM PIN UNDER ITSELF.
+
+The FAB stack sits INSIDE the map container, so the tap that turns route mode on
+carries straight through to Leaflet's map click handler — still inside the same
+click. routeMode had just been set true, so that handler immediately added pin S
+at the map coordinate UNDER THE BUTTON. The stack is on the RIGHT of the screen,
+which over Ponce Inlet is the Atlantic, so every route began several hundred
+yards offshore of wherever the user actually tapped first. Jan's "where the map
+opened" and "offshore" are the same observation from two angles.
+
+Reproduced before changing anything, by dispatching a real mouse press/release
+at the button's coordinates: after the FAB tap, routeDraft already held
+[29.07324, -80.90974] — open water east of the inlet.
+
+CORRECTION TO AN OLDER NOTE IN THIS FILE: the 2026-07-31 entry says synthetic
+element.click() on a FAB bubbles into Leaflet's map handler but REAL coordinate
+clicks do not. That is wrong. Measured 2026-08-08: a real dispatched tap
+produced the phantom pin too. Any FAB that arms a map-click mode must defend
+itself.
+
+Two defences, deliberately both:
+  * ev.stopPropagation() on the routeFab listener — the ordinary case.
+  * routeArmedAt + ROUTE_ARM_GUARD_MS (450 ms) checked in the map click handler
+    — catches the click iOS can synthesize out of the same gesture a moment
+    later, which stopPropagation cannot reach. The compass rose guards its pin
+    the same way (compassLastPin) and for the same reason.
+
+WHY 47 PASSING CHECKS MISSED IT, WHICH IS THE REAL LESSON: every check drove the
+app through its own functions (routeStart(), routeAddPoint()). None of them
+pressed a button the way a thumb does, so the entire class of "the tap also does
+something else" bugs was invisible. The suite now has a tap(x,y) helper that
+dispatches real Input.dispatchMouseEvent presses, and four checks that use it:
+the FAB arms route mode, drops NO pin, a real tap on the water drops exactly one
+pin AT the tapped position, and a second FAB tap cancels. Anything asserting
+"what a tap does" must go through tap(), not element.click().
+
+ALSO: the + Route FAB moved from beside + Catch to after Waves and ahead of My
+Log (Jan) — the stack reads as a taper and "Route" belongs just above the first
+pill wider than it.
+
+NOT CHANGED, and worth recording so it is not re-litigated: Jan asked whether the
+top filter pills could sit in two rows rather than three on a phone, then
+withdrew it ("text size handles it"). Measured while it was open: the six top
+pills hold TWO rows down to 393 px and only break to three at 375 px. The A text
+size control is the right lever.
+
+VERIFIED  47/47 headless.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 7:15 PM EDT · v485 · Route FAB, Long Routes, Column Labels
 ------------------------------------------------------------------------------
 First real use of routes on the water. Jan: "need to be able to record more than

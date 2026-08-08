@@ -3404,16 +3404,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       Catch
       <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the form to log a catch.</span><span>Logged catches show as diamonds on the map.</span></span>
     </button>
-    <!-- v485: + Route, kept with the other two "+" actions rather than between Spot and
-         Catch, so the two most-used buttons stay neighbours. Measuring a run was two taps
-         through the + Spot sheet before this, which is two taps too many in a moving
-         boat. Tap again to cancel, the way TRACK MY PATH does. No title attr — a FAB with
-         one doubles its tooltip (v375). -->
-    <button class="fab" id="routeFab">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 9 9l5 5 7-12"></path></svg>
-      Route
-      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> measure a run — tap along your path,</span><span>one pin per bend. Tap again to cancel.</span></span>
-    </button>
     <button class="fab" id="tidePinBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
       Tides
@@ -3423,6 +3413,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <svg viewBox="0 0 24 24" fill="currentColor"><use href="#waveArt"></use></svg>
       Waves
       <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> opens the offshore buoy's live wave report.</span></span>
+    </button>
+    <!-- + Route. v485 put it up with + Spot and + Catch; v486 moved it here, after Waves
+         and ahead of My Log, at Jan's request — the stack reads as a tidy taper and
+         "Route" belongs just above the first pill wider than it. Measuring a run was two
+         taps through the + Spot sheet before v485, which is two too many in a moving
+         boat. Tap again to cancel, the way TRACK MY PATH does. No title attr — a FAB with
+         one doubles its tooltip (v375). -->
+    <button class="fab" id="routeFab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 9 9l5 5 7-12"></path></svg>
+      Route
+      <span class="fab-tip" aria-hidden="true"><span><b>TAP:</b> measure a run — tap along your path,</span><span>one pin per bend. Tap again to cancel.</span></span>
     </button>
     <button class="fab" id="myLogBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.2C10 4.6 7.4 4 4 4v14.4c3.4 0 6 .6 8 2.2 2-1.6 4.6-2.2 8-2.2V4c-3.4 0-6 .6-8 2.2Z"></path><path d="M12 6.2v14.4"></path></svg>
@@ -5100,7 +5101,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 485;
+const BUILD_NUM  = 486;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -14678,9 +14679,15 @@ function routeUpdateBar(){
 }
 
 /* ---------- measuring ---------- */
+/* Set every time route mode is armed. The map-click handler ignores anything that
+   arrives within ROUTE_ARM_GUARD_MS of it — see the handler for why that is essential. */
+let routeArmedAt = 0;
+const ROUTE_ARM_GUARD_MS = 450;
+
 function routeStart(){
   if(routeMode) return;
   routeMode = true;
+  routeArmedAt = Date.now();
   routeDraft = [];
   document.body.classList.add('route-mode');
   const bar = document.getElementById('routeBar');
@@ -14946,7 +14953,10 @@ document.getElementById('routeStartBtn').addEventListener('click', ()=>{
 });
 /* The FAB is the fast way in — one tap from the chart. Tap again to cancel, same
    toggle TRACK MY PATH uses, so the two recording-ish buttons behave alike. */
-document.getElementById('routeFab').addEventListener('click', ()=>{
+document.getElementById('routeFab').addEventListener('click', (ev)=>{
+  /* Keeps the tap off the map underneath — the FAB stack is inside the map container.
+     See the arm-guard note on the map click handler. */
+  ev.stopPropagation();
   if(routeMode) routeAskCancel(); else routeStart();
 });
 document.getElementById('routeUndoBtn').addEventListener('click', routeUndoPin);
@@ -14961,8 +14971,27 @@ document.getElementById('routeFoldBtn').addEventListener('click', ()=>{
 });
 /* Every tap on the chart is a pin while measuring. The pointer-events rule on the map
    panes (see the CSS) is what stops a tap that lands on a pin or a track being eaten
-   before it gets here. */
-map.on('click', (e)=>{ if(routeMode) routeAddPoint(e.latlng); });
+   before it gets here.
+
+   v486 — THE ARM GUARD IS NOT OPTIONAL. The FAB stack sits INSIDE the map container, so
+   the tap that turns route mode on carries straight through to this handler, which was
+   still in the same click. routeMode had just been set true, so the tap on the button
+   immediately dropped pin S at the map coordinate UNDER THE BUTTON. The stack is on the
+   right-hand side of the screen, which over Ponce Inlet is the Atlantic — so every route
+   started offshore, several hundred yards from wherever the user actually tapped first.
+   (The repo's older note said real coordinate taps on a FAB do NOT bubble into Leaflet
+   and only synthetic .click() does. That is wrong, measured 2026-08-08: a real tap
+   dispatched at the button's coordinates produced the phantom pin too.)
+
+   Two defences, deliberately both: stopPropagation on the button (below), which handles
+   the ordinary case, and this timestamp guard, which catches the click iOS can synthesize
+   out of the same gesture a moment later. The compass rose guards its own pin the same
+   way and for the same reason. */
+map.on('click', (e)=>{
+  if(!routeMode) return;
+  if(Date.now() - routeArmedAt < ROUTE_ARM_GUARD_MS) return;
+  routeAddPoint(e.latlng);
+});
 
 /* ===================== BACKUP EXPORT / IMPORT =====================
 
