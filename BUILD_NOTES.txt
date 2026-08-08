@@ -7,6 +7,49 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 11:20 AM EDT · v478 · My Spots Filter Pill
+------------------------------------------------------------------------------
+Jan: "add a button before the inshore and offshore buttons that says MY SPOTS,
+and include the users inshore and offshore spots there as well."
+
+The + Catch Location row (#logZoneRow) now carries THREE pills: My Spots,
+Inshore, Offshore. My Spots is different in kind from the other two — it cuts
+ACROSS the zones instead of picking one: lit, the drop-down holds the user's own
+spots from both zones ("—— INSHORE · MY SPOTS ——" and "—— OFFSHORE · MY SPOTS
+——") and no built-ins at all. It shares the same logZones set and the same
+one-lit-at-a-time behaviour as the zone pills, so the existing click handler
+needed no change; rebuildSpotSelect() just reads logZones.has('mine') into
+`mineOnly` and skips the built-in addGroup() calls.
+
+Colour: it can't wear a zone colour (it spans both), so it takes the theme
+accent — black on var(--accent-lite) when lit, white on black with an accent
+border when off. Same bright-fill/black-text pairing as v477's drop-down
+headers. This is the only data-zone="mine" chip in the app.
+
+Its label is userSpotsLabel(), so a saved name renames it to "Ace’s Spots" like
+the map's sub-row pills; applyUserName() repaints it (a third selector was added
+there — that function is the ONE place the name-bearing surfaces are repainted,
+keep adding to it).
+
+Also new: any filter that empties the list now appends a disabled option saying
+so ("— no spots of your own saved yet —" / "— nothing in this zone —"). A
+drop-down holding nothing but its placeholder reads as broken, and a brand-new
+user tapping My Spots would have hit exactly that.
+
+Help updated (Entering the GPS position) with the three pills and the My Spots
+heading order.
+
+Verified headless (Chrome 151, CDP): pills present in order mine/inshore/
+offshore; unfiltered list = 4 groups; My Spots lit = the two custom groups only;
+Inshore lit = inshore pair; second tap restores all; lit chip measured
+rgb(255,122,61) fill on black text (orange theme) AFTER a 400 ms wait — reading
+computed style straight after the click returns the pre-transition colours (the
+v-2026-08-01 .chip transition gotcha, still true). Empty-state option confirmed
+disabled. Test gotcha for next time: serve the app on its OWN port — a stale
+service worker from another app previously served at the same localhost port
+will answer with that app's shell and every WTF global reads as undefined.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 10:35 AM EDT · v477 · Black On Accent Headers
 ------------------------------------------------------------------------------
 Jan: "the MY SPOTS and INSHORE SPOTS, and OFFSHORE SPOTS, does not meet the

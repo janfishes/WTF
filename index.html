@@ -1569,6 +1569,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     filter:none; text-shadow:none !important;
   }
   #speciesCol .chip .dot{background:currentColor !important;}
+  /* v478: the + Catch location row's My Spots filter. It spans both zones, so it can't
+     wear either zone colour — it takes the theme accent, lit as bright fill + BLACK text
+     (the v375 species-pill / v477 drop-down-header pairing; white on --accent-lite would
+     fail contrast on every theme). Only this row has a data-zone="mine" chip. */
+  .chip[data-zone="mine"]{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid var(--accent-lite) !important; box-shadow:none !important;}
+  .chip[data-zone="mine"]:not(.active){opacity:1; color:#fff !important; border-color:var(--accent-lite) !important;}
+  .chip[data-zone="mine"].active{background:var(--accent-lite) !important; color:#000 !important; border-color:#fff !important; text-shadow:none !important;}
   .chip[data-zone="inshore"]{background:#000 !important; color:#fff !important; font-weight:800; border:1px solid var(--inshore) !important; box-shadow:none !important;}
   /* v389: WHITE text on every lit pill (Jan's pick from the mockup — one rule for the whole
      row). White cannot pass on the bright pin blue #1e90ff (3.2:1), so the lit Inshore FILL
@@ -3573,7 +3580,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="help-topic" type="button" aria-expanded="false" aria-controls="hb-catch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg> Catch<span class="ht-caret">▸</span></button>
       <div class="help-body" id="hb-catch">
       <p class="sheet-note">Tap <b>+ Catch</b> to open the catch dialog window and then pick <b>one or more species</b> from the list. The first one you tap is that entry's main fish, but every one you pick will be stored for that particular log entry. Set date and time (shown in local 12-hour time — on a computer just type the date, like 6/15/1988; phones get a scroll picker), then set the location three ways: choose a known spot from the alphabetical list for Inshore or Offshore, <b>Drop a pin on map</b>, or <b>Use my location</b>. <b>Clear</b> removes a dropped pin. Next pick the tide by tapping <b>High</b>, <b>Low</b>, <b>Falling</b>, or <b>Rising</b> — or tap <b>Auto-detect from NOAA</b> once a location and date/time are set. The app looks up the nearest NOAA tide station's predictions for that exact moment (works for past dates too, but needs internet). <b>Size</b> takes Length as ft and inches and Weight as lb and ounces — numbers only (e.g., 30 inches records the fish as 2 ft 6 in).</p>
-      <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g., 29°04.672′ N). A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. A photo with embedded GPS fills the position automatically. You can key or paste numbers in by hand. If you save the location in <b>+ Spot</b> first, that spot will appear in the dropdown list for catch locations.</p>
+      <p class="sheet-note"><b>Entering the GPS position.</b> All coordinates display in <b>degrees and decimal minutes</b> (e.g., 29°04.672′ N). A catch takes its position three ways: pick a known spot from the location list, <b>Drop a pin on map</b>, or <b>Use my location</b>. A photo with embedded GPS fills the position automatically. You can key or paste numbers in by hand. If you save the location in <b>+ Spot</b> first, that spot will appear in the dropdown list for catch locations — under a <b>MY SPOTS</b> heading at the top of its zone, ahead of the built-in pins. Three pills sit above the list and narrow it: <b>My Spots</b> shows only the ones you saved yourself, inshore and offshore together, and <b>Inshore</b> or <b>Offshore</b> cuts it to that zone. Tap the lit pill again for the whole list back.</p>
       <p class="sheet-note">The <b>+ Catch</b> button allows you to store a photo from your gallery — and stores them on your device at high quality. If the photo has embedded GPS and a timestamp, the app fills in the catch location, date, and time automatically, and looks up the tide for that moment from NOAA. If it doesn't (photos sent through messaging apps usually lose this data), simply set the date and location yourself, then tap the tide buttons or NOAA auto-detect. Everything stays editable before you save. Photos need to be in a format your browser can open — <b>JPEG</b> always works. Safari can read iPhone <b>HEIC</b> files, but Chrome, Edge and Firefox can't. If a photo is refused on an iPhone, set <b>Settings → Camera → Formats → Most Compatible</b> so new photos save as JPEG.</p>
       <p class="sheet-note"><b>Personal best 🏆.</b> Under Size sits a gold <b>PERSONAL BEST 🏆</b> button — tap it for the fish you want to remember, and confetti flies when you save it. From then on the trophy rides the <b>top corner of that catch's photo</b>, both on its card in <b>My Log</b> and in the popup when you open its diamond on the map. A catch with no photo wears the words <b>PERSONAL BEST 🏆</b> beside its species instead, so the flag is never hidden. <b>Tap the trophy</b> anywhere it appears and the confetti flies again. Searching <b>personal best</b> (or <b>pb</b>, or <b>trophy</b>) lists all of them. To take the flag off, open the catch with <b>EDIT ✎</b> and tap the gold button again.</p>
       <p class="sheet-note"><b>To edit or delete a catch:</b> tap a catch diamond on the map and use <b>EDIT ✎</b> or <b>DELETE ✕</b> in its popup — or use the same buttons on the entry in My Log. Editing reopens the form with everything filled in.</p>
@@ -3740,6 +3747,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     <label class="field-label">Location</label>
     <div class="chiprow wrap" id="logZoneRow" style="margin-bottom:8px;">
+      <!-- v478 (Jan): your own spots are the ones you pick most, so they get their
+           own filter ahead of the zones — it lists them from BOTH zones at once. -->
+      <div class="chip" data-zone="mine"><span class="zmine-lbl">My Spots</span></div>
       <div class="chip" data-zone="inshore">Inshore</div>
       <div class="chip" data-zone="offshore">Offshore</div>
     </div>
@@ -4841,7 +4851,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 477;
+const BUILD_NUM  = 478;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -9801,6 +9811,8 @@ function applyUserName(){
   if(mp) mp.textContent = userSpotsLabel();
   const mo = document.querySelector('#offshoreSubRow .chip[data-icat="myoffshore"] .icat-lbl');
   if(mo) mo.textContent = userSpotsLabel();
+  const mz = document.querySelector('#logZoneRow .zmine-lbl');   // v478, + Catch location row
+  if(mz) mz.textContent = userSpotsLabel();
 }
 window.applyUserName = applyUserName;
 document.getElementById('logNameInput').addEventListener('input', function(){ setUserName(this.value); });
@@ -10383,9 +10395,10 @@ document.addEventListener('click', (e)=>{
 /* The location list carries every known fishing spot — built-in inshore and offshore
    (including the imported jan-* offshore numbers, which used to be filtered out)
    plus anything the user has added themselves. Boat ramps and kayak launches are
-   excluded. The Inshore/Offshore switches above the list narrow it down: NEITHER lit
-   (both black) is the resting state and lists everything, and tapping one lights that
-   pill in its zone colour and cuts the list to that zone alone. */
+   excluded. The My Spots/Inshore/Offshore switches above the list narrow it down: NONE
+   lit (all black) is the resting state and lists everything, and tapping one lights it
+   and cuts the list — to that zone alone, or (v478) to the user's own spots in both
+   zones. Only one is ever lit. */
 const logZoneRow = document.getElementById('logZoneRow');
 let logZones = new Set();
 
@@ -10420,14 +10433,27 @@ function rebuildSpotSelect(){
   const bucket = s => (s.zone === 'offshore' ? 'offshore' : 'inshore');
   const isLaunch = s => !!s.ramp || s.zone === 'launch';
 
+  /* v478: My Spots is a THIRD filter on the same row, and it cuts across the zones
+     rather than picking one — lit, the list is the user's own spots from both zones
+     and no built-ins at all. It shares logZones (still one pill lit at a time). */
+  const mineOnly = logZones.has('mine');
+
   // No pill lit = no filter = every zone, which is how the form opens.
   ['inshore','offshore'].forEach(zone=>{
-    if(logZones.size && !logZones.has(zone)) return;
+    if(logZones.size && !mineOnly && !logZones.has(zone)) return;
     // v475: the user's own spots come FIRST in each zone — they're the ones being
     // picked most often, so they shouldn't sit below a hundred built-ins.
     addGroup(ZONES[zone].label + ' · My Spots', custom.filter(s=> !isLaunch(s) && bucket(s) === zone));
-    addGroup(ZONES[zone].label, SPOTS.filter(s=> !s._deleted && !isLaunch(s) && bucket(s) === zone));
+    if(!mineOnly) addGroup(ZONES[zone].label, SPOTS.filter(s=> !s._deleted && !isLaunch(s) && bucket(s) === zone));
   });
+
+  // A filter that empties the list has to say so, or it reads as a broken drop-down.
+  if(!spotSelect.querySelector('option[value]:not([value=""])')){
+    const none = document.createElement('option');
+    none.value = ''; none.disabled = true;
+    none.textContent = mineOnly ? '— no spots of your own saved yet —' : '— nothing in this zone —';
+    spotSelect.appendChild(none);
+  }
 
   // Keep the current pick if it survived the filter
   if(keep && spotSelect.querySelector(`option[value="${keep}"]`)) spotSelect.value = keep;
@@ -10454,6 +10480,10 @@ if(logZoneRow){
     });
   });
   syncLogZoneChips();
+  // Named after the user like the map's sub-row pills ("Ace’s Spots"); applyUserName()
+  // repaints it when the name changes.
+  const zmine = logZoneRow.querySelector('.zmine-lbl');
+  if(zmine) zmine.textContent = userSpotsLabel();
 }
 
 rebuildSpotSelect();
