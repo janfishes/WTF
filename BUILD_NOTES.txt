@@ -7,6 +7,41 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 10:20 PM EDT · v490 · The Three Plus Buttons Taper
+------------------------------------------------------------------------------
+Jan: "reduce the horizontal padding on + Catch and + Spot so + Catch is shorter
+than + Route and + Spot is shorter than + Catch".
+
+Worked out from measurement rather than by eye. Every FAB carries the same fixed
+furniture — 15px icon + 5px icon margin + 2px border = 22px — so a pill's width
+is simply 22 + text + 2*padding, and only the words differ: Spot 32.2, Catch
+39.6, Route 40.3.
+
+    Spot    8px -> 6px sides     70.2 -> 66.2
+    Catch   6px -> 4px sides     73.6 -> 69.6      (6px was .fab.primary's own)
+    Route   5px (unchanged)              72.3
+
+Which gives Spot < Catch < Route, and also repairs a dip at the TOP of the stack
+that nobody had asked about: Bite 65.2 used to be followed by a narrower Spot in
+some of the arrangements this week. The run is now clean from the first pill
+down: 65.2 < 66.2 < 69.6 < 72.3 < Tides 74.1 < Waves 81.1 < ...
+
+WHY THE GAPS CANNOT INVERT LATER: padding is fixed in px while the words scale
+with the A text-size control, so as text grows the differences between the three
+OPEN rather than close. Checked at the largest text size as well as the default.
+
+Targeted by ID (#addSpotBtn, #logCatchFab) rather than by .fab.primary — primary
+is a shared class and + Catch should not be the only thing that can ever wear it.
+
+Known and deliberately not chased: at a text scale above roughly 1.43, Route
+(text 40.3, 5px sides) overtakes Tides (text 36.1, 8px sides) and the taper
+breaks at THAT junction. Nothing in the app depends on it and Jan has not raised
+it; the suite therefore asserts the full-stack taper at the default size only,
+and the three "+" actions at both sizes.
+
+VERIFIED  63/63 headless. Screenshot at 430px confirms the step down.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 9:55 PM EDT · v489 · Only The Route You Just Saved
 ------------------------------------------------------------------------------
 Three from Jan, all from using v488.

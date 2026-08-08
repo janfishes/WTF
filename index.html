@@ -3011,6 +3011,24 @@ svg.leaflet-image-layer.leaflet-interactive path {
      cannot push it back past, since the padding is fixed while the word scales.
      The suite asserts Route <= Catch, so a future padding change cannot undo this. */
   #routeFab{padding-left:5px !important; padding-right:5px !important;}
+  /* v490: + Spot and + Catch trimmed so the three "+" actions taper — Spot < Catch <
+     Route (Jan). Worked out from measurement, not by eye. Every FAB has the same fixed
+     furniture (15px icon + 5px margin + 2px border = 22px), so width is just
+     22 + text + 2*padding, and the words differ: Spot 32.2, Catch 39.6, Route 40.3.
+
+       Spot   6px sides -> 66.2      (was 8px, 70.2)
+       Catch  4px sides -> 69.6      (was 6px, 73.6 — .fab.primary's own padding)
+       Route  5px sides -> 72.3
+
+     That also repairs the top of the stack, which had a dip: Bite 65.2 now runs
+     65.2 < 66.2 < 69.6 < 72.3 < Tides 74.1 — a clean taper from the first pill down.
+     Padding is fixed while the words scale with the A control, so the gaps between the
+     three OPEN as text grows; the order cannot invert. The suite checks the ordering at
+     both the default and the largest text size.
+     Targeted by id: .fab.primary is a shared class and Catch is not the only thing that
+     could ever wear it. */
+  #addSpotBtn{padding-left:6px !important; padding-right:6px !important;}
+  #logCatchFab{padding-left:4px !important; padding-right:4px !important;}
 
   /* Lit while a route is being measured. Mirrors .fab.pressed but is its OWN class so
      closeAllOverlays()'s .pressed sweep cannot darken the button mid-route. */
@@ -5145,7 +5163,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 489;
+const BUILD_NUM  = 490;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)

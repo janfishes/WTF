@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-08
 
+- **v490** — The Three Plus Buttons Taper
 - **v489** — Only The Route You Just Saved
 - **v488** — Routes Get Their Own Sheet
 - **v487** — Route FAB Fits The Taper
