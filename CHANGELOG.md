@@ -5,6 +5,7 @@ details are in [BUILD_NOTES.txt](BUILD_NOTES.txt).
 
 ## 2026-08-08
 
+- **v480** — Real Drop-Down, Theme-Colored Headers
 - **v479** — Both Zones Always Under My Spots
 - **v478** — My Spots Filter Pill
 - **v477** — Black On Accent Headers

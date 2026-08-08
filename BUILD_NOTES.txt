@@ -7,6 +7,46 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 1:10 PM EDT · v480 · Real Drop-Down, Theme-Colored Headers
+------------------------------------------------------------------------------
+Jan: "where it says INSHORE - My Spots and OFFSHORE - My Spots, gray text color
+is too faint, make it the dark theme color (blue, purple, brown, etc)."
+
+Why v476/v477 didn't take. Both builds styled `select optgroup`, and on the Mac
+that CSS goes in the bin: Chrome (and Safari) draw a select's open list with the
+SYSTEM menu, a native widget the page cannot paint. Jan was still looking at the
+browser's default faint grey italic in v479, and no amount of colour on that
+rule was ever going to change it. Worth remembering before styling any native
+control again — measure the rendered pixels, don't trust that the property
+"applies".
+
+The fix is `appearance: base-select` (Chrome 135+, confirmed available in the
+Chrome 151 on this Mac): it hands the open list back to the page as real DOM, so
+::picker(select), optgroup and option are ordinary styleable elements. Scoped to
+#logSpotSelect ONLY — every other select in the app keeps the system list — and
+wrapped in @supports so Safari and iOS fall back to exactly what they render
+today. On those engines the uppercase "—— INSHORE · MY SPOTS ——" label text is
+still the only thing separating the sections; that text must not be "cleaned up".
+
+Headers are now var(--accent-lite) — the theme's own colour, so blue on Ice,
+purple on the violet theme, amber on Brown Sugar, orange on Sunset, teal on the
+default — at weight 800 with letter-spacing, on the dark --navy-900 picker.
+Entries are --fog, disabled notes are muted italic, the hovered row takes
+--navy-700 and the selected row is the accent fill with black text (the v477
+pairing). The custom arrow background-image is dropped inside the @supports
+block, or it would double with ::picker-icon.
+
+Verified headless (Chrome 151, real mouse-gesture click — showPicker() refuses
+without a user gesture): computed appearance base-select, optgroup colour
+rgb(255,122,61) = that profile's --accent-lite, weight 800, and a screenshot of
+the open picker showing coloured headers over white entries.
+
+Test gotcha, cost twenty minutes: `python3 -m http.server 8799` silently does
+NOT bind if something already holds the port — the screenshot came back showing
+Jan's TIDE BOARD app, served by a leftover server on that port. curl the port
+and grep BUILD_NUM before trusting any headless run.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 11:55 AM EDT · v479 · Both Zones Always Under My Spots
 ------------------------------------------------------------------------------
 Jan: "add Offshore under my spots and say no offshore spots saved yet under it

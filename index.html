@@ -2148,10 +2148,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   input:focus, select:focus, textarea:focus{outline:2px solid var(--teal); outline-offset:0;}
   textarea{resize:vertical; min-height:44px;}
   /* v476: the section headers inside a drop-down were the browser's default dim grey
-     italic and Jan couldn't pick them out from the spots under them. Chrome honours
-     colour/weight on optgroup in the popup, so state them; Safari and the iOS wheel
-     ignore CSS entirely, which is why rebuildSpotSelect() also uppercases the label
-     text — the shouting is what carries the header on those engines.
+     italic and Jan couldn't pick them out from the spots under them. These two rules
+     state the colours — but see v480 below: on macOS NO browser applies them to a
+     system-drawn list, which is why rebuildSpotSelect() also uppercases the label
+     text. The shouting is what carries the header wherever the CSS doesn't reach.
      v477: --fog on --navy-900 failed the contrast check (Jan). The header now wears
      the app's own lit-pill treatment — bright theme accent fill, BLACK text — which
      clears 7:1 on every theme (teal 10.6, violet 7.0, green 10.2, orange 8.1, ice
@@ -2161,6 +2161,37 @@ svg.leaflet-image-layer.leaflet-interactive path {
   select optgroup{color:#000; background:var(--accent-lite); font-weight:800; font-style:normal; letter-spacing:.06em;}
   select option{color:var(--fog); background:var(--navy-800); font-weight:400; font-style:normal; letter-spacing:0;}
   select{appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%); background-position:calc(100% - 16px) center, calc(100% - 11px) center; background-size:5px 5px; background-repeat:no-repeat;}
+  /* v480: on the Mac, Chrome draws the drop-down list with the SYSTEM menu, which
+     throws away everything the two rules above say — Jan still saw faint grey
+     headers. The only way to own those pixels is `appearance:base-select`, which
+     hands the list back to the page as real DOM (Chrome 135+; Safari and iOS have
+     no such thing and keep the system list, hence the uppercase "—— ... ——" label
+     text, which is all that reaches them). Scoped to the location list alone —
+     every other select in the app keeps the system behaviour. Header text is the
+     theme accent (blue / purple / brown / teal / green / amber by theme), which is
+     what Jan asked for and clears 7:1 on the dark row. */
+  @supports (appearance: base-select){
+    #logSpotSelect, #logSpotSelect::picker(select){ appearance: base-select; }
+    #logSpotSelect{ background-image:none; padding-right:30px; }
+    #logSpotSelect::picker-icon{ color:var(--muted); }
+    #logSpotSelect::picker(select){
+      background:var(--navy-900); border:1px solid var(--line); border-radius:10px;
+      padding:4px; max-height:60vh; box-shadow:0 12px 30px rgba(0,0,0,.55);
+    }
+    #logSpotSelect optgroup{
+      color:var(--accent-lite); background:transparent; font-weight:800; font-style:normal;
+      letter-spacing:.06em; padding:9px 8px 3px; font-size:14px;
+    }
+    #logSpotSelect option{
+      color:var(--fog); background:transparent; font-weight:500; padding:7px 8px; border-radius:6px;
+    }
+    #logSpotSelect option:disabled{ color:var(--muted); font-style:italic; }
+    #logSpotSelect option:hover:not(:disabled), #logSpotSelect option:focus:not(:disabled){
+      background:var(--navy-700); color:#fff;
+    }
+    #logSpotSelect option:checked{ background:var(--accent-lite); color:#000; font-weight:800; }
+    #logSpotSelect option::checkmark{ display:none; }
+  }
   .loc-btns{display:flex; gap:8px; margin-top:8px;}
   .mini-btn{
     flex:1; font-family:'Space Grotesk',sans-serif; font-size:calc(12px * var(--tsb)); font-weight:600;
@@ -4851,7 +4882,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 479;
+const BUILD_NUM  = 480;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
