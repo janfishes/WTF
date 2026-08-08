@@ -7,6 +7,38 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 12:55 AM EDT · v474 · Photo Debug Text Off
+------------------------------------------------------------------------------
+Jan: "this text appears under photo without a time stamp: path:createImageBitmap
+autoOrients:true exifTag:1 applied:1] [EXIF found:true keys:dateTime,orientation
+size:1324865 err:null]"
+
+Instrumentation from the iOS orientation work shipped switched ON. It appended
+two bracketed blocks to the status line under every photo in + Catch - gibberish
+to a user, and long enough to push the real message off the end of the line.
+
+THE TIMESTAMP WAS NEVER BROKEN, which is the part worth recording. Jan's own
+debug string carries "keys:dateTime,orientation", so the date WAS parsed; the
+line saying so was simply buried behind the debug text. Verified by building a
+JPEG carrying exactly Jan's EXIF signature (DateTimeOriginal + Orientation, no
+GPS) and running it through the real + Catch input: readExif returns
+"2026:08:07 11:16:32", the status reads "Date & time set from photo", and the
+date and time fields land on 08/07/2026 and 11:16. Do not go looking for an EXIF
+date bug on the strength of that report.
+
+The debug objects are still gathered on every photo - they cost nothing and they
+are what solved the orientation bug - so this is a switch, not a deletion. Set
+WTF_PHOTO_DEBUG = true in a console and the next photo prints them again;
+verified both states.
+
+TEST-HARNESS GOTCHA worth keeping: a synthetic test photo must have TEXTURE. The
+first attempt used a flat colour fill and resizeToDataURL threw "blank output" -
+canvasLooksBlank() samples 64 points and calls the image blank when all 64 are
+byte-identical. That guard is correct (it is what catches the iOS sub-sampling
+bug that produced black photos), and a real photo, even of open water, carries
+enough JPEG noise to pass. Also: readExif() takes an ArrayBuffer, not a File.
+
+------------------------------------------------------------------------------
 Build 2026-08-07 · 8:40 PM EDT · v473 · Tap A Position To See It
 ------------------------------------------------------------------------------
 Jan, on v472: "before i can name a spot, i need to see the spot on the map. can

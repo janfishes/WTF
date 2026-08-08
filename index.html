@@ -4828,7 +4828,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/07/26';                          // map stamp form
-const BUILD_NUM  = 473;
+const BUILD_NUM  = 474;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-07 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -11928,13 +11928,27 @@ photoInput.addEventListener('change', async ()=>{
     statusBits.push('No timestamp — set the date & time below');
   }
   photoStatus.textContent = statusBits.join(' \u00b7 ');
-  if(window._lastPhotoOrientDebug){
-    const d = window._lastPhotoOrientDebug;
-    photoStatus.textContent += ` [DEBUG path:${d.decodePath} autoOrients:${d.autoOrients} exifTag:${d.exifOrientationTag} applied:${d.correctionApplied}]`;
-  }
-  if(window._lastPhotoExifDebug){
-    const e2 = window._lastPhotoExifDebug;
-    photoStatus.textContent += ` [EXIF found:${e2.exifFound} keys:${e2.exifKeys} size:${e2.fileSize} err:${e2.parseError}]`;
+  /* v474: this instrumentation shipped switched ON by accident. It appended
+     "[DEBUG path:createImageBitmap autoOrients:true exifTag:1 applied:1] [EXIF
+     found:true keys:dateTime,orientation size:1324865 err:null]" to the line under
+     every photo -- gibberish to a user, and long enough to push the REAL message
+     ("Date & time set from photo") out of sight, which is how it read as a photo
+     whose timestamp had not been picked up. The timestamp was always being read;
+     only the message was buried.
+
+     The objects behind it are still gathered every time (they cost nothing and they
+     are what solved the iOS orientation bug), so this stays as a switch rather than
+     a deletion: type WTF_PHOTO_DEBUG = true in a console and the next photo prints
+     the diagnostics again. */
+  if(window.WTF_PHOTO_DEBUG){
+    if(window._lastPhotoOrientDebug){
+      const d = window._lastPhotoOrientDebug;
+      photoStatus.textContent += ` [DEBUG path:${d.decodePath} autoOrients:${d.autoOrients} exifTag:${d.exifOrientationTag} applied:${d.correctionApplied}]`;
+    }
+    if(window._lastPhotoExifDebug){
+      const e2 = window._lastPhotoExifDebug;
+      photoStatus.textContent += ` [EXIF found:${e2.exifFound} keys:${e2.exifKeys} size:${e2.fileSize} err:${e2.parseError}]`;
+    }
   }
   if(gotLoc && gotTime) autoTide(true);
 });
