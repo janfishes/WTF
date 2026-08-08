@@ -7,6 +7,30 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 10:35 AM EDT · v477 · Black On Accent Headers
+------------------------------------------------------------------------------
+Jan: "the MY SPOTS and INSHORE SPOTS, and OFFSHORE SPOTS, does not meet the
+contrast ratio requirement, make those titles black or the dark theme color."
+
+v476 gave the drop-down's optgroup headers --fog text on --navy-900 — two dark
+values a step apart, which is exactly the contrast failure Jan called. They now
+wear the app's lit-pill treatment instead: BLACK text on a var(--accent-lite)
+fill, the same bright-fill/black-text pairing the selected species pill has used
+since v375. Measured black-on-accent ratios, all themes: teal 10.6, violet 7.0,
+green 10.2, orange 8.1, ice 11.3, brown-sugar amber 8.9 — every one past 7:1
+(AAA for normal text, and these are bold).
+
+Rule for any theme added later: keep the header text BLACK. --accent-lite is
+picked to be bright enough to carry white-on-black body text, so black on it is
+always the safe side; a "dark text = --navy-950" variant would have to be
+re-checked per theme.
+
+Unchanged from v476: the labels are still uppercased and ruled in the label
+STRING ("—— INSHORE · MY SPOTS ——") because Safari and the iOS picker wheel
+ignore optgroup CSS outright — this build only helps Chrome. On Jan's iPhone the
+text form is still doing all the work.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 10:05 AM EDT · v476 · Louder Drop-Down Headers
 ------------------------------------------------------------------------------
 Jan, right after v475: "in the dropdown, the section labels are to hard to see."

@@ -2144,8 +2144,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
      italic and Jan couldn't pick them out from the spots under them. Chrome honours
      colour/weight on optgroup in the popup, so state them; Safari and the iOS wheel
      ignore CSS entirely, which is why rebuildSpotSelect() also uppercases the label
-     text — the shouting is what carries the header on those engines. */
-  select optgroup{color:var(--fog); background:var(--navy-900); font-weight:800; font-style:normal; letter-spacing:.06em;}
+     text — the shouting is what carries the header on those engines.
+     v477: --fog on --navy-900 failed the contrast check (Jan). The header now wears
+     the app's own lit-pill treatment — bright theme accent fill, BLACK text — which
+     clears 7:1 on every theme (teal 10.6, violet 7.0, green 10.2, orange 8.1, ice
+     11.3, brown-sugar amber 8.9) and reads as a header, not another entry. Keep the
+     text black on any new theme: --accent-lite is chosen to be bright enough for
+     white-on-black body text, so black on it is always the safe pairing. */
+  select optgroup{color:#000; background:var(--accent-lite); font-weight:800; font-style:normal; letter-spacing:.06em;}
   select option{color:var(--fog); background:var(--navy-800); font-weight:400; font-style:normal; letter-spacing:0;}
   select{appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%); background-position:calc(100% - 16px) center, calc(100% - 11px) center; background-size:5px 5px; background-repeat:no-repeat;}
   .loc-btns{display:flex; gap:8px; margin-top:8px;}
@@ -4835,7 +4841,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 476;
+const BUILD_NUM  = 477;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
