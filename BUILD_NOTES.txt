@@ -7,6 +7,32 @@ CHANGELOG.md on GitHub (since v341); the full note for every build lives
 here. New builds are added at the top, date- and time-stamped.
 
 ------------------------------------------------------------------------------
+Build 2026-08-08 · 11:55 AM EDT · v479 · Both Zones Always Under My Spots
+------------------------------------------------------------------------------
+Jan: "add Offshore under my spots and say no offshore spots saved yet under it
+if there are none" — then, a moment later: "same for inshore."
+
+With My Spots lit, an empty zone used to vanish: save two inshore spots and no
+offshore ones and the list showed a single INSHORE heading, with nothing to say
+offshore spots of your own are even a thing. Now BOTH headings always appear
+under My Spots, and an empty one carries a disabled option reading "— no
+offshore spots saved yet —" (or inshore). Disabled so it can't be picked as a
+location.
+
+Mechanically: addGroup() takes a third argument, emptyNote. Passing one makes
+the group render even with an empty list; leaving it off keeps the old
+drop-the-group behaviour everywhere else (the built-in zone groups, which are
+never empty in practice). Only the My Spots branch passes it. The v478
+whole-list fallback option now skips the mineOnly case, since the per-zone notes
+already say it — otherwise a fresh log showed the zone notes AND "no spots of
+your own saved yet" stacked underneath.
+
+Verified headless with a fresh profile: empty log under My Spots = both headings
+each with their note; after saving one inshore spot = the spot plus the offshore
+note; after both = two clean groups, no notes. Unfiltered and Inshore-pill
+states unchanged from v478.
+
+------------------------------------------------------------------------------
 Build 2026-08-08 · 11:20 AM EDT · v478 · My Spots Filter Pill
 ------------------------------------------------------------------------------
 Jan: "add a button before the inshore and offshore buttons that says MY SPOTS,

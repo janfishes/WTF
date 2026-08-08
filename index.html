@@ -4851,7 +4851,7 @@ function showToast(msg, duration=2400, html){
    v151 nine builds later. Both now read these constants, so a stamp cannot drift out
    of step with the build again. Update these when the build number changes. */
 const BUILD_DATE = '08/08/26';                          // map stamp form
-const BUILD_NUM  = 478;
+const BUILD_NUM  = 479;
 const BUILD_VER  = 'V1';                                // user-facing version (help/About)
 const BUILD_TAG  = 'build 2026-08-08 v' + BUILD_NUM;    // diagnostic-message form
 /* v347: stamp carries the build number again (Jan's ask) — date+V1 alone (v341)
@@ -10407,8 +10407,12 @@ function rebuildSpotSelect(){
   spotSelect.innerHTML = '<option value="">— choose a known spot —</option>';
 
   const byName = (a,b)=> a.name.localeCompare(b.name, undefined, {numeric:true, sensitivity:'base'});
-  const addGroup = (label, list)=>{
-    if(!list.length) return;
+  /* emptyNote (v479): normally an empty group is simply left out, but under My Spots
+     BOTH zone headings always show — Jan wants to see that Offshore is a place his own
+     spots can live even before he has saved one there. The note is a disabled option so
+     it can't be picked. */
+  const addGroup = (label, list, emptyNote)=>{
+    if(!list.length && !emptyNote) return;
     const group = document.createElement('optgroup');
     // Uppercased with rules either side: Safari and the iOS picker wheel ignore any
     // CSS on an optgroup, so the label's own text has to do the separating work.
@@ -10419,6 +10423,12 @@ function rebuildSpotSelect(){
       opt.textContent = s.name;
       group.appendChild(opt);
     });
+    if(!list.length){
+      const none = document.createElement('option');
+      none.value = ''; none.disabled = true;
+      none.textContent = emptyNote;
+      group.appendChild(none);
+    }
     spotSelect.appendChild(group);
   };
 
@@ -10443,15 +10453,18 @@ function rebuildSpotSelect(){
     if(logZones.size && !mineOnly && !logZones.has(zone)) return;
     // v475: the user's own spots come FIRST in each zone — they're the ones being
     // picked most often, so they shouldn't sit below a hundred built-ins.
-    addGroup(ZONES[zone].label + ' · My Spots', custom.filter(s=> !isLaunch(s) && bucket(s) === zone));
+    addGroup(ZONES[zone].label + ' · My Spots',
+             custom.filter(s=> !isLaunch(s) && bucket(s) === zone),
+             mineOnly ? '— no ' + zone + ' spots saved yet —' : '');
     if(!mineOnly) addGroup(ZONES[zone].label, SPOTS.filter(s=> !s._deleted && !isLaunch(s) && bucket(s) === zone));
   });
 
   // A filter that empties the list has to say so, or it reads as a broken drop-down.
-  if(!spotSelect.querySelector('option[value]:not([value=""])')){
+  // Under My Spots the per-zone notes above already cover it.
+  if(!mineOnly && !spotSelect.querySelector('option[value]:not([value=""])')){
     const none = document.createElement('option');
     none.value = ''; none.disabled = true;
-    none.textContent = mineOnly ? '— no spots of your own saved yet —' : '— nothing in this zone —';
+    none.textContent = '— nothing in this zone —';
     spotSelect.appendChild(none);
   }
 
